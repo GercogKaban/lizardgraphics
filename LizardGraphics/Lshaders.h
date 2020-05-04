@@ -1,0 +1,80 @@
+#pragma once
+
+#include <string>
+#include "libs/GLEW/glew.h"
+
+namespace LShaders
+{
+    class Shader
+    {
+        GLuint program;
+    public:
+        Shader(const GLchar* v_shader, const GLchar* f_shader)
+        {
+            GLuint vertex, fragment;
+            GLint success;
+            vertex = glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(vertex, 1, &v_shader, NULL);
+            glCompileShader(vertex);
+            glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+            if (!success)
+                throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
+
+            // Fragment Shader
+            fragment = glCreateShader(GL_FRAGMENT_SHADER);
+            glShaderSource(fragment, 1, &f_shader, NULL);
+            glCompileShader(fragment);
+
+            glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+            if (!success)
+                throw std::exception("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
+
+            // Shader Program
+            this->program = glCreateProgram();
+            glAttachShader(this->program, vertex);
+            glAttachShader(this->program, fragment);
+            glLinkProgram(this->program);
+
+            glGetProgramiv(this->program, GL_LINK_STATUS, &success);
+            if (!success)
+                throw std::exception("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
+
+            glDeleteShader(vertex);
+            glDeleteShader(fragment);
+
+        }
+
+        void use() const
+        {
+            glUseProgram(program);
+        }
+
+        GLuint getShaderProgram() const
+        {
+            return program;
+        }
+    };
+
+    const char interface_v[] =
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 position;\n"
+        "layout (location = 1) in vec2 texCoord;\n"
+        "out vec2 TexCoord;\n"
+        "uniform vec3 move;\n"
+        "uniform vec3 scale;\n"
+        "void main()\n"
+        "{\n"
+        "gl_Position = (vec4(position.x, position.y, position.z, 1.0) + vec4(move,0.0))*vec4(scale,1.0);\n"
+        "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
+        "}\0";
+    const char interface_f[] =
+        "#version 330 core\n"
+        "in vec2 TexCoord;\n"
+        "out vec4 color;\n"
+        "uniform sampler2D ourTexture;\n"
+        "uniform vec4 color_;\n"
+        "void main()\n"
+        "{\n"
+        "color = texture(ourTexture, TexCoord)*color_;\n"
+        "}\n\0";
+}
