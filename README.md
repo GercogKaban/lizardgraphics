@@ -25,6 +25,7 @@ You need to download and place this static libraries in the "libs" directory.
 3. Input following commands:
 
 cmake -G "Visual Studio 16 2019" -A x64 -S path -B "build64"
+
 cmake --build build64 --config Debug
 
 # Building for Linux
