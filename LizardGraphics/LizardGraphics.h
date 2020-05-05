@@ -1,12 +1,16 @@
 #pragma once
 
+#define GLEW_STATIC
+
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <list>
+#include <iostream>
 #include "Lshaders.h"
-#include "libs/GLFW/glfw3.h"
+#include "include/GLFW/glfw3.h"
 
-#include "../SstpContent/vectors.h"
+#include "vectors.h"
 
 #define LWRITE(...) LError::writeError(__VA_ARGS__)
 #define LPRINT(...) LError::printErrors()
@@ -15,6 +19,7 @@
 namespace LGraphics
 {
     class LBuffer;
+    class LApp;
 
     namespace
     {
@@ -192,6 +197,7 @@ namespace LGraphics
     public:
         LIButton(LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
     };
+
     //
     //class LTextEdit : public LRectangle
     //{

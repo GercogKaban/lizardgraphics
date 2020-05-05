@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "libs/GLEW/glew.h"
+#include "include/GLEW/glew.h"
 
 namespace LShaders
 {

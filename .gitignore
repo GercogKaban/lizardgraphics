@@ -271,3 +271,15 @@ __pycache__/
 
 # OpenGLLibs
 /LizardGraphics/libs
+
+# cmake
+CMakeFiles/
+build64/
+LizardGraphics/CMakeFiles
+
+.sln
+.vcxproj
+.vcxproj.filters
+.vcxproj.user
+*.filters
+*.vcxproj

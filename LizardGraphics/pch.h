@@ -15,7 +15,8 @@
 #include <iostream>
 #include <functional>
 
-#include "libs/SOIL2/SOIL2.h"
-#include "libs/GLEW/glew.h"
+#include "include/SOIL2/SOIL2.h"
+
+#include "include/GLEW/glew.h"
 
 #endif //PCH_H
