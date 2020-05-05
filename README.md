@@ -10,7 +10,9 @@ Reasons to use:
 # The necessary libraries
 
 glfw - https://www.glfw.org/download.html
+
 glew32 - http://glew.sourceforge.net/
+
 SOIL2 - https://github.com/SpartanJ/SOIL2
 
 Also you can find all of this libraries here: https://drive.google.com/open?id=1xMj5cn3cL8jD9MrSl9WjcWl4D283tu6g
