@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <list>
 #include <iostream>
+#include <functional>
 #include "Lshaders.h"
 #include "include/GLFW/glfw3.h"
 
@@ -18,6 +19,9 @@
 
 namespace LGraphics
 {
+    // need moving into another module
+    bool isPointInPolygon(int npol, float * xp, float * yp, fvect2 p);
+
     class LBuffer;
     class LApp;
 
@@ -77,10 +81,12 @@ namespace LGraphics
     {
     public:
 
-        const GLuint getVao() const { return VAO; }
+        const GLuint getVaoNum() const { return VAO; }
+        const auto getVbo() const { return vbo; }
         size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount) * sizeof(GLfloat); }
         size_t getIndSize() const { return indicesCount * sizeof(GLuint); }
         size_t getIndCount() const { return indicesCount; }
+        size_t getVerticesCount() const { return verticesCount; }
 
         void init();
 
@@ -96,8 +102,8 @@ namespace LGraphics
 
         void genBuffers();
 
-        GLfloat* vertices = nullptr;
-        GLuint* indices = nullptr;
+        GLfloat* vbo = nullptr;
+        GLuint* ebo = nullptr;
         GLuint VBO, VAO, EBO;
 
         size_t verticesCount, indicesCount, coordsCount = 3, textureCoordsCount = 0;
@@ -133,19 +139,20 @@ namespace LGraphics
     {
     public:
 
+        void setShader(LShaders::Shader* shader) override;
+
         void setColor(const fvect3 val) override;
         void setColor(const unsigned char r, const unsigned char g, const unsigned char b) override;
         void setTransparency(const float val) override;
         void setScale(const fvect3 val) override;
+
+        void move(const fvect3 val) override;
 
         float getTransparency() const override { return transparency_; }
         fvect3 getColor() const override { return color_; }
         fvect3 getScale() const override { return scale_; }
         fvect3 getMove() const override { return move_; }
 
-        void move(const fvect3 val) override;
-
-        void setShader(LShaders::Shader* shader) override;
         virtual ~LShape()
         {
             delete buffer;
@@ -196,6 +203,13 @@ namespace LGraphics
     {
     public:
         LIButton(LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
+
+        void setClickEventFunction(std::function<void()> fun);
+        void doClickEventFunction();
+
+    protected:
+
+        std::function<void()> clickFunction;
     };
 
     //
@@ -214,6 +228,7 @@ namespace LGraphics
         }
         void addObject(LWidgetI* shape);
         void loop();
+        fvect2 getWindowSize() const { return { (float)width, (float)height }; }
 
         GLFWwindow* getWindowHandler() { return window; }
 
@@ -284,4 +299,7 @@ namespace LGraphics
         static std::vector<std::string> errors;
         static size_t lastErrorNum;
     };
+
+    bool isPointInPolygon(int npol, float * xp, float * yp, fvect2 p);
+    fvect2 mouseDisplayCoordsToGl(fvect2 displaySize, fvect2 mouse);
 }

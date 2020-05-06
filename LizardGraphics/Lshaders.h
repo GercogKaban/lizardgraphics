@@ -64,7 +64,7 @@ namespace LShaders
         "uniform vec3 scale;\n"
         "void main()\n"
         "{\n"
-        "gl_Position = (vec4(position.x, position.y, position.z, 1.0) + vec4(move,0.0))*vec4(scale,1.0);\n"
+        "gl_Position = vec4(position.x, position.y, position.z, 1.0)*vec4(scale,1.0) + vec4(move,0.0);\n"
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
         "}\0";
     const char interface_f[] =

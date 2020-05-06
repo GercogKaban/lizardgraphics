@@ -21,8 +21,8 @@ namespace LGraphics
 
     LBuffer::LBuffer()
     {
-        if (vertices) delete[] vertices;
-        if (indices) delete[] indices;
+        if (vbo) delete[] vbo;
+        if (ebo) delete[] ebo;
     }
 
     void LBuffer::genBuffers()
@@ -34,10 +34,10 @@ namespace LGraphics
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, getVertSize(), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, getVertSize(), vbo, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndSize(), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndSize(), ebo, GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, coordsCount, GL_FLOAT, GL_FALSE, (coordsCount + textureCoordsCount) * sizeof(GLfloat), (GLvoid*)0);
         glEnableVertexAttribArray(0);
@@ -54,8 +54,8 @@ namespace LGraphics
         glDeleteBuffers(1, &EBO);
         glDeleteBuffers(1, &VBO);
         glDeleteVertexArrays(1, &VAO);
-        delete[] vertices;
-        delete[] indices;
+        delete[] vbo;
+        delete[] ebo;
     }
 
 
@@ -120,7 +120,7 @@ namespace LGraphics
 
     void LRectangleBuffer::setVerts()
     {
-        vertices = new GLfloat[(coordsCount + textureCoordsCount)* verticesCount]
+        vbo = new GLfloat[(coordsCount + textureCoordsCount)* verticesCount]
             {
                  0.5f,  0.5f, 0.0f,  1.0f, 1.0f,
                  0.5f, -0.5f, 0.0f,  1.0f, 0.0f,
@@ -131,7 +131,7 @@ namespace LGraphics
 
     void LRectangleBuffer::setInds()
     {
-        indices = new GLuint[indicesCount]
+        ebo = new GLuint[indicesCount]
         {
             0,1,3,
             1,2,3
@@ -145,31 +145,19 @@ namespace LGraphics
 
     bool LRectangleShape::mouseOnIt()
     {
-        //!! такая функция уже есть в модуле structures.h !!
-        //!! когда будет рефакторинг нужно будет переместить её в отдельный модуль !!
-        // проверка на принадлежность точки четырехугольнику
-        auto pointAttachment =[](int npol, float * xp, float * yp, fvect2 p)
+        float x_[4], y_[4];
+        auto vbo = buffer->getVbo();
+
+        // getting rectangle coordinates 
+        for (size_t i = 0; i < buffer->getVerticesCount(); ++i)
         {
-            bool c = false;
-            for (int i = 0, j = npol - 1; i < npol; j = i++)
-            {
-                if ((
-                    (yp[i] < yp[j]) && (yp[i] <= p.y) && (p.y <= yp[j]) &&
-                    ((yp[j] - yp[i]) * (p.x - xp[i]) > (xp[j] - xp[i]) * (p.y - yp[i]))
-                    ) || (
-                    (yp[i] > yp[j]) && (yp[j] <= p.y) && (p.y <= yp[i]) &&
-                        ((yp[j] - yp[i]) * (p.x - xp[i]) < (xp[j] - xp[i]) * (p.y - yp[i]))
-                        ))
-                    c = !c;
-            }
-            return c;
-        };
+            x_[i] = (vbo[i*5] *getScale().x) + getMove().x;
+            y_[i] = (vbo[i*5 + 1] * getScale().y) + getMove().y;
+        }
 
-        double x, y;
-        glfwGetCursorPos(app->getWindowHandler(), &x, &y);
-
-
-        return false;
+        double mouse_x, mouse_y;
+        glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
+        return isPointInPolygon(buffer->getVerticesCount(), x_, y_, mouseDisplayCoordsToGl(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
     }
 
     void LRectangleShape::draw()
@@ -180,7 +168,7 @@ namespace LGraphics
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
         glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
-        glBindVertexArray(buffer->getVao());
+        glBindVertexArray(buffer->getVaoNum());
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
@@ -270,7 +258,16 @@ namespace LGraphics
         window = glfwCreateWindow(width, height, "window", nullptr, nullptr);
         glfwMakeContextCurrent(window);
 
-        //glfwSetKeyCallback(window, key_callback);
+ 
+        LApp* myWindow = this;
+        glfwSetWindowUserPointer(window, myWindow);
+
+        auto func = [](GLFWwindow* w, int button, int action , int mods )
+        {
+            static_cast<LApp*>(glfwGetWindowUserPointer(w))->mouse_button_callback(w, button, action, mods);
+        };
+
+        glfwSetMouseButtonCallback(window, func);
 
         glewExperimental = GL_TRUE;
         glewInit();
@@ -300,11 +297,15 @@ namespace LGraphics
 
     void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
     {
-        //if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-        //{
-        //    double xpos, ypos;
-        //    glfwGetCursorPos(window, &xpos, &ypos);
-        //}
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+        {
+            for (auto& o : objects)
+            {
+                if (dynamic_cast<LIButton*>(o))
+                    if (o->mouseOnIt())
+                        dynamic_cast<LIButton*>(o)->doClickEventFunction();
+            }
+        }
     }
 
     void LShape::setShader(LShaders::Shader* shader)
@@ -336,15 +337,49 @@ namespace LGraphics
         setShader(interfaceShader);
     }
 
-    LIButton::LIButton(LObject * parent, const char * path, LBuffer *)
+    //LWRectangle::LWRectangle(LRectangleShape * rectangle)
+//    : LRectangleShapeI(rectangle)
+//{
+//    rectangle->setShader(sceneObjectShader);
+//}
+
+    LIButton::LIButton(LObject * parent, const char * path, LBuffer * buffer)
         :LRectangleShape(parent, path, buffer)
     {
         setShader(interfaceShader);
     }
 
-    //LWRectangle::LWRectangle(LRectangleShape * rectangle)
-    //    : LRectangleShapeI(rectangle)
-    //{
-    //    rectangle->setShader(sceneObjectShader);
-    //}
+    void LIButton::setClickEventFunction(std::function<void()> fun)
+    {
+        clickFunction = fun;
+    }
+
+    void LIButton::doClickEventFunction()
+    {
+        clickFunction();
+    }
+
+    bool isPointInPolygon(int npol, float* xp, float* yp, fvect2 p)
+    {
+        bool c = false;
+        for (int i = 0, j = npol - 1; i < npol; j = i++)
+        {
+            if ((
+                (yp[i] < yp[j]) && (yp[i] <= p.y) && (p.y <= yp[j]) &&
+                ((yp[j] - yp[i]) * (p.x - xp[i]) > (xp[j] - xp[i]) * (p.y - yp[i]))
+                ) || (
+                (yp[i] > yp[j]) && (yp[j] <= p.y) && (p.y <= yp[i]) &&
+                    ((yp[j] - yp[i]) * (p.x - xp[i]) < (xp[j] - xp[i]) * (p.y - yp[i]))
+                    ))
+                c = !c;
+        }
+        return c;
+    }
+
+
+    fvect2 mouseDisplayCoordsToGl(fvect2 displaySize, fvect2 mouse)
+    {
+        mouse.y = displaySize.y - mouse.y;
+        return mouse / displaySize - (fvect2(1.0f, 1.0f) - mouse / displaySize);
+    }
 }
