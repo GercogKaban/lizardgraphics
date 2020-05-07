@@ -8,6 +8,7 @@
 #include <list>
 #include <iostream>
 #include <functional>
+#include <chrono>
 #include "Lshaders.h"
 #include "include/GLFW/glfw3.h"
 
@@ -21,13 +22,17 @@ namespace LGraphics
 {
     // need moving into another module
     bool isPointInPolygon(int npol, float * xp, float * yp, fvect2 p);
+    fvect2 pointOnDisplayToGlCoords(fvect2 displaySize, fvect2 point);
 
     class LBuffer;
+    class LTextBuffer;
     class LApp;
+    class LText;
 
     namespace
     {
         extern LBuffer* baseRectangleBuffer;
+        extern LTextBuffer* baseRectangleTextBuffer;
     }
 
     class LObject
@@ -44,11 +49,20 @@ namespace LGraphics
 
         virtual void draw() = 0;
         
-        virtual void setTransparency(const float val) = 0;
-        virtual void setColor(const unsigned char r, const unsigned char g, const unsigned char b) = 0;
-        virtual void setColor(const fvect3 val) = 0;
-        virtual void setScale(const fvect3 val) = 0;
+        virtual void transparency(const float val) = 0;
+
+        virtual void color(const unsigned char r, const unsigned char g, const unsigned char b) = 0;
+        virtual void color(const fvect3 val) = 0;
+
+        virtual void scale(const fvect3 val) = 0;
+        virtual void scale(const float x, const float y, const float z) = 0;
+
         virtual void move(const fvect3 val) = 0;
+        virtual void move(const float x, const float y, const float z) = 0;
+        virtual void move(const size_t x, const size_t y) = 0;
+        virtual void move(const szvect2 v) = 0;
+
+        void setMouseOnItEventFunction(std::function<void()> fun) { mouseOnItFunction = fun; }
 
         virtual float getTransparency() const = 0;
         virtual fvect3 getColor() const = 0;
@@ -74,6 +88,8 @@ namespace LGraphics
         
         LApp* app = nullptr;
         bool isHidden_ = false;
+        std::function<void()> mouseOnItFunction;
+
         LWidgetI(){}
     };
 
@@ -81,9 +97,11 @@ namespace LGraphics
     {
     public:
 
+        const GLuint* getVBO() const { return VBO; }
         const GLuint getVaoNum() const { return VAO; }
-        const auto getVbo() const { return vbo; }
-        size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount) * sizeof(GLfloat); }
+        const auto getVertices() const { return vertices; }
+        size_t getVertSize() const { return verticesCount * coordsCount  * sizeof(GLfloat); }
+        size_t getTextureSize() const { return textureCoordsCount * verticesCount * sizeof(GLfloat); }
         size_t getIndSize() const { return indicesCount * sizeof(GLuint); }
         size_t getIndCount() const { return indicesCount; }
         size_t getVerticesCount() const { return verticesCount; }
@@ -102,17 +120,18 @@ namespace LGraphics
 
         void genBuffers();
 
-        GLfloat* vbo = nullptr;
+        GLfloat* textures = nullptr;
+        GLfloat* vertices = nullptr;
         GLuint* ebo = nullptr;
-        GLuint VBO, VAO, EBO;
+        GLuint VBO[2], VAO, EBO;
 
         size_t verticesCount, indicesCount, coordsCount = 3, textureCoordsCount = 0;
+
     };
 
     class LRectangleBuffer : public LBuffer
     {
     protected:
-
         void setBuffers() override;
         void setVerts() override;
         void setInds() override;
@@ -141,12 +160,17 @@ namespace LGraphics
 
         void setShader(LShaders::Shader* shader) override;
 
-        void setColor(const fvect3 val) override;
-        void setColor(const unsigned char r, const unsigned char g, const unsigned char b) override;
-        void setTransparency(const float val) override;
-        void setScale(const fvect3 val) override;
+        void color(const fvect3 val) override;
+        void color(const unsigned char r, const unsigned char g, const unsigned char b) override;
+        void transparency(const float val) override;
+
+        void scale(const fvect3 val) override;
+        void scale(const float x, const float y, const float z) override;
 
         void move(const fvect3 val) override;
+        void move(const float x, const float y, const float z) override;
+        void move(const size_t x, const size_t y) override;
+        void move(const szvect2 v) override;
 
         float getTransparency() const override { return transparency_; }
         fvect3 getColor() const override { return color_; }
@@ -155,7 +179,7 @@ namespace LGraphics
 
         virtual ~LShape()
         {
-            delete buffer;
+            //if (buffer)delete buffer;
         }
 
     protected:
@@ -184,13 +208,14 @@ namespace LGraphics
         bool mouseOnIt() override;
 
         void draw() override;
-        LRectangleShape(LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
+        LRectangleShape(LApp* app,LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
+        LRectangleShape(LApp* app, LObject* parent = nullptr, const unsigned char* bytes = nullptr, size_t size = 0, LBuffer* = nullptr);
     };
 
     class LIRectangle : public LRectangleShape
     {
     public:
-        LIRectangle(LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
+        LIRectangle(LApp* app, LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
     };
 
     //class LWRectangle : public LRectangleShapeI
@@ -202,14 +227,18 @@ namespace LGraphics
     class LIButton : public LRectangleShape
     {
     public:
-        LIButton(LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
+
+        friend LApp;
+
+        LIButton(LApp* app,LObject* parent = nullptr, const char* path = nullptr, LBuffer* = nullptr);
 
         void setClickEventFunction(std::function<void()> fun);
-        void doClickEventFunction();
+
 
     protected:
 
         std::function<void()> clickFunction;
+        void doClickEventFunction();
     };
 
     //
@@ -220,19 +249,25 @@ namespace LGraphics
 
     class LApp : public LObject
     {
+        friend LRectangleShape;
     public:
         LApp();
         ~LApp()
         {
             releaseResources();
         }
-        void addObject(LWidgetI* shape);
         void loop();
         fvect2 getWindowSize() const { return { (float)width, (float)height }; }
 
         GLFWwindow* getWindowHandler() { return window; }
 
     private:
+
+        void addObject(LWidgetI* w);
+
+        //std::chrono::time_point<std::chrono::system_clock> start, end;
+        //start = std::chrono::system_clock::now();
+        //end = std::chrono::system_clock::now();
 
         void init(const int width, const int height);
         void initLEngine();
@@ -246,6 +281,7 @@ namespace LGraphics
 
         GLFWwindow* window;
         std::vector<LWidgetI*> objects;
+
         size_t width, height;
     };
 
@@ -300,6 +336,24 @@ namespace LGraphics
         static size_t lastErrorNum;
     };
 
-    bool isPointInPolygon(int npol, float * xp, float * yp, fvect2 p);
-    fvect2 mouseDisplayCoordsToGl(fvect2 displaySize, fvect2 mouse);
+    class LTextBuffer : public LRectangleBuffer
+    {
+        friend LText;
+    public:
+        LTextBuffer();
+    protected:
+        GLfloat** textCoords;
+        const size_t charIndex_from = 32;
+    };
+
+    class LText : public LRectangleShape
+    {
+        friend LRectangleShape;
+    public:
+        LText(LApp* app);
+    protected:
+        // эта переменная не работает, передается мусор :(
+        //const char fontPath[37] = "../lizardgraphics/res/font_white.png";
+        void setTextureBuffer();
+    };
 }

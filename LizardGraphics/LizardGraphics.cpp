@@ -12,6 +12,7 @@ namespace LGraphics
     namespace
     {
         LBuffer* baseRectangleBuffer = new LRectangleBuffer();
+        LTextBuffer* baseRectangleTextBuffer = new LTextBuffer();
     }
 
     void LBuffer::init()
@@ -21,30 +22,33 @@ namespace LGraphics
 
     LBuffer::LBuffer()
     {
-        if (vbo) delete[] vbo;
+        if (textures) delete[] textures;
+        if (vertices) delete[] vertices;
         if (ebo) delete[] ebo;
     }
 
     void LBuffer::genBuffers()
     {
         glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
+        glGenBuffers(2, VBO);
         glGenBuffers(1, &EBO);
 
         glBindVertexArray(VAO);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, getVertSize(), vbo, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+        glBufferData(GL_ARRAY_BUFFER, getVertSize(), vertices, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndSize(), ebo, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, coordsCount, GL_FLOAT, GL_FALSE, (coordsCount + textureCoordsCount) * sizeof(GLfloat), (GLvoid*)0);
+        glVertexAttribPointer(0, coordsCount, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, textureCoordsCount, GL_FLOAT, GL_FALSE, (coordsCount + textureCoordsCount) * sizeof(GLfloat), (GLvoid*)(coordsCount * sizeof(GLfloat)));
-        glEnableVertexAttribArray(1);
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+        glBufferData(GL_ARRAY_BUFFER, getTextureSize(), textures, GL_DYNAMIC_DRAW);
+
+        glVertexAttribPointer(1, textureCoordsCount, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+        glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
     }
@@ -52,10 +56,11 @@ namespace LGraphics
     LBuffer::~LBuffer()
     {
         glDeleteBuffers(1, &EBO);
-        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(2, VBO);
         glDeleteVertexArrays(1, &VAO);
-        delete[] vbo;
+        delete[] vertices;
         delete[] ebo;
+        delete[] textures;
     }
 
 
@@ -120,13 +125,21 @@ namespace LGraphics
 
     void LRectangleBuffer::setVerts()
     {
-        vbo = new GLfloat[(coordsCount + textureCoordsCount)* verticesCount]
-            {
-                 0.5f,  0.5f, 0.0f,  1.0f, 1.0f,
-                 0.5f, -0.5f, 0.0f,  1.0f, 0.0f,
-                -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,
-                -0.5f,  0.5f, 0.0f,  0.0f, 1.0f
-            };
+        vertices = new GLfloat[coordsCount * verticesCount]
+        {
+             0.5f,  0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+            -0.5f, -0.5f, 0.0f, 
+            -0.5f,  0.5f, 0.0f,
+        };
+
+        textures = new GLfloat[textureCoordsCount* verticesCount]
+        {
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f
+        };
     }
 
     void LRectangleBuffer::setInds()
@@ -146,22 +159,24 @@ namespace LGraphics
     bool LRectangleShape::mouseOnIt()
     {
         float x_[4], y_[4];
-        auto vbo = buffer->getVbo();
+        auto vbo = buffer->getVertices();
 
         // getting rectangle coordinates 
         for (size_t i = 0; i < buffer->getVerticesCount(); ++i)
         {
-            x_[i] = (vbo[i*5] *getScale().x) + getMove().x;
-            y_[i] = (vbo[i*5 + 1] * getScale().y) + getMove().y;
+            x_[i] = (vbo[i*3] *getScale().x) + getMove().x;
+            y_[i] = (vbo[i*3 + 1] * getScale().y) + getMove().y;
         }
 
         double mouse_x, mouse_y;
         glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
-        return isPointInPolygon(buffer->getVerticesCount(), x_, y_, mouseDisplayCoordsToGl(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
+        return isPointInPolygon(buffer->getVerticesCount(), x_, y_, pointOnDisplayToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
     }
 
     void LRectangleShape::draw()
     {
+        if (dynamic_cast<LText*>(this))
+            dynamic_cast<LText*>(this)->setTextureBuffer();
         auto shader = getShader();
         shader->use();
         glBindTexture(GL_TEXTURE_2D, getTexture());
@@ -173,24 +188,29 @@ namespace LGraphics
         glBindVertexArray(0);
     }
 
-    void LShape::setColor(const fvect3 val)
+    void LShape::color(const fvect3 val)
     {
         color_ = { (float)val.x / (float)sizeof(unsigned char), (float)val.y / (float)sizeof(unsigned char),(float)val.z / (float)sizeof(unsigned char) };
     }
 
-    void LShape::setColor(const unsigned char r, const unsigned char g, const unsigned char b)
+    void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
     {
         color_ = { (float)r / (float)sizeof(unsigned char), (float)g / (float)sizeof(unsigned char),(float)b / (float)sizeof(unsigned char) };
     }
 
-    void LShape::setTransparency(const float val)
+    void LShape::transparency(const float val)
     {
         transparency_ = val;
     }
 
-    void LShape::setScale(const fvect3 val)
+    void LShape::scale(const fvect3 val)
     {
         scale_ = val;
+    }
+
+    void LShape::scale(const float x, const float y, const float z)
+    {
+        scale_ = { x,y,z };
     }
 
     void LShape::move(const fvect3 val)
@@ -198,8 +218,36 @@ namespace LGraphics
         move_ = val;
     }
 
-    LRectangleShape::LRectangleShape(LObject* parent , const char* path, LBuffer* buffer)
-        :LShape(path,buffer){}
+    void LShape::move(const float x, const float y, const float z)
+    {
+        move_ = { x,y,z };
+    }
+
+    void LShape::move(const size_t x, const size_t y)
+    {
+        auto coords = pointOnDisplayToGlCoords(app->getWindowSize(), { (float)x,(float)y });
+        move_ = { coords.x,coords.y, 0.0f };
+    }
+
+    void LShape::move(const szvect2 v)
+    {
+        auto coords = pointOnDisplayToGlCoords(app->getWindowSize(), fvect2((float)v.x,(float)v.y));
+        move_ = { coords.x,coords.y, 0.0f };
+    }
+
+    LRectangleShape::LRectangleShape(LApp* app, LObject* parent , const char* path, LBuffer* buffer)
+        :LShape(path,buffer)
+    {
+        this->app = app;
+        app->addObject(this);
+    }
+
+    LRectangleShape::LRectangleShape(LApp * app, LObject * parent, const unsigned char * bytes, size_t size, LBuffer* buffer)
+        :LShape(bytes,size, buffer)
+    {
+        this->app = app;
+        app->addObject(this);
+    }
 
     LApp::LApp()
     {
@@ -208,8 +256,10 @@ namespace LGraphics
 
     void LApp::loop()
     {
+
         while (!glfwWindowShouldClose(window))
         {
+
             glfwPollEvents();
             checkEvents();
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -222,10 +272,9 @@ namespace LGraphics
         glfwTerminate();
     }
 
-    void LApp::addObject(LWidgetI* shape)
+    void LApp::addObject(LWidgetI * w)
     {
-        shape->setApp(this);
-        objects.push_back(shape);
+        objects.push_back(w);
     }
 
     void LApp::init(const int width, const int height)
@@ -240,6 +289,7 @@ namespace LGraphics
         LError::init();
         interfaceShader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
         baseRectangleBuffer->init();
+        baseRectangleTextBuffer->init();
         
         //auto background = new LIRectangle();
         //background->setScale({ 2.0f,2.0f,1.0f });
@@ -293,6 +343,9 @@ namespace LGraphics
         for (auto& x : objects)
             delete x;
         LError::releaseResources();
+
+        delete baseRectangleBuffer;
+        delete baseRectangleTextBuffer;
     }
 
     void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
@@ -331,8 +384,8 @@ namespace LGraphics
         else this->buffer = buffer;
     }
 
-    LIRectangle::LIRectangle(LObject* parent, const char * path, LBuffer* buffer)
-        :LRectangleShape(parent,path,buffer)
+    LIRectangle::LIRectangle(LApp* app,LObject* parent, const char * path, LBuffer* buffer)
+        :LRectangleShape(app,parent,path,buffer)
     {
         setShader(interfaceShader);
     }
@@ -343,8 +396,8 @@ namespace LGraphics
 //    rectangle->setShader(sceneObjectShader);
 //}
 
-    LIButton::LIButton(LObject * parent, const char * path, LBuffer * buffer)
-        :LRectangleShape(parent, path, buffer)
+    LIButton::LIButton(LApp* app, LObject * parent, const char * path, LBuffer * buffer)
+        :LRectangleShape(app,parent, path, buffer)
     {
         setShader(interfaceShader);
     }
@@ -377,9 +430,96 @@ namespace LGraphics
     }
 
 
-    fvect2 mouseDisplayCoordsToGl(fvect2 displaySize, fvect2 mouse)
+    fvect2 pointOnDisplayToGlCoords(fvect2 displaySize, fvect2 point)
     {
-        mouse.y = displaySize.y - mouse.y;
-        return mouse / displaySize - (fvect2(1.0f, 1.0f) - mouse / displaySize);
+        point.y = displaySize.y - point.y;
+        return point / displaySize - (fvect2(1.0f, 1.0f) - point / displaySize);
+    }
+
+    LTextBuffer::LTextBuffer()
+    {
+        const szvect2 charSize = ivect2(14, 24);
+        const size_t charIndex_to = 127;
+        const size_t charsInLine = 83;
+        const szvect2 offset = ivect2(1, 4);
+
+        const szvect2 textureSize = { 1180,79 };
+
+
+        textCoords = new GLfloat*[charIndex_to - charIndex_from];
+        for (size_t i = 0; i < charIndex_to - charIndex_from; ++i)
+            textCoords[i] = new GLfloat[8];
+
+        int x = offset.x;
+        int y = offset.y;
+
+        for (int i = charIndex_from; i < charIndex_to; i++)
+        {
+            x += charSize.x * (i - charIndex_from);
+            while (x >= charsInLine * charSize.x)
+                x -= charsInLine * charSize.x, y += charSize.y;
+
+            // здесь должна быть формула
+            GLfloat textCoords_[] =
+            {
+                x + charSize.x,   y,
+                x + charSize.x,  y - charSize.y,
+                x ,                  y - charSize.y,
+                x ,                   y                    // верхний левый угол
+            };
+
+            memcpy(textCoords[i - charIndex_from], textCoords_, 8 * sizeof(GLfloat));
+
+            //14 х 24
+
+            // 1.0f, 1.0f, x + symbolSize y
+            // 1.0f, 0.0f, x + symbolSize.x y 
+            // 0.0f, 0.0f, 
+            // 0.0f, 1.0f  x y
+        }
+
+        //vbo = new GLfloat[coordsCount* verticesCount];
+        //{
+        //     0.5f,  0.5f, 0.0f,  (x + symbolSize.x) / textureSize.x,   y / textureSize.y,
+        //     0.5f, -0.5f, 0.0f,  (x + symbolSize.x) / textureSize.x,  (y - symbolSize.y) / textureSize.y,
+        //    -0.5f, -0.5f, 0.0f,  x / textureSize.x,                   (y - symbolSize.y) / textureSize.y,
+        //    -0.5f,  0.5f, 0.0f,  x / textureSize.x,                    y / textureSize.y
+        //};
+        //vbo = new GLfloat[(coordsCount + textureCoordsCount)* verticesCount]
+        //{
+        //     0.5f,  0.5f, 0.0f,  (x + symbolSize.x) / textureSize.x,   y / textureSize.y,
+        //     0.5f, -0.5f, 0.0f,  (x + symbolSize.x) / textureSize.x,  (y - symbolSize.y) / textureSize.y,
+        //    -0.5f, -0.5f, 0.0f,  x / textureSize.x,                   (y - symbolSize.y) / textureSize.y,
+        //    -0.5f,  0.5f, 0.0f,  x / textureSize.x,                    y / textureSize.y
+        //};
+    }
+
+    LText::LText(LApp* app_)
+        :LRectangleShape(app_,nullptr, new_font,new_fontSize, baseRectangleTextBuffer)
+    {
+        setShader(interfaceShader);
+    }
+
+    void LText::setTextureBuffer()
+    {
+       // вся текстура
+       //GLfloat bf_[] =
+       //{
+       //     1.0f, 1.0f,
+       //     1.0f, 0.0f,
+       //     0.0f, 0.0f,
+       //     0.0f, 1.0f
+       //};
+
+        glBindVertexArray(buffer->getVaoNum());
+        auto b = dynamic_cast<LTextBuffer*>(buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer->getVBO()[1]);
+        // пока что будет выводиться (нет) только 1 символ
+        glBufferData(GL_ARRAY_BUFFER, buffer->getTextureSize(), b->textCoords['f' - b->charIndex_from] , GL_STREAM_DRAW);
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+        glEnableVertexAttribArray(1);
+
+        glBindVertexArray(0);
     }
 }

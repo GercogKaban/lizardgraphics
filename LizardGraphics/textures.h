@@ -10,5 +10,7 @@ namespace LGraphics
     extern size_t nohpSize;
     extern unsigned char notexture[];
     extern size_t notextureSize;
+    extern unsigned char new_font[];
+    extern size_t new_fontSize;
 }
 
