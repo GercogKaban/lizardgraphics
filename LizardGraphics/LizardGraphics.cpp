@@ -441,20 +441,22 @@ namespace LGraphics
         const szvect2 charSize = ivect2(14, 24);
         const size_t charIndex_to = 127;
         const size_t charsInLine = 83;
-        const szvect2 offset = ivect2(1, 4);
+        const szvect2 offset = ivect2(1 + charSize.x * (charIndex_from - 30), 4);
 
         const szvect2 textureSize = { 1180,79 };
+        fvect2 textureSizeF = textureSize.cut<fvect2>();
 
 
         textCoords = new GLfloat*[charIndex_to - charIndex_from];
         for (size_t i = 0; i < charIndex_to - charIndex_from; ++i)
             textCoords[i] = new GLfloat[8];
 
-        int x = offset.x;
-        int y = offset.y;
 
         for (int i = charIndex_from; i < charIndex_to; i++)
         {
+            int x = offset.x;
+            int y = offset.y;
+
             x += charSize.x * (i - charIndex_from);
             while (x >= charsInLine * charSize.x)
                 x -= charsInLine * charSize.x, y += charSize.y;
@@ -462,10 +464,10 @@ namespace LGraphics
             // здесь должна быть формула
             GLfloat textCoords_[] =
             {
-                x + charSize.x,   y,
-                x + charSize.x,  y - charSize.y,
-                x ,                  y - charSize.y,
-                x ,                   y                    // верхний левый угол
+                (x + charSize.x)/ textureSizeF.x,   1.0f - y/ textureSizeF.y,
+                (x + charSize.x) / textureSizeF.x,  1.0f - (y + charSize.y) / textureSizeF.y,
+                x / textureSizeF.x ,                  1.0f - (y + charSize.y) / textureSizeF.y,
+                x/ textureSizeF.x ,                   1.0f - y/ textureSizeF.y                   // верхний левый угол
             };
 
             memcpy(textCoords[i - charIndex_from], textCoords_, 8 * sizeof(GLfloat));
