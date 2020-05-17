@@ -7,16 +7,24 @@
 #ifndef PCH_H
 #define PCH_H
 
-#define GLEW_STATIC
+//#define GLEW_STATIC
 
 //#define WIN32_LEAN_AND_MEAN  
 
+#include <vector>
+#include <string>
 #include <algorithm>
+#include <list>
 #include <iostream>
 #include <functional>
+#include <chrono>
+#include <cmath>
+
+#include "vectors.h"
+#include "include/GLEW/glew.h"
+#include "include/GLFW/glfw3.h"
 
 #include "include/SOIL2/SOIL2.h"
-
-#include "include/GLEW/glew.h"
+#include "additional.h"
 
 #endif //PCH_H

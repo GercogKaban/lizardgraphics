@@ -5,6 +5,29 @@
 
 namespace LShaders
 {
+    const char interface_v[] =
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 position;\n"
+        "layout (location = 1) in vec2 texCoord;\n"
+        "out vec2 TexCoord;\n"
+        "uniform vec3 move;\n"
+        "uniform vec3 scale;\n"
+        "void main()\n"
+        "{\n"
+        "gl_Position = vec4(position.x, position.y, position.z, 1.0)*vec4(scale,1.0) + vec4(move,0.0);\n"
+        "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
+        "}\0";
+    const char interface_f[] =
+        "#version 330 core\n"
+        "in vec2 TexCoord;\n"
+        "out vec4 color;\n"
+        "uniform sampler2D ourTexture;\n"
+        "uniform vec4 color_;\n"
+        "void main()\n"
+        "{\n"
+        "color = texture(ourTexture, TexCoord)*color_;\n"
+        "}\n\0";
+
     class Shader
     {
         GLuint program;
@@ -55,26 +78,8 @@ namespace LShaders
         }
     };
 
-    const char interface_v[] =
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 position;\n"
-        "layout (location = 1) in vec2 texCoord;\n"
-        "out vec2 TexCoord;\n"
-        "uniform vec3 move;\n"
-        "uniform vec3 scale;\n"
-        "void main()\n"
-        "{\n"
-        "gl_Position = vec4(position.x, position.y, position.z, 1.0)*vec4(scale,1.0) + vec4(move,0.0);\n"
-        "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
-        "}\0";
-    const char interface_f[] =
-        "#version 330 core\n"
-        "in vec2 TexCoord;\n"
-        "out vec4 color;\n"
-        "uniform sampler2D ourTexture;\n"
-        "uniform vec4 color_;\n"
-        "void main()\n"
-        "{\n"
-        "color = texture(ourTexture, TexCoord)*color_;\n"
-        "}\n\0";
+    //namespace
+    //{
+    //    Shader* interfaceShader;
+    //}
 }
