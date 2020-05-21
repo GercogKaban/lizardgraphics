@@ -1,4 +1,4 @@
-#include "LImage.h"
+﻿#include "LImage.h"
 #include "include/SOIL2/SOIL2.h"
 #include "textures.h"
 #include "LError.h"

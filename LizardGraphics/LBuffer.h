@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "LObject.h"
 #include "include/GLEW/glew.h"

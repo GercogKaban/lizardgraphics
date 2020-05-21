@@ -1,4 +1,4 @@
-#include "LTextBuffer.h"
+п»ї#include "LTextBuffer.h"
 #include "pch.h"
 
 namespace LGraphics
@@ -28,18 +28,18 @@ namespace LGraphics
             while (x >= charsInLine * charSize.x)
                 x -= charsInLine * charSize.x, y += charSize.y;
 
-            // здесь должна быть формула
+            // Р·РґРµСЃСЊ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ С„РѕСЂРјСѓР»Р°
             GLfloat textCoords_[] =
             {
                 (x + charSize.x) / textureSizeF.x,   1.0f - y / textureSizeF.y,
                 (x + charSize.x) / textureSizeF.x,  1.0f - (y + charSize.y) / textureSizeF.y,
                 x / textureSizeF.x ,                  1.0f - (y + charSize.y) / textureSizeF.y,
-                x / textureSizeF.x ,                   1.0f - y / textureSizeF.y                   // верхний левый угол
+                x / textureSizeF.x ,                   1.0f - y / textureSizeF.y                   // РІРµСЂС…РЅРёР№ Р»РµРІС‹Р№ СѓРіРѕР»
             };
 
             memcpy(textCoords[i - charIndex_from], textCoords_, 8 * sizeof(GLfloat));
 
-            //14 х 24
+            //14 С… 24
 
             // 1.0f, 1.0f, x + symbolSize y
             // 1.0f, 0.0f, x + symbolSize.x y 

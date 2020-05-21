@@ -9,3 +9,5 @@ set (HEADER_FILES pch.h textures.h Lshaders.h vectors.h LTextBuffer.h LSymbol.h 
 
 add_library(LizardGraphics STATIC ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(LizardGraphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(LizardGraphics/freetype PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(LizardGraphics/ft2build.h PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

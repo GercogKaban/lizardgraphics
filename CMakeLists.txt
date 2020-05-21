@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
      
-project (LS_Example CXX)
+project (LS_Example C CXX)
 
 find_package(OpenGL REQUIRED)
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "LApp.h"
 
@@ -14,7 +14,6 @@ namespace LGraphics
         LIButton(LApp* app, LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* = nullptr);
 
         void setClickEventFunction(std::function<void()> fun);
-
 
     protected:
 

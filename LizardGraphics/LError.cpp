@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "LError.h"
 #include "pch.h"
 

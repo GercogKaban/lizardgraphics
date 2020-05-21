@@ -1,4 +1,4 @@
-#include "LShape.h"
+﻿#include "LShape.h"
 #include "LBaseComponent.h"
 #include "LApp.h"
 #include "pch.h"

@@ -1,4 +1,4 @@
-#include "LIRectangle.h"
+﻿#include "LIRectangle.h"
 #include "LBaseComponent.h"
 #include "pch.h"
 

@@ -1,4 +1,4 @@
-#include "LBuffer.h"
+﻿#include "LBuffer.h"
 #include "pch.h"
 
 namespace LGraphics

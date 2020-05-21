@@ -1,15 +1,31 @@
-#pragma once
-#include "LRectangleShape.h"
+ï»¿#pragma once
+//#include "LRectangleShape.h"
+#include <ft2build.h>
+#include <iostream>
+#include FT_FREETYPE_H 
 
 namespace LGraphics
 {
-    //class LSymbol : public LRectangleShape
+    class LSymbol
+    {
+    public:
+        LSymbol()
+        {
+            FT_Library ft;
+            if (FT_Init_FreeType(&ft))
+                std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+            FT_Face face;
+            if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+                std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        }
+    };
     //{
     //    friend LRectangleShape;
     //public:
     //    LSymbol(LApp* app);
     //protected:
-    //    // ýòà ïåðåìåííàÿ íå ðàáîòàåò, ïåðåäàåòñÿ ìóñîð :(
+    //    // ÑÑ‚Ð° Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ð°Ñ Ð½Ðµ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚, Ð¿ÐµÑ€ÐµÐ´Ð°ÐµÑ‚ÑÑ Ð¼ÑƒÑÐ¾Ñ€ :(
     //    //const char fontPath[37] = "../lizardgraphics/res/font_white.png";
     //    void setTextureBuffer();
     //};

@@ -1,4 +1,4 @@
-#include "LRectangleBuffer.h"
+﻿#include "LRectangleBuffer.h"
 #include "pch.h"
 
 namespace LGraphics
