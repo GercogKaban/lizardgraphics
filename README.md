@@ -22,9 +22,10 @@ Also you can find all of this libraries here: https://drive.google.com/open?id=1
 You need to download and place this static libraries in the "LizardGraphics/libs" directory.
 
 # Building for Windows
-1. Open command line
-2. Go to the repository directory (cd /d path)
-3. Input following commands:
+1. Clone repository.
+2. Open command line
+3. Go to the repository directory (cd /d path)
+4. Input following command:
 
 cmake -G "Visual Studio 16 2019" -A x64 -S path
 
