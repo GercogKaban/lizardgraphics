@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['color_5fdata_0',['color_data',['../structcolor__data.html',1,'']]]
+  ['app_0',['app',['../class_l_graphics_1_1_l_widget_i.html#ae6b110b17e833d1f79b55e8d57677c86',1,'LGraphics::LWidgetI']]]
 ];

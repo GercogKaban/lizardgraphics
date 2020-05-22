@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['width_494',['width',['../struct_g_l_f_wvidmode.html#a698dcb200562051a7249cb6ae154c71d',1,'GLFWvidmode::width()'],['../struct_g_l_f_wimage.html#af6a71cc999fe6d3aea31dd7e9687d835',1,'GLFWimage::width()']]]
+  ['scale_5f_178',['scale_',['../class_l_graphics_1_1_l_shape.html#a8c57f55d38b16c807eb039363b55ebf4',1,'LGraphics::LShape']]],
+  ['shader_179',['shader',['../class_l_graphics_1_1_l_shape.html#a6fb798415e344e66055010768d73f2b3',1,'LGraphics::LShape']]]
 ];

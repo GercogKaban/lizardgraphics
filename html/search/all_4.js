@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['vect2_5fdata_19',['vect2_data',['../structvect2__data.html',1,'']]],
-  ['vect3_5fdata_20',['vect3_data',['../structvect3__data.html',1,'']]],
-  ['vect3_5fdata_3c_20float_20_3e_21',['vect3_data&lt; float &gt;',['../structvect3__data.html',1,'']]],
-  ['vect_5fcustom_5fdata_22',['vect_custom_data',['../structvect__custom__data.html',1,'']]],
-  ['vect_5fprototype2_23',['vect_prototype2',['../structvect__prototype2.html',1,'']]],
-  ['vect_5fprototype2_3c_20float_2c_203_2c_20vect3_5fdata_3c_20float_20_3e_20_3e_24',['vect_prototype2&lt; float, 3, vect3_data&lt; float &gt; &gt;',['../structvect__prototype2.html',1,'']]]
+  ['ebo_9',['EBO',['../class_l_graphics_1_1_l_buffer.html#ae3c6feaa2ffd0f3a7f582ef1d65b2b85',1,'LGraphics::LBuffer::EBO()'],['../class_l_graphics_1_1_l_buffer.html#a2b9469b0f0033aad86cea55963c4533c',1,'LGraphics::LBuffer::ebo()']]],
+  ['errors_10',['errors',['../class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25',1,'LGraphics::LError']]]
 ];

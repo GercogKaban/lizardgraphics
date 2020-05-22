@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['size_493',['size',['../struct_g_l_f_wgammaramp.html#ad620e1cffbff9a32c51bca46301b59a5',1,'GLFWgammaramp']]]
+  ['mouseonitfunction_176',['mouseOnItFunction',['../class_l_graphics_1_1_l_widget_i.html#a71b57c92a926edb1158e88ab9a7581e7',1,'LGraphics::LWidgetI']]],
+  ['move_5f_177',['move_',['../class_l_graphics_1_1_l_shape.html#ae2fe9b66bce9c225acbae8d9e6402eb2',1,'LGraphics::LShape']]]
 ];

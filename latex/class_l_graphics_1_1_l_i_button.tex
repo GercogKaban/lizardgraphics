@@ -1,5 +1,14 @@
 \hypertarget{class_l_graphics_1_1_l_i_button}{}\doxysection{L\+Graphics\+::L\+I\+Button Class Reference}
 \label{class_l_graphics_1_1_l_i_button}\index{LGraphics::LIButton@{LGraphics::LIButton}}
+
+
+Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция.  
+
+
+
+
+{\ttfamily \#include $<$L\+I\+Button.\+h$>$}
+
 Inheritance diagram for L\+Graphics\+::L\+I\+Button\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -9,12 +18,10 @@ Inheritance diagram for L\+Graphics\+::L\+I\+Button\+:\begin{figure}[H]
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_i_button_a5e33be0452d0cc87a85626d7312d0d06}\label{class_l_graphics_1_1_l_i_button_a5e33be0452d0cc87a85626d7312d0d06}} 
-{\bfseries L\+I\+Button} (\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$app, \mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$parent=nullptr, const char $\ast$path=nullptr, \mbox{\hyperlink{struct_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$=nullptr)
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_i_button_a60e351804069ce65903a41d35dba09a3}\label{class_l_graphics_1_1_l_i_button_a60e351804069ce65903a41d35dba09a3}} 
-void {\bfseries set\+Click\+Event\+Function} (std\+::function$<$ void()$>$ fun)
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{class_l_graphics_1_1_l_i_button_ade1e5b1b068f339603baafa72a8881c2}{L\+I\+Button}} (\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$\mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ae6b110b17e833d1f79b55e8d57677c86}{app}}, \mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$parent=nullptr, const char $\ast$path=nullptr, \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$component=nullptr)
+\begin{DoxyCompactList}\small\item\em Конструктор. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_i_button_a60e351804069ce65903a41d35dba09a3}{set\+Click\+Event\+Function}} (std\+::function$<$ void()$>$ fun)
+\begin{DoxyCompactList}\small\item\em устанавливает функцию, которая будет срабатывать при нажатии на кнопку \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -25,15 +32,61 @@ friend {\bfseries L\+App}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_i_button_a9e3896dd1757d2d954b30eb7da6f0c93}\label{class_l_graphics_1_1_l_i_button_a9e3896dd1757d2d954b30eb7da6f0c93}} 
-void {\bfseries do\+Click\+Event\+Function} ()
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{class_l_graphics_1_1_l_i_button_a9e3896dd1757d2d954b30eb7da6f0c93}{do\+Click\+Event\+Function}} ()
+\begin{DoxyCompactList}\small\item\em Вызывает click\+Function. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_i_button_a5390f7b68aa83a94a8fe685caaaa69fb}\label{class_l_graphics_1_1_l_i_button_a5390f7b68aa83a94a8fe685caaaa69fb}} 
-std\+::function$<$ void()$>$ {\bfseries click\+Function}
-\end{DoxyCompactItemize}
+std\+::function$<$ void()$>$ \mbox{\hyperlink{class_l_graphics_1_1_l_i_button_a5390f7b68aa83a94a8fe685caaaa69fb}{click\+Function}}
+\begin{DoxyCompactList}\small\item\em Функция, срабатывающая при нажатии на кнопку. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_i_button_ade1e5b1b068f339603baafa72a8881c2}\label{class_l_graphics_1_1_l_i_button_ade1e5b1b068f339603baafa72a8881c2}} 
+\index{LGraphics::LIButton@{LGraphics::LIButton}!LIButton@{LIButton}}
+\index{LIButton@{LIButton}!LGraphics::LIButton@{LGraphics::LIButton}}
+\doxysubsubsection{\texorpdfstring{LIButton()}{LIButton()}}
+{\footnotesize\ttfamily L\+Graphics\+::\+L\+I\+Button\+::\+L\+I\+Button (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$}]{app,  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$}]{parent = {\ttfamily nullptr},  }\item[{const char $\ast$}]{path = {\ttfamily nullptr},  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$}]{component = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+Конструктор. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & -\/ указатель на приложение \mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}}. \\
+\hline
+{\em parent} & -\/ родительский виджет (пока не работает). \\
+\hline
+{\em path} & -\/ путь к текстуре. \\
+\hline
+{\em component} & -\/ указатель на \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}}. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_i_button_a60e351804069ce65903a41d35dba09a3}\label{class_l_graphics_1_1_l_i_button_a60e351804069ce65903a41d35dba09a3}} 
+\index{LGraphics::LIButton@{LGraphics::LIButton}!setClickEventFunction@{setClickEventFunction}}
+\index{setClickEventFunction@{setClickEventFunction}!LGraphics::LIButton@{LGraphics::LIButton}}
+\doxysubsubsection{\texorpdfstring{setClickEventFunction()}{setClickEventFunction()}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+I\+Button\+::set\+Click\+Event\+Function (\begin{DoxyParamCaption}\item[{std\+::function$<$ void()$>$}]{fun }\end{DoxyParamCaption})}
+
+
+
+устанавливает функцию, которая будет срабатывать при нажатии на кнопку 
+
+Пример использования\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{auto} obj = \textcolor{keyword}{new} \mbox{\hyperlink{class_l_graphics_1_1_l_i_rectangle}{LGraphics::LIRectangle}}(\&\mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ae6b110b17e833d1f79b55e8d57677c86}{app}}, \textcolor{keyword}{nullptr}, \textcolor{stringliteral}{"image.png"},\&c);}
+\DoxyCodeLine{\textcolor{keyword}{auto} b = \textcolor{keyword}{new} \mbox{\hyperlink{class_l_graphics_1_1_l_i_button}{LGraphics::LIButton}}(\&\mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ae6b110b17e833d1f79b55e8d57677c86}{app}}, \textcolor{keyword}{nullptr}, \textcolor{stringliteral}{"image.png"},\&c);}
+\DoxyCodeLine{b-\/>setClickEventFunction([\&]() \{obj-\/>setHidden(!obj-\/>isHidden()); \}); \textcolor{comment}{// прячет/показывает четырёхугольник.}}
+\end{DoxyCode}
+ 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

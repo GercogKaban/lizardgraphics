@@ -79,55 +79,13 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
+<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top"><a id="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> ()</td></tr>
 <tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Файл, демонстрирующий применение классов LizardGraphics. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae66f6b31b5ad750f1fe042a706a4e3d4">&#9670;&nbsp;</a></span>main()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int main </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Главное приложение Lizard Graphics</p>
-<p>Инициализирует OpenGL, окно и вспомогательные модули LG</p>
-<p>Необходимо объявлять перед использованием любого из классов LGraphics.</p>
-<div class="fragment"><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a> app;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="struct_l_graphics_1_1_l_base_component.html">LGraphics::LBaseComponent</a> c;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="class_l_graphics_1_1_l_symbol.html">LGraphics::LSymbol</a> p;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">auto</span> obj = <span class="keyword">new</span> <a class="code" href="class_l_graphics_1_1_l_i_rectangle.html">LGraphics::LIRectangle</a>(&amp;app, <span class="keyword">nullptr</span>, <span class="stringliteral">&quot;image.png&quot;</span>,&amp;c);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">auto</span> b = <span class="keyword">new</span> <a class="code" href="class_l_graphics_1_1_l_i_button.html">LGraphics::LIButton</a>(&amp;app, <span class="keyword">nullptr</span>, <span class="stringliteral">&quot;image.png&quot;</span>,&amp;c);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    b-&gt;scale({ 0.1f,0.1f,1.0f });</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    b-&gt;move(100,50);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    b-&gt;color(255, 0, 0);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">// show/hide image</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    b-&gt;setClickEventFunction([&amp;]() {obj-&gt;setHidden(!obj-&gt;isHidden()); });</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    app.loop();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
-</div><!-- fragment -->
-</div>
-</div>
-</div><!-- contents -->
-<div class="ttc" id="astruct_l_graphics_1_1_l_base_component_html"><div class="ttname"><a href="struct_l_graphics_1_1_l_base_component.html">LGraphics::LBaseComponent</a></div><div class="ttdef"><b>Definition:</b> LBaseComponent.h:8</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_i_button_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_button.html">LGraphics::LIButton</a></div><div class="ttdef"><b>Definition:</b> LIButton.h:9</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_i_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_rectangle.html">LGraphics::LIRectangle</a></div><div class="ttdef"><b>Definition:</b> LIRectangle.h:8</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_symbol_html"><div class="ttname"><a href="class_l_graphics_1_1_l_symbol.html">LGraphics::LSymbol</a></div><div class="ttdef"><b>Definition:</b> LSymbol.h:10</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdef"><b>Definition:</b> LApp.h:24</div></div>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

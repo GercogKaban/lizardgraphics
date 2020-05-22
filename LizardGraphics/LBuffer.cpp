@@ -10,9 +10,6 @@ namespace LGraphics
 
     LBuffer::LBuffer()
     {
-        //if (textures) delete[] textures;
-        //if (vertices) delete[] vertices;
-        //if (ebo) delete[] ebo;
     }
 
     void LBuffer::genBuffers()

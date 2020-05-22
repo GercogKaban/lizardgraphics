@@ -1,5 +1,14 @@
 \hypertarget{class_l_graphics_1_1_l_rectangle_shape}{}\doxysection{L\+Graphics\+::L\+Rectangle\+Shape Class Reference}
 \label{class_l_graphics_1_1_l_rectangle_shape}\index{LGraphics::LRectangleShape@{LGraphics::LRectangleShape}}
+
+
+Класс четурёхугольной формы.  
+
+
+
+
+{\ttfamily \#include $<$L\+Rectangle\+Shape.\+h$>$}
+
 Inheritance diagram for L\+Graphics\+::L\+Rectangle\+Shape\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -10,18 +19,66 @@ Inheritance diagram for L\+Graphics\+::L\+Rectangle\+Shape\+:\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_rectangle_shape_aee4a0580bc281a7552225999284c8468}\label{class_l_graphics_1_1_l_rectangle_shape_aee4a0580bc281a7552225999284c8468}} 
-bool {\bfseries mouse\+On\+It} () override
-\item 
+bool \mbox{\hyperlink{class_l_graphics_1_1_l_rectangle_shape_aee4a0580bc281a7552225999284c8468}{mouse\+On\+It}} () override
+\begin{DoxyCompactList}\small\item\em Возвращает находится ли мышка на виджете. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_rectangle_shape_a09627c4d1c114e045d32e92f280c3c3f}\label{class_l_graphics_1_1_l_rectangle_shape_a09627c4d1c114e045d32e92f280c3c3f}} 
-void {\bfseries draw} () override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_rectangle_shape_a6ace5773b8bf7d955ca43e1ca6a57f3c}\label{class_l_graphics_1_1_l_rectangle_shape_a6ace5773b8bf7d955ca43e1ca6a57f3c}} 
-{\bfseries L\+Rectangle\+Shape} (\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$app, \mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$parent=nullptr, const char $\ast$path=nullptr, \mbox{\hyperlink{struct_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$=nullptr)
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_rectangle_shape_a1438dc8cc4e80d8085e4b563be0c19ea}\label{class_l_graphics_1_1_l_rectangle_shape_a1438dc8cc4e80d8085e4b563be0c19ea}} 
-{\bfseries L\+Rectangle\+Shape} (\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$app, \mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$parent=nullptr, const unsigned char $\ast$bytes=nullptr, size\+\_\+t size=0, \mbox{\hyperlink{struct_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$=nullptr)
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{class_l_graphics_1_1_l_rectangle_shape_a09627c4d1c114e045d32e92f280c3c3f}{draw}} () override
+\begin{DoxyCompactList}\small\item\em Рисует виджет на сцене. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_l_graphics_1_1_l_rectangle_shape_a13913fb51d776f555b80166544bec5da}{L\+Rectangle\+Shape}} (\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$\mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ae6b110b17e833d1f79b55e8d57677c86}{app}}, \mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$parent=nullptr, const char $\ast$path=nullptr, \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$component=nullptr)
+\begin{DoxyCompactList}\small\item\em Конструктор. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_l_graphics_1_1_l_rectangle_shape_a72dc6fc34d295c55e4afb0dcee0ba9f0}{L\+Rectangle\+Shape}} (\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$\mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ae6b110b17e833d1f79b55e8d57677c86}{app}}, \mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$parent=nullptr, const unsigned char $\ast$bytes=nullptr, size\+\_\+t size=0, \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$component=nullptr)
+\begin{DoxyCompactList}\small\item\em Конструктор. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Класс четурёхугольной формы. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_rectangle_shape_a13913fb51d776f555b80166544bec5da}\label{class_l_graphics_1_1_l_rectangle_shape_a13913fb51d776f555b80166544bec5da}} 
+\index{LGraphics::LRectangleShape@{LGraphics::LRectangleShape}!LRectangleShape@{LRectangleShape}}
+\index{LRectangleShape@{LRectangleShape}!LGraphics::LRectangleShape@{LGraphics::LRectangleShape}}
+\doxysubsubsection{\texorpdfstring{LRectangleShape()}{LRectangleShape()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily L\+Graphics\+::\+L\+Rectangle\+Shape\+::\+L\+Rectangle\+Shape (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$}]{app,  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$}]{parent = {\ttfamily nullptr},  }\item[{const char $\ast$}]{path = {\ttfamily nullptr},  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$}]{component = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+Конструктор. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & -\/ указатель на приложение \mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}}. \\
+\hline
+{\em parent} & -\/ родительский виджет (пока не работает). \\
+\hline
+{\em path} & -\/ путь к текстуре. \\
+\hline
+{\em component} & -\/ указатель на \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}}. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_rectangle_shape_a72dc6fc34d295c55e4afb0dcee0ba9f0}\label{class_l_graphics_1_1_l_rectangle_shape_a72dc6fc34d295c55e4afb0dcee0ba9f0}} 
+\index{LGraphics::LRectangleShape@{LGraphics::LRectangleShape}!LRectangleShape@{LRectangleShape}}
+\index{LRectangleShape@{LRectangleShape}!LGraphics::LRectangleShape@{LGraphics::LRectangleShape}}
+\doxysubsubsection{\texorpdfstring{LRectangleShape()}{LRectangleShape()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily L\+Graphics\+::\+L\+Rectangle\+Shape\+::\+L\+Rectangle\+Shape (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}} $\ast$}]{app,  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_object}{L\+Object}} $\ast$}]{parent = {\ttfamily nullptr},  }\item[{const unsigned char $\ast$}]{bytes = {\ttfamily nullptr},  }\item[{size\+\_\+t}]{size = {\ttfamily 0},  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$}]{component = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+Конструктор. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & -\/ указатель на приложение \mbox{\hyperlink{class_l_graphics_1_1_l_app}{L\+App}}. \\
+\hline
+{\em parent} & -\/ родительский виджет (пока не работает). \\
+\hline
+{\em bytes} & -\/ массив байт (rgba). \\
+\hline
+{\em size} & -\/ размер массива bytes. \\
+\hline
+{\em component} & -\/ указатель на \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}}. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

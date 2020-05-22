@@ -71,31 +71,41 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;LWidgetI.h&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_image.html">    6</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_image.html">LImage</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_widget_i.html">LWidgetI</a></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    {</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        GLuint getTexture()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> texture; }</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keywordtype">void</span> bindTexture(<span class="keyword">const</span> <span class="keywordtype">char</span>* path) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordtype">void</span> bindTexture(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes, <span class="keywordtype">size_t</span> size) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_image.html">LImage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* path);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_image.html">LImage</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes, <span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        GLuint texture;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordtype">void</span> bindTexture(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    };</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;include/GLEW/glew.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;LObject.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">//#include &quot;LWidgetI.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_image.html">   11</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_image.html">LImage</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_object.html">LObject</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        </div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_image.html#a2742b8c770d7cf2aa5d4a02f6d4ef095">   15</a></span>&#160;        GLuint <a class="code" href="class_l_graphics_1_1_l_image.html#a2742b8c770d7cf2aa5d4a02f6d4ef095">getTexture</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_l_graphics_1_1_l_image.html#a4940861be16efca90b3965bd7d565061">texture</a>; } </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508">bindTexture</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* path);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508">bindTexture</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes, <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56">LImage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* path);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56">LImage</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes, <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508">bindTexture</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_image.html#a4940861be16efca90b3965bd7d565061">   53</a></span>&#160;        GLuint <a class="code" href="class_l_graphics_1_1_l_image.html#a4940861be16efca90b3965bd7d565061">texture</a>; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    };</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_graphics_1_1_l_image_html"><div class="ttname"><a href="class_l_graphics_1_1_l_image.html">LGraphics::LImage</a></div><div class="ttdef"><b>Definition:</b> LImage.h:7</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_i_html"><div class="ttname"><a href="class_l_graphics_1_1_l_widget_i.html">LGraphics::LWidgetI</a></div><div class="ttdef"><b>Definition:</b> LWidgetI.h:15</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_image_html_a28ce57b4d9e78f515399ea51258f4f56"><div class="ttname"><a href="class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56">LGraphics::LImage::LImage</a></div><div class="ttdeci">LImage(const char *path)</div><div class="ttdoc">Конструктор.</div><div class="ttdef"><b>Definition:</b> LImage.cpp:9</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_image_html_aaaa2666df7a7e6ec65445cd8e7fc4508"><div class="ttname"><a href="class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508">LGraphics::LImage::bindTexture</a></div><div class="ttdeci">void bindTexture(const char *path)</div><div class="ttdoc">Привязывает текстуру.</div><div class="ttdef"><b>Definition:</b> LImage.cpp:19</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_image_html_a4940861be16efca90b3965bd7d565061"><div class="ttname"><a href="class_l_graphics_1_1_l_image.html#a4940861be16efca90b3965bd7d565061">LGraphics::LImage::texture</a></div><div class="ttdeci">GLuint texture</div><div class="ttdoc">Текстура.</div><div class="ttdef"><b>Definition:</b> LImage.h:53</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_image_html_a2742b8c770d7cf2aa5d4a02f6d4ef095"><div class="ttname"><a href="class_l_graphics_1_1_l_image.html#a2742b8c770d7cf2aa5d4a02f6d4ef095">LGraphics::LImage::getTexture</a></div><div class="ttdeci">GLuint getTexture() const</div><div class="ttdoc">Возвращает текстуру.</div><div class="ttdef"><b>Definition:</b> LImage.h:15</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_image_html"><div class="ttname"><a href="class_l_graphics_1_1_l_image.html">LGraphics::LImage</a></div><div class="ttdoc">Класс изображения, привязывается к виджетом в качестве текстуры.</div><div class="ttdef"><b>Definition:</b> LImage.h:12</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['green_486',['green',['../struct_g_l_f_wgammaramp.html#affccc6f5df47820b6562d709da3a5a3a',1,'GLFWgammaramp']]],
-  ['greenbits_487',['greenBits',['../struct_g_l_f_wvidmode.html#a292fdd281f3485fb3ff102a5bda43faa',1,'GLFWvidmode']]]
+  ['clickfunction_170',['clickFunction',['../class_l_graphics_1_1_l_i_button.html#a5390f7b68aa83a94a8fe685caaaa69fb',1,'LGraphics::LIButton']]],
+  ['color_5f_171',['color_',['../class_l_graphics_1_1_l_shape.html#ac07ebc9051102c4dd1a8a28bdb498537',1,'LGraphics::LShape']]]
 ];

@@ -1,5 +1,14 @@
 \hypertarget{class_l_graphics_1_1_l_shape}{}\doxysection{L\+Graphics\+::L\+Shape Class Reference}
 \label{class_l_graphics_1_1_l_shape}\index{LGraphics::LShape@{LGraphics::LShape}}
+
+
+Переопределяет абстрактный класс \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i}{L\+WidgetI}}.  
+
+
+
+
+{\ttfamily \#include $<$L\+Shape.\+h$>$}
+
 Inheritance diagram for L\+Graphics\+::L\+Shape\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -10,83 +19,300 @@ Inheritance diagram for L\+Graphics\+::L\+Shape\+:\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a793e8527051b1c2e424b957d631747b4}\label{class_l_graphics_1_1_l_shape_a793e8527051b1c2e424b957d631747b4}} 
-void {\bfseries set\+Shader} (\mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$shader) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a1aa51addad75da57a40bedee25e270c2}\label{class_l_graphics_1_1_l_shape_a1aa51addad75da57a40bedee25e270c2}} 
-void {\bfseries color} (const \mbox{\hyperlink{structvect__prototype2}{fvect3}} val) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a555ddfa4f53795f3774194c9ace66239}\label{class_l_graphics_1_1_l_shape_a555ddfa4f53795f3774194c9ace66239}} 
-void {\bfseries color} (const unsigned char r, const unsigned char g, const unsigned char b) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a156985a3eee45f336830bb59eef4a4a0}\label{class_l_graphics_1_1_l_shape_a156985a3eee45f336830bb59eef4a4a0}} 
-void {\bfseries transparency} (const float val) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ad1c0318d07c93450274be6a451a625dd}\label{class_l_graphics_1_1_l_shape_ad1c0318d07c93450274be6a451a625dd}} 
-void {\bfseries scale} (const \mbox{\hyperlink{structvect__prototype2}{fvect3}} val) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_acccf886325328e58da6b8623748e51f1}\label{class_l_graphics_1_1_l_shape_acccf886325328e58da6b8623748e51f1}} 
-void {\bfseries scale} (const float x, const float y, const float z) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_afb42580751530213a54749682dcdbecd}\label{class_l_graphics_1_1_l_shape_afb42580751530213a54749682dcdbecd}} 
-void {\bfseries move} (const \mbox{\hyperlink{structvect__prototype2}{fvect3}} val) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a9a5e07297af96cc3d96da7f8799fecfa}\label{class_l_graphics_1_1_l_shape_a9a5e07297af96cc3d96da7f8799fecfa}} 
-void {\bfseries move} (const float x, const float y, const float z) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a720f0c9a20c057913fbc907d57f53cea}\label{class_l_graphics_1_1_l_shape_a720f0c9a20c057913fbc907d57f53cea}} 
-void {\bfseries move} (const size\+\_\+t x, const size\+\_\+t y) override
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a3a7f08a06e0d541df8c2d373bd524407}\label{class_l_graphics_1_1_l_shape_a3a7f08a06e0d541df8c2d373bd524407}} 
-void {\bfseries move} (const \mbox{\hyperlink{structvect__prototype2}{szvect2}} v) override
-\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a793e8527051b1c2e424b957d631747b4}{set\+Shader}} (\mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$\mbox{\hyperlink{class_l_graphics_1_1_l_shape_a6fb798415e344e66055010768d73f2b3}{shader}}) override
+\begin{DoxyCompactList}\small\item\em Устанавливает шейдер виджету. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a1aa51addad75da57a40bedee25e270c2}{color}} (const \mbox{\hyperlink{structvect__prototype2}{fvect3}} val) override
+\begin{DoxyCompactList}\small\item\em Устанавливает цвет виджету. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a555ddfa4f53795f3774194c9ace66239}{color}} (const unsigned char r, const unsigned char g, const unsigned char b) override
+\begin{DoxyCompactList}\small\item\em Устанавливает цвет виджету. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a156985a3eee45f336830bb59eef4a4a0}{transparency}} (const float val) override
+\begin{DoxyCompactList}\small\item\em Устанавливает цвет виджету. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_ad1c0318d07c93450274be6a451a625dd}{scale}} (const \mbox{\hyperlink{structvect__prototype2}{fvect3}} val) override
+\begin{DoxyCompactList}\small\item\em Устанавливает размеры виджету. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_acccf886325328e58da6b8623748e51f1}{scale}} (const float x, const float y, const float z) override
+\begin{DoxyCompactList}\small\item\em Устанавливает размеры виджету. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_afb42580751530213a54749682dcdbecd}{move}} (const \mbox{\hyperlink{structvect__prototype2}{fvect3}} val) override
+\begin{DoxyCompactList}\small\item\em Перемещает виджет. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a9a5e07297af96cc3d96da7f8799fecfa}{move}} (const float x, const float y, const float z) override
+\begin{DoxyCompactList}\small\item\em Перемещает виджет. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a720f0c9a20c057913fbc907d57f53cea}{move}} (const size\+\_\+t x, const size\+\_\+t y) override
+\begin{DoxyCompactList}\small\item\em Перемещает виджет. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_aa6df70e77934042020930ff33b07d1f4}{move}} (const \mbox{\hyperlink{structvect__prototype2}{szvect2}} val) override
+\begin{DoxyCompactList}\small\item\em Перемещает виджет. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_add711fd0cef590b29ea7c85613bf6b15}\label{class_l_graphics_1_1_l_shape_add711fd0cef590b29ea7c85613bf6b15}} 
-float {\bfseries get\+Transparency} () const override
-\item 
+float \mbox{\hyperlink{class_l_graphics_1_1_l_shape_add711fd0cef590b29ea7c85613bf6b15}{get\+Transparency}} () const override
+\begin{DoxyCompactList}\small\item\em Возвращает прозрачность виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_aed3866748136ef71c8c9ba83de30582e}\label{class_l_graphics_1_1_l_shape_aed3866748136ef71c8c9ba83de30582e}} 
-\mbox{\hyperlink{structvect__prototype2}{fvect3}} {\bfseries get\+Color} () const override
-\item 
+\mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{class_l_graphics_1_1_l_shape_aed3866748136ef71c8c9ba83de30582e}{get\+Color}} () const override
+\begin{DoxyCompactList}\small\item\em Возвращает цвет виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ae9d389d3e1d97da325ff9cbce7a3b955}\label{class_l_graphics_1_1_l_shape_ae9d389d3e1d97da325ff9cbce7a3b955}} 
-\mbox{\hyperlink{structvect__prototype2}{fvect3}} {\bfseries get\+Scale} () const override
-\item 
+\mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{class_l_graphics_1_1_l_shape_ae9d389d3e1d97da325ff9cbce7a3b955}{get\+Scale}} () const override
+\begin{DoxyCompactList}\small\item\em Возвращает размеры виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a5906bdacd0f018c11acb03e37865b4b9}\label{class_l_graphics_1_1_l_shape_a5906bdacd0f018c11acb03e37865b4b9}} 
-\mbox{\hyperlink{structvect__prototype2}{fvect3}} {\bfseries get\+Move} () const override
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a5906bdacd0f018c11acb03e37865b4b9}{get\+Move}} () const override
+\begin{DoxyCompactList}\small\item\em Возвращает расположение виджета. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_af0cb40be507958998fc84fc8525d7241}\label{class_l_graphics_1_1_l_shape_af0cb40be507958998fc84fc8525d7241}} 
-{\bfseries L\+Shape} (const char $\ast$path=nullptr, \mbox{\hyperlink{struct_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$buffer=nullptr)
+\mbox{\hyperlink{class_l_graphics_1_1_l_shape_a28dccb1ccdb7a4cfdaafda839d47653e}{L\+Shape}} (const char $\ast$path=nullptr, \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$component=nullptr)
 \item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_af88363cc0749667be78809c9522468c0}\label{class_l_graphics_1_1_l_shape_af88363cc0749667be78809c9522468c0}} 
-{\bfseries L\+Shape} (const unsigned char $\ast$bytes, size\+\_\+t size, \mbox{\hyperlink{struct_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$buffer=nullptr)
+\mbox{\hyperlink{class_l_graphics_1_1_l_shape_a146333faa64dea3022f86b39ad6a5982}{L\+Shape}} (const unsigned char $\ast$bytes, size\+\_\+t size, \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$component=nullptr)
 \item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_aef0cb28c74f8a1a548b45be9309641ad}\label{class_l_graphics_1_1_l_shape_aef0cb28c74f8a1a548b45be9309641ad}} 
-void {\bfseries init\+Buffer} (\mbox{\hyperlink{class_l_graphics_1_1_l_buffer}{L\+Buffer}} $\ast$buffer)
-\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_aa2209f9d2a5e2ca3a821d51a82a734ae}\label{class_l_graphics_1_1_l_shape_aa2209f9d2a5e2ca3a821d51a82a734ae}} 
+void \mbox{\hyperlink{class_l_graphics_1_1_l_shape_aa2209f9d2a5e2ca3a821d51a82a734ae}{set\+Buffer}} (\mbox{\hyperlink{class_l_graphics_1_1_l_buffer}{L\+Buffer}} $\ast$\mbox{\hyperlink{class_l_graphics_1_1_l_shape_ad1333437d8bafc7188acf7aff744ea19}{buffer}})
+\begin{DoxyCompactList}\small\item\em Устанавливает буфер. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a2efdd547d6ef863e274b76a9ecdf89af}\label{class_l_graphics_1_1_l_shape_a2efdd547d6ef863e274b76a9ecdf89af}} 
-const \mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$ {\bfseries get\+Shader} () const
-\end{DoxyCompactItemize}
+const \mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a2efdd547d6ef863e274b76a9ecdf89af}{get\+Shader}} () const
+\begin{DoxyCompactList}\small\item\em Возвращает шейдер. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a8c57f55d38b16c807eb039363b55ebf4}\label{class_l_graphics_1_1_l_shape_a8c57f55d38b16c807eb039363b55ebf4}} 
-\mbox{\hyperlink{structvect__prototype2}{fvect3}} {\bfseries scale\+\_\+} = \mbox{\hyperlink{structvect__prototype2}{fvect3}}(0.\+5f, 0.\+5f, 1.\+0f)
-\item 
+\mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a8c57f55d38b16c807eb039363b55ebf4}{scale\+\_\+}} = \mbox{\hyperlink{structvect__prototype2}{fvect3}}(0.\+5f, 0.\+5f, 1.\+0f)
+\begin{DoxyCompactList}\small\item\em Вектор размеров виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ae2fe9b66bce9c225acbae8d9e6402eb2}\label{class_l_graphics_1_1_l_shape_ae2fe9b66bce9c225acbae8d9e6402eb2}} 
-\mbox{\hyperlink{structvect__prototype2}{fvect3}} {\bfseries move\+\_\+} = \mbox{\hyperlink{structvect__prototype2}{fvect3}}(0.\+0f, 0.\+0f, 0.\+0f)
-\item 
+\mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{class_l_graphics_1_1_l_shape_ae2fe9b66bce9c225acbae8d9e6402eb2}{move\+\_\+}} = \mbox{\hyperlink{structvect__prototype2}{fvect3}}(0.\+0f, 0.\+0f, 0.\+0f)
+\begin{DoxyCompactList}\small\item\em Вектор расположение виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ac07ebc9051102c4dd1a8a28bdb498537}\label{class_l_graphics_1_1_l_shape_ac07ebc9051102c4dd1a8a28bdb498537}} 
-\mbox{\hyperlink{structvect__prototype2}{fvect3}} {\bfseries color\+\_\+} = \mbox{\hyperlink{structvect__prototype2}{fvect3}}(1.\+0f, 1.\+0f, 1.\+0f)
-\item 
+\mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{class_l_graphics_1_1_l_shape_ac07ebc9051102c4dd1a8a28bdb498537}{color\+\_\+}} = \mbox{\hyperlink{structvect__prototype2}{fvect3}}(1.\+0f, 1.\+0f, 1.\+0f)
+\begin{DoxyCompactList}\small\item\em Вектор цвета виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ab756d3da3d3bc7807bbb2d036214f284}\label{class_l_graphics_1_1_l_shape_ab756d3da3d3bc7807bbb2d036214f284}} 
-float {\bfseries transparency\+\_\+} = 1.\+0f
-\item 
+float \mbox{\hyperlink{class_l_graphics_1_1_l_shape_ab756d3da3d3bc7807bbb2d036214f284}{transparency\+\_\+}} = 1.\+0f
+\begin{DoxyCompactList}\small\item\em Прозрачность виджета. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a6fb798415e344e66055010768d73f2b3}\label{class_l_graphics_1_1_l_shape_a6fb798415e344e66055010768d73f2b3}} 
-\mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$ {\bfseries shader}
-\item 
+\mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_shape_a6fb798415e344e66055010768d73f2b3}{shader}}
+\begin{DoxyCompactList}\small\item\em Шейдер. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ad1333437d8bafc7188acf7aff744ea19}\label{class_l_graphics_1_1_l_shape_ad1333437d8bafc7188acf7aff744ea19}} 
-\mbox{\hyperlink{class_l_graphics_1_1_l_buffer}{L\+Buffer}} $\ast$ {\bfseries buffer}
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{class_l_graphics_1_1_l_buffer}{L\+Buffer}} $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_shape_ad1333437d8bafc7188acf7aff744ea19}{buffer}}
+\begin{DoxyCompactList}\small\item\em Координатный буфер (вершини, индексы, текстурные координаты). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Переопределяет абстрактный класс \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i}{L\+WidgetI}}. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a28dccb1ccdb7a4cfdaafda839d47653e}\label{class_l_graphics_1_1_l_shape_a28dccb1ccdb7a4cfdaafda839d47653e}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!LShape@{LShape}}
+\index{LShape@{LShape}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{LShape()}{LShape()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily L\+Graphics\+::\+L\+Shape\+::\+L\+Shape (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path = {\ttfamily nullptr},  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$}]{component = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & -\/ путь к изображению. \\
+\hline
+{\em component} & -\/ указатель на \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}}. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a146333faa64dea3022f86b39ad6a5982}\label{class_l_graphics_1_1_l_shape_a146333faa64dea3022f86b39ad6a5982}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!LShape@{LShape}}
+\index{LShape@{LShape}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{LShape()}{LShape()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily L\+Graphics\+::\+L\+Shape\+::\+L\+Shape (\begin{DoxyParamCaption}\item[{const unsigned char $\ast$}]{bytes,  }\item[{size\+\_\+t}]{size,  }\item[{\mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}} $\ast$}]{component = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em bytes} & -\/ массив байт (rgba). \\
+\hline
+{\em size} & -\/ размер массива bytes. \\
+\hline
+{\em component} & -\/ указатель на \mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{L\+Base\+Component}}. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a1aa51addad75da57a40bedee25e270c2}\label{class_l_graphics_1_1_l_shape_a1aa51addad75da57a40bedee25e270c2}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!color@{color}}
+\index{color@{color}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{color()}{color()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::color (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structvect__prototype2}{fvect3}}}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Устанавливает цвет виджету. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & -\/ вектор, значения которого находятся в промежутке \mbox{[}0;1\mbox{]}. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_a2ba009b348948ebd53c42ec611bf8d0d}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a555ddfa4f53795f3774194c9ace66239}\label{class_l_graphics_1_1_l_shape_a555ddfa4f53795f3774194c9ace66239}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!color@{color}}
+\index{color@{color}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{color()}{color()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::color (\begin{DoxyParamCaption}\item[{const unsigned char}]{r,  }\item[{const unsigned char}]{g,  }\item[{const unsigned char}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Устанавливает цвет виджету. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & -\/ красный цвет, \mbox{[}0;255\mbox{]}. \\
+\hline
+{\em g} & -\/ зелёный цвет, \mbox{[}0;255\mbox{]}. \\
+\hline
+{\em b} & -\/ синий цвет, \mbox{[}0;255\mbox{]}. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_a16b12ba121e441c912c0e319a8e7a107}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a9a5e07297af96cc3d96da7f8799fecfa}\label{class_l_graphics_1_1_l_shape_a9a5e07297af96cc3d96da7f8799fecfa}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!move@{move}}
+\index{move@{move}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::move (\begin{DoxyParamCaption}\item[{const float}]{x,  }\item[{const float}]{y,  }\item[{const float}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Перемещает виджет. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & -\/ x координата на сцене. \\
+\hline
+{\em y} & -\/ y координата на сцене. \\
+\hline
+{\em z} & -\/ z координата на сцене. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ae6b510f2a14b8a6e93339ca1d3357f01}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_afb42580751530213a54749682dcdbecd}\label{class_l_graphics_1_1_l_shape_afb42580751530213a54749682dcdbecd}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!move@{move}}
+\index{move@{move}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::move (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structvect__prototype2}{fvect3}}}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Перемещает виджет. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & -\/ вектор. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_adcb6c8f8946e3cad6969270ffe9c5f32}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a720f0c9a20c057913fbc907d57f53cea}\label{class_l_graphics_1_1_l_shape_a720f0c9a20c057913fbc907d57f53cea}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!move@{move}}
+\index{move@{move}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::move (\begin{DoxyParamCaption}\item[{const size\+\_\+t}]{x,  }\item[{const size\+\_\+t}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Перемещает виджет. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & -\/ пиксель по x. \\
+\hline
+{\em y} & -\/ пиксель по y. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+x увеличивается вправо, y -\/ вниз. 
+\end{DoxyWarning}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_a6c3154a80f9349ddd8339d667b26f99e}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_aa6df70e77934042020930ff33b07d1f4}\label{class_l_graphics_1_1_l_shape_aa6df70e77934042020930ff33b07d1f4}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!move@{move}}
+\index{move@{move}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::move (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structvect__prototype2}{szvect2}}}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Перемещает виджет. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & -\/ вектор, где x -\/ пиксель по x, y -\/ пиксель по y. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+x увеличивается вправо, y -\/ вниз. 
+\end{DoxyWarning}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_a5f781d9586fd5fe8f12f979b23039b58}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_acccf886325328e58da6b8623748e51f1}\label{class_l_graphics_1_1_l_shape_acccf886325328e58da6b8623748e51f1}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!scale@{scale}}
+\index{scale@{scale}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{scale()}{scale()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::scale (\begin{DoxyParamCaption}\item[{const float}]{x,  }\item[{const float}]{y,  }\item[{const float}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Устанавливает размеры виджету. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & -\/ x координата. \\
+\hline
+{\em y} & -\/ y координата. \\
+\hline
+{\em z} & -\/ z координата. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_ab82255b16bf659c96ead6eaa9ab5b281}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_ad1c0318d07c93450274be6a451a625dd}\label{class_l_graphics_1_1_l_shape_ad1c0318d07c93450274be6a451a625dd}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!scale@{scale}}
+\index{scale@{scale}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{scale()}{scale()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::scale (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structvect__prototype2}{fvect3}}}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Устанавливает размеры виджету. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & -\/ вектор, значения которого находятся в промежутке \mbox{[}0;1\mbox{]}. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_a8cab28eeeee9f8954b09ebb3a465e71b}{L\+Graphics\+::\+L\+WidgetI}}.
+
+\mbox{\Hypertarget{class_l_graphics_1_1_l_shape_a156985a3eee45f336830bb59eef4a4a0}\label{class_l_graphics_1_1_l_shape_a156985a3eee45f336830bb59eef4a4a0}} 
+\index{LGraphics::LShape@{LGraphics::LShape}!transparency@{transparency}}
+\index{transparency@{transparency}!LGraphics::LShape@{LGraphics::LShape}}
+\doxysubsubsection{\texorpdfstring{transparency()}{transparency()}}
+{\footnotesize\ttfamily void L\+Graphics\+::\+L\+Shape\+::transparency (\begin{DoxyParamCaption}\item[{const float}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Устанавливает цвет виджету. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & -\/ float \mbox{[}0;1\mbox{]}. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_l_graphics_1_1_l_widget_i_acb938e8df110ef772370207712bf498e}{L\+Graphics\+::\+L\+WidgetI}}.
+
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

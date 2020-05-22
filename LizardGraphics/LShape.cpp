@@ -59,21 +59,21 @@ namespace LGraphics
         this->shader = shader;
     }
 
-    LShape::LShape(const char* path, LBaseComponent* buffer)
-        :LImage(path)
+    LShape::LShape(const char* path, LBaseComponent* component)
+        :LWidgetI(path)
     {
-        if (!buffer->baseRectangleBuffer) throw std::exception("error, no buffer\n");
-        initBuffer(buffer->baseRectangleBuffer);
+        if (!component->getBuffer()) throw std::exception("error, no buffer\n");
+        this->buffer = component->getBuffer();
     }
 
-    LShape::LShape(const unsigned char* bytes, size_t size, LBaseComponent* buffer)
-        : LImage(bytes, size)
+    LShape::LShape(const unsigned char* bytes, size_t size, LBaseComponent* component)
+        : LWidgetI(bytes, size)
     {
-        if (!buffer->baseRectangleBuffer) throw std::exception("error, no buffer\n");
-        initBuffer(buffer->baseRectangleBuffer);
+        if (!component->getBuffer()) throw std::exception("error, no buffer\n");
+        this->buffer = component->getBuffer();
     }
 
-    void LShape::initBuffer(LBuffer* buffer)
+    void LShape::setBuffer(LBuffer* buffer)
     {
         this->buffer = buffer;
     }

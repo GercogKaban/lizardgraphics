@@ -7,6 +7,6 @@ namespace LGraphics
     LIRectangle::LIRectangle(LApp* app, LObject* parent, const char * path, LBaseComponent* component)
         :LRectangleShape(app, parent, path, component)
     {
-        setShader(component->interfaceShader);
+        setShader(component->getShader());
     }
 }

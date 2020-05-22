@@ -1,0 +1,53 @@
+\hypertarget{class_l_graphics_1_1_l_base_component}{}\doxysection{L\+Graphics\+::L\+Base\+Component Class Reference}
+\label{class_l_graphics_1_1_l_base_component}\index{LGraphics::LBaseComponent@{LGraphics::LBaseComponent}}
+
+
+Компонент необходимы для конструкции виджетов Lizard Graphics.  
+
+
+
+
+{\ttfamily \#include $<$L\+Base\+Component.\+h$>$}
+
+Inheritance diagram for L\+Graphics\+::L\+Base\+Component\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_l_graphics_1_1_l_base_component}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_base_component_abc993c000c26f5a4bc0b4067e4644327}\label{class_l_graphics_1_1_l_base_component_abc993c000c26f5a4bc0b4067e4644327}} 
+\mbox{\hyperlink{class_l_graphics_1_1_l_base_component_abc993c000c26f5a4bc0b4067e4644327}{L\+Base\+Component}} ()
+\begin{DoxyCompactList}\small\item\em Конструктор \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_base_component_a87657af2c092d80d3fd6a17c069d3cbc}\label{class_l_graphics_1_1_l_base_component_a87657af2c092d80d3fd6a17c069d3cbc}} 
+\mbox{\hyperlink{class_l_graphics_1_1_l_base_component_a87657af2c092d80d3fd6a17c069d3cbc}{$\sim$\+L\+Base\+Component}} ()
+\begin{DoxyCompactList}\small\item\em Деструктор \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_base_component_a297037ab88d939d6f79c5e2981c5b515}\label{class_l_graphics_1_1_l_base_component_a297037ab88d939d6f79c5e2981c5b515}} 
+\mbox{\hyperlink{class_l_graphics_1_1_l_buffer}{L\+Buffer}} $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_base_component_a297037ab88d939d6f79c5e2981c5b515}{get\+Buffer}} ()
+\begin{DoxyCompactList}\small\item\em Возвращает указатель на буфер вершин компонента. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_base_component_a7b6b3dcb71e7f24b39a661ccf4dbe57c}\label{class_l_graphics_1_1_l_base_component_a7b6b3dcb71e7f24b39a661ccf4dbe57c}} 
+\mbox{\hyperlink{class_l_shaders_1_1_shader}{L\+Shaders\+::\+Shader}} $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_base_component_a7b6b3dcb71e7f24b39a661ccf4dbe57c}{get\+Shader}} ()
+\begin{DoxyCompactList}\small\item\em Возвращает указатель на шейдер компонента. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Компонент необходимы для конструкции виджетов Lizard Graphics. 
+
+Сожержит в себе шейдер и буфер вершин, необходимых для рисования объектов. Должен передаваться 4-\/м параметром в конструктор L\+Widget.
+
+Пример\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_l_graphics_1_1_l_base_component}{LGraphics::LBaseComponent}} c;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{auto} obj = \textcolor{keyword}{new} \mbox{\hyperlink{class_l_graphics_1_1_l_i_rectangle}{LGraphics::LIRectangle}}(\&app, \textcolor{keyword}{nullptr}, \textcolor{stringliteral}{"image.png"},\&c);}
+\DoxyCodeLine{\textcolor{keyword}{auto} b = \textcolor{keyword}{new} \mbox{\hyperlink{class_l_graphics_1_1_l_i_button}{LGraphics::LIButton}}(\&app, \textcolor{keyword}{nullptr}, \textcolor{stringliteral}{"image.png"},\&c);}
+\end{DoxyCode}
+ \begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]В след. версиях необходимо инкапсулировать его в сами виджеты и не передавать его в конструктор. \end{DoxyRefDesc}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Lizard\+Graphics/L\+Base\+Component.\+h\end{DoxyCompactItemize}

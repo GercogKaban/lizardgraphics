@@ -1,18 +1,5 @@
 var searchData=
 [
-  ['lapp_1',['LApp',['../class_l_graphics_1_1_l_app.html',1,'LGraphics']]],
-  ['lbasecomponent_2',['LBaseComponent',['../struct_l_graphics_1_1_l_base_component.html',1,'LGraphics']]],
-  ['lbuffer_3',['LBuffer',['../class_l_graphics_1_1_l_buffer.html',1,'LGraphics']]],
-  ['lerror_4',['LError',['../class_l_graphics_1_1_l_error.html',1,'LGraphics']]],
-  ['libutton_5',['LIButton',['../class_l_graphics_1_1_l_i_button.html',1,'LGraphics']]],
-  ['limage_6',['LImage',['../class_l_graphics_1_1_l_image.html',1,'LGraphics']]],
-  ['lirectangle_7',['LIRectangle',['../class_l_graphics_1_1_l_i_rectangle.html',1,'LGraphics']]],
-  ['lobject_8',['LObject',['../class_l_graphics_1_1_l_object.html',1,'LGraphics']]],
-  ['lrectanglebuffer_9',['LRectangleBuffer',['../class_l_graphics_1_1_l_rectangle_buffer.html',1,'LGraphics']]],
-  ['lrectangleshape_10',['LRectangleShape',['../class_l_graphics_1_1_l_rectangle_shape.html',1,'LGraphics']]],
-  ['lshape_11',['LShape',['../class_l_graphics_1_1_l_shape.html',1,'LGraphics']]],
-  ['lsymbol_12',['LSymbol',['../class_l_graphics_1_1_l_symbol.html',1,'LGraphics']]],
-  ['ltextbuffer_13',['LTextBuffer',['../class_l_graphics_1_1_l_text_buffer.html',1,'LGraphics']]],
-  ['lwidgeti_14',['LWidgetI',['../class_l_graphics_1_1_l_widget_i.html',1,'LGraphics']]],
-  ['lizardgraphics_15',['lizardgraphics',['../md__r_e_a_d_m_e.html',1,'']]]
+  ['bindtexture_1',['bindTexture',['../class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508',1,'LGraphics::LImage::bindTexture(const char *path)'],['../class_l_graphics_1_1_l_image.html#a8821513c3c6e878dfa5bd0dfb3c63ffb',1,'LGraphics::LImage::bindTexture(const unsigned char *bytes, size_t size)'],['../class_l_graphics_1_1_l_image.html#a637e7308b8dce82a0cb68cab080c5f0c',1,'LGraphics::LImage::bindTexture(unsigned char *bytes, int width, int height)']]],
+  ['buffer_2',['buffer',['../class_l_graphics_1_1_l_shape.html#ad1333437d8bafc7188acf7aff744ea19',1,'LGraphics::LShape']]]
 ];

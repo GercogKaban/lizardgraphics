@@ -28,10 +28,23 @@ namespace LShaders
         "color = texture(ourTexture, TexCoord)*color_;\n"
         "}\n\0";
 
+    /*!
+    @brief Класс шейдера.
+
+    Создаёт вершинный и фрагментный шейдер.
+    */
     class Shader
     {
         GLuint program;
     public:
+
+        /*!
+        @brief Конструктор
+
+        Создаёт вершинный и фрагментный шейдер.
+        @param v_shader - массив вершинного шейдера
+        @param v_shader - массив фрагментного шейдера
+        */
         Shader(const GLchar* v_shader, const GLchar* f_shader)
         {
             GLuint vertex, fragment;
@@ -67,19 +80,20 @@ namespace LShaders
 
         }
 
+        /*!
+        @brief Активирует шейдер (перед отрисовкой).
+        */
         void use() const
         {
             glUseProgram(program);
         }
 
+        /*!
+        @brief Возвращает шейдерную программу.
+        */
         GLuint getShaderProgram() const
         {
             return program;
         }
     };
-
-    //namespace
-    //{
-    //    Shader* interfaceShader;
-    //}
 }

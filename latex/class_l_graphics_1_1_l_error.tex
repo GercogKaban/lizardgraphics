@@ -1,5 +1,14 @@
 \hypertarget{class_l_graphics_1_1_l_error}{}\doxysection{L\+Graphics\+::L\+Error Class Reference}
 \label{class_l_graphics_1_1_l_error}\index{LGraphics::LError@{LGraphics::LError}}
+
+
+Класс вывода ошибок.  
+
+
+
+
+{\ttfamily \#include $<$L\+Error.\+h$>$}
+
 Inheritance diagram for L\+Graphics\+::L\+Error\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -10,35 +19,87 @@ Inheritance diagram for L\+Graphics\+::L\+Error\+:\begin{figure}[H]
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_error_abc7934d318f36bfa176ebf35b6b2840f}\label{class_l_graphics_1_1_l_error_abc7934d318f36bfa176ebf35b6b2840f}} 
-static void {\bfseries init} ()
-\item 
+static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_abc7934d318f36bfa176ebf35b6b2840f}{init}} ()
+\begin{DoxyCompactList}\small\item\em Инициализирует класс \mbox{\hyperlink{class_l_graphics_1_1_l_error}{L\+Error}}. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_error_a0c5d91a42ef37c9619342245b65c657a}\label{class_l_graphics_1_1_l_error_a0c5d91a42ef37c9619342245b65c657a}} 
-static void {\bfseries print\+To\+Console} (const std\+::string \&error)
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_error_a598e5af71074c5070941a213213423cb}\label{class_l_graphics_1_1_l_error_a598e5af71074c5070941a213213423cb}} 
-static void {\bfseries print\+To\+Display} (const std\+::string \&error)
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_error_ad69d303936e4336cdc96a269becd5a11}\label{class_l_graphics_1_1_l_error_ad69d303936e4336cdc96a269becd5a11}} 
-{\footnotesize template$<$typename T $>$ }\\static void {\bfseries write\+Error} (T t)
-\item 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_error_a8af1f7ccf2f0734d0b71704f25adf8eb}\label{class_l_graphics_1_1_l_error_a8af1f7ccf2f0734d0b71704f25adf8eb}} 
-{\footnotesize template$<$typename T , typename... Args$>$ }\\static void {\bfseries write\+Error} (T t, Args... args)
-\item 
+static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_a0c5d91a42ef37c9619342245b65c657a}{print\+To\+Console}} (const std\+::string \&error)
+\begin{DoxyCompactList}\small\item\em Выводит в консоль ошибку. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_a598e5af71074c5070941a213213423cb}{print\+To\+Display}} (const std\+::string \&error)
+\begin{DoxyCompactList}\small\item\em Выводит на экран еще не выведенные ошибки. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_ad69d303936e4336cdc96a269becd5a11}{write\+Error}} (T t)
+\begin{DoxyCompactList}\small\item\em Записывает ошибку в массив ошибок. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T , typename... Args$>$ }\\static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_a8af1f7ccf2f0734d0b71704f25adf8eb}{write\+Error}} (T t, Args... args)
+\begin{DoxyCompactList}\small\item\em Записывает ошибку в массив ошибок. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_error_aa4a33d960a0ddee4a44b4b8fa4c09b1f}\label{class_l_graphics_1_1_l_error_aa4a33d960a0ddee4a44b4b8fa4c09b1f}} 
-static void {\bfseries print\+Errors} ()
-\item 
+static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_aa4a33d960a0ddee4a44b4b8fa4c09b1f}{print\+Errors}} ()
+\begin{DoxyCompactList}\small\item\em Выводит в консоль все не выведенные ошибки. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_error_af4b8a12dc0baaf160aa5be1a384dc783}\label{class_l_graphics_1_1_l_error_af4b8a12dc0baaf160aa5be1a384dc783}} 
-static void {\bfseries release\+Resources} ()
-\end{DoxyCompactItemize}
+static void \mbox{\hyperlink{class_l_graphics_1_1_l_error_af4b8a12dc0baaf160aa5be1a384dc783}{release\+Resources}} ()
+\begin{DoxyCompactList}\small\item\em Освобождает ресурсы. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_error_afbc4f22c4b88952aca0d3e1d22a19e25}\label{class_l_graphics_1_1_l_error_afbc4f22c4b88952aca0d3e1d22a19e25}} 
-static std\+::vector$<$ std\+::string $>$ {\bfseries errors}
-\item 
+static std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{class_l_graphics_1_1_l_error_afbc4f22c4b88952aca0d3e1d22a19e25}{errors}}
+\begin{DoxyCompactList}\small\item\em Коллекция ошибок. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_l_graphics_1_1_l_error_a41b70809dd83bab765d7b82b036a3f25}\label{class_l_graphics_1_1_l_error_a41b70809dd83bab765d7b82b036a3f25}} 
-static size\+\_\+t {\bfseries last\+Error\+Num} = 0
-\end{DoxyCompactItemize}
+static size\+\_\+t \mbox{\hyperlink{class_l_graphics_1_1_l_error_a41b70809dd83bab765d7b82b036a3f25}{last\+Error\+Num}} = 0
+\begin{DoxyCompactList}\small\item\em Индекс последней выведенной ошибки. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Класс вывода ошибок. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_error_a598e5af71074c5070941a213213423cb}\label{class_l_graphics_1_1_l_error_a598e5af71074c5070941a213213423cb}} 
+\index{LGraphics::LError@{LGraphics::LError}!printToDisplay@{printToDisplay}}
+\index{printToDisplay@{printToDisplay}!LGraphics::LError@{LGraphics::LError}}
+\doxysubsubsection{\texorpdfstring{printToDisplay()}{printToDisplay()}}
+{\footnotesize\ttfamily static void L\+Graphics\+::\+L\+Error\+::print\+To\+Display (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{error }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Выводит на экран еще не выведенные ошибки. 
+
+\begin{DoxyWarning}{Warning}
+Функция пока не рабочая, будет сделана после реализации вывода текста на экран. 
+\end{DoxyWarning}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000002}{Todo}}]Добавить определение. \end{DoxyRefDesc}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_error_ad69d303936e4336cdc96a269becd5a11}\label{class_l_graphics_1_1_l_error_ad69d303936e4336cdc96a269becd5a11}} 
+\index{LGraphics::LError@{LGraphics::LError}!writeError@{writeError}}
+\index{writeError@{writeError}!LGraphics::LError@{LGraphics::LError}}
+\doxysubsubsection{\texorpdfstring{writeError()}{writeError()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static void L\+Graphics\+::\+L\+Error\+::write\+Error (\begin{DoxyParamCaption}\item[{T}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Записывает ошибку в массив ошибок. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & -\/ строка (const char$\ast$ или std\+::string) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_l_graphics_1_1_l_error_a8af1f7ccf2f0734d0b71704f25adf8eb}\label{class_l_graphics_1_1_l_error_a8af1f7ccf2f0734d0b71704f25adf8eb}} 
+\index{LGraphics::LError@{LGraphics::LError}!writeError@{writeError}}
+\index{writeError@{writeError}!LGraphics::LError@{LGraphics::LError}}
+\doxysubsubsection{\texorpdfstring{writeError()}{writeError()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename... Args$>$ \\
+static void L\+Graphics\+::\+L\+Error\+::write\+Error (\begin{DoxyParamCaption}\item[{T}]{t,  }\item[{Args...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Записывает ошибку в массив ошибок. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & -\/ строка (const char$\ast$ или std\+::string) \\
+\hline
+{\em args} & -\/ переменное кол-\/во строк (const char$\ast$ или std\+::string) \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

@@ -20,6 +20,13 @@ namespace LGraphics
     {
     }
 
+    /*!
+    @brief Класс приложения Lizard Graphics
+
+    Объект этого класса должен объявляться перед любым из элементом 
+    LGraphics, т.к. LApp инициализурент OpenGL, GLFW окно и некоторые 
+    другие вспомогательные классы
+    */
     class LApp : public LObject
     {
         friend LIRectangle;
@@ -27,12 +34,28 @@ namespace LGraphics
         friend LShape;
 
     public:
+        
         LApp();
         ~LApp(){releaseResources();}
 
+        /*!
+        @brief Бесконечный цикл
+
+        Открывает окно, при этом запуская бесконечный цикл, в котором
+        рисуются все объекты сцены. Выход из цикла осуществляется при закрытии окна.
+        */
         void loop();
+
+        /*!
+        @brief Возвращает размеры окна (в пикселях).
+
+        */
         fvect2 getWindowSize() const { return { (float)width, (float)height }; }
 
+        /*!
+        @brief Возвращает дескриптор GLFW окна.
+
+        */
         GLFWwindow* getWindowHandler() { return window; }
 
     private:
