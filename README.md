@@ -1,5 +1,5 @@
 ﻿# lizardgraphics
-Graphic widget library written on C++ and OpenGL functions.
+C++ Graphic widget library written on OpenGL functions.
 
 Reasons to use:
 
