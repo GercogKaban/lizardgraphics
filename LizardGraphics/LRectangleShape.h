@@ -36,6 +36,8 @@ namespace LGraphics
         @param component - указатель на LBaseComponent.
         */
         LRectangleShape(LApp* app, LObject* parent = nullptr, const unsigned char* bytes = nullptr, size_t size = 0, LBaseComponent* component = nullptr);
+
+        void setLabel(const std::string label) override;
     };
 }
 

@@ -8,6 +8,7 @@ namespace LGraphics
 
     /*!
     @brief Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция.
+    @todo Сделать, чтобы кнопка срабатывала при отжатии.
     */
     class LIButton : public LRectangleShape
     {
@@ -38,7 +39,7 @@ namespace LGraphics
 
     protected:
 
-        std::function<void()> clickFunction; ///< Функция, срабатывающая при нажатии на кнопку.
+        std::function<void()> clickFunction = [](){}; ///< Функция, срабатывающая при нажатии на кнопку.
         void doClickEventFunction(); ///< Вызывает clickFunction.
     };
 }

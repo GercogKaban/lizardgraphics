@@ -55,4 +55,28 @@ namespace LGraphics
         SOIL_free_image_data(bytes);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+
+    void LImage::turnOffTexture()
+    {
+        turnedOn = false;
+    }
+
+    void LImage::turnOnTexture()
+    {
+        turnedOn = true;
+    }
+
+    void LImage::switchTexture(bool show)
+    {
+        turnedOn = show;
+    }
+
+    void LImage::switchTexture()
+    {
+        turnedOn = !turnedOn;
+    }
+    bool LImage::isTextureTurnedOn() const
+    {
+        return turnedOn;
+    }
 }

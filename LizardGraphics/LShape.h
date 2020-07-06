@@ -2,6 +2,7 @@
 
 #include "LBuffer.h"
 #include "LWidgetI.h"
+#include "LText.h"
 
 #include "vectors.h"
 
@@ -86,6 +87,11 @@ namespace LGraphics
         fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         fvect3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
 
+        void turnOffColor() override;
+
+        void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;
+        void setLabel(const std::string label) override;
+
         virtual ~LShape()
         {
             //if (buffer)delete buffer;
@@ -108,14 +114,16 @@ namespace LGraphics
         */
         LShape(const unsigned char* bytes, size_t size, LBaseComponent* component = nullptr);
 
-
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 
         const LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
 
         fvect3 scale_ = fvect3(0.5f, 0.5f, 1.0f);  ///< Вектор размеров виджета.
         fvect3 move_ = fvect3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
-        fvect3 color_ = fvect3(1.0f, 1.0f, 1.0f);  ///< Вектор цвета виджета.
+        fvect3 color_ = fvect3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
+
+        Text label;
+
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 
         LShaders::Shader* shader;                  ///< Шейдер.

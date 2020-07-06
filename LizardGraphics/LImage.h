@@ -27,6 +27,35 @@ namespace LGraphics
         */
         void bindTexture(const unsigned char* bytes, size_t size);
 
+        /*!
+        @brief Выключает текстуру.
+        */
+        void turnOffTexture();
+
+        /*!
+        @brief Включает текстуру.
+        */
+        void turnOnTexture();
+
+        /*!
+        @brief Включает/выключает текстуру.
+        @param show - true - включить текстуру, false - выключить.
+        */
+        void switchTexture(bool show);
+
+        /*!
+        @brief Включает/выключает текстуру.
+
+        Если была включена, то текстура выключается,
+        если была выключена, то текстура включается.
+        */
+        void switchTexture();
+
+        /*!
+        @brief Включена ли текстура
+        */
+        bool isTextureTurnedOn() const;
+
     protected:
 
         /*!
@@ -50,7 +79,9 @@ namespace LGraphics
         */
         void bindTexture(unsigned char* bytes, int width, int height);
 
-        GLuint texture; ///< Текстура.
+        GLuint texture; ///< Дескриптор текстуры.
+
+        bool turnedOn = true; ///< Включена ли текстура.
     };
 }
 

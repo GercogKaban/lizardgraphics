@@ -17,16 +17,42 @@ namespace LShaders
         "gl_Position = vec4(position.x, position.y, position.z, 1.0)*vec4(scale,1.0) + vec4(move,0.0);\n"
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
         "}\0";
+
     const char interface_f[] =
         "#version 330 core\n"
         "in vec2 TexCoord;\n"
         "out vec4 color;\n"
         "uniform sampler2D ourTexture;\n"
         "uniform vec4 color_;\n"
+        "uniform bool sampleTexture;\n"
         "void main()\n"
         "{\n"
-        "color = texture(ourTexture, TexCoord)*color_;\n"
+        "if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n"
+        "else color = color_;\n"
         "}\n\0";
+    
+    const char symbol_v[] =
+        "#version 330 core\n"
+        "layout (location = 0) in vec4 vertex;\n"
+        "out vec2 TexCoords;\n"
+        "uniform mat4 projection;\n"
+        "void main()\n"
+        "{\n"
+        "gl_Position = projection* vec4(vertex.xy, 0.0, 1.0);\n"
+        "TexCoords = vertex.zw;\n"
+        "}\n";
+
+    const char symbol_f[] =
+        "#version 330 core\n"
+        "in vec2 TexCoords;\n"
+        "out vec4 color;\n"
+        "uniform sampler2D text;\n"
+        "uniform vec3 textColor;\n"
+        "void main()\n"
+        "{\n"
+        "vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);\n"
+        "color = vec4(textColor, 1.0) * sampled;\n"
+        "}\n";
 
     /*!
     @brief Класс шейдера.

@@ -19,6 +19,12 @@ namespace LGraphics
         app->addObject(this);
     }
 
+    void LRectangleShape::setLabel(const std::string label)
+    {
+        auto b = ((LRectangleBuffer*)buffer);
+        this->label.text = label;
+    }
+
     bool LRectangleShape::mouseOnIt()
     {
         float x_[4], y_[4];
@@ -33,15 +39,15 @@ namespace LGraphics
 
         double mouse_x, mouse_y;
         glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
-        return isPointInPolygon(buffer->getVerticesCount(), x_, y_, pointOnDisplayToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
+        return isPointInPolygon(buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
     }
 
     void LRectangleShape::draw()
     {
-        //if (dynamic_cast<LSymbol*>(this))
-            //dynamic_cast<LSymbol*>(this)->setTextureBuffer();
         auto shader = getShader();
         shader->use();
+        if (isTextureTurnedOn()) glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
+        else glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 0);
         glBindTexture(GL_TEXTURE_2D, getTexture());
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
@@ -49,5 +55,6 @@ namespace LGraphics
         glBindVertexArray(buffer->getVaoNum());
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        LText::display(label);
     }
 }

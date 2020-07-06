@@ -286,3 +286,7 @@ cmake_install.cmake
 CMakeCache.txt
 LS_Example.sln
 build/
+*.ttf
+*.otf
+test1.jpg
+test.png

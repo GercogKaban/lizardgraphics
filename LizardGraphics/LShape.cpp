@@ -2,7 +2,7 @@
 #include "LBaseComponent.h"
 #include "LApp.h"
 #include "pch.h"
-//#include "additional.h"
+#include "additional.h"
 
 namespace LGraphics
 {
@@ -28,7 +28,7 @@ namespace LGraphics
 
     void LShape::scale(const float x, const float y, const float z)
     {
-        scale_ = { x,y,z };
+        scale({ x,y,z });
     }
 
     void LShape::move(const fvect3 val)
@@ -43,13 +43,13 @@ namespace LGraphics
 
     void LShape::move(const size_t x, const size_t y)
     {
-        auto coords = pointOnDisplayToGlCoords(app->getWindowSize(), { (float)x,(float)y });
+        auto coords = pointOnScreenToGlCoords(app->getWindowSize(), { (float)x,(float)y });
         move_ = { coords.x,coords.y, 0.0f };
     }
 
     void LShape::move(const szvect2 v)
     {
-        auto coords = pointOnDisplayToGlCoords(app->getWindowSize(), fvect2((float)v.x, (float)v.y));
+        auto coords = pointOnScreenToGlCoords(app->getWindowSize(), fvect2((float)v.x, (float)v.y));
         move_ = { coords.x,coords.y, 0.0f };
     }
 
@@ -76,5 +76,19 @@ namespace LGraphics
     void LShape::setBuffer(LBuffer* buffer)
     {
         this->buffer = buffer;
+    }
+
+    void LShape::turnOffColor()
+    {
+        color_ = rgbToFloat(1, 1, 1);
+    }
+
+    void LShape::setLabelColor(unsigned char r, unsigned char g, unsigned char b)
+    {
+        label.color = rgbToFloat(r,g,b);
+    }
+
+    void LShape::setLabel(const std::string label)
+    {
     }
 }

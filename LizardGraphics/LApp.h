@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "LSymbol.h"
+#include "LText.h"
 
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
@@ -35,7 +35,7 @@ namespace LGraphics
 
     public:
         
-        LApp();
+        LApp(size_t width, size_t height);
         ~LApp(){releaseResources();}
 
         /*!
@@ -50,7 +50,7 @@ namespace LGraphics
         @brief Возвращает размеры окна (в пикселях).
 
         */
-        fvect2 getWindowSize() const { return { (float)width, (float)height }; }
+        szvect2 getWindowSize() const { return szvect2(width, height); }
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
@@ -58,13 +58,16 @@ namespace LGraphics
         */
         GLFWwindow* getWindowHandler() { return window; }
 
+        void addText(std::string text, fvect2 pos, float scale, fvect3 color);
+        LWidgetI* getActiveWidget();
+
+        void lockFps(size_t fps) { fpsLock = fps; }
+
     private:
 
         void addObject(LWidgetI* w);
 
-        //std::chrono::time_point<std::chrono::system_clock> start, end;
-        //start = std::chrono::system_clock::now();
-        //end = std::chrono::system_clock::now();
+        LText* textRenderer;
 
         void init(const int width, const int height);
         void initLEngine();
@@ -76,14 +79,18 @@ namespace LGraphics
 
         void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
+        void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        void character_callback(GLFWwindow* window, unsigned int codepoint);
+
         GLFWwindow* window;
         std::vector<LWidgetI*> objects;
+        std::vector<Text> textObjects;
 
         size_t width, height;
 
-        //LBuffer* baseRectangleBuffer;
+        size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
 
-        //static LBuffer* baseRectangleTextBuffer;
+        LWidgetI* activeWidget = nullptr;
     };
 }
 
