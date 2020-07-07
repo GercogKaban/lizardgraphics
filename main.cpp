@@ -1,6 +1,6 @@
 ﻿/*!
 @file
-@brief Файл, демонстрирующий применение классов LizardGraphics
+@brief Файл, демонстрирующий применение классов LizardGraphics TEST
 */
 
 #include "LApp.h"
