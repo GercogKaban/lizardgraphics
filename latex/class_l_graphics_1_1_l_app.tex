@@ -18,12 +18,24 @@ Inheritance diagram for L\+Graphics\+::L\+App\+:\begin{figure}[H]
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_app_a827ab3f1ed93e1fbf8c2cd89f28a37e5}\label{class_l_graphics_1_1_l_app_a827ab3f1ed93e1fbf8c2cd89f28a37e5}} 
+{\bfseries L\+App} (size\+\_\+t width, size\+\_\+t height)
+\item 
 void \mbox{\hyperlink{class_l_graphics_1_1_l_app_a2f0d137044067c3c98d097f5bfe63660}{loop}} ()
 \begin{DoxyCompactList}\small\item\em Бесконечный цикл \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structvect__prototype2}{fvect2}} \mbox{\hyperlink{class_l_graphics_1_1_l_app_a55f505f068c2c384542f5f7d7a1f80c7}{get\+Window\+Size}} () const
+\mbox{\hyperlink{structvect__prototype2}{szvect2}} \mbox{\hyperlink{class_l_graphics_1_1_l_app_acce33d5422267c292fb5d208198a2640}{get\+Window\+Size}} () const
 \begin{DoxyCompactList}\small\item\em Возвращает размеры окна (в пикселях). \end{DoxyCompactList}\item 
 G\+L\+F\+Wwindow $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_app_a66ebf0f08e10ebbe392eca6db846f61e}{get\+Window\+Handler}} ()
-\begin{DoxyCompactList}\small\item\em Возвращает дескриптор G\+L\+FW окна. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Возвращает дескриптор G\+L\+FW окна. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_app_aa600183f258fcaabf64873359366ff95}\label{class_l_graphics_1_1_l_app_aa600183f258fcaabf64873359366ff95}} 
+void {\bfseries add\+Text} (std\+::string text, \mbox{\hyperlink{structvect__prototype2}{fvect2}} pos, float scale, \mbox{\hyperlink{structvect__prototype2}{fvect3}} \mbox{\hyperlink{structvect__prototype2}{color}})
+\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_app_ad7b2a25c4c6cd4f8d621eaa78f747ee2}\label{class_l_graphics_1_1_l_app_ad7b2a25c4c6cd4f8d621eaa78f747ee2}} 
+\mbox{\hyperlink{class_l_graphics_1_1_l_widget_i}{L\+WidgetI}} $\ast$ {\bfseries get\+Active\+Widget} ()
+\item 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_app_a3b24249aefc57f8eb0e37d39ad2235ed}\label{class_l_graphics_1_1_l_app_a3b24249aefc57f8eb0e37d39ad2235ed}} 
+void {\bfseries lock\+Fps} (size\+\_\+t fps)
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +54,11 @@ G\+L\+F\+Wwindow $\ast$ \mbox{\hyperlink{class_l_graphics_1_1_l_app_a66ebf0f08e1
 
 Возвращает дескриптор G\+L\+FW окна. 
 
-\mbox{\Hypertarget{class_l_graphics_1_1_l_app_a55f505f068c2c384542f5f7d7a1f80c7}\label{class_l_graphics_1_1_l_app_a55f505f068c2c384542f5f7d7a1f80c7}} 
+\mbox{\Hypertarget{class_l_graphics_1_1_l_app_acce33d5422267c292fb5d208198a2640}\label{class_l_graphics_1_1_l_app_acce33d5422267c292fb5d208198a2640}} 
 \index{LGraphics::LApp@{LGraphics::LApp}!getWindowSize@{getWindowSize}}
 \index{getWindowSize@{getWindowSize}!LGraphics::LApp@{LGraphics::LApp}}
 \doxysubsubsection{\texorpdfstring{getWindowSize()}{getWindowSize()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structvect__prototype2}{fvect2}} L\+Graphics\+::\+L\+App\+::get\+Window\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structvect__prototype2}{szvect2}} L\+Graphics\+::\+L\+App\+::get\+Window\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
