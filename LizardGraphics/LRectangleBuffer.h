@@ -19,19 +19,10 @@ namespace LGraphics
 
     public:
 
-            /*
-
-            0.5f, 0.5f, 0.0f, 
-            0.5f, -0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
-
-            */
-
-        virtual fvect3 getTopLeftCorner() { return {vertices[9],vertices[10],vertices[11] };}
-        virtual fvect3 getTopRightCorner() { return { vertices[0],vertices[1],vertices[2] }; }
-        virtual fvect3 getBottomLeftCorner() { return { vertices[6],vertices[7],vertices[8] };}
-        virtual fvect3 getBottomRightCorner() { return { vertices[3],vertices[4],vertices[5] };}
+        fvect3 getTopLeftCorner() { return {vertices[9],vertices[10],vertices[11] };}
+        fvect3 getTopRightCorner() { return { vertices[0],vertices[1],vertices[2] }; }
+        fvect3 getBottomLeftCorner() { return { vertices[6],vertices[7],vertices[8] };}
+        fvect3 getBottomRightCorner() { return { vertices[3],vertices[4],vertices[5] };}
     };
 }
 

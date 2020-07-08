@@ -97,11 +97,11 @@ namespace LGraphics
         void setAnimation(std::function<void()> fun);
         void doAnimation();
 
-
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
         virtual fvect3 getColor() const = 0;         ///< Возвращает цвет виджета.
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
-        virtual fvect3 getMove() const = 0;          ///< Возвращает расположение виджета.
+        virtual fvect3 getMove() const = 0;          ///< Возвращает вектор move виджета.
+        virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
 
         virtual void setShader(LShaders::Shader* shader) = 0;  ///< Устанавливает шейдер виджету.
 
@@ -112,8 +112,8 @@ namespace LGraphics
         void setHidden(bool hide) { isHidden_ = hide; }   ///< Установить видимость виджета.
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
 
-        virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0;
-        virtual void setLabel(const std::string label) = 0;
+        virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
+        virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
         virtual ~LWidgetI() {}
 
@@ -123,6 +123,9 @@ namespace LGraphics
         bool isHidden_ = false; ///< Видимость виджета.
         std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
         std::function<void()> animation = std::function<void()>([](){});
+
+        virtual void alignLabel() = 0;
+        virtual void updateLabelPos() = 0;
 
         /*!
         @brief Конструктор.

@@ -38,6 +38,21 @@ namespace LGraphics
         LRectangleShape(LApp* app, LObject* parent = nullptr, const unsigned char* bytes = nullptr, size_t size = 0, LBaseComponent* component = nullptr);
 
         void setLabel(const std::string label) override;
+        void alignLabel() override;
+
+        float calculateWidgetLength();
+
+        fvect3 getCenter() const override;
+
+        fvect3 getTopLeftCorner() const;
+        fvect3 getTopRightCorner() const;
+        fvect3 getBottomLeftCorner() const;
+        fvect3 getBottomRightCorner() const;
+
+    protected:
+
+        void updateLabelPos() override;
+        //void updateLabelPos();
     };
 }
 

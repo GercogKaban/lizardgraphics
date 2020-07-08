@@ -142,6 +142,16 @@ namespace LGraphics
 
     void LText::display(Text text)
     {
-        display(text.text, text.pos.x, text.pos.y, text.scale, text.color);
+        fvect2 pos = glCoordsToScreenCoords(app->getWindowSize(), { text.pos.x,text.pos.y});
+        display(text.text, pos.x, app->getWindowSize().y - pos.y, text.scale, text.color);
+    }
+
+    float LText::getTextLength(Text text)
+    {
+        float res = 0.0f;
+        for (auto s : text.text)
+            res += (float)characters[s].advance / 64.0f;
+        res-= (float)characters[text.text.back()].advance / 64.0f;
+        return res;
     }
 }

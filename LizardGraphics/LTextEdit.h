@@ -11,6 +11,7 @@ namespace LGraphics
         LTextEdit(LApp* app, const std::string = "", LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
         void draw() override;
         void scale(const fvect3 val) override;
+        void move(const size_t x, const size_t y) override;
 
         std::vector<Text> getText() const;
 
@@ -34,6 +35,8 @@ namespace LGraphics
         bool outOfBordersY(float y);
 
         void pushNewString();
+
+        void setLabel(const std::string) override {}
 
         float leftBorder = 0.038f;
         float rightBorder = 0.03f;

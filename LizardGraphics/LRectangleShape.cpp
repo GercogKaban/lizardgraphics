@@ -21,8 +21,62 @@ namespace LGraphics
 
     void LRectangleShape::setLabel(const std::string label)
     {
-        auto b = ((LRectangleBuffer*)buffer);
+        fvect2 coords = { getBottomLeftCorner().x , getBottomLeftCorner().y};
+        this->label.pos = { coords.x + labelTextStartPosition, coords.y};
         this->label.text = label;
+        alignLabel();
+    }
+
+    void LRectangleShape::alignLabel()
+    {
+        if (label.text.empty())
+            return;
+        float widgetLength = calculateWidgetLength();
+        float textLength = LText::getTextLength(label);
+
+        if (textLength > widgetLength)
+            scaleWithoutAlign({ ((getScale().x * textLength)/widgetLength) + 0.05f ,getScale().y,getScale().z });
+        widgetLength = calculateWidgetLength();
+        labelTextStartPosition = widgetLength >= textLength ? (widgetLength - textLength) / 2.0f : 0.0f;
+        updateLabelPos();
+    }
+
+    float LRectangleShape::calculateWidgetLength()
+    {
+        float topLeftCornerScreenPos = xGlCoordToScreenCoord(app->getWindowSize(), getTopLeftCorner().x);
+        float topRightCornerScreenPos = xGlCoordToScreenCoord(app->getWindowSize(), getTopRightCorner().x);
+        return topRightCornerScreenPos - topLeftCornerScreenPos;
+    }
+
+    fvect3 LRectangleShape::getCenter() const
+    {
+        return ((((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_) + (((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_)) /2;
+    }
+
+    fvect3 LRectangleShape::getTopLeftCorner() const
+    {
+        return ((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_;
+    }
+
+    fvect3 LRectangleShape::getTopRightCorner() const
+    {
+        return ((LRectangleBuffer*)buffer)->getTopRightCorner() * scale_ + move_;
+    }
+
+    fvect3 LRectangleShape::getBottomLeftCorner() const
+    {
+        return ((LRectangleBuffer*)buffer)->getBottomLeftCorner() * scale_ + move_;
+    }
+
+    fvect3 LRectangleShape::getBottomRightCorner() const
+    {
+        return ((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_;
+    }
+
+    void LRectangleShape::updateLabelPos()
+    {
+        fvect2 coords = { getBottomLeftCorner().x, getBottomLeftCorner().y };
+        this->label.pos = { coords.x + labelTextStartPosition/app->getWindowSize().x, coords.y };
     }
 
     bool LRectangleShape::mouseOnIt()

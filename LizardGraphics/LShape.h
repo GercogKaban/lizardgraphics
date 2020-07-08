@@ -53,6 +53,8 @@ namespace LGraphics
         */
         void scale(const float x, const float y, const float z) override;
 
+        void scaleWithoutAlign(const fvect3 val);
+
         /*!
         @brief Перемещает виджет.
         @param val - вектор.
@@ -91,7 +93,7 @@ namespace LGraphics
 
         void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;
         void setLabel(const std::string label) override;
-
+           
         virtual ~LShape()
         {
             //if (buffer)delete buffer;
@@ -123,6 +125,8 @@ namespace LGraphics
         fvect3 color_ = fvect3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
 
         Text label;
+        float labelTextStartPosition = 0.0f;
+        //void updateLabelPos() override;
 
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 

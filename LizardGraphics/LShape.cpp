@@ -23,12 +23,19 @@ namespace LGraphics
 
     void LShape::scale(const fvect3 val)
     {
+        alignLabel();
         scale_ = val;
     }
 
     void LShape::scale(const float x, const float y, const float z)
     {
+        alignLabel();
         scale({ x,y,z });
+    }
+
+    void LShape::scaleWithoutAlign(const fvect3 val)
+    {
+        scale_ = val;
     }
 
     void LShape::move(const fvect3 val)
@@ -91,4 +98,9 @@ namespace LGraphics
     void LShape::setLabel(const std::string label)
     {
     }
+
+    //void LShape::updateLabelPos()
+    //{
+    //    this->label.pos = { coords.x + labelTextStartPosition, coords.y };
+    //}
 }

@@ -30,7 +30,7 @@ void LGraphics::LTextEdit::draw()
     LRectangleShape::draw();
     for (auto str = begin; str < end; str++)
     {
-        auto toScreen = LGraphics::glCoordsToScreenCoords(app->getWindowSize(), { str->pos.x, str->pos.y + hiddenStrings*strIndent });
+        auto toScreen = glCoordsToScreenCoords(app->getWindowSize(), { str->pos.x, str->pos.y + hiddenStrings*strIndent });
         toScreen.y = app->getWindowSize().y - toScreen.y;
         LText::display(str->text, toScreen.x, toScreen.y, str->scale, str->color);
     }
@@ -39,6 +39,13 @@ void LGraphics::LTextEdit::draw()
 void LGraphics::LTextEdit::scale(const fvect3 val)
 {
     scale_ = val;
+    alignText();
+}
+
+void LGraphics::LTextEdit::move(const size_t x, const size_t y)
+{
+    auto coords = pointOnScreenToGlCoords(app->getWindowSize(), { (float)x,(float)y });
+    move_ = { coords.x,coords.y, 0.0f };
     alignText();
 }
 
@@ -98,12 +105,7 @@ void LGraphics::LTextEdit::removeLastSymbol()
 
 void LGraphics::LTextEdit::calculateMaxLength()
 {
-    auto rectBuffer = (LRectangleBuffer*)buffer;
-    fvect3 topLeftCorner = rectBuffer->getTopLeftCorner()*scale_.x;
-    fvect3 topRightCorner = rectBuffer->getTopRightCorner()*scale_.x;
-    float topLeftCornerScreenPos = xGlCoordToScreenCoord(app->getWindowSize(), topLeftCorner.x);
-    float topRightCornerScreenPos = xGlCoordToScreenCoord(app->getWindowSize(), topRightCorner.x);
-    maxLength = topRightCornerScreenPos - topLeftCornerScreenPos - rightBorder * app->getWindowSize().x;
+    maxLength = calculateWidgetLength() - rightBorder;
 }
 
 void LGraphics::LTextEdit::yAlign()
@@ -124,7 +126,7 @@ void LGraphics::LTextEdit::alignText()
 
 bool LGraphics::LTextEdit::outOfBordersY(float y)
 {
-    return y < ((LRectangleBuffer*)buffer)->getBottomLeftCorner().y*scale_.y;
+    return y < getBottomLeftCorner().y;
 }
 
 void LGraphics::LTextEdit::pushNewString()
@@ -134,10 +136,9 @@ void LGraphics::LTextEdit::pushNewString()
         temp.pos = {text.back().pos.x, text.back().pos.y - strIndent};
     else
     {
-        auto rectBuffer = (LRectangleBuffer*)buffer;
-        fvect3 topLeftCorner = rectBuffer->getTopLeftCorner()*scale_;
-        fvect3 topRightCorner = rectBuffer->getTopRightCorner()*scale_;
-        temp.pos = { topLeftCorner.x + leftBorder*scale_.x, topLeftCorner.y - topBorder };
+        fvect3 topLeftCorner = getTopLeftCorner();
+        fvect3 topRightCorner = getTopRightCorner();
+        temp.pos = { topLeftCorner.x + leftBorder, topLeftCorner.y - topBorder };
     }
 
     text.push_back(temp);

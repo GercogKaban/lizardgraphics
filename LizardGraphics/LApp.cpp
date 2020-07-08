@@ -22,7 +22,6 @@ namespace LGraphics
         {
             fps++;
             glfwPollEvents();
-            //checkEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
             for (auto& o : objects)
@@ -30,7 +29,7 @@ namespace LGraphics
                     o->draw();
             for (auto& t : textObjects)
                 LText::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
-            LText::display(std::to_string(prevFps), 50, getWindowSize().y - 100, 1.5f, { 1.0f,0.0f,0.0f });
+            LText::display(std::to_string(prevFps), 50, getWindowSize().y - 50, 1.5f, { 1.0f,0.0f,0.0f });
             glfwSwapBuffers(window);
         }
         t.stop();
@@ -62,7 +61,7 @@ namespace LGraphics
     void LApp::initLEngine()
     {
         LError::init();
-        addText("Lizard Graphics v. 0.1", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 0.3,0.7,0.9 });
+        addText("Lizard Graphics v. 0.1", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 0,1,0 });
     }
 
     void LApp::initOpenGl()

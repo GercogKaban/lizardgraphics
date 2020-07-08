@@ -55,5 +55,6 @@ namespace LGraphics
         static LShaders::Shader* getShader() { return shader; }
         static void display(const std::string text, float x, float y, const float scale, const fvect3 color);
         static void display(Text text);
+        static float getTextLength(Text text);
     };
 }

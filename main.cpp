@@ -1,6 +1,6 @@
 ﻿/*!
 @file
-@brief Файл, демонстрирующий применение классов LizardGraphics TEST
+@brief Файл, демонстрирующий применение классов LizardGraphicss
 */
 
 #include "LApp.h"
@@ -22,20 +22,30 @@ int main()
     auto d = new LIButton(&app, nullptr, "image.png", &c);
 
     auto textEdit = new LTextEdit(&app, "Hello, world!", nullptr, "test.png", &c);
+    textEdit->turnOffTexture();
+    textEdit->color(255, 255, 255);
     textEdit->move(app.getWindowSize().x/2, app.getWindowSize().y / 2);
     textEdit->scale({ 1.5f,0.5f,1.0f });
     textEdit->transparency(0.85f);
+    textEdit->move(700, 500);
 
     e->scale({ 0.1f,0.1f,1.0f });
     e->move(100,50);
     e->color(255, 0, 0);
 
     d->scale({ 0.1f,0.1f,1.0f });
-    d->move(250, 50);
-    d->color(0, 0, 255);
+    d->move(700, 50);
+    d->color(0, 0, 0);
+    d->setLabel("aue");
+    d->setLabelColor(255, 255, 255);
+    d->turnOffTexture();
 
     e->setClickEventFunction([&]() {textEdit->scale({ 1.5f,0.5f,1.0f }); });
     d->setClickEventFunction([&]() {textEdit->scale({ 0.5f,0.5f,1.0f }); });
+
+    auto back = new LGraphics::LIRectangle(&app, nullptr, "brge_back.png", &c);
+    back->scale(2.0f, 2.0f, 1.0f);
+    back->turnOffColor();
 
     app.loop();
     return 0;
