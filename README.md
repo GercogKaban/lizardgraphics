@@ -31,3 +31,6 @@ cmake -G "Visual Studio 16 2019" -A x64 -S path
 
 # Building for Linux
 Coming soon...
+
+# Documentation
+Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
