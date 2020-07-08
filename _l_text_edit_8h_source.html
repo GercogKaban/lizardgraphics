@@ -83,44 +83,47 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_text_edit.html">LTextEdit</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget_i.html#ae6b110b17e833d1f79b55e8d57677c86">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <a class="code" href="class_l_graphics_1_1_l_object.html">LObject</a>* parent = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <a class="code" href="class_l_graphics_1_1_l_base_component.html">LBaseComponent</a>* component = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_text_edit.html#a0121025134cd0faebd836674481da24d">draw</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_text_edit.html#a150c42e7a90b7df0c89aca8a619bcfd8">scale</a>(<span class="keyword">const</span> <a class="code" href="structvect__prototype2.html">fvect3</a> val) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        std::vector&lt;Text&gt; getText() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">void</span> setText(<span class="keyword">const</span> std::string&amp; text);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> std::string text);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        std::vector&lt;Text&gt;::const_iterator begin;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        std::vector&lt;Text&gt;::const_iterator end;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">void</span> initWidget();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">void</span> calculateMaxLength();</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">void</span> yAlign();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">void</span> alignText();</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">bool</span> outOfBordersY(<span class="keywordtype">float</span> y);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordtype">void</span> pushNewString();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordtype">float</span> leftBorder = 0.038f;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordtype">float</span> rightBorder = 0.03f;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">float</span> topBorder = 0.085f;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">float</span> bottomBorder = 0;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">float</span> strIndent = 0.1f;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        std::vector&lt;Text&gt; text;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_text_edit.html#a533b3b9db7b65c13a7b0e922f03452da">move</a>(<span class="keyword">const</span> <span class="keywordtype">size_t</span> x, <span class="keyword">const</span> <span class="keywordtype">size_t</span> y) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        std::vector&lt;Text&gt; getText() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> setText(<span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> std::string text);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        std::vector&lt;Text&gt;::const_iterator begin;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        std::vector&lt;Text&gt;::const_iterator end;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">void</span> initWidget();</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">void</span> calculateMaxLength();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">void</span> yAlign();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">void</span> alignText();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordtype">bool</span> outOfBordersY(<span class="keywordtype">float</span> y);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">void</span> pushNewString();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordtype">void</span> setLabel(<span class="keyword">const</span> std::string)<span class="keyword"> override </span>{}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">float</span> leftBorder = 0.038f;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">float</span> rightBorder = 0.03f;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">float</span> topBorder = 0.085f;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">float</span> bottomBorder = 0;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">size_t</span> hiddenStrings = 0;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">size_t</span> maxStrings = 0;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">float</span> maxLength = 0.0f;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    };</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">float</span> strIndent = 0.1f;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        std::vector&lt;Text&gt; text;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordtype">size_t</span> hiddenStrings = 0;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordtype">size_t</span> maxStrings = 0;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">float</span> maxLength = 0.0f;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    };</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html_a150c42e7a90b7df0c89aca8a619bcfd8"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html#a150c42e7a90b7df0c89aca8a619bcfd8">LGraphics::LTextEdit::scale</a></div><div class="ttdeci">void scale(const fvect3 val) override</div><div class="ttdoc">Устанавливает размеры виджету.</div><div class="ttdef"><b>Definition:</b> LTextEdit.cpp:39</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_base_component_html"><div class="ttname"><a href="class_l_graphics_1_1_l_base_component.html">LGraphics::LBaseComponent</a></div><div class="ttdoc">Компонент необходимы для конструкции виджетов Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LBaseComponent.h:24</div></div>
@@ -129,6 +132,7 @@ $(function() {
 <div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html">LGraphics::LTextEdit</a></div><div class="ttdef"><b>Definition:</b> LTextEdit.h:8</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:31</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html_a533b3b9db7b65c13a7b0e922f03452da"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html#a533b3b9db7b65c13a7b0e922f03452da">LGraphics::LTextEdit::move</a></div><div class="ttdeci">void move(const size_t x, const size_t y) override</div><div class="ttdoc">Перемещает виджет.</div><div class="ttdef"><b>Definition:</b> LTextEdit.cpp:45</div></div>
 <div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2&lt; float, 3, vect3_data&lt; float &gt; &gt;</a></div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html_a0121025134cd0faebd836674481da24d"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html#a0121025134cd0faebd836674481da24d">LGraphics::LTextEdit::draw</a></div><div class="ttdeci">void draw() override</div><div class="ttdoc">Рисует виджет на сцене.</div><div class="ttdef"><b>Definition:</b> LTextEdit.cpp:26</div></div>
 <!-- start footer part -->
