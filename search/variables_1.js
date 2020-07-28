@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buffer_200',['buffer',['../class_l_graphics_1_1_l_shape.html#ad1333437d8bafc7188acf7aff744ea19',1,'LGraphics::LShape']]]
+  ['buffer_212',['buffer',['../class_l_graphics_1_1_l_shape.html#ad1333437d8bafc7188acf7aff744ea19',1,'LGraphics::LShape']]]
 ];

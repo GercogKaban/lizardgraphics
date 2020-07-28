@@ -71,73 +71,82 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//#include &quot;LRectangleShape.h&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;array&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;ft2build.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;include/GLEW/glew.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;LTimer.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;vectors.h&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include FT_FREETYPE_H </span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>LShaders</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">class </span>Shader;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">class </span>LTextEdit;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">class </span>LApp;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="struct_l_graphics_1_1_text.html">   23</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_l_graphics_1_1_text.html">Text</a></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        std::string text; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="structvect__prototype2.html">fvect2</a> pos = { 0.0f,0.0f };</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">float</span> scale = 1.0f;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">float</span> length = 0.0f;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="structvect__prototype2.html">fvect3</a> <a class="code" href="structvect__prototype2.html">color</a> = {0.0f,0.0f,0.0f};</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    };</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_text.html">   32</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_text.html">LText</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {   </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_text_edit.html">LTextEdit</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="struct_l_graphics_1_1_l_text_1_1_character.html">   36</a></span>&#160;        <span class="keyword">struct </span><a class="code" href="struct_l_graphics_1_1_l_text_1_1_character.html">Character</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> textureID;  <span class="comment">// ID handle of the glyph texture</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <a class="code" href="structvect__prototype2.html">ivect2</a> size;            <span class="comment">// Size of glyph</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <a class="code" href="structvect__prototype2.html">ivect2</a> bearing;         <span class="comment">// Offset from baseline to left/top of glyph</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> advance;    <span class="comment">// Offset to advance to next glyph</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        };</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;LIButton.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;LLine.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;LScroller.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_text.html">    8</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_text.html">LText</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_i_button.html">LIButton</a></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_vertical_scroller.html">LVerticalScroller</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_horizontal_scroller.html">LHorizontalScroller</a>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget_i.html#ae6b110b17e833d1f79b55e8d57677c86">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <a class="code" href="class_l_graphics_1_1_l_object.html">LObject</a>* parent = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <a class="code" href="class_l_graphics_1_1_l_base_component.html">LBaseComponent</a>* component = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_text.html#af1cb0249d4a7cb83e6c77f6ff634007b">draw</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_text.html#aa54235be9fab2b262287dc53ed9b2aaa">scale</a>(<span class="keyword">const</span> <a class="code" href="structvect__prototype2.html">fvect3</a> val) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_text.html#a21668684bbdf39f05192b99d912456bc">move</a>(<span class="keyword">const</span> <span class="keywordtype">size_t</span> x, <span class="keyword">const</span> <span class="keywordtype">size_t</span> y) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        std::vector&lt;Text&gt; getText() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordtype">void</span> setText(<span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> std::string text);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol();</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">void</span> setVerticalScroller(<a class="code" href="class_l_graphics_1_1_l_vertical_scroller.html">LVerticalScroller</a>* scroller);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">void</span> setHorizontalScroller(<a class="code" href="class_l_graphics_1_1_l_horizontal_scroller.html">LHorizontalScroller</a>* scroller);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_vertical_scroller.html">LVerticalScroller</a>* vertScroller = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_horizontal_scroller.html">LHorizontalScroller</a>* horizScroller = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        std::vector&lt;Text&gt;::const_iterator begin;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        std::vector&lt;Text&gt;::const_iterator end;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordtype">void</span> initWidget();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">void</span> calculateMaxLength();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">void</span> yAlign();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">void</span> alignText();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">void</span> showFrom(<span class="keywordtype">int</span> position);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a>* shader;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">static</span> <a class="code" href="struct_l_graphics_1_1_l_text_1_1_character.html">Character</a> characters[CHAR_MAX + 1];</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> VAO, VBO;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a>* app;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* app);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a>* getShader() { <span class="keywordflow">return</span> shader; }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> display(<span class="keyword">const</span> std::string text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keyword">const</span> <span class="keywordtype">float</span> scale, <span class="keyword">const</span> <a class="code" href="structvect__prototype2.html">fvect3</a> <a class="code" href="structvect__prototype2.html">color</a>);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> display(<a class="code" href="struct_l_graphics_1_1_text.html">Text</a> text);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">float</span> getTextLength(<a class="code" href="struct_l_graphics_1_1_text.html">Text</a> text);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    };</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">bool</span> outOfBordersY(<span class="keywordtype">float</span> y);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">void</span> pushNewString();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordtype">void</span> setLabel(<span class="keyword">const</span> std::string)<span class="keyword"> override </span>{}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordtype">float</span> leftBorder = 0.038f;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">float</span> rightBorder = 0.03f;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">float</span> topBorder = 0.085f;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">float</span> bottomBorder = 0;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">float</span> strIndent = 0.1f;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::vector&lt;Text&gt; text;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">size_t</span> hiddenStrings = 0;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">float</span> maxLength = 0.0f;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    };</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_shaders_1_1_shader_html"><div class="ttname"><a href="class_l_shaders_1_1_shader.html">LShaders::Shader</a></div><div class="ttdoc">Класс шейдера.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:63</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html">LGraphics::LTextEdit</a></div><div class="ttdef"><b>Definition:</b> LTextEdit.h:8</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_vertical_scroller_html"><div class="ttname"><a href="class_l_graphics_1_1_l_vertical_scroller.html">LGraphics::LVerticalScroller</a></div><div class="ttdef"><b>Definition:</b> LScroller.h:33</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_text_html_aa54235be9fab2b262287dc53ed9b2aaa"><div class="ttname"><a href="class_l_graphics_1_1_l_text.html#aa54235be9fab2b262287dc53ed9b2aaa">LGraphics::LText::scale</a></div><div class="ttdeci">void scale(const fvect3 val) override</div><div class="ttdoc">Устанавливает размеры виджету.</div><div class="ttdef"><b>Definition:</b> LText.cpp:44</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_horizontal_scroller_html"><div class="ttname"><a href="class_l_graphics_1_1_l_horizontal_scroller.html">LGraphics::LHorizontalScroller</a></div><div class="ttdef"><b>Definition:</b> LScroller.h:48</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_base_component_html"><div class="ttname"><a href="class_l_graphics_1_1_l_base_component.html">LGraphics::LBaseComponent</a></div><div class="ttdoc">Компонент необходимы для конструкции виджетов Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LBaseComponent.h:24</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_text_html_af1cb0249d4a7cb83e6c77f6ff634007b"><div class="ttname"><a href="class_l_graphics_1_1_l_text.html#af1cb0249d4a7cb83e6c77f6ff634007b">LGraphics::LText::draw</a></div><div class="ttdeci">void draw() override</div><div class="ttdoc">Рисует виджет на сцене.</div><div class="ttdef"><b>Definition:</b> LText.cpp:29</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_i_button_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_button.html">LGraphics::LIButton</a></div><div class="ttdoc">Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция.</div><div class="ttdef"><b>Definition:</b> LIButton.h:14</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_i_html_ae6b110b17e833d1f79b55e8d57677c86"><div class="ttname"><a href="class_l_graphics_1_1_l_widget_i.html#ae6b110b17e833d1f79b55e8d57677c86">LGraphics::LWidgetI::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidgetI.h:124</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_text_html_a21668684bbdf39f05192b99d912456bc"><div class="ttname"><a href="class_l_graphics_1_1_l_text.html#a21668684bbdf39f05192b99d912456bc">LGraphics::LText::move</a></div><div class="ttdeci">void move(const size_t x, const size_t y) override</div><div class="ttdoc">Перемещает виджет.</div><div class="ttdef"><b>Definition:</b> LText.cpp:50</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:31</div></div>
-<div class="ttc" id="astruct_l_graphics_1_1_l_text_1_1_character_html"><div class="ttname"><a href="struct_l_graphics_1_1_l_text_1_1_character.html">LGraphics::LText::Character</a></div><div class="ttdef"><b>Definition:</b> LText.h:37</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_text_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text.html">LGraphics::LText</a></div><div class="ttdef"><b>Definition:</b> LText.h:33</div></div>
-<div class="ttc" id="astruct_l_graphics_1_1_text_html"><div class="ttname"><a href="struct_l_graphics_1_1_text.html">LGraphics::Text</a></div><div class="ttdef"><b>Definition:</b> LText.h:24</div></div>
-<div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2&lt; float, 2, vect2_data&lt; float &gt; &gt;</a></div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_text_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text.html">LGraphics::LText</a></div><div class="ttdef"><b>Definition:</b> LText.h:9</div></div>
+<div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2&lt; float, 3, vect3_data&lt; float &gt; &gt;</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
