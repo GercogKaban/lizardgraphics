@@ -5,6 +5,7 @@
 #include <future>
 
 #include "vectors.h"
+
 class LTimer
 {
 public:
@@ -15,7 +16,7 @@ public:
     void stop();
     void restart();
 
-    void setInterval(std::chrono::milliseconds interval) { this->interval = interval; }
+    void setInterval(std::chrono::milliseconds interval_) { this->interval = interval_; }
 
 protected:
 

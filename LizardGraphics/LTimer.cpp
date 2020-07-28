@@ -1,7 +1,7 @@
 #include "LTimer.h"
 #include <thread>
 #include <iostream>
-#include "LText.h"
+#include "LLine.h"
 
 LTimer::LTimer(std::function<void()> func, std::chrono::milliseconds interval,bool start_)
 {

@@ -32,7 +32,7 @@ namespace LGraphics
         if (label.text.empty())
             return;
         float widgetLength = calculateWidgetLength();
-        float textLength = LText::getTextLength(label);
+        float textLength = LLine::getTextLength(label);
 
         if (textLength > widgetLength)
             scaleWithoutAlign({ ((getScale().x * textLength)/widgetLength) + 0.05f ,getScale().y,getScale().z });
@@ -43,9 +43,7 @@ namespace LGraphics
 
     float LRectangleShape::calculateWidgetLength()
     {
-        float topLeftCornerScreenPos = xGlCoordToScreenCoord(app->getWindowSize(), getTopLeftCorner().x);
-        float topRightCornerScreenPos = xGlCoordToScreenCoord(app->getWindowSize(), getTopRightCorner().x);
-        return topRightCornerScreenPos - topLeftCornerScreenPos;
+        return xGlCoordToScreenCoord(app->getWindowSize(), getTopRightCorner().x) - xGlCoordToScreenCoord(app->getWindowSize(), getTopLeftCorner().x);
     }
 
     fvect3 LRectangleShape::getCenter() const
@@ -82,18 +80,18 @@ namespace LGraphics
     bool LRectangleShape::mouseOnIt()
     {
         float x_[4], y_[4];
-        auto vbo = buffer->getVertices();
+        float* vbo = buffer->getVertices();
 
         // getting rectangle coordinates 
         for (size_t i = 0; i < buffer->getVerticesCount(); ++i)
         {
-            x_[i] = (vbo[i * 3] * getScale().x) + getMove().x;
-            y_[i] = (vbo[i * 3 + 1] * getScale().y) + getMove().y;
+            x_[i] = vbo[i * 3] * getScale().x + getMove().x;
+            y_[i] = vbo[i * 3 + 1] * getScale().y + getMove().y;
         }
 
         double mouse_x, mouse_y;
         glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
-        return isPointInPolygon(buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
+        return isPointInPolygon((int)buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
     }
 
     void LRectangleShape::draw()
@@ -109,6 +107,6 @@ namespace LGraphics
         glBindVertexArray(buffer->getVaoNum());
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-        LText::display(label);
+        LLine::display(label);
     }
 }

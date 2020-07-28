@@ -8,7 +8,7 @@ namespace LGraphics
         const szvect2 charSize = ivect2(14, 24);
         const size_t charIndex_to = 127;
         const size_t charsInLine = 83;
-        const szvect2 offset = ivect2(1 + charSize.x * (charIndex_from - 30), 4);
+        const szvect2 offset = ivect2(1 + charSize.x * ((int)charIndex_from - 30), 4);
 
         const szvect2 textureSize = { 1180,79 };
         fvect2 textureSizeF = textureSize.cut<fvect2>();
@@ -19,7 +19,7 @@ namespace LGraphics
             textCoords[i] = new GLfloat[8];
 
 
-        for (int i = charIndex_from; i < charIndex_to; i++)
+        for (int i = charIndex_from; i < (int)charIndex_to; i++)
         {
             int x = offset.x;
             int y = offset.y;

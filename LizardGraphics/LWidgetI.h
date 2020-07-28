@@ -1,12 +1,11 @@
 ﻿#pragma once
 
 #include <functional>
+#include <vector>
 
-//#include "LApp.h"
 #include "vectors.h"
 #include "Lshaders.h"
 #include "LImage.h"
-//#include "LObject.h"
 
 namespace LGraphics
 {
@@ -19,8 +18,9 @@ namespace LGraphics
     {
     public:
 
-        void setApp(LApp* app) { this->app = app; }  ///< Устанавливает приложение (окно) виджета.
+        void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.
 
+        virtual void tick() {}
         virtual void draw() = 0; ///< Рисует виджет.
 
         /*!
@@ -115,6 +115,8 @@ namespace LGraphics
         virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
+        const std::vector<LWidgetI*>& getInnerWidgets() const { return innerWidgets; }
+
         virtual ~LWidgetI() {}
 
     protected:
@@ -123,6 +125,8 @@ namespace LGraphics
         bool isHidden_ = false; ///< Видимость виджета.
         std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
         std::function<void()> animation = std::function<void()>([](){});
+
+        std::vector<LWidgetI*> innerWidgets;
 
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;

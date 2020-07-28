@@ -52,7 +52,6 @@ namespace LGraphics
     protected:
 
         void updateLabelPos() override;
-        //void updateLabelPos();
     };
 }
 

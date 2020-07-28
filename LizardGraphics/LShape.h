@@ -2,7 +2,7 @@
 
 #include "LBuffer.h"
 #include "LWidgetI.h"
-#include "LText.h"
+#include "LLine.h"
 
 #include "vectors.h"
 
@@ -126,7 +126,6 @@ namespace LGraphics
 
         Text label;
         float labelTextStartPosition = 0.0f;
-        //void updateLabelPos() override;
 
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 

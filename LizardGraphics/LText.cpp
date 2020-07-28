@@ -1,157 +1,197 @@
-﻿#pragma once
-
 #include "LText.h"
-#include "pch.h"
-
-#include <map>
-#include <iostream>
-#include <ft2build.h>
-#include "include/GLEW/glew.h"
-
-#include "include/glm/glm.hpp"
-#include "include/glm/gtc/matrix_transform.hpp"
-#include "include/glm/gtc/type_ptr.hpp"
-
-#include "LApp.h"
-#include "Lshaders.h"
-
-#include FT_FREETYPE_H 
+#include "LRectangleBuffer.h"
+#include "additional.h"
+#include <cassert>
 
 namespace LGraphics
 {
-    LShaders::Shader* LText::shader;
-    LText::Character LText::characters[CHAR_MAX+1];
-    unsigned int LText::VAO, LText::VBO;
-    LGraphics::LApp* LText::app;
 
-    LText::LText(LGraphics::LApp* app)
+    LGraphics::LText::LText(LApp * app, const std::string text_, LObject* parent, const char* path, LBaseComponent* component)
+        :LIButton(app, parent, path, component)
     {
-        this->app = app;
-        shader = new LShaders::Shader(LShaders::symbol_v, LShaders::symbol_f);
-        glm::mat4 projection = glm::ortho(0.0f, (float)app->getWindowSize().x, 0.0f, (float)app->getWindowSize().y);
-        shader->use();
-        glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-        FT_Library ft;
-        if (FT_Init_FreeType(&ft))
-            throw std::exception("ERROR::FREETYPE: Could not init FreeType Library");
-
-        FT_Face face;
-        if (FT_New_Face(ft, "fonts\\OpenSans-Regular.ttf", 0, &face))
-            throw std::exception("ERROR::FREETYPE: Failed to load font");
-
-        FT_Set_Pixel_Sizes(face, 0, 48);
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
-
-        for (unsigned char c = 0; c < CHAR_MAX + 1; c++)
+        initWidget();
+        addText(text_);
+        turnOffColor();
+        setAnimation([&]()
         {
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-            {
-                throw std::exception("ERROR::FREETYTPE: Failed to load Glyph");
-                continue;
-            }
-            // generate texture
-            unsigned int texture;
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
-            // set texture options
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            // now store character for later use
-            Character character =
-            {
-                texture,
-                szvect2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                szvect2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                face->glyph->advance.x
-            };
-            characters[c] = character;
-        }
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        FT_Done_Face(face);
-        FT_Done_FreeType(ft);
-
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+            static bool fading = true;
+            if (getTransparency() <= 0.25f)
+                fading = false;
+            else if (getTransparency() >= 0.85f)
+                fading = true;
+            if (fading)
+                transparency(getTransparency() - 0.015f);
+            else if (!fading)
+                transparency(getTransparency() + 0.015f);
+        });
     }
-    
-    void LText::display(const std::string text, float x, float y, const float scale, const fvect3 color)
+
+    void LGraphics::LText::draw()
     {
-        y = app->getWindowSize().y - y;
-        getShader()->use();
-        glUniform3f(glGetUniformLocation(getShader()->getShaderProgram(), "textColor"), color.x, color.y, color.z);
-        glActiveTexture(GL_TEXTURE0);
-        glBindVertexArray(VAO);
- 
-        for (const unsigned int const c: text)
+        if (app->getActiveWidget() == this)
+            doAnimation();
+        LRectangleShape::draw();
+        for (auto str = begin; str < end; str++)
         {
-            const Character ch = characters[c];
-            const float xpos = x + ch.bearing.x * scale;
-            const float ypos = y - (ch.size.y - ch.bearing.y) * scale;
-
-            const float w = ch.size.x * scale;
-            const float h = ch.size.y * scale;
-            // update VBO for each character
-            const float vertices[6][4] = 
-            {
-                { xpos,     ypos + h,   0.0f, 0.0f },
-                { xpos,     ypos,       0.0f, 1.0f },
-                { xpos + w, ypos,       1.0f, 1.0f },
-
-                { xpos,     ypos + h,   0.0f, 0.0f },
-                { xpos + w, ypos,       1.0f, 1.0f },
-                { xpos + w, ypos + h,   1.0f, 0.0f }
-            };
-        
-            // render glyph texture over quad
-            glBindTexture(GL_TEXTURE_2D, ch.textureID);
-            // update content of VBO memory
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            // render quad
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-            x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+           if (outOfBordersY(str->pos.y + (vertScroller? vertScroller->currentPos : hiddenStrings) * strIndent))
+               continue;
+            auto toScreen = glCoordsToScreenCoords(app->getWindowSize(), { str->pos.x, str->pos.y + (vertScroller ? vertScroller->currentPos : hiddenStrings) * strIndent });
+            toScreen.y = app->getWindowSize().y - toScreen.y;
+            LLine::display(str->text, toScreen.x, toScreen.y, str->scale, str->color);
         }
-        glBindVertexArray(0);
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void LText::display(Text text)
+    void LGraphics::LText::scale(const fvect3 val)
     {
-        fvect2 pos = glCoordsToScreenCoords(app->getWindowSize(), { text.pos.x,text.pos.y});
-        display(text.text, pos.x, app->getWindowSize().y - pos.y, text.scale, text.color);
+        scale_ = val;
+        alignText();
     }
 
-    float LText::getTextLength(Text text)
+    void LGraphics::LText::move(const size_t x, const size_t y)
     {
-        float res = 0.0f;
-        for (auto s : text.text)
-            res += (float)characters[s].advance / 64.0f;
-        res-= (float)characters[text.text.back()].advance / 64.0f;
-        return res;
+        auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)x,(float)y });
+        move_ = { coords.x,coords.y, 0.0f };
+        alignText();
     }
+
+    std::vector<LGraphics::Text> LGraphics::LText::getText() const
+    {
+        return text;
+    }
+
+    void LGraphics::LText::setText(const std::string& text_)
+    {
+        text.clear();
+        pushNewString();
+        addText(text_);
+    }
+
+    void LGraphics::LText::addText(const std::string text_)
+    {
+        for (auto& symbol : text_)
+            addText(symbol);
+    }
+
+    void LGraphics::LText::addText(const unsigned int symbol)
+    {
+        auto char_ = LLine::characters[symbol];
+        if (symbol == '\n')
+            pushNewString();
+
+        else if ((float)char_.advance / 64.0f + text.back().length + rightBorder * app->getWindowSize().x <= maxLength)
+        {
+            text.back().text += (char)symbol;
+            text.back().length += (float)char_.advance / 64.0f;
+            if (vertScroller && hiddenStrings > 0)
+                vertScroller->reloadScroller(hiddenStrings);
+        }
+
+        else
+        {
+            pushNewString();
+            addText(symbol);
+        }
+    }
+
+    void LGraphics::LText::removeLastSymbol()
+    {
+        if (text.back().text.empty() && text.size() != 1)
+        {
+            hiddenStrings > 0 ? hiddenStrings--, vertScroller? vertScroller->reloadScroller(hiddenStrings), vertScroller->moveScrollerToPos(hiddenStrings) :void() : hiddenStrings;
+            text.pop_back();
+            yAlign();
+        }
+
+        if (!text.back().text.empty())
+        {
+            auto char_ = LLine::characters[text.back().text.back()];
+            text.back().length -= (float)char_.advance / 64.0f;
+            text.back().text.pop_back();
+        }
+    }
+
+    void LGraphics::LText::setVerticalScroller(LVerticalScroller* scroller)
+    {
+        scroller->setParent(this);
+        if (vertScroller)
+            std::remove(innerWidgets.begin(), innerWidgets.end(), vertScroller);
+        vertScroller = scroller;
+        scroller->scale({ scale_.x / 25.0f,scale_.y, scale_.z });
+        scroller->move(fvect3(getTopRightCorner().x, move_.y, move_.z));
+        scroller->reloadScroller(hiddenStrings);
+        innerWidgets.push_back(scroller);
+    }
+
+    void LGraphics::LText::setHorizontalScroller(LHorizontalScroller * scroller)
+    {
+        scroller->setParent(this);
+        if (horizScroller)
+            std::remove(innerWidgets.begin(), innerWidgets.end(), horizScroller);
+        horizScroller = scroller;
+        scroller->scale({ scale_.x, scale_.y / 25.0f, scale_.z });
+        //scroller->move(fvect3(move_.x, move_.y + (getTopLeftCorner().x + getBottomLeftCorner().y) / 2.0f, move_.z));
+        scroller->move(fvect3(move_.x, getTopLeftCorner().y, move_.z));
+        innerWidgets.push_back(scroller);
+    }
+
+    void LGraphics::LText::calculateMaxLength()
+    {
+        maxLength = calculateWidgetLength() - rightBorder;
+    }
+
+    void LGraphics::LText::yAlign()
+    {
+        begin = text.begin() + hiddenStrings;
+        end = text.end();
+    }
+
+    void LGraphics::LText::alignText()
+    {
+        std::string wholeText;
+        for (auto& str : text)
+            wholeText += str.text;
+        text.clear();
+        initWidget();
+        addText(wholeText);
+    }
+
+    void LText::showFrom(int position)
+    {
+        begin = text.begin() + position;
+    }
+
+    bool LGraphics::LText::outOfBordersY(float y)
+    {
+        return y < getBottomLeftCorner().y;
+    }
+
+    void LGraphics::LText::pushNewString()
+    {
+        Text temp;
+        if (text.size())
+            temp.pos = { text.back().pos.x, text.back().pos.y - strIndent };
+        else
+        {
+            fvect3 topLeftCorner = getTopLeftCorner();
+            temp.pos = { topLeftCorner.x + leftBorder, topLeftCorner.y - topBorder };
+        }
+
+        text.push_back(temp);
+        if (outOfBordersY(temp.pos.y))
+            hiddenStrings++;
+
+        if (vertScroller && hiddenStrings > 0)
+            vertScroller->reloadScroller(hiddenStrings);
+        yAlign();
+    }
+
+    void LGraphics::LText::initWidget()
+    {
+        hiddenStrings = 0;
+        pushNewString();
+        calculateMaxLength();
+        begin = text.begin();
+        end = text.end();
+    }
+
 }

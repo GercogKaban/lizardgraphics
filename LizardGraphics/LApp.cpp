@@ -28,9 +28,11 @@ namespace LGraphics
                 if (!o->isHidden())
                     o->draw();
             for (auto& t : textObjects)
-                LText::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
-            LText::display(std::to_string(prevFps), 50, getWindowSize().y - 50, 1.5f, { 1.0f,0.0f,0.0f });
+                LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
+            LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
             glfwSwapBuffers(window);
+            for (auto& o : objects)
+                o->tick();
         }
         t.stop();
         glfwTerminate();
@@ -61,7 +63,7 @@ namespace LGraphics
     void LApp::initLEngine()
     {
         LError::init();
-        addText("Lizard Graphics v. 0.1", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 0,1,0 });
+        addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
     }
 
     void LApp::initOpenGl()
@@ -74,7 +76,6 @@ namespace LGraphics
 
         window = glfwCreateWindow(width, height, "window", nullptr, nullptr);
         glfwMakeContextCurrent(window);
-
 
         glfwSetWindowUserPointer(window, this);
 
@@ -107,7 +108,7 @@ namespace LGraphics
         int width_, height_;
         glfwGetFramebufferSize(window, &width_, &height_);
         glViewport(0, 0, width_, height_);
-        textRenderer = &LText(this);
+        textRenderer = &LLine(this);
     }
 
     void LApp::checkEvents()
@@ -129,9 +130,22 @@ namespace LGraphics
             {
                 if (o->mouseOnIt())
                     activeWidget = o;
-                if (dynamic_cast<LIButton*>(o))
-                    if (o->mouseOnIt())
-                        dynamic_cast<LIButton*>(o)->doClickEventFunction();
+                if (dynamic_cast<LIButton*>(o) && o->mouseOnIt())
+                        ((LIButton*)o)->doClickEventFunction();
+
+                for (auto& innerW : o->getInnerWidgets())
+                    if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
+                       activeWidget = innerW;
+            }
+        }
+
+        else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+        {
+            for (auto& o : objects)
+            {
+                for (auto& innerW : o->getInnerWidgets())
+                    if (dynamic_cast<LScroller*>(innerW) && activeWidget == (LScroller*)innerW)
+                        activeWidget = ((LScroller*)innerW)->parent;
             }
         }
     }
@@ -142,7 +156,6 @@ namespace LGraphics
         {
             if (key == GLFW_KEY_BACKSPACE)
                 textEdit->removeLastSymbol();
-
             if (key == GLFW_KEY_ENTER)
                 textEdit->addText(std::string(1, '\n'));
         }

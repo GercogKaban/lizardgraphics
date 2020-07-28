@@ -25,7 +25,6 @@ namespace LGraphics
         return c;
     }
 
-
     fvect2 pointOnScreenToGlCoords(fvect2 screenSize, fvect2 point)
     {
         point.y = screenSize.y - point.y;

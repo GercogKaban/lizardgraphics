@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "LText.h"
+#include "LLine.h"
 
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
@@ -50,7 +50,9 @@ namespace LGraphics
         @brief Возвращает размеры окна (в пикселях).
 
         */
-        szvect2 getWindowSize() const { return szvect2(width, height); }
+        szvect2 getWindowSize() const { 
+            return szvect2(width, height); 
+        }
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
@@ -61,13 +63,13 @@ namespace LGraphics
         void addText(std::string text, fvect2 pos, float scale, fvect3 color);
         LWidgetI* getActiveWidget();
 
-        void lockFps(size_t fps) { fpsLock = fps; }
+        void lockFps(size_t fps_) { fpsLock = fps_; }
 
     private:
 
         void addObject(LWidgetI* w);
 
-        LText* textRenderer;
+        LLine* textRenderer;
 
         void init(const int width, const int height);
         void initLEngine();

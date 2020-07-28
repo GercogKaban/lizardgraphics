@@ -1,60 +1,64 @@
-﻿#pragma once
-//#include "LRectangleShape.h"
-#include <map>
-#include <iostream>
-#include <array>
+#pragma once
+#include "LIButton.h"
+#include "LLine.h"
+#include "LScroller.h"
 
-#include <ft2build.h>
-#include "include/GLEW/glew.h"
-
-#include "LTimer.h"
-#include "vectors.h"
-#include FT_FREETYPE_H 
-
-namespace LShaders
-{
-    class Shader;
-}
 namespace LGraphics
 {
-    class LTextEdit;
-    class LApp;
-
-    struct Text
+    class LText : public LIButton
     {
-        std::string text; 
-        fvect2 pos = { 0.0f,0.0f };
-        float scale = 1.0f;
-        float length = 0.0f;
-        fvect3 color = {0.0f,0.0f,0.0f};
-    };
-
-    class LText
-    {   
     public:
-        friend LTextEdit;
-        struct Character
-        {
-            unsigned int textureID;  // ID handle of the glyph texture
-            ivect2 size;            // Size of glyph
-            ivect2 bearing;         // Offset from baseline to left/top of glyph
-            unsigned int advance;    // Offset to advance to next glyph
-        };
+        
+        friend LVerticalScroller;
+        friend LHorizontalScroller;
+
+        LText(LApp* app, const std::string = "", LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
+        void draw() override;
+        void scale(const fvect3 val) override;
+        void move(const size_t x, const size_t y) override;
+
+        std::vector<Text> getText() const;
+
+        void setText(const std::string& text);
+        void addText(const std::string text);
+        void addText(const unsigned int symbol);
+        void removeLastSymbol();
+
+        void setVerticalScroller(LVerticalScroller* scroller);
+        void setHorizontalScroller(LHorizontalScroller* scroller);
+
+        LVerticalScroller* vertScroller = nullptr;
+        LHorizontalScroller* horizScroller = nullptr;
 
     protected:
 
-        static LShaders::Shader* shader;
-        static Character characters[CHAR_MAX + 1];
-        static unsigned int VAO, VBO;
-        static LGraphics::LApp* app;
+        std::vector<Text>::const_iterator begin;
+        std::vector<Text>::const_iterator end;
 
-    public:
+        void initWidget();
 
-        LText(LApp* app);
+        void calculateMaxLength();
 
-        static LShaders::Shader* getShader() { return shader; }
-        static void display(const std::string text, float x, float y, const float scale, const fvect3 color);
-        static void display(Text text);
-        static float getTextLength(Text text);
+        void yAlign();
+        void alignText();
+        void showFrom(int position);
+
+        bool outOfBordersY(float y);
+
+        void pushNewString();
+
+        void setLabel(const std::string) override {}
+
+        float leftBorder = 0.038f;
+        float rightBorder = 0.03f;
+        float topBorder = 0.085f;
+        float bottomBorder = 0;
+
+        float strIndent = 0.1f;
+        std::vector<Text> text;
+
+        size_t hiddenStrings = 0;
+        float maxLength = 0.0f;
     };
 }
+
