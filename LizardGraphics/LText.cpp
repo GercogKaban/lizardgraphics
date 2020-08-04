@@ -45,12 +45,16 @@ namespace LGraphics
     {
         scale_ = val;
         alignText();
+        if (vertScroller)
+            vertScroller->reloadScroller(hiddenStrings);
     }
 
     void LGraphics::LText::move(const size_t x, const size_t y)
     {
         auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)x,(float)y });
         move_ = { coords.x,coords.y, 0.0f };
+        if (vertScroller)
+            vertScroller->reloadScroller(hiddenStrings);
         alignText();
     }
 
@@ -117,7 +121,7 @@ namespace LGraphics
             std::remove(innerWidgets.begin(), innerWidgets.end(), vertScroller);
         vertScroller = scroller;
         scroller->scale({ scale_.x / 25.0f,scale_.y, scale_.z });
-        scroller->move(fvect3(getTopRightCorner().x, move_.y, move_.z));
+        //scroller->move(fvect3(getTopRightCorner().x, move_.y, move_.z));
         scroller->reloadScroller(hiddenStrings);
         innerWidgets.push_back(scroller);
     }

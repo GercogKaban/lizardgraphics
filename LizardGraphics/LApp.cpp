@@ -8,9 +8,9 @@
 
 namespace LGraphics
 {
-    LApp::LApp(size_t width, size_t height)
+    LApp::LApp()
     {
-        init(width, height);
+        init();
     }
 
     void LApp::loop()
@@ -53,9 +53,8 @@ namespace LGraphics
         objects.push_back(w);
     }
 
-    void LApp::init(const int width, const int height)
+    void LApp::init()
     {
-        this->width = width, this->height = height;
         initOpenGl();
         initLEngine();
     }
@@ -74,9 +73,18 @@ namespace LGraphics
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-        window = glfwCreateWindow(width, height, "window", nullptr, nullptr);
-        glfwMakeContextCurrent(window);
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        width = mode->width;
+        height = mode->height;
 
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+        window = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
+        glfwMakeContextCurrent(window);
+        
         glfwSetWindowUserPointer(window, this);
 
         auto mouse = [](GLFWwindow* w, int button, int action, int mods)
@@ -156,7 +164,7 @@ namespace LGraphics
         {
             if (key == GLFW_KEY_BACKSPACE)
                 textEdit->removeLastSymbol();
-            if (key == GLFW_KEY_ENTER)
+            else if (key == GLFW_KEY_ENTER)
                 textEdit->addText(std::string(1, '\n'));
         }
     }

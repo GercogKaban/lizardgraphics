@@ -2,6 +2,7 @@
 #include "LRectangleShape.h"
 #include "LBaseComponent.h"
 #include "LApp.h"
+#include "LIButton.h"
 
 namespace LGraphics
 {
@@ -91,6 +92,7 @@ namespace LGraphics
 
         double mouse_x, mouse_y;
         glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
+
         return isPointInPolygon((int)buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
     }
 

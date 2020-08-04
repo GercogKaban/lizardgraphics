@@ -31,6 +31,7 @@ namespace LGraphics
 
     void LVerticalScroller::reloadScroller(size_t scrollPositions)
     {
+        move(fvect3(parent->getTopRightCorner().x, parent->move_.y, parent->move_.z));
         positions = scrollPositions;
         scale_.y = parent->getScale().y / float(scrollPositions+1);
         moveScrollerToPos((int)scrollPositions);

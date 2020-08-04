@@ -1,11 +1,5 @@
 ﻿#include "pch.h"
 
-//#ifdef __linux__ 
-//#include <X11/Xlib.h>
-//#elif _WIN32
-//#include <Windows.h>
-//#endif
-
 namespace LGraphics
 {
     bool isPointInPolygon(int npol, float* xp, float* yp, fvect2 p)

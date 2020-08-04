@@ -35,7 +35,7 @@ namespace LGraphics
 
     public:
         
-        LApp(size_t width, size_t height);
+        LApp();
         ~LApp(){releaseResources();}
 
         /*!
@@ -65,13 +65,15 @@ namespace LGraphics
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
 
+        void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
+
     private:
 
         void addObject(LWidgetI* w);
 
         LLine* textRenderer;
 
-        void init(const int width, const int height);
+        void init();
         void initLEngine();
         void initOpenGl();
 

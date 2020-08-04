@@ -14,8 +14,7 @@ using namespace LGraphics;
 
 int main()
 {   
-    LGraphics::LApp app(1920,1080);
-
+    LGraphics::LApp app;
     LGraphics::LBaseComponent c;
 
     auto back = new LGraphics::LIRectangle(&app, nullptr, "brge_back.png", &c);
@@ -28,15 +27,15 @@ int main()
     auto textEdit = new LTextEdit(&app, "Hello, world!", nullptr, "test.png", &c);
     textEdit->turnOffTexture();
     textEdit->color(255, 255, 255);
-    //textEdit->move(app.getWindowSize().x/2, app.getWindowSize().y / 2);
+    textEdit->move(app.getWindowSize().x/2, app.getWindowSize().y / 2);
     textEdit->setVerticalScroller(new LGraphics::LVerticalScroller(&app, nullptr, "", &c));
     //textEdit->setHorizontalScroller(new LGraphics::LHorizontalScroller(&app, nullptr, "", &c));
     //textEdit->scale({ 1.5f,1.8f,1.0f });
     //textEdit->transparency(0.85f);
     //textEdit->move(700, 500);
 
-    e->scale({ 1.9f,1.8f,1.0f });
-    //e->move(100,50);
+    e->scale({ 0.1f,0.1f,1.0f });
+    e->move(100,50);
     e->color(255, 0, 0);
 
     d->scale({ 0.1f,0.1f,1.0f });
@@ -47,7 +46,7 @@ int main()
     d->turnOffTexture();
 
     e->setClickEventFunction([&]() {textEdit->scale({ 1.5f,0.5f,1.0f }); });
-    d->setClickEventFunction([&]() {textEdit->scale({ 0.5f,0.5f,1.0f }); });
+    d->setClickEventFunction([&]() {textEdit->move(app.getWindowSize().x / 3, app.getWindowSize().y / 2); });
 
     app.loop();
     return 0;
