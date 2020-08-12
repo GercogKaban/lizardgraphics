@@ -61,12 +61,18 @@ namespace LGraphics
         GLFWwindow* getWindowHandler() { return window; }
 
         void addText(std::string text, fvect2 pos, float scale, fvect3 color);
+        void popText();
         LWidgetI* getActiveWidget();
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
 
         void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
+        void setActiveWidget(LWidgetI* w) { activeWidget = w; }
 
+        std::vector<LWidgetI*>* getObjects() { return &objects; }
+        std::vector<Text>& getTextObjects() { return textObjects; }
+        //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
+            
     private:
 
         void addObject(LWidgetI* w);

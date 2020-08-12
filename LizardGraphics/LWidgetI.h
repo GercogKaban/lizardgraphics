@@ -97,6 +97,9 @@ namespace LGraphics
         void setAnimation(std::function<void()> fun);
         void doAnimation();
 
+        void setBreakingAnimation(std::function<void()> fun);
+        void breakAnimation();
+
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
         virtual fvect3 getColor() const = 0;         ///< Возвращает цвет виджета.
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
@@ -125,6 +128,7 @@ namespace LGraphics
         bool isHidden_ = false; ///< Видимость виджета.
         std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
         std::function<void()> animation = std::function<void()>([](){});
+        std::function<void()> breakingAnimation = std::function<void()>([]() {});
 
         std::vector<LWidgetI*> innerWidgets;
 

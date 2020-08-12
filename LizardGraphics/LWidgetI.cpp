@@ -10,3 +10,13 @@ void LGraphics::LWidgetI::doAnimation()
 {
     animation();
 }
+
+void LGraphics::LWidgetI::setBreakingAnimation(std::function<void()> fun)
+{
+    breakingAnimation = fun;
+}
+
+void LGraphics::LWidgetI::breakAnimation()
+{
+    breakingAnimation();
+}

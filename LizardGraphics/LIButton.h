@@ -37,6 +37,8 @@ namespace LGraphics
         */
         void setClickEventFunction(std::function<void()> fun);
 
+        void tick() override;
+
     protected:
 
         std::function<void()> clickFunction = [](){}; ///< Функция, срабатывающая при нажатии на кнопку.

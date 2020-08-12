@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#include "LApp.h"
+#include "pch.h"
 #include "LApp.h"
 #include "LError.h"
 #include "Lshaders.h"
@@ -43,6 +44,11 @@ namespace LGraphics
         textObjects.push_back({ text,pos,scale,0.0f,color });
     }
 
+    void LApp::popText()
+    {
+        textObjects.pop_back();
+    }
+
     LWidgetI * LApp::getActiveWidget()
     {
         return activeWidget;
@@ -72,17 +78,21 @@ namespace LGraphics
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
-        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        width = mode->width;
-        height = mode->height;
+        window = glfwCreateWindow(1919, 1080, "My Title", NULL, NULL);
+        width = 1919;
+        height = 1080;
+        //const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        //width = mode->width;
+        //height = mode->height;
 
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        //glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        //glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        //glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        //glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-        window = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
+        //window = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
         glfwMakeContextCurrent(window);
         
         glfwSetWindowUserPointer(window, this);
@@ -134,16 +144,26 @@ namespace LGraphics
     {
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
-            for (auto& o : objects)
+            for (auto& o = objects.end()-1; o >= objects.begin(); o--)
             {
-                if (o->mouseOnIt())
-                    activeWidget = o;
-                if (dynamic_cast<LIButton*>(o) && o->mouseOnIt())
-                        ((LIButton*)o)->doClickEventFunction();
+                if ((*o)->mouseOnIt())
+                {
+                    if (activeWidget) activeWidget->breakAnimation();
+                    activeWidget = *o;
 
-                for (auto& innerW : o->getInnerWidgets())
+                    if (dynamic_cast<LIButton*>(*o))
+                    {
+                        ((LIButton*)*o)->doClickEventFunction();
+                        return;
+                    }
+                }
+
+                for (auto& innerW : (*o)->getInnerWidgets())
                     if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
-                       activeWidget = innerW;
+                    {
+                        if (activeWidget) activeWidget->breakAnimation();
+                        activeWidget = innerW;
+                    }
             }
         }
 
@@ -153,7 +173,10 @@ namespace LGraphics
             {
                 for (auto& innerW : o->getInnerWidgets())
                     if (dynamic_cast<LScroller*>(innerW) && activeWidget == (LScroller*)innerW)
+                    {
+                        if (activeWidget) activeWidget->breakAnimation();
                         activeWidget = ((LScroller*)innerW)->parent;
+                    }
             }
         }
     }

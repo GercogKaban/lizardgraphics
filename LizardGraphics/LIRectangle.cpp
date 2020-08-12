@@ -1,4 +1,5 @@
-﻿#include "LIRectangle.h"
+﻿#include "LApp.h"
+#include "LIRectangle.h"
 #include "LBaseComponent.h"
 #include "pch.h"
 
@@ -8,5 +9,11 @@ namespace LGraphics
         :LRectangleShape(app, parent, path, component)
     {
         setShader(component->getShader());
+    }
+
+    void LIRectangle::tick()
+    {
+        if (app->getActiveWidget() == this)
+            doAnimation();
     }
 }

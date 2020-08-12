@@ -15,8 +15,16 @@ namespace LGraphics
         clickFunction = fun;
     }
 
+    void LIButton::tick()
+    {
+        if (app->getActiveWidget() == this)
+            doAnimation();
+    }
+
     void LIButton::doClickEventFunction()
     {
         clickFunction();
     }
+
+ 
 }
