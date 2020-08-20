@@ -12,7 +12,7 @@ namespace LGraphics
         friend LVerticalScroller;
         friend LHorizontalScroller;
 
-        LText(LApp* app, const std::string = "", LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
+        LText(LApp* app, const std::string = "", const char* path = nullptr);
         void draw() override;
         void scale(const fvect3 val) override;
         void move(const size_t x, const size_t y) override;

@@ -1,5 +1,4 @@
 ﻿#include "LShape.h"
-#include "LBaseComponent.h"
 #include "LApp.h"
 #include "pch.h"
 #include "additional.h"
@@ -23,14 +22,14 @@ namespace LGraphics
 
     void LShape::scale(const fvect3 val)
     {
-        alignLabel();
         scale_ = val;
+        alignLabel();
     }
 
     void LShape::scale(const float x, const float y, const float z)
     {
-        alignLabel();
         scaleWithoutAlign({ x,y,z });
+        //alignLabel();
     }
 
     void LShape::scaleWithoutAlign(const fvect3 val)
@@ -69,19 +68,18 @@ namespace LGraphics
         this->shader = shader;
     }
 
-    LShape::LShape(const char* path, LBaseComponent* component)
-        :LWidgetI(path)
-    {
-        if (!component->getBuffer()) throw std::exception("error, no buffer\n");
-        this->buffer = component->getBuffer();
-    }
+    //LShape::LShape()
+    //    //:LIWidget(path)
+    //{
+    //    //if (!component->getBuffer()) throw std::exception("error, no buffer\n");
+    //    //this->buffer = component->getBuffer();
+    //}
 
-    LShape::LShape(const unsigned char* bytes, size_t size, LBaseComponent* component)
-        : LWidgetI(bytes, size)
-    {
-        if (!component->getBuffer()) throw std::exception("error, no buffer\n");
-        this->buffer = component->getBuffer();
-    }
+    LShape::LShape(const char * path)
+        : LIWidget(path){}
+
+    LShape::LShape(const unsigned char* bytes, size_t size)
+        : LIWidget(bytes, size){}
 
     void LShape::setBuffer(LBuffer* buffer)
     {

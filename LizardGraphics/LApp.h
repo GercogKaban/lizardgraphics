@@ -62,20 +62,20 @@ namespace LGraphics
 
         void addText(std::string text, fvect2 pos, float scale, fvect3 color);
         void popText();
-        LWidgetI* getActiveWidget();
+        LIWidget* getActiveWidget();
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
 
         void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
-        void setActiveWidget(LWidgetI* w) { activeWidget = w; }
+        void setActiveWidget(LIWidget* w) { activeWidget = w; }
 
-        std::vector<LWidgetI*>* getObjects() { return &objects; }
+        std::vector<LIWidget*>* getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
     private:
 
-        void addObject(LWidgetI* w);
+        void addObject(LIWidget* w);
 
         LLine* textRenderer;
 
@@ -93,14 +93,14 @@ namespace LGraphics
         void character_callback(GLFWwindow* window, unsigned int codepoint);
 
         GLFWwindow* window;
-        std::vector<LWidgetI*> objects;
+        std::vector<LIWidget*> objects;
         std::vector<Text> textObjects;
 
         size_t width, height;
 
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
 
-        LWidgetI* activeWidget = nullptr;
+        LIWidget* activeWidget = nullptr;
     };
 }
 

@@ -91,7 +91,8 @@ namespace LGraphics
         GLuint* ebo = nullptr;       ///< Массив индексов.*/
         GLuint VBO[2], VAO, EBO;     ///< OpenGL буфферы.*/
 
-        size_t verticesCount, indicesCount, coordsCount = 3, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
+        const size_t coordsCount = 3;
+        size_t verticesCount, indicesCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
 
     };
 }

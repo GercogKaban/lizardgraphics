@@ -19,6 +19,7 @@ namespace LGraphics
 
     public:
 
+        LRectangleBuffer();
         fvect3 getTopLeftCorner() { return {vertices[9],vertices[10],vertices[11] };}
         fvect3 getTopRightCorner() { return { vertices[0],vertices[1],vertices[2] }; }
         fvect3 getBottomLeftCorner() { return { vertices[6],vertices[7],vertices[8] };}

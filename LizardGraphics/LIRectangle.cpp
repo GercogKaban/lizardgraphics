@@ -1,14 +1,13 @@
 ﻿#include "LApp.h"
 #include "LIRectangle.h"
-#include "LBaseComponent.h"
 #include "pch.h"
 
 namespace LGraphics
 {
-    LIRectangle::LIRectangle(LApp* app, LObject* parent, const char * path, LBaseComponent* component)
-        :LRectangleShape(app, parent, path, component)
+    LIRectangle::LIRectangle(LApp* app, const char * path)
+        :LRectangleShape(app, path)
     {
-        setShader(component->getShader());
+        setShader(new LShaders::Shader{ LShaders::interface_v, LShaders::interface_f });
     }
 
     void LIRectangle::tick()

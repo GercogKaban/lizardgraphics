@@ -4,8 +4,6 @@
 
 namespace LGraphics
 {
-    class LBaseComponent;
-
     /*!
     @brief Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция.
     @todo Сделать, чтобы кнопка срабатывала при отжатии.
@@ -23,7 +21,7 @@ namespace LGraphics
         @param path - путь к текстуре.
         @param component - указатель на LBaseComponent.
         */
-        LIButton(LApp* app, LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
+        LIButton(LApp* app, const char* path = nullptr);
 
         /*!
         @brief устанавливает функцию, которая будет срабатывать при нажатии на кнопку

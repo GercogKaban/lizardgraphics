@@ -64,6 +64,11 @@ namespace LShaders
         GLuint program;
     public:
 
+        Shader()
+        {
+
+        }
+
         /*!
         @brief Конструктор
 
@@ -104,6 +109,25 @@ namespace LShaders
             glDeleteShader(vertex);
             glDeleteShader(fragment);
 
+        }
+
+        void bindShader(const GLchar* shader, short shaderType)
+        {
+            GLuint sh;
+            GLint success;
+            sh = glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(sh, 1, &shader, NULL);
+            glCompileShader(sh);
+            glGetShaderiv(sh, GL_COMPILE_STATUS, &success);
+            if (!success)
+                throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
+            this->program = glCreateProgram();
+            glAttachShader(this->program, sh);
+            glLinkProgram(this->program);
+            glGetProgramiv(this->program, GL_LINK_STATUS, &success);
+            if (!success)
+                throw std::exception("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
+            glDeleteShader(sh);
         }
 
         /*!

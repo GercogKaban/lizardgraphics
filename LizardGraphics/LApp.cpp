@@ -1,5 +1,4 @@
-﻿#include "LApp.h"
-#include "pch.h"
+﻿#include "pch.h"
 #include "LApp.h"
 #include "LError.h"
 #include "Lshaders.h"
@@ -49,12 +48,12 @@ namespace LGraphics
         textObjects.pop_back();
     }
 
-    LWidgetI * LApp::getActiveWidget()
+    LIWidget * LApp::getActiveWidget()
     {
         return activeWidget;
     }
 
-    void LApp::addObject(LWidgetI * w)
+    void LApp::addObject(LIWidget * w)
     {
         objects.push_back(w);
     }
@@ -77,22 +76,25 @@ namespace LGraphics
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+        //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
-        window = glfwCreateWindow(1919, 1080, "My Title", NULL, NULL);
-        width = 1919;
-        height = 1080;
-        //const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        //width = mode->width;
-        //height = mode->height;
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-        //glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        //glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        //glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        //glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+#ifndef NDEBUG
+        window = glfwCreateWindow(mode->width - 1, mode->height, "My Title", NULL, NULL);
+        width = mode->width - 1;
+        height = mode->height;
+#else
+        width = mode->width;
+        height = mode->height;
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        window = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
+#endif
 
-        //window = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
         glfwMakeContextCurrent(window);
         
         glfwSetWindowUserPointer(window, this);
@@ -121,12 +123,12 @@ namespace LGraphics
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         int width_, height_;
         glfwGetFramebufferSize(window, &width_, &height_);
         glViewport(0, 0, width_, height_);
-        textRenderer = &LLine(this);
+        textRenderer = new LLine(this);
     }
 
     void LApp::checkEvents()
@@ -142,20 +144,17 @@ namespace LGraphics
 
     void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
     {
+        if (!objects.size()) return;
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
-            for (auto& o = objects.end()-1; o >= objects.begin(); o--)
+            for (auto& o = objects.begin(); o < objects.end(); o++)
             {
                 if ((*o)->mouseOnIt())
                 {
                     if (activeWidget) activeWidget->breakAnimation();
                     activeWidget = *o;
-
                     if (dynamic_cast<LIButton*>(*o))
-                    {
                         ((LIButton*)*o)->doClickEventFunction();
-                        return;
-                    }
                 }
 
                 for (auto& innerW : (*o)->getInnerWidgets())

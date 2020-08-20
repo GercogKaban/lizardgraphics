@@ -6,8 +6,8 @@
 namespace LGraphics
 {
 
-    LGraphics::LText::LText(LApp * app, const std::string text_, LObject* parent, const char* path, LBaseComponent* component)
-        :LIButton(app, parent, path, component)
+    LGraphics::LText::LText(LApp * app, const std::string text_, const char* path)
+        :LIButton(app, path)
     {
         initWidget();
         addText(text_);
@@ -28,8 +28,8 @@ namespace LGraphics
 
     void LGraphics::LText::draw()
     {
-        if (app->getActiveWidget() == this)
-            doAnimation();
+        //if (app->getActiveWidget() == this)
+        //    doAnimation();
         LRectangleShape::draw();
         for (auto str = begin; str < end; str++)
         {
@@ -120,7 +120,8 @@ namespace LGraphics
         if (vertScroller)
             std::remove(innerWidgets.begin(), innerWidgets.end(), vertScroller);
         vertScroller = scroller;
-        scroller->scale({ scale_.x / 25.0f,scale_.y, scale_.z });
+        scroller->scaleWithoutAlign({ scale_.x / 25.0f,scale_.y, scale_.z });
+        //scroller->move(getTopRightCorner());
         //scroller->move(fvect3(getTopRightCorner().x, move_.y, move_.z));
         scroller->reloadScroller(hiddenStrings);
         innerWidgets.push_back(scroller);

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "include/GLEW/glew.h"
 #include "LObject.h"
-//#include "LWidgetI.h"
 
 namespace LGraphics
 {
@@ -57,6 +56,10 @@ namespace LGraphics
         bool isTextureTurnedOn() const;
 
     protected:
+
+        LImage(){}
+
+
 
         /*!
         @brief Конструктор.

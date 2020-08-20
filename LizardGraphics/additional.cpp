@@ -56,37 +56,3 @@ namespace LGraphics
         return{ (float)r / (float)sizeof(unsigned char), (float)g / (float)sizeof(unsigned char), (float)b / (float)sizeof(unsigned char) };
     }
 }
-
-//#ifdef __linux__
-//
-//    std::string getClipboard()
-//    {
-//        return std::string();
-//    }
-//
-//#elif _WIN32
-//
-//    std::string getClipboard()
-//    {
-//        // Try opening the clipboard
-//        if (!OpenClipboard(nullptr))
-//            throw std::exception("can't open clipboard\n");
-//
-//          // Get handle of clipboard object for ANSI text
-//        HANDLE hData = GetClipboardData(CF_TEXT);
-//        if (hData == nullptr)
-//            throw std::exception("can't get data handler\n");
-//
-//          // Lock the handle to get the actual text pointer
-//        char * pszText = static_cast<char*>(GlobalLock(hData));
-//        if (pszText == nullptr)
-//            throw std::exception("can't get text by handler\n");
-//
-//        std::string text(pszText);
-//        GlobalUnlock(hData);
-//        CloseClipboard();
-//
-//        return text;
-//    }
-//
-//#endif

@@ -39,4 +39,9 @@ namespace LGraphics
             1,2,3
         };
     }
+
+    LRectangleBuffer::LRectangleBuffer()
+    {
+        init();
+    }
 }

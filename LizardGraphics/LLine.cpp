@@ -19,7 +19,7 @@
 
 namespace LGraphics
 {
-    LShaders::Shader* LLine::shader;
+    LShaders::Shader* LLine::symbShader;
     LLine::Character LLine::characters[CHAR_MAX+1];
     unsigned int LLine::VAO, LLine::VBO;
     LGraphics::LApp* LLine::app;
@@ -27,10 +27,10 @@ namespace LGraphics
     LLine::LLine(LGraphics::LApp* app)
     {
         this->app = app;
-        shader = new LShaders::Shader(LShaders::symbol_v, LShaders::symbol_f);
+        symbShader = new LShaders::Shader(LShaders::symbol_v, LShaders::symbol_f);
         glm::mat4 projection = glm::ortho(0.0f, (float)app->getWindowSize().x, 0.0f, (float)app->getWindowSize().y);
-        shader->use();
-        glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        symbShader->use();
+        glUniformMatrix4fv(glGetUniformLocation(symbShader->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         FT_Library ft;
         if (FT_Init_FreeType(&ft))
@@ -90,11 +90,16 @@ namespace LGraphics
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+    }
+
+    LLine::~LLine()
+    {
+        delete symbShader;
     }
     
     void LLine::display(const std::string text, float x, float y, const float scale, const fvect3 color)
@@ -114,6 +119,7 @@ namespace LGraphics
             const float w = ch.size.x * scale;
             const float h = ch.size.y * scale;
             // update VBO for each character
+
             const float vertices[6][4] = 
             {
                 { xpos,     ypos + h,   0.0f, 0.0f },
@@ -124,7 +130,8 @@ namespace LGraphics
                 { xpos + w, ypos,       1.0f, 1.0f },
                 { xpos + w, ypos + h,   1.0f, 0.0f }
             };
-        
+
+     
             // render glyph texture over quad
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
             // update content of VBO memory
@@ -149,7 +156,7 @@ namespace LGraphics
     float LLine::getTextLength(Text text)
     {
         float res = 0.0f;
-        for (auto s : text.text)
+        for (auto& s : text.text)
             res += (float)characters[s].advance / 64.0f;
         res-= (float)characters[text.text.back()].advance / 64.0f;
         return res;

@@ -1,13 +1,12 @@
 ﻿#include "LIButton.h"
-#include "LBaseComponent.h"
 #include "pch.h"
 
 namespace LGraphics
 {
-    LIButton::LIButton(LApp* app, LObject* parent, const char* path, LBaseComponent* buffer)
-        :LRectangleShape(app, parent, path, buffer)
+    LIButton::LIButton(LApp* app, const char* path)
+        :LRectangleShape(app, path)
     {
-        setShader(buffer->getShader());
+        setShader(new LShaders::Shader{ LShaders::interface_v, LShaders::interface_f });
     }
 
     void LIButton::setClickEventFunction(std::function<void()> fun)

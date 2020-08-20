@@ -7,6 +7,7 @@
 #include <ft2build.h>
 #include "include/GLEW/glew.h"
 
+
 #include "LTimer.h"
 #include "vectors.h"
 #include FT_FREETYPE_H 
@@ -43,16 +44,17 @@ namespace LGraphics
 
     protected:
 
-        static LShaders::Shader* shader;
+        static LShaders::Shader* symbShader;
         static Character characters[CHAR_MAX + 1];
-        static unsigned int VAO, VBO;
+        static GLuint VAO, VBO;
         static LGraphics::LApp* app;
 
     public:
 
         LLine(LApp* app);
+        ~LLine();
 
-        static LShaders::Shader* getShader() { return shader; }
+        static LShaders::Shader* getShader() { return symbShader; }
         static void display(const std::string text, float x, float y, const float scale, const fvect3 color);
         static void display(Text text);
         static float getTextLength(Text text);

@@ -15,7 +15,7 @@ namespace LGraphics
 
     protected:
 
-        LScroller(LApp* app, LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
+        LScroller(LApp* app, const char* path = nullptr);
 
         void setParent(LText* parent_) { this->parent = parent_; }
 
@@ -35,7 +35,7 @@ namespace LGraphics
 
         friend LText;
 
-        LVerticalScroller(LApp* app, LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
+        LVerticalScroller(LApp* app, const char* path = nullptr);
 
     protected:
 
@@ -49,7 +49,7 @@ namespace LGraphics
     public:
         friend LText;
 
-        LHorizontalScroller(LApp* app, LObject* parent = nullptr, const char* path = nullptr, LBaseComponent* component = nullptr);
+        LHorizontalScroller(LApp* app, const char* path = nullptr);
         void reloadScroller(size_t scrollPositions) override;
 
     protected:

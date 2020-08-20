@@ -2,6 +2,6 @@
 
 namespace LGraphics
 {
-    LTextEdit::LTextEdit(LApp * app, const std::string text_, LObject* parent, const char* path, LBaseComponent* component)
-        :LText(app, text_, parent, path, component) {}
+    LTextEdit::LTextEdit(LApp * app, const std::string text_, const char* path)
+        :LText(app, text_, path) {}
 }

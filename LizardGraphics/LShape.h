@@ -1,19 +1,17 @@
 ﻿#pragma once
 
 #include "LBuffer.h"
-#include "LWidgetI.h"
+#include "LIWidget.h"
 #include "LLine.h"
 
 #include "vectors.h"
 
 namespace LGraphics
 {
-    class LBaseComponent;
-
     /*!
     @brief Переопределяет абстрактный класс LWidgetI.
     */
-    class LShape : public LWidgetI
+    class LShape : public LIWidget
     {
     public:
 
@@ -96,17 +94,21 @@ namespace LGraphics
            
         virtual ~LShape()
         {
-            //if (buffer)delete buffer;
+            delete buffer;
+            delete shader;
         }
 
     protected:
+
+        LShape(){}
+
 
         /*!
         @brief
         @param path - путь к изображению.
         @param component - указатель на LBaseComponent.
         */
-        LShape(const char* path = nullptr, LBaseComponent* component = nullptr);
+        LShape(const char* path);
 
         /*!
         @brief
@@ -114,7 +116,7 @@ namespace LGraphics
         @param size - размер массива bytes.
         @param component - указатель на LBaseComponent.
         */
-        LShape(const unsigned char* bytes, size_t size, LBaseComponent* component = nullptr);
+        LShape(const unsigned char* bytes, size_t size);
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 
@@ -129,8 +131,8 @@ namespace LGraphics
 
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 
-        LShaders::Shader* shader;                  ///< Шейдер.
-        LBuffer* buffer;                           ///< Координатный буфер (вершини, индексы, текстурные координаты).
+        LShaders::Shader* shader = nullptr;                  ///< Шейдер.
+        LBuffer* buffer = nullptr; ///< Координатный буфер (вершини, индексы, текстурные координаты).
     };
 }
 

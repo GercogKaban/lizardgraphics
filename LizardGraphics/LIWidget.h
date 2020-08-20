@@ -14,7 +14,7 @@ namespace LGraphics
     /*!
     @brief Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.
     */
-    class LWidgetI : public LImage
+    class LIWidget : public LImage
     {
     public:
 
@@ -118,9 +118,9 @@ namespace LGraphics
         virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
-        const std::vector<LWidgetI*>& getInnerWidgets() const { return innerWidgets; }
+        const std::vector<LIWidget*>& getInnerWidgets() const { return innerWidgets; }
 
-        virtual ~LWidgetI() {}
+        virtual ~LIWidget() {}
 
     protected:
 
@@ -130,23 +130,26 @@ namespace LGraphics
         std::function<void()> animation = std::function<void()>([](){});
         std::function<void()> breakingAnimation = std::function<void()>([]() {});
 
-        std::vector<LWidgetI*> innerWidgets;
+        std::vector<LIWidget*> innerWidgets;
 
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;
+
+
+        LIWidget(){}
 
         /*!
         @brief Конструктор.
         @param image - Копия LImage.
         */
-        LWidgetI(const LImage& image)
+        LIWidget(const LImage& image)
             :LImage(image){}
 
         /*!
         @brief Конструктор.
         @param path - Путь к изображению.
         */
-        LWidgetI(const char* path)
+        LIWidget(const char* path)
             :LImage(path) {}
 
         /*!
@@ -154,7 +157,7 @@ namespace LGraphics
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        LWidgetI(const unsigned char* bytes, size_t size)
+        LIWidget(const unsigned char* bytes, size_t size)
             :LImage(bytes,size) {}
     };
 }
