@@ -113,20 +113,20 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> addText(std::string text, <a class="code" href="structvect__prototype2.html">fvect2</a> pos, <span class="keywordtype">float</span> scale, <a class="code" href="structvect__prototype2.html">fvect3</a> <a class="code" href="structvect__prototype2.html">color</a>);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">void</span> popText();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_widget_i.html">LWidgetI</a>* getActiveWidget();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_i_widget.html">LIWidget</a>* getActiveWidget();</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">void</span> lockFps(<span class="keywordtype">size_t</span> fps_) { fpsLock = fps_; }</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">void</span> setResolution(<span class="keywordtype">size_t</span> resolutionX, <span class="keywordtype">size_t</span> resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordtype">void</span> setActiveWidget(LWidgetI* w) { activeWidget = w; }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordtype">void</span> setActiveWidget(LIWidget* w) { activeWidget = w; }</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        std::vector&lt;LWidgetI*&gt;* getObjects() { <span class="keywordflow">return</span> &amp;objects; }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        std::vector&lt;LIWidget*&gt;* getObjects() { <span class="keywordflow">return</span> &amp;objects; }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        std::vector&lt;Text&gt;&amp; getTextObjects() { <span class="keywordflow">return</span> textObjects; }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">void</span> addObject(LWidgetI* w);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">void</span> addObject(LIWidget* w);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        LLine* textRenderer;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
@@ -144,27 +144,27 @@ $(function() {
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordtype">void</span> character_callback(GLFWwindow* window, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> codepoint);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        GLFWwindow* window;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        std::vector&lt;LWidgetI*&gt; objects;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        std::vector&lt;LIWidget*&gt; objects;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        std::vector&lt;Text&gt; textObjects;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">size_t</span> width, height;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">size_t</span> fps = 0, prevFps = 0, fpsLock = SIZE_MAX;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        LWidgetI* activeWidget = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        LIWidget* activeWidget = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    };</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html_a66ebf0f08e10ebbe392eca6db846f61e"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">LGraphics::LApp::getWindowHandler</a></div><div class="ttdeci">GLFWwindow * getWindowHandler()</div><div class="ttdoc">Возвращает дескриптор GLFW окна.</div><div class="ttdef"><b>Definition:</b> LApp.h:61</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_i_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_rectangle.html">LGraphics::LIRectangle</a></div><div class="ttdoc">Класс четырёхугольника.</div><div class="ttdef"><b>Definition:</b> LIRectangle.h:12</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_shape.html">LGraphics::LShape</a></div><div class="ttdoc">Переопределяет абстрактный класс LWidgetI.</div><div class="ttdef"><b>Definition:</b> LShape.h:17</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_shape.html">LGraphics::LShape</a></div><div class="ttdoc">Переопределяет абстрактный класс LWidgetI.</div><div class="ttdef"><b>Definition:</b> LShape.h:15</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:14</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html_acce33d5422267c292fb5d208198a2640"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#acce33d5422267c292fb5d208198a2640">LGraphics::LApp::getWindowSize</a></div><div class="ttdeci">szvect2 getWindowSize() const</div><div class="ttdoc">Возвращает размеры окна (в пикселях).</div><div class="ttdef"><b>Definition:</b> LApp.h:53</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:31</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html_a2f0d137044067c3c98d097f5bfe63660"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#a2f0d137044067c3c98d097f5bfe63660">LGraphics::LApp::loop</a></div><div class="ttdeci">void loop()</div><div class="ttdoc">Бесконечный цикл</div><div class="ttdef"><b>Definition:</b> LApp.cpp:17</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_i_html"><div class="ttname"><a href="class_l_graphics_1_1_l_widget_i.html">LGraphics::LWidgetI</a></div><div class="ttdoc">Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LWidgetI.h:18</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_i_widget_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_widget.html">LGraphics::LIWidget</a></div><div class="ttdoc">Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LIWidget.h:18</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_app_html_a2f0d137044067c3c98d097f5bfe63660"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#a2f0d137044067c3c98d097f5bfe63660">LGraphics::LApp::loop</a></div><div class="ttdeci">void loop()</div><div class="ttdoc">Бесконечный цикл</div><div class="ttdef"><b>Definition:</b> LApp.cpp:16</div></div>
 <div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2</a></div><div class="ttdef"><b>Definition:</b> vectors.h:31</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

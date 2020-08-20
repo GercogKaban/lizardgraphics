@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['mouseonitfunction_219',['mouseOnItFunction',['../class_l_graphics_1_1_l_widget_i.html#a71b57c92a926edb1158e88ab9a7581e7',1,'LGraphics::LWidgetI']]],
-  ['move_5f_220',['move_',['../class_l_graphics_1_1_l_shape.html#ae2fe9b66bce9c225acbae8d9e6402eb2',1,'LGraphics::LShape']]]
+  ['mouseonitfunction_212',['mouseOnItFunction',['../class_l_graphics_1_1_l_i_widget.html#aa64c88d296b25c74a973098a98e902d7',1,'LGraphics::LIWidget']]],
+  ['move_5f_213',['move_',['../class_l_graphics_1_1_l_shape.html#ae2fe9b66bce9c225acbae8d9e6402eb2',1,'LGraphics::LShape']]]
 ];

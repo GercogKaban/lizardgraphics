@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ishidden_5f_217',['isHidden_',['../class_l_graphics_1_1_l_widget_i.html#a97458c9c3d5e1bd80d69544c02435e40',1,'LGraphics::LWidgetI']]]
+  ['ishidden_5f_210',['isHidden_',['../class_l_graphics_1_1_l_i_widget.html#a472db23ee28c590627fc93640fb822eb',1,'LGraphics::LIWidget']]]
 ];

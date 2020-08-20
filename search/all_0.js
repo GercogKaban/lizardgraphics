@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['app_0',['app',['../class_l_graphics_1_1_l_widget_i.html#ae6b110b17e833d1f79b55e8d57677c86',1,'LGraphics::LWidgetI']]]
+  ['app_0',['app',['../class_l_graphics_1_1_l_i_widget.html#a883624841fccfbe83e0543137748fd66',1,'LGraphics::LIWidget']]]
 ];
