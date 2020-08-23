@@ -13,10 +13,7 @@ namespace LGraphics
     public:
 
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
-
         void draw() override; ///< Рисует виджет на сцене.
-
-
         LRectangleShape(LApp* app);
 
         /*!

@@ -1,15 +1,9 @@
 ﻿#pragma once
-//#include "LRectangleShape.h"
-#include <map>
-#include <iostream>
-#include <array>
-
+#include <string>
 #include <ft2build.h>
 #include "include/GLEW/glew.h"
-
-
-#include "LTimer.h"
 #include "vectors.h"
+
 #include FT_FREETYPE_H 
 
 namespace LShaders

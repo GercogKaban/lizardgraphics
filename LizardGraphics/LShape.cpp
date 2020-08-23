@@ -1,7 +1,6 @@
-﻿#include "LShape.h"
+﻿#include "pch.h"
+#include "LShape.h"
 #include "LApp.h"
-#include "pch.h"
-#include "additional.h"
 
 namespace LGraphics
 {
@@ -98,6 +97,12 @@ namespace LGraphics
 
     void LShape::setLabel(const std::string label)
     {
+    }
+
+    LShape::~LShape()
+    {
+        //delete buffer;
+        //delete shader;
     }
 
     //void LShape::updateLabelPos()

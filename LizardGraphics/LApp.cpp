@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "LApp.h"
 #include "LError.h"
-#include "Lshaders.h"
 #include "LTextEdit.h"
 #include "LRectangleBuffer.h"
 #include "LTimer.h"
@@ -15,7 +14,7 @@ namespace LGraphics
 
     void LApp::loop()
     {
-        static LTimer t([&]()
+        LTimer t([&]()
         {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
         t.start();
         while (!glfwWindowShouldClose(window))
@@ -67,6 +66,8 @@ namespace LGraphics
     void LApp::initLEngine()
     {
         LError::init();
+        standartRectBuffer = new LRectangleBuffer();
+        standartInterfaceshader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
     }
 
@@ -139,22 +140,28 @@ namespace LGraphics
     {
         for (auto& x : objects)
             delete x;
+        delete standartRectBuffer;
+        delete standartInterfaceshader;
         LError::releaseResources();
     }
 
     void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
     {
+        bool out = false;
         if (!objects.size()) return;
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
-            for (auto& o = objects.begin(); o < objects.end(); o++)
+            for (auto& o = objects.rbegin(); o < objects.rend(); o++)
             {
                 if ((*o)->mouseOnIt())
                 {
                     if (activeWidget) activeWidget->breakAnimation();
                     activeWidget = *o;
                     if (dynamic_cast<LIButton*>(*o))
+                    {
                         ((LIButton*)*o)->doClickEventFunction();
+                        out = true;
+                    }
                 }
 
                 for (auto& innerW : (*o)->getInnerWidgets())
@@ -162,7 +169,9 @@ namespace LGraphics
                     {
                         if (activeWidget) activeWidget->breakAnimation();
                         activeWidget = innerW;
+                        return;
                     }
+                if (out) return;
             }
         }
 

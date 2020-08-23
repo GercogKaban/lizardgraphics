@@ -1,21 +1,12 @@
 ﻿#pragma once
 
-#include <vector>
-
-#include "LLine.h"
-
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
 #include "Lshaders.h"
 #include "LIRectangle.h"
 
-#include "vectors.h"
-
 namespace LGraphics
 {
-    class LWidgetI;
-    class LBuffer;
-
     namespace
     {
     }
@@ -29,9 +20,7 @@ namespace LGraphics
     */
     class LApp : public LObject
     {
-        friend LIRectangle;
         friend LRectangleShape;
-        friend LShape;
 
     public:
         
@@ -50,9 +39,7 @@ namespace LGraphics
         @brief Возвращает размеры окна (в пикселях).
 
         */
-        szvect2 getWindowSize() const { 
-            return szvect2(width, height); 
-        }
+        szvect2 getWindowSize() const { return szvect2(width, height); }
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
@@ -101,6 +88,9 @@ namespace LGraphics
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
 
         LIWidget* activeWidget = nullptr;
+
+        LBuffer* standartRectBuffer;
+        LShaders::Shader* standartInterfaceshader;
     };
 }
 

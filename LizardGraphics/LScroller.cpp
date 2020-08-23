@@ -1,10 +1,9 @@
+#include "pch.h"
+
 #include "LScroller.h"
 #include "LApp.h"
-#include "LRectangleBuffer.h"
 #include "LText.h"
 #include "additional.h"
-#include <cassert>
-#include <cmath>
 
 namespace LGraphics
 {

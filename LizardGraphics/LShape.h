@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "LBuffer.h"
 #include "LIWidget.h"
 #include "LLine.h"
 
@@ -8,6 +7,7 @@
 
 namespace LGraphics
 {
+    class LBuffer;
     /*!
     @brief Переопределяет абстрактный класс LWidgetI.
     */
@@ -92,11 +92,7 @@ namespace LGraphics
         void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;
         void setLabel(const std::string label) override;
            
-        virtual ~LShape()
-        {
-            delete buffer;
-            delete shader;
-        }
+        virtual ~LShape();
 
     protected:
 

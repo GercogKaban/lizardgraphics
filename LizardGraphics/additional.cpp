@@ -6,7 +6,6 @@ namespace LGraphics
     {
         bool c = false;
         for (int i = 0, j = npol - 1; i < npol; j = i++)
-        {
             if ((
                 (yp[i] < yp[j]) && (yp[i] <= p.y) && (p.y <= yp[j]) &&
                 ((yp[j] - yp[i]) * (p.x - xp[i]) > (xp[j] - xp[i]) * (p.y - yp[i]))
@@ -15,7 +14,6 @@ namespace LGraphics
                     ((yp[j] - yp[i]) * (p.x - xp[i]) < (xp[j] - xp[i]) * (p.y - yp[i]))
                     ))
                 c = !c;
-        }
         return c;
     }
 
@@ -49,6 +47,11 @@ namespace LGraphics
     float yGlCoordToScreenCoord(fvect2 screenSize, float y)
     {
         return ((y + 1.0f)*screenSize.y) / 2.0f;
+    }
+
+    std::tuple<fvect2, fvect2> getMoveAndSizeByCoords(fvect2 topLeft, fvect2 topRight, fvect2 bottomRight, fvect2 bottomLeft)
+    {
+        return std::tuple<fvect2, fvect2>({ (topLeft.x - topRight.x) / 2.0f, (topLeft.y - bottomLeft.y) / 2.0f , 1.0f }, fvect3(topLeft.x, topLeft.y, 0.0f) - fvect3(-0.5f, 0.5f, 0.0f));
     }
 
     fvect3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b)

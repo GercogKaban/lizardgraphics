@@ -5,10 +5,7 @@
 namespace LGraphics
 {
     LIRectangle::LIRectangle(LApp* app, const char * path)
-        :LRectangleShape(app, path)
-    {
-        setShader(new LShaders::Shader{ LShaders::interface_v, LShaders::interface_f });
-    }
+        :LRectangleShape(app, path){}
 
     void LIRectangle::tick()
     {

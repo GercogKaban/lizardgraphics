@@ -1,8 +1,7 @@
-﻿#include "LImage.h"
-#include "include/SOIL2/SOIL2.h"
+﻿#include "pch.h"
+#include "LImage.h"
 #include "textures.h"
 #include "LError.h"
-#include "pch.h"
 
 namespace LGraphics
 {

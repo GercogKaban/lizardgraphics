@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "LTimer.h"
-#include <thread>
-#include <iostream>
 #include "LLine.h"
 
 LTimer::LTimer(std::function<void()> func, std::chrono::milliseconds interval,bool start_)
@@ -10,11 +9,16 @@ LTimer::LTimer(std::function<void()> func, std::chrono::milliseconds interval,bo
     if (start_) start();
 }
 
+LTimer::~LTimer()
+{
+    stop();
+    thread.join();
+}
+
 void LTimer::start()
 {
     isStopped = false;
-    std::thread thread(std::move([&]() { while (!isStopped) {std::this_thread::sleep_for(interval); func(); } }));
-    thread.detach();
+    thread = std::thread([&]() { while (!isStopped) { std::this_thread::sleep_for(interval); func(); }});
 }
 
 void LTimer::stop()

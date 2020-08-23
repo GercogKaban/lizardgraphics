@@ -2,7 +2,6 @@
 #include "LRectangleShape.h"
 #include "LRectangleBuffer.h"
 #include "LApp.h"
-#include "LIButton.h"
 
 namespace LGraphics
 {
@@ -73,7 +72,8 @@ namespace LGraphics
     void LRectangleShape::init(LApp* app)
     {
         this->app = app;
-        buffer = new LRectangleBuffer();
+        buffer = app->standartRectBuffer;
+        shader = app->standartInterfaceshader;
         app->addObject(this);
     }
 

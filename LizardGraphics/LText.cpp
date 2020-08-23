@@ -1,11 +1,9 @@
+#include "pch.h"
+#include "LApp.h"
 #include "LText.h"
-#include "LRectangleBuffer.h"
-#include "additional.h"
-#include <cassert>
 
 namespace LGraphics
 {
-
     LGraphics::LText::LText(LApp * app, const std::string text_, const char* path)
         :LIButton(app, path)
     {

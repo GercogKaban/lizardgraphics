@@ -4,6 +4,7 @@
 
 namespace LGraphics
 {
+    class LText;
     class LScroller : public LIRectangle
     {
     public:

@@ -7,8 +7,6 @@
 #include "LIRectangle.h"
 #include "LIButton.h"
 #include "LTextEdit.h"
-#include "additional.h"
-#include <cmath>
 
 using namespace LGraphics;
 
@@ -17,10 +15,10 @@ int main()
     LGraphics::LApp app;
 
     //auto e = new LIButton(&app, "image.png");
-    auto d = new LIButton(&app, "image.png");
+    auto d = new LIButton(&app);
 
     std::string test(1, 'i');
-    auto textEdit = new LTextEdit(&app, test, "test.png");
+    auto textEdit = new LTextEdit(&app, test);
     textEdit->turnOffTexture();
     textEdit->color(255, 255, 255);
     textEdit->move(app.getWindowSize().x/2, app.getWindowSize().y / 2);
@@ -33,11 +31,8 @@ int main()
     //e->move(100,50);
     //e->color(255, 0, 0);
 
-    d->scale(textEdit->vertScroller->getScale());
-
     //d->move(700,200);
-    d->color(0, 0, 0);
-    //d->setLabel("aue");
+    d->color(255, 0, 0);
     d->setLabelColor(255, 255, 255);
     d->turnOffTexture();
 

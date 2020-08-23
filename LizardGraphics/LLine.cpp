@@ -1,19 +1,9 @@
 ﻿#pragma once
 
-#include "LLine.h"
 #include "pch.h"
-
-#include <map>
-#include <iostream>
-#include <ft2build.h>
-#include "include/GLEW/glew.h"
-
-#include "include/glm/glm.hpp"
-#include "include/glm/gtc/matrix_transform.hpp"
-#include "include/glm/gtc/type_ptr.hpp"
+#include "LLine.h"
 
 #include "LApp.h"
-#include "Lshaders.h"
 
 #include FT_FREETYPE_H 
 

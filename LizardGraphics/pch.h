@@ -19,12 +19,19 @@
 #include <functional>
 #include <chrono>
 #include <cmath>
+#include <thread>
 
 #include "vectors.h"
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
 
 #include "include/SOIL2/SOIL2.h"
+
+#include "include/glm/glm.hpp"
+#include "include/glm/gtc/matrix_transform.hpp"
+#include "include/glm/gtc/type_ptr.hpp"
+
+#include <ft2build.h>
 #include "additional.h"
 
 #endif //PCH_H
