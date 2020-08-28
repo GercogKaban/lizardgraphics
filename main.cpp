@@ -11,17 +11,17 @@
 using namespace LGraphics;
 
 int main()
-{   
+{
     LGraphics::LApp app;
 
     //auto e = new LIButton(&app, "image.png");
     auto d = new LIButton(&app);
 
-    std::string test(1, 'i');
+    std::string test("test\ntest");
     auto textEdit = new LTextEdit(&app, test);
     textEdit->turnOffTexture();
     textEdit->color(255, 255, 255);
-    textEdit->move(app.getWindowSize().x/2, app.getWindowSize().y / 2);
+    textEdit->move(app.getWindowSize().x / 2, app.getWindowSize().y / 2);
     textEdit->setVerticalScroller(new LGraphics::LVerticalScroller(&app));
 
     //textEdit->scale({0.5f ,0.5f,1.0f });
@@ -39,6 +39,7 @@ int main()
     //e->setClickEventFunction([&]() {textEdit->scale({ 1.5f,0.5f,1.0f }); });
     d->setClickEventFunction([&]() {textEdit->move(app.getWindowSize().x / 3, app.getWindowSize().y / 2); });
     textEdit->move(800, 500);
+    textEdit->scale({ 1, 1, 1});
     app.loop();
     return 0;
 }

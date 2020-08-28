@@ -151,8 +151,9 @@ namespace LGraphics
     void LGraphics::LText::alignText()
     {
         std::string wholeText;
-        for (auto& str : text)
-            wholeText += str.text;
+        for (size_t i = 0; i < text.size(); ++i)
+            wholeText += text[i].text += '\n';
+        wholeText.pop_back();
         text.clear();
         initWidget();
         addText(wholeText);
@@ -170,12 +171,13 @@ namespace LGraphics
 
     void LGraphics::LText::pushNewString()
     {
+        fvect3 topLeftCorner = getTopLeftCorner();
         Text temp;
         if (text.size())
-            temp.pos = { text.back().pos.x, text.back().pos.y - strIndent };
+            temp.pos = { topLeftCorner.x + leftBorder, text.back().pos.y - strIndent };
         else
         {
-            fvect3 topLeftCorner = getTopLeftCorner();
+            //fvect3 topLeftCorner = getTopLeftCorner();
             temp.pos = { topLeftCorner.x + leftBorder, topLeftCorner.y - topBorder };
         }
 
@@ -193,8 +195,7 @@ namespace LGraphics
         hiddenStrings = 0;
         pushNewString();
         calculateMaxLength();
-        begin = text.begin();
-        end = text.end();
+        yAlign();
     }
 
 }
