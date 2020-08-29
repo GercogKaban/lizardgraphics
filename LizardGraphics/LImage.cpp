@@ -17,6 +17,12 @@ namespace LGraphics
 
     void LImage::bindTexture(const char* path)
     {
+        if (textures.find(path) != textures.end())
+        {
+            texture = textures[path];
+            return;
+        }
+
         int width, height;
         unsigned char* image;
 
@@ -32,6 +38,7 @@ namespace LGraphics
             }
         }
         bindTexture(image, width, height);
+        textures.insert(std::make_pair(path, texture));
     }
 
     void LImage::bindTexture(const unsigned char* bytes, size_t size)

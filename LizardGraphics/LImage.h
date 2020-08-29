@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <map>
 #include "include/GLEW/glew.h"
 #include "LObject.h"
 
@@ -82,6 +83,7 @@ namespace LGraphics
         */
         void bindTexture(unsigned char* bytes, int width, int height);
 
+        std::map<std::string, GLuint> textures;
         GLuint texture; ///< Дескриптор текстуры.
 
         bool turnedOn = true; ///< Включена ли текстура.

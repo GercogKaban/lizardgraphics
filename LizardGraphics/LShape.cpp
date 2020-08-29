@@ -75,7 +75,10 @@ namespace LGraphics
     //}
 
     LShape::LShape(const char * path)
-        : LIWidget(path){}
+        : LIWidget(path)
+    {
+        if (path) turnOffColor();
+    }
 
     LShape::LShape(const unsigned char* bytes, size_t size)
         : LIWidget(bytes, size){}
