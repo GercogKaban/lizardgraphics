@@ -23,5 +23,6 @@ var searchData=
   ['ltextedit_56',['LTextEdit',['../class_l_graphics_1_1_l_text_edit.html',1,'LGraphics']]],
   ['ltimer_57',['LTimer',['../class_l_timer.html',1,'']]],
   ['lverticalscroller_58',['LVerticalScroller',['../class_l_graphics_1_1_l_vertical_scroller.html',1,'LGraphics']]],
-  ['lizardgraphics_59',['lizardgraphics',['../md__r_e_a_d_m_e.html',1,'']]]
+  ['lwrectangle_59',['LWRectangle',['../class_l_graphics_1_1_l_w_rectangle.html',1,'LGraphics']]],
+  ['lizardgraphics_60',['lizardgraphics',['../md__r_e_a_d_m_e.html',1,'']]]
 ];
