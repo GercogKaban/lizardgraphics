@@ -1,3 +1,3 @@
 #pragma once
 
-bool openglIsBusy = false;
+extern bool openglIsBusy;
