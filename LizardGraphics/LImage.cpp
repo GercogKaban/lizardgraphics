@@ -2,6 +2,7 @@
 #include "LImage.h"
 #include "textures.h"
 #include "LError.h"
+#include "mutex.h"
 
 namespace LGraphics
 {
@@ -37,7 +38,10 @@ namespace LGraphics
                 LWRITE("item at address: ", path, " is missing"), LPRINT();
             }
         }
+        while (openglIsBusy);
+        openglIsBusy = true;
         bindTexture(image, width, height);
+        openglIsBusy = false;
         if (path && image) textures.insert(std::make_pair(path, texture));
     }
 

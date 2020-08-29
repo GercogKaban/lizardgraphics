@@ -6,6 +6,8 @@
 #include "LWRectangle.h"
 #include "LTimer.h"
 
+#include "mutex.h"
+
 namespace LGraphics
 {
     LApp::LApp()
@@ -20,6 +22,8 @@ namespace LGraphics
         t.start();
         while (!glfwWindowShouldClose(window))
         {
+            while (openglIsBusy);
+            openglIsBusy = true;
             fps++;
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -31,6 +35,7 @@ namespace LGraphics
                 LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
             glfwSwapBuffers(window);
+            openglIsBusy = false;
             for (auto& o : objects)
                 o->tick();
         }
