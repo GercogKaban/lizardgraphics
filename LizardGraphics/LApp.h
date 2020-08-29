@@ -2,6 +2,7 @@
 
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
+#include "include/glm/glm.hpp"
 #include "Lshaders.h"
 #include "LIRectangle.h"
 
@@ -55,13 +56,24 @@ namespace LGraphics
 
         void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
         void setActiveWidget(LIWidget* w) { activeWidget = w; }
+        void setMatrices(glm::mat4 view, glm::mat4 projection);
+
+        void refreshObjectMatrices();
 
         std::vector<LIWidget*>* getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
+
+        LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
+        LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
+
+        glm::mat4 getViewMatrix() const { return view; }
+        glm::mat4 getProjectionMatrix() const { return projection; }
+
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
     private:
 
+        void setMatrices();
         void addObject(LIWidget* w);
 
         LLine* textRenderer;
@@ -90,7 +102,9 @@ namespace LGraphics
         LIWidget* activeWidget = nullptr;
 
         LBuffer* standartRectBuffer;
-        LShaders::Shader* standartInterfaceshader;
+        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader;
+
+        glm::mat4 view, projection;
     };
 }
 

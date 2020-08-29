@@ -54,6 +54,22 @@ namespace LShaders
         "color = vec4(textColor, 1.0) * sampled;\n"
         "}\n";
 
+
+    const char world_w[] =
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 position;\n"
+        "layout (location = 1) in vec2 texCoord;\n"
+        "out vec2 TexCoord;\n"
+        "uniform mat4 model;\n"
+        "uniform mat4 view;\n"
+        "uniform mat4 projection;\n"
+        "void main()\n"
+        "{\n"
+        "gl_Position = projection * view * model * vec4(position, 1.0f);\n"
+        "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
+        "}\n";
+
+
     /*!
     @brief Класс шейдера.
 

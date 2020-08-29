@@ -3,6 +3,7 @@
 #include "LError.h"
 #include "LTextEdit.h"
 #include "LRectangleBuffer.h"
+#include "LWRectangle.h"
 #include "LTimer.h"
 
 namespace LGraphics
@@ -52,6 +53,28 @@ namespace LGraphics
         return activeWidget;
     }
 
+    void LApp::setMatrices(glm::mat4 view, glm::mat4 projection)
+    {
+        this->view = view;
+        this->projection = projection;
+    }
+
+    void LApp::refreshObjectMatrices()
+    {
+        for (auto& obj : objects)
+            if (dynamic_cast<LWRectangle*>(obj))
+                dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
+    }
+
+    void LApp::setMatrices()
+    {
+        auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
+        view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f));
+        projection = glm::ortho(-1.0f, 1.0f, -1.0f * aspect, 1.0f * aspect, 0.1f, 100.0f);
+    }
+
     void LApp::addObject(LIWidget * w)
     {
         objects.push_back(w);
@@ -68,6 +91,8 @@ namespace LGraphics
         LError::init();
         standartRectBuffer = new LRectangleBuffer();
         standartInterfaceshader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
+        standartWorldObjShader = new LShaders::Shader(LShaders::world_w, LShaders::interface_f);
+        setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
     }
 
@@ -142,6 +167,7 @@ namespace LGraphics
             delete x;
         delete standartRectBuffer;
         delete standartInterfaceshader;
+        delete standartWorldObjShader;
         LError::releaseResources();
     }
 

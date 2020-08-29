@@ -7,6 +7,7 @@
 #include "LIRectangle.h"
 #include "LIButton.h"
 #include "LTextEdit.h"
+#include "LWRectangle.h"
 
 using namespace LGraphics;
 
@@ -17,7 +18,8 @@ int main()
     auto t1 = "test1.png";
     auto t2 = "test2.png";
     //auto e = new LIButton(&app, "image.png");
-    auto d = new LIButton(&app, t1);
+    //auto d = new LIButton(&app, t1);
+    auto unit = new LWRectangle(&app,t1);
 
     //std::string test("test\ntest");
     //auto textEdit = new LTextEdit(&app, test);
@@ -39,20 +41,20 @@ int main()
     //d->turnOffTexture();
 
     ////e->setClickEventFunction([&]() {textEdit->scale({ 1.5f,0.5f,1.0f }); });
-    d->setClickEventFunction([&]() 
-    {
-        static bool firstTexture = true; 
-        if (firstTexture)
-        {
-            d->bindTexture("test2.png");
-            firstTexture = false;
-        }
-        else
-        {
-            d->bindTexture("test1.png");
-            firstTexture = true;
-        }
-    });
+    //d->setClickEventFunction([&]() 
+    //{
+    //    static bool firstTexture = true; 
+    //    if (firstTexture)
+    //    {
+    //        d->bindTexture("test2.png");
+    //        firstTexture = false;
+    //    }
+    //    else
+    //    {
+    //        d->bindTexture("test1.png");
+    //        firstTexture = true;
+    //    }
+    //});
     //textEdit->move(800, 500);
     //textEdit->scale({ 1, 1, 1});
     app.loop();

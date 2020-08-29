@@ -17,12 +17,6 @@ namespace LGraphics
 
     void LImage::bindTexture(const char* path)
     {
-        if (textures.find(path) != textures.end())
-        {
-            texture = textures[path];
-            return;
-        }
-
         int width, height;
         unsigned char* image;
 
@@ -30,6 +24,12 @@ namespace LGraphics
             image = SOIL_load_image_from_memory(LGraphics::notexture, notextureSize, &width, &height, 0, SOIL_LOAD_RGBA);
         else
         {
+            if (textures.find(path) != textures.end())
+            {
+                texture = textures[path];
+                return;
+            }
+
             image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGBA);
             if (!image)
             {
@@ -38,7 +38,7 @@ namespace LGraphics
             }
         }
         bindTexture(image, width, height);
-        textures.insert(std::make_pair(path, texture));
+        if (path && image) textures.insert(std::make_pair(path, texture));
     }
 
     void LImage::bindTexture(const unsigned char* bytes, size_t size)
