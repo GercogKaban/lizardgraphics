@@ -70,6 +70,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="class_l_graphics_1_1_l_i_rectangle-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">LGraphics::LIRectangle Class Reference</div>  </div>
@@ -88,7 +89,7 @@ Inheritance diagram for LGraphics::LIRectangle:</div>
   <map id="LGraphics::LIRectangle_map" name="LGraphics::LIRectangle_map">
 <area href="class_l_graphics_1_1_l_rectangle_shape.html" title="Класс четурёхугольной формы." alt="LGraphics::LRectangleShape" shape="rect" coords="97,224,282,248"/>
 <area href="class_l_graphics_1_1_l_shape.html" title="Переопределяет абстрактный класс LWidgetI." alt="LGraphics::LShape" shape="rect" coords="97,168,282,192"/>
-<area href="class_l_graphics_1_1_l_i_widget.html" title="Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics." alt="LGraphics::LIWidget" shape="rect" coords="97,112,282,136"/>
+<area href="class_l_graphics_1_1_l_widget.html" title="Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics." alt="LGraphics::LWidget" shape="rect" coords="97,112,282,136"/>
 <area href="class_l_graphics_1_1_l_image.html" title="Класс изображения, привязывается к виджетом в качестве текстуры." alt="LGraphics::LImage" shape="rect" coords="97,56,282,80"/>
 <area href="class_l_graphics_1_1_l_object.html" alt="LGraphics::LObject" shape="rect" coords="97,0,282,24"/>
 <area href="class_l_graphics_1_1_l_scroller.html" alt="LGraphics::LScroller" shape="rect" coords="97,336,282,360"/>
@@ -99,9 +100,9 @@ Inheritance diagram for LGraphics::LIRectangle:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a66a5708d444749598d621f21161dff7a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_rectangle.html#a66a5708d444749598d621f21161dff7a">LIRectangle</a> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_i_widget.html#a883624841fccfbe83e0543137748fd66">app</a>, const char *path=nullptr)</td></tr>
-<tr class="memdesc:a66a5708d444749598d621f21161dff7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор.  <a href="class_l_graphics_1_1_l_i_rectangle.html#a66a5708d444749598d621f21161dff7a">More...</a><br /></td></tr>
-<tr class="separator:a66a5708d444749598d621f21161dff7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf8f0eda94382512204e1d42659d6fc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_rectangle.html#a0bf8f0eda94382512204e1d42659d6fc">LIRectangle</a> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, const char *path=nullptr, bool lazy=true)</td></tr>
+<tr class="memdesc:a0bf8f0eda94382512204e1d42659d6fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор.  <a href="class_l_graphics_1_1_l_i_rectangle.html#a0bf8f0eda94382512204e1d42659d6fc">More...</a><br /></td></tr>
+<tr class="separator:a0bf8f0eda94382512204e1d42659d6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ad1e0caefc9dbc8ac6b33aacaf8053d"><td class="memItemLeft" align="right" valign="top"><a id="a9ad1e0caefc9dbc8ac6b33aacaf8053d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>tick</b> () override</td></tr>
 <tr class="separator:a9ad1e0caefc9dbc8ac6b33aacaf8053d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,6 +139,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>calculateWidgetLengt
 <tr class="memitem:aa48748c93aec05892374edf2916e811c"><td class="memItemLeft" align="right" valign="top"><a id="aa48748c93aec05892374edf2916e811c"></a>
 <a class="el" href="structvect__prototype2.html">fvect3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getBottomRightCorner</b> () const</td></tr>
 <tr class="separator:aa48748c93aec05892374edf2916e811c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b2264b07ff6c9af6116dd92769e9c35"><td class="memItemLeft" align="right" valign="top"><a id="a8b2264b07ff6c9af6116dd92769e9c35"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
+<tr class="separator:a8b2264b07ff6c9af6116dd92769e9c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a793e8527051b1c2e424b957d631747b4"><td class="memItemLeft" align="right" valign="top"><a id="a793e8527051b1c2e424b957d631747b4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#a793e8527051b1c2e424b957d631747b4">setShader</a> (<a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *<a class="el" href="class_l_graphics_1_1_l_shape.html#a6fb798415e344e66055010768d73f2b3">shader</a>) override</td></tr>
 <tr class="memdesc:a793e8527051b1c2e424b957d631747b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает шейдер виджету. <br /></td></tr>
@@ -195,46 +199,42 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>turnOffColor</b> () o
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#ab7c39bd317918b1abe1878819efad452">setLabelColor</a> (unsigned char r, unsigned char g, unsigned char b) override</td></tr>
 <tr class="memdesc:ab7c39bd317918b1abe1878819efad452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает цвет метке виджета. <br /></td></tr>
 <tr class="separator:ab7c39bd317918b1abe1878819efad452"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b037a15c3695b3655e96ab8a851fc02"><td class="memItemLeft" align="right" valign="top"><a id="a9b037a15c3695b3655e96ab8a851fc02"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a9b037a15c3695b3655e96ab8a851fc02">setApp</a> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *app_)</td></tr>
-<tr class="memdesc:a9b037a15c3695b3655e96ab8a851fc02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает приложение (окно) виджета. <br /></td></tr>
-<tr class="separator:a9b037a15c3695b3655e96ab8a851fc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08311b6fb0985ca79a0295625eda1049"><td class="memItemLeft" align="right" valign="top"><a id="a08311b6fb0985ca79a0295625eda1049"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a08311b6fb0985ca79a0295625eda1049">setMouseOnItEventFunction</a> (std::function&lt; void()&gt; fun)</td></tr>
-<tr class="memdesc:a08311b6fb0985ca79a0295625eda1049"><td class="mdescLeft">&#160;</td><td class="mdescRight">устанавливает функцию, которая будет срабатывать при наведении мышки на виджет. <br /></td></tr>
-<tr class="separator:a08311b6fb0985ca79a0295625eda1049"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e57478ac0db7c230d34ba4f938d8b14"><td class="memItemLeft" align="right" valign="top"><a id="a0e57478ac0db7c230d34ba4f938d8b14"></a>
+<tr class="memitem:a84d46235ec8d5e8844bdb899dbcfabc8"><td class="memItemLeft" align="right" valign="top"><a id="a84d46235ec8d5e8844bdb899dbcfabc8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#a84d46235ec8d5e8844bdb899dbcfabc8">setMouseOnItEventFunction</a> (std::function&lt; void()&gt; fun)</td></tr>
+<tr class="memdesc:a84d46235ec8d5e8844bdb899dbcfabc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">устанавливает функцию, которая будет срабатывать при наведении мышки на виджет. <br /></td></tr>
+<tr class="separator:a84d46235ec8d5e8844bdb899dbcfabc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedec6f6db2850f7447a6ea9f7cf8f3b6"><td class="memItemLeft" align="right" valign="top"><a id="aedec6f6db2850f7447a6ea9f7cf8f3b6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setAnimation</b> (std::function&lt; void()&gt; fun)</td></tr>
-<tr class="separator:a0e57478ac0db7c230d34ba4f938d8b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af41a11c2ace7ef655354077370b84767"><td class="memItemLeft" align="right" valign="top"><a id="af41a11c2ace7ef655354077370b84767"></a>
+<tr class="separator:aedec6f6db2850f7447a6ea9f7cf8f3b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20a5c693d3b0ab0feca1cbbfbbbc3585"><td class="memItemLeft" align="right" valign="top"><a id="a20a5c693d3b0ab0feca1cbbfbbbc3585"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>doAnimation</b> ()</td></tr>
-<tr class="separator:af41a11c2ace7ef655354077370b84767"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ce1a1cd3ef33997b40c9b56ee48a824"><td class="memItemLeft" align="right" valign="top"><a id="a9ce1a1cd3ef33997b40c9b56ee48a824"></a>
+<tr class="separator:a20a5c693d3b0ab0feca1cbbfbbbc3585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ee5c6fa835e47733ee9feec3ce1853d"><td class="memItemLeft" align="right" valign="top"><a id="a1ee5c6fa835e47733ee9feec3ce1853d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setBreakingAnimation</b> (std::function&lt; void()&gt; fun)</td></tr>
-<tr class="separator:a9ce1a1cd3ef33997b40c9b56ee48a824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f03bdfb50dc0c6a1c5dc4485c0b7a79"><td class="memItemLeft" align="right" valign="top"><a id="a8f03bdfb50dc0c6a1c5dc4485c0b7a79"></a>
+<tr class="separator:a1ee5c6fa835e47733ee9feec3ce1853d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a618e748e57dc83b5a7e118d1f1fea665"><td class="memItemLeft" align="right" valign="top"><a id="a618e748e57dc83b5a7e118d1f1fea665"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>breakAnimation</b> ()</td></tr>
-<tr class="separator:a8f03bdfb50dc0c6a1c5dc4485c0b7a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a246e7d0f990513b9d2ba7c6ba0e84e86"><td class="memItemLeft" align="right" valign="top"><a id="a246e7d0f990513b9d2ba7c6ba0e84e86"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a246e7d0f990513b9d2ba7c6ba0e84e86">show</a> ()</td></tr>
-<tr class="memdesc:a246e7d0f990513b9d2ba7c6ba0e84e86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Показать виджет. <br /></td></tr>
-<tr class="separator:a246e7d0f990513b9d2ba7c6ba0e84e86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2d911805ee3093e8e33c7c3b649df52"><td class="memItemLeft" align="right" valign="top"><a id="ad2d911805ee3093e8e33c7c3b649df52"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#ad2d911805ee3093e8e33c7c3b649df52">hide</a> ()</td></tr>
-<tr class="memdesc:ad2d911805ee3093e8e33c7c3b649df52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Скрыть виджет. <br /></td></tr>
-<tr class="separator:ad2d911805ee3093e8e33c7c3b649df52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9424dd9d77ded13ba99ea2837df74a9"><td class="memItemLeft" align="right" valign="top"><a id="ad9424dd9d77ded13ba99ea2837df74a9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#ad9424dd9d77ded13ba99ea2837df74a9">setHidden</a> (bool <a class="el" href="class_l_graphics_1_1_l_i_widget.html#ad2d911805ee3093e8e33c7c3b649df52">hide</a>)</td></tr>
-<tr class="memdesc:ad9424dd9d77ded13ba99ea2837df74a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Установить видимость виджета. <br /></td></tr>
-<tr class="separator:ad9424dd9d77ded13ba99ea2837df74a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ceaec1e4ad3042b778f14e6a789cf4b"><td class="memItemLeft" align="right" valign="top"><a id="a2ceaec1e4ad3042b778f14e6a789cf4b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a2ceaec1e4ad3042b778f14e6a789cf4b">isHidden</a> () const</td></tr>
-<tr class="memdesc:a2ceaec1e4ad3042b778f14e6a789cf4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает спрятан ли виджет. <br /></td></tr>
-<tr class="separator:a2ceaec1e4ad3042b778f14e6a789cf4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a57c477fc6680d7252b8df6adfa3ce7"><td class="memItemLeft" align="right" valign="top"><a id="a0a57c477fc6680d7252b8df6adfa3ce7"></a>
-const std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_i_widget.html">LIWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a0a57c477fc6680d7252b8df6adfa3ce7">getInnerWidgets</a> () const</td></tr>
-<tr class="memdesc:a0a57c477fc6680d7252b8df6adfa3ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает текст метке виджета. <br /></td></tr>
-<tr class="separator:a0a57c477fc6680d7252b8df6adfa3ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a618e748e57dc83b5a7e118d1f1fea665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa79345fc9f8d6f2d5d3627346aba23f"><td class="memItemLeft" align="right" valign="top"><a id="afa79345fc9f8d6f2d5d3627346aba23f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#afa79345fc9f8d6f2d5d3627346aba23f">show</a> ()</td></tr>
+<tr class="memdesc:afa79345fc9f8d6f2d5d3627346aba23f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Показать виджет. <br /></td></tr>
+<tr class="separator:afa79345fc9f8d6f2d5d3627346aba23f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fd03dfcef5e64c327bdba06b5eb690"><td class="memItemLeft" align="right" valign="top"><a id="a05fd03dfcef5e64c327bdba06b5eb690"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#a05fd03dfcef5e64c327bdba06b5eb690">hide</a> ()</td></tr>
+<tr class="memdesc:a05fd03dfcef5e64c327bdba06b5eb690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Скрыть виджет. <br /></td></tr>
+<tr class="separator:a05fd03dfcef5e64c327bdba06b5eb690"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a990c5286605dfc61636d9010e295234f"><td class="memItemLeft" align="right" valign="top"><a id="a990c5286605dfc61636d9010e295234f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#a990c5286605dfc61636d9010e295234f">setHidden</a> (bool <a class="el" href="class_l_graphics_1_1_l_widget.html#a05fd03dfcef5e64c327bdba06b5eb690">hide</a>)</td></tr>
+<tr class="memdesc:a990c5286605dfc61636d9010e295234f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Установить видимость виджета. <br /></td></tr>
+<tr class="separator:a990c5286605dfc61636d9010e295234f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9ec3943fb1eeab1188f9bbc7bcf0150"><td class="memItemLeft" align="right" valign="top"><a id="ac9ec3943fb1eeab1188f9bbc7bcf0150"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#ac9ec3943fb1eeab1188f9bbc7bcf0150">isHidden</a> () const</td></tr>
+<tr class="memdesc:ac9ec3943fb1eeab1188f9bbc7bcf0150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает спрятан ли виджет. <br /></td></tr>
+<tr class="separator:ac9ec3943fb1eeab1188f9bbc7bcf0150"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09c99b01f68a304cb10c9e7d84ef0261"><td class="memItemLeft" align="right" valign="top"><a id="a09c99b01f68a304cb10c9e7d84ef0261"></a>
+const std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#a09c99b01f68a304cb10c9e7d84ef0261">getInnerWidgets</a> () const</td></tr>
+<tr class="memdesc:a09c99b01f68a304cb10c9e7d84ef0261"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает текст метке виджета. <br /></td></tr>
+<tr class="separator:a09c99b01f68a304cb10c9e7d84ef0261"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2742b8c770d7cf2aa5d4a02f6d4ef095"><td class="memItemLeft" align="right" valign="top"><a id="a2742b8c770d7cf2aa5d4a02f6d4ef095"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a2742b8c770d7cf2aa5d4a02f6d4ef095">getTexture</a> () const</td></tr>
 <tr class="memdesc:a2742b8c770d7cf2aa5d4a02f6d4ef095"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает текстуру. <br /></td></tr>
@@ -253,7 +253,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a52cb3db1caa0ed27a0b3c8f0ef544502">turnOnTexture</a> ()</td></tr>
 <tr class="memdesc:a52cb3db1caa0ed27a0b3c8f0ef544502"><td class="mdescLeft">&#160;</td><td class="mdescRight">Включает текстуру. <br /></td></tr>
 <tr class="separator:a52cb3db1caa0ed27a0b3c8f0ef544502"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63c916f0c2ea2c9be528338e3b43dd5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a63c916f0c2ea2c9be528338e3b43dd5a">switchTexture</a> (bool <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a246e7d0f990513b9d2ba7c6ba0e84e86">show</a>)</td></tr>
+<tr class="memitem:a63c916f0c2ea2c9be528338e3b43dd5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a63c916f0c2ea2c9be528338e3b43dd5a">switchTexture</a> (bool <a class="el" href="class_l_graphics_1_1_l_widget.html#afa79345fc9f8d6f2d5d3627346aba23f">show</a>)</td></tr>
 <tr class="memdesc:a63c916f0c2ea2c9be528338e3b43dd5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Включает/выключает текстуру.  <a href="class_l_graphics_1_1_l_image.html#a63c916f0c2ea2c9be528338e3b43dd5a">More...</a><br /></td></tr>
 <tr class="separator:a63c916f0c2ea2c9be528338e3b43dd5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac098468eec05278adf88e306eb5dc01e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#ac098468eec05278adf88e306eb5dc01e">switchTexture</a> ()</td></tr>
@@ -267,8 +267,11 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a35c75edeb13d89488b8ac06db8d6198e"><td class="memItemLeft" align="right" valign="top"><a id="a35c75edeb13d89488b8ac06db8d6198e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_i_widget.html#a883624841fccfbe83e0543137748fd66">app</a>)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>)</td></tr>
 <tr class="separator:a35c75edeb13d89488b8ac06db8d6198e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a460fc60490c3f4b791c6e14a9077943e"><td class="memItemLeft" align="right" valign="top"><a id="a460fc60490c3f4b791c6e14a9077943e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, bool lazy)</td></tr>
+<tr class="separator:a460fc60490c3f4b791c6e14a9077943e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dfe887f7d5af8450a9a50f6486f264b"><td class="memItemLeft" align="right" valign="top"><a id="a4dfe887f7d5af8450a9a50f6486f264b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>updateLabelPos</b> () override</td></tr>
 <tr class="separator:a4dfe887f7d5af8450a9a50f6486f264b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -280,9 +283,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 const <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#a2efdd547d6ef863e274b76a9ecdf89af">getShader</a> () const</td></tr>
 <tr class="memdesc:a2efdd547d6ef863e274b76a9ecdf89af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает шейдер. <br /></td></tr>
 <tr class="separator:a2efdd547d6ef863e274b76a9ecdf89af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a637e7308b8dce82a0cb68cab080c5f0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a637e7308b8dce82a0cb68cab080c5f0c">bindTexture</a> (unsigned char *bytes, int width, int height)</td></tr>
-<tr class="memdesc:a637e7308b8dce82a0cb68cab080c5f0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Привязывает текстуру.  <a href="class_l_graphics_1_1_l_image.html#a637e7308b8dce82a0cb68cab080c5f0c">More...</a><br /></td></tr>
-<tr class="separator:a637e7308b8dce82a0cb68cab080c5f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -316,30 +316,27 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <a class="el" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#ad1333437d8bafc7188acf7aff744ea19">buffer</a> = nullptr</td></tr>
 <tr class="memdesc:ad1333437d8bafc7188acf7aff744ea19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Координатный буфер (вершини, индексы, текстурные координаты). <br /></td></tr>
 <tr class="separator:ad1333437d8bafc7188acf7aff744ea19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a883624841fccfbe83e0543137748fd66"><td class="memItemLeft" align="right" valign="top"><a id="a883624841fccfbe83e0543137748fd66"></a>
-<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a883624841fccfbe83e0543137748fd66">app</a> = nullptr</td></tr>
-<tr class="memdesc:a883624841fccfbe83e0543137748fd66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Указатель на приложение. <br /></td></tr>
-<tr class="separator:a883624841fccfbe83e0543137748fd66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a472db23ee28c590627fc93640fb822eb"><td class="memItemLeft" align="right" valign="top"><a id="a472db23ee28c590627fc93640fb822eb"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#a472db23ee28c590627fc93640fb822eb">isHidden_</a> = false</td></tr>
-<tr class="memdesc:a472db23ee28c590627fc93640fb822eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Видимость виджета. <br /></td></tr>
-<tr class="separator:a472db23ee28c590627fc93640fb822eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa64c88d296b25c74a973098a98e902d7"><td class="memItemLeft" align="right" valign="top"><a id="aa64c88d296b25c74a973098a98e902d7"></a>
-std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_widget.html#aa64c88d296b25c74a973098a98e902d7">mouseOnItFunction</a></td></tr>
-<tr class="memdesc:aa64c88d296b25c74a973098a98e902d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Функция, срабатывающая при наведении мышки на виджет. <br /></td></tr>
-<tr class="separator:aa64c88d296b25c74a973098a98e902d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57f1ce89ed8b34296a453af46722d824"><td class="memItemLeft" align="right" valign="top"><a id="a57f1ce89ed8b34296a453af46722d824"></a>
+<tr class="memitem:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="memItemLeft" align="right" valign="top"><a id="afb1a6f0c4d6f17b768d2fb5d5c400e51"></a>
+<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a> = nullptr</td></tr>
+<tr class="memdesc:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Указатель на приложение. <br /></td></tr>
+<tr class="separator:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6106763de9a9a59206806ed4a4d7d0d4"><td class="memItemLeft" align="right" valign="top"><a id="a6106763de9a9a59206806ed4a4d7d0d4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#a6106763de9a9a59206806ed4a4d7d0d4">isHidden_</a> = false</td></tr>
+<tr class="memdesc:a6106763de9a9a59206806ed4a4d7d0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Видимость виджета. <br /></td></tr>
+<tr class="separator:a6106763de9a9a59206806ed4a4d7d0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad26de8467035b1f7bbdcf571b8fbe21d"><td class="memItemLeft" align="right" valign="top"><a id="ad26de8467035b1f7bbdcf571b8fbe21d"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#ad26de8467035b1f7bbdcf571b8fbe21d">mouseOnItFunction</a></td></tr>
+<tr class="memdesc:ad26de8467035b1f7bbdcf571b8fbe21d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Функция, срабатывающая при наведении мышки на виджет. <br /></td></tr>
+<tr class="separator:ad26de8467035b1f7bbdcf571b8fbe21d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a82106bc4725a47696058d1d4d77e79"><td class="memItemLeft" align="right" valign="top"><a id="a7a82106bc4725a47696058d1d4d77e79"></a>
 std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>animation</b> = std::function&lt;void()&gt;([](){})</td></tr>
-<tr class="separator:a57f1ce89ed8b34296a453af46722d824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43be3c43e9d61f63f4223b7753d8a59f"><td class="memItemLeft" align="right" valign="top"><a id="a43be3c43e9d61f63f4223b7753d8a59f"></a>
+<tr class="separator:a7a82106bc4725a47696058d1d4d77e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39dce924c101198629215ef100180f28"><td class="memItemLeft" align="right" valign="top"><a id="a39dce924c101198629215ef100180f28"></a>
 std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>breakingAnimation</b> = std::function&lt;void()&gt;([]() {})</td></tr>
-<tr class="separator:a43be3c43e9d61f63f4223b7753d8a59f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab68aff01560fbca031c3c6421a6cc7fb"><td class="memItemLeft" align="right" valign="top"><a id="ab68aff01560fbca031c3c6421a6cc7fb"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_i_widget.html">LIWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>innerWidgets</b></td></tr>
-<tr class="separator:ab68aff01560fbca031c3c6421a6cc7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8591fcd3b266752f17b554234b5fe5d4"><td class="memItemLeft" align="right" valign="top"><a id="a8591fcd3b266752f17b554234b5fe5d4"></a>
-std::map&lt; std::string, GLuint &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textures</b></td></tr>
-<tr class="separator:a8591fcd3b266752f17b554234b5fe5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a39dce924c101198629215ef100180f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39cd7c4e786c0ae583aaa784c833d3ea"><td class="memItemLeft" align="right" valign="top"><a id="a39cd7c4e786c0ae583aaa784c833d3ea"></a>
+std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>innerWidgets</b></td></tr>
+<tr class="separator:a39cd7c4e786c0ae583aaa784c833d3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4940861be16efca90b3965bd7d565061"><td class="memItemLeft" align="right" valign="top"><a id="a4940861be16efca90b3965bd7d565061"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a4940861be16efca90b3965bd7d565061">texture</a></td></tr>
 <tr class="memdesc:a4940861be16efca90b3965bd7d565061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Дескриптор текстуры. <br /></td></tr>
@@ -348,12 +345,27 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#aa467339f17051537dba386f40b71e8f5">turnedOn</a> = true</td></tr>
 <tr class="memdesc:aa467339f17051537dba386f40b71e8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Включена ли текстура. <br /></td></tr>
 <tr class="separator:aa467339f17051537dba386f40b71e8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0b157dd7901bbc19504ede1c4cd7b1d"><td class="memItemLeft" align="right" valign="top"><a id="ae0b157dd7901bbc19504ede1c4cd7b1d"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>texturePath</b></td></tr>
+<tr class="separator:ae0b157dd7901bbc19504ede1c4cd7b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65741a9a527b90474621a7a623b63ae8"><td class="memItemLeft" align="right" valign="top"><a id="a65741a9a527b90474621a7a623b63ae8"></a>
+unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><b>texturesBytes</b> = nullptr</td></tr>
+<tr class="separator:a65741a9a527b90474621a7a623b63ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafa847f706dd2f0674be1b06f6e6cfde"><td class="memItemLeft" align="right" valign="top"><a id="aafa847f706dd2f0674be1b06f6e6cfde"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>texturesBytesSize</b> = 0</td></tr>
+<tr class="separator:aafa847f706dd2f0674be1b06f6e6cfde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:aa7ba44f123936084d369ede2b06d89ee"><td class="memItemLeft" align="right" valign="top"><a id="aa7ba44f123936084d369ede2b06d89ee"></a>
+static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResourceManager</a>&#160;</td><td class="memItemRight" valign="bottom"><b>resManager</b></td></tr>
+<tr class="separator:aa7ba44f123936084d369ede2b06d89ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Класс четырёхугольника. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a66a5708d444749598d621f21161dff7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66a5708d444749598d621f21161dff7a">&#9670;&nbsp;</a></span>LIRectangle()</h2>
+<a id="a0bf8f0eda94382512204e1d42659d6fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bf8f0eda94382512204e1d42659d6fc">&#9670;&nbsp;</a></span>LIRectangle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,7 +380,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>path</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>path</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>lazy</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -393,7 +411,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaaa2666df7a7e6ec65445cd8e7fc4508"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaaa2666df7a7e6ec65445cd8e7fc4508">&#9670;&nbsp;</a></span>bindTexture() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaa2666df7a7e6ec65445cd8e7fc4508">&#9670;&nbsp;</a></span>bindTexture() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -427,7 +445,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div>
 </div>
 <a id="a8821513c3c6e878dfa5bd0dfb3c63ffb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8821513c3c6e878dfa5bd0dfb3c63ffb">&#9670;&nbsp;</a></span>bindTexture() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8821513c3c6e878dfa5bd0dfb3c63ffb">&#9670;&nbsp;</a></span>bindTexture() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -471,58 +489,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a637e7308b8dce82a0cb68cab080c5f0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a637e7308b8dce82a0cb68cab080c5f0c">&#9670;&nbsp;</a></span>bindTexture() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LGraphics::LImage::bindTexture </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"><em>bytes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>width</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>height</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Привязывает текстуру. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">bytes</td><td>- массив байт (rgba). </td></tr>
-    <tr><td class="paramname">width</td><td>- ширина изображения (в пикселях). </td></tr>
-    <tr><td class="paramname">height</td><td>- длина изображения (в пикселях). </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a1aa51addad75da57a40bedee25e270c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1aa51addad75da57a40bedee25e270c2">&#9670;&nbsp;</a></span>color() <span class="overload">[1/2]</span></h2>
 
@@ -555,7 +521,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#af7c1fabccf40eab13628beb6c26b8c82">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ab2204bd217bfdf26bffad55ac6f5e10e">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
@@ -609,7 +575,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a7c7b3cda70a9b665c3ae94d0b33b4683">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#aa0a7421ebf742faf9a327ec8443c82e2">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
@@ -663,7 +629,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a9eec9b1b506bc4d7bb75f32104b40559">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ad0416d556b95dad44553ba8d893500f2">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
@@ -699,7 +665,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a64f7754bee32e06feed782defda89115">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#add225dc7b08e3022ebf72882f102e6c1">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
@@ -747,7 +713,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </dl>
 <dl class="section warning"><dt>Warning</dt><dd>x увеличивается вправо, y - вниз. </dd></dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a7a1856b6ee7346e723c57e529316669b">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#accfecea66ad8adb8d2c85b8e18d7a0bb">LGraphics::LWidget</a>.</p>
 
 <p>Reimplemented in <a class="el" href="class_l_graphics_1_1_l_text.html#a21668684bbdf39f05192b99d912456bc">LGraphics::LText</a>.</p>
 
@@ -786,7 +752,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </dl>
 <dl class="section warning"><dt>Warning</dt><dd>x увеличивается вправо, y - вниз. </dd></dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#abd1aa4dcc009abda23dd84b193757c35">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#a1c78f2e4c5189e20008007400f10b4ba">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
@@ -840,7 +806,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a51888adad2c3f4d494d90ce5f1ee12c6">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ab2b3dc1ef93a7bc2c86ef69808e12ab5">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
@@ -876,7 +842,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a48e84201ceed5985071193be54007a72">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ab97185e3fd97a535a1eb1fb3ca961cff">LGraphics::LWidget</a>.</p>
 
 <p>Reimplemented in <a class="el" href="class_l_graphics_1_1_l_text.html#aa54235be9fab2b262287dc53ed9b2aaa">LGraphics::LText</a>.</p>
 
@@ -976,7 +942,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_i_widget.html#a13786d6a105298e92f32a316500ec3a4">LGraphics::LIWidget</a>.</p>
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#a063c86504677b2f7b50f4225b051a3b1">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>

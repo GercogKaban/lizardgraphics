@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hide_31',['hide',['../class_l_graphics_1_1_l_i_widget.html#ad2d911805ee3093e8e33c7c3b649df52',1,'LGraphics::LIWidget']]]
+  ['hide_31',['hide',['../class_l_graphics_1_1_l_widget.html#a05fd03dfcef5e64c327bdba06b5eb690',1,'LGraphics::LWidget']]]
 ];
