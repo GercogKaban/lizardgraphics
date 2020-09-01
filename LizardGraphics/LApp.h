@@ -72,6 +72,8 @@ namespace LGraphics
         void addSizeToTexturesToInitVector(const size_t size);
         void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
 
+        bool isInitingTextures() const { return initingTextures; }
+
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
     private:
@@ -85,6 +87,8 @@ namespace LGraphics
         void initLEngine();
         void initOpenGl();
 
+        void initTextures();
+
         void checkEvents();
 
         void releaseResources();
@@ -93,8 +97,6 @@ namespace LGraphics
 
         void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         void character_callback(GLFWwindow* window, unsigned int codepoint);
-
-        void initTextures();
 
         GLFWwindow* window;
         std::vector<LWidget*> objects;
@@ -112,6 +114,8 @@ namespace LGraphics
         std::vector<LWidget*> texturesToInit;
 
         glm::mat4 view, projection;
+
+        bool initingTextures = false;
     };
 }
 
