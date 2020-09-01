@@ -5,14 +5,14 @@
 
 namespace LGraphics
 {
-    LRectangleShape::LRectangleShape(LApp* app,  const char* path)
-        :LShape(path)
+    LRectangleShape::LRectangleShape(LApp* app, const char* path, bool lazy)
+        :LShape(app,path, lazy)
     {
         init(app);
     }
 
-    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size)
-        :LShape(bytes, size)
+    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size, bool lazy)
+        :LShape(app,bytes, lazy)
     {
         init(app);
     }
@@ -117,9 +117,9 @@ namespace LGraphics
         LLine::display(label);
     }
 
-    LRectangleShape::LRectangleShape(LApp* app)
-        :LShape()
-    {
-        init(app);
-    }
+    //LRectangleShape::LRectangleShape(LApp* app)
+    //    :LShape()
+    //{
+    //    init(app);
+    //}
 }

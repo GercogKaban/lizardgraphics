@@ -14,11 +14,11 @@ namespace LGraphics
     /*!
     @brief Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.
     */
-    class LIWidget : public LImage
+    class LWidget : public LImage
     {
     public:
 
-        void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.
+        /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 
         virtual void tick() {}
         virtual void draw() = 0; ///< Рисует виджет.
@@ -118,9 +118,9 @@ namespace LGraphics
         virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
-        const std::vector<LIWidget*>& getInnerWidgets() const { return innerWidgets; }
+        const std::vector<LWidget*>& getInnerWidgets() const { return innerWidgets; }
 
-        virtual ~LIWidget() {}
+        virtual ~LWidget() {}
 
     protected:
 
@@ -130,34 +130,34 @@ namespace LGraphics
         std::function<void()> animation = std::function<void()>([](){});
         std::function<void()> breakingAnimation = std::function<void()>([]() {});
 
-        std::vector<LIWidget*> innerWidgets;
+        std::vector<LWidget*> innerWidgets;
 
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;
 
+        //LIWidget()
+        //    :LImage(nullptr){}
 
-        LIWidget(){}
-
-        /*!
-        @brief Конструктор.
-        @param image - Копия LImage.
-        */
-        LIWidget(const LImage& image)
-            :LImage(image){}
+        //*!
+        //@brief Конструктор.
+        //@param image - Копия LImage.
+        //*/
+        //LIWidget(const LImage& image)
+        //    :LImage(image){}
 
         /*!
         @brief Конструктор.
         @param path - Путь к изображению.
         */
-        LIWidget(const char* path)
-            :LImage(path) {}
+        LWidget(LApp* app, const char* path, bool lazy = true);
 
         /*!
         @brief Конструктор.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        LIWidget(const unsigned char* bytes, size_t size)
-            :LImage(bytes,size) {}
+        LWidget(LApp* app, const unsigned char* bytes, size_t size, bool lazy = true);
+
+        virtual void init(LApp* app, bool lazy);
     };
 }

@@ -21,7 +21,7 @@ namespace LGraphics
         @param path - путь к текстуре.
         @param component - указатель на LBaseComponent.
         */
-        LIButton(LApp* app, const char* path = nullptr);
+        LIButton(LApp* app, const char* path = nullptr, bool lazy = true);
 
         /*!
         @brief устанавливает функцию, которая будет срабатывать при нажатии на кнопку

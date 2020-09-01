@@ -10,7 +10,7 @@ namespace LGraphics
     {
     public:
 
-        LWRectangle(LApp* app, const char* path = nullptr);
+        LWRectangle(LApp* app, const char* path = nullptr, bool lazy = true);
         void setMatrices(LApp* app);
         void setMatrices();
         void draw() override;

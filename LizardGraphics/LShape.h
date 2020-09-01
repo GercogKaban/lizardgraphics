@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "LIWidget.h"
+#include "LWidget.h"
 #include "LLine.h"
 
 #include "vectors.h"
@@ -11,7 +11,7 @@ namespace LGraphics
     /*!
     @brief Переопределяет абстрактный класс LWidgetI.
     */
-    class LShape : public LIWidget
+    class LShape : public LWidget
     {
     public:
 
@@ -96,7 +96,7 @@ namespace LGraphics
 
     protected:
 
-        LShape(){}
+        //LShape(){}
 
 
         /*!
@@ -104,7 +104,7 @@ namespace LGraphics
         @param path - путь к изображению.
         @param component - указатель на LBaseComponent.
         */
-        LShape(const char* path);
+        LShape(LApp* app, const char* path, bool lazy = true);
 
         /*!
         @brief
@@ -112,7 +112,7 @@ namespace LGraphics
         @param size - размер массива bytes.
         @param component - указатель на LBaseComponent.
         */
-        LShape(const unsigned char* bytes, size_t size);
+        LShape(LApp* app, const unsigned char* bytes, size_t size, bool lazy = true);
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 

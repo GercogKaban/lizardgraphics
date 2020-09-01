@@ -6,8 +6,6 @@
 #include "LWRectangle.h"
 #include "LTimer.h"
 
-#include "mutex.h"
-
 namespace LGraphics
 {
     LApp::LApp()
@@ -22,9 +20,8 @@ namespace LGraphics
         t.start();
         while (!glfwWindowShouldClose(window))
         {
-            while (openglIsBusy);
-            openglIsBusy = true;
             fps++;
+            initTextures();
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -35,7 +32,6 @@ namespace LGraphics
                 LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
             glfwSwapBuffers(window);
-            openglIsBusy = false;
             for (auto& o : objects)
                 o->tick();
         }
@@ -53,7 +49,7 @@ namespace LGraphics
         textObjects.pop_back();
     }
 
-    LIWidget * LApp::getActiveWidget()
+    LWidget * LApp::getActiveWidget()
     {
         return activeWidget;
     }
@@ -71,6 +67,11 @@ namespace LGraphics
                 dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
     }
 
+    void LApp::addSizeToTexturesToInitVector(const size_t size)
+    {
+        texturesToInit.resize(texturesToInit.size() + size);
+    }
+
     void LApp::setMatrices()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
@@ -80,7 +81,7 @@ namespace LGraphics
         projection = glm::ortho(-1.0f, 1.0f, -1.0f * aspect, 1.0f * aspect, 0.1f, 100.0f);
     }
 
-    void LApp::addObject(LIWidget * w)
+    void LApp::addObject(LWidget * w)
     {
         objects.push_back(w);
     }
@@ -182,20 +183,24 @@ namespace LGraphics
         if (!objects.size()) return;
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
-            for (auto& o = objects.rbegin(); o < objects.rend(); o++)
+            // нужно сменить итераторы на C-шный цикл
+            size_t num = 0;
+            for (int i = objects.size()-1; i > -1; --i)
+            //for (auto& o = objects.rbegin(); o < objects.rend(); o++, num++)
             {
-                if ((*o)->mouseOnIt())
+                auto o = objects[i];
+                if (o->mouseOnIt())
                 {
                     if (activeWidget) activeWidget->breakAnimation();
-                    activeWidget = *o;
-                    if (dynamic_cast<LIButton*>(*o))
+                    activeWidget = o;
+                    if (dynamic_cast<LIButton*>(o))
                     {
-                        ((LIButton*)*o)->doClickEventFunction();
+                        ((LIButton*)o)->doClickEventFunction();
                         out = true;
                     }
                 }
 
-                for (auto& innerW : (*o)->getInnerWidgets())
+                for (auto& innerW : (o)->getInnerWidgets())
                     if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
                     {
                         if (activeWidget) activeWidget->breakAnimation();
@@ -236,6 +241,13 @@ namespace LGraphics
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
         if (textEdit)
             textEdit->addText(std::string(1, codepoint));
+    }
+
+    void LApp::initTextures()
+    {
+        for (auto& w : texturesToInit)
+            w->LImage::init();
+        texturesToInit.clear();
     }
 
 }

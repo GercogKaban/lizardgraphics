@@ -50,17 +50,17 @@ namespace LGraphics
 
         void addText(std::string text, fvect2 pos, float scale, fvect3 color);
         void popText();
-        LIWidget* getActiveWidget();
+        LWidget* getActiveWidget();
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
 
         void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
-        void setActiveWidget(LIWidget* w) { activeWidget = w; }
+        void setActiveWidget(LWidget* w) { activeWidget = w; }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
 
         void refreshObjectMatrices();
 
-        std::vector<LIWidget*>* getObjects() { return &objects; }
+        std::vector<LWidget*>* getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
 
         LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
@@ -69,12 +69,15 @@ namespace LGraphics
         glm::mat4 getViewMatrix() const { return view; }
         glm::mat4 getProjectionMatrix() const { return projection; }
 
+        void addSizeToTexturesToInitVector(const size_t size);
+        void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
+
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
     private:
 
         void setMatrices();
-        void addObject(LIWidget* w);
+        void addObject(LWidget* w);
 
         LLine* textRenderer;
 
@@ -91,18 +94,22 @@ namespace LGraphics
         void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         void character_callback(GLFWwindow* window, unsigned int codepoint);
 
+        void initTextures();
+
         GLFWwindow* window;
-        std::vector<LIWidget*> objects;
+        std::vector<LWidget*> objects;
         std::vector<Text> textObjects;
 
         size_t width, height;
 
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
 
-        LIWidget* activeWidget = nullptr;
+        LWidget* activeWidget = nullptr;
 
         LBuffer* standartRectBuffer;
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader;
+
+        std::vector<LWidget*> texturesToInit;
 
         glm::mat4 view, projection;
     };

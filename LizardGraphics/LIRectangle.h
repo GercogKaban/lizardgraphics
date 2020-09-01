@@ -19,7 +19,7 @@ namespace LGraphics
         @param path - путь к текстуре.
         @param component - указатель на LBaseComponent.
         */
-        LIRectangle(LApp* app, const char* path = nullptr);
+        LIRectangle(LApp* app, const char* path = nullptr, bool lazy = true);
         void tick() override;
     };
 }

@@ -68,20 +68,23 @@ namespace LGraphics
     }
 
     //LShape::LShape()
-    //    //:LIWidget(path)
+    //    //:LWidget(path)
     //{
     //    //if (!component->getBuffer()) throw std::exception("error, no buffer\n");
     //    //this->buffer = component->getBuffer();
     //}
 
-    LShape::LShape(const char * path)
-        : LIWidget(path)
+    LShape::LShape(LApp* app, const char * path, bool lazy)
+        : LWidget(app, path, lazy)
     {
         if (path) turnOffColor();
     }
 
-    LShape::LShape(const unsigned char* bytes, size_t size)
-        : LIWidget(bytes, size){}
+    LShape::LShape(LApp* app, const unsigned char* bytes, size_t size, bool lazy)
+        : LWidget(app, bytes, size, lazy)
+    {
+        turnOffColor();
+    }
 
     void LShape::setBuffer(LBuffer* buffer)
     {

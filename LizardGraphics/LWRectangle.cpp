@@ -5,8 +5,8 @@
 #include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
 
-LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
-    :LRectangleShape(app, path)
+LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path, bool lazy)
+    :LRectangleShape(app, path, lazy)
 {
     shader = app->getStandartWorldObjShader();
     view = app->getViewMatrix();

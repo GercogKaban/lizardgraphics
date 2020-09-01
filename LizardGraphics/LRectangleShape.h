@@ -14,7 +14,7 @@ namespace LGraphics
 
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
         void draw() override; ///< Рисует виджет на сцене.
-        LRectangleShape(LApp* app);
+        //LRectangleShape(LApp* app);
 
         /*!
         @brief Конструктор.
@@ -23,7 +23,7 @@ namespace LGraphics
         @param path - путь к текстуре.
         @param component - указатель на LBaseComponent.
         */
-        LRectangleShape(LApp* app, const char* path = nullptr);
+        LRectangleShape(LApp* app, const char* path = nullptr, bool lazy = true);
 
         /*!
         @brief Конструктор.
@@ -33,7 +33,7 @@ namespace LGraphics
         @param size - размер массива bytes.
         @param component - указатель на LBaseComponent.
         */
-        LRectangleShape(LApp* app, const unsigned char* bytes = nullptr, size_t size = 0);
+        LRectangleShape(LApp* app, const unsigned char* bytes = nullptr, size_t size = 0, bool lazy = true);
 
         void setLabel(const std::string label) override;
         void alignLabel() override;

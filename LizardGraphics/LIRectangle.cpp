@@ -4,8 +4,8 @@
 
 namespace LGraphics
 {
-    LIRectangle::LIRectangle(LApp* app, const char * path)
-        :LRectangleShape(app, path){}
+    LIRectangle::LIRectangle(LApp* app, const char * path, bool lazy)
+        :LRectangleShape(app, path,lazy){}
 
     void LIRectangle::tick()
     {
