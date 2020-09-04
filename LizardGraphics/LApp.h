@@ -74,7 +74,7 @@ namespace LGraphics
         void addSizeToTexturesToInitVector(const size_t size);
         void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
 
-        std::mutex& getInitingTextures() { return initingTextures; }
+        std::mutex& getOpenGlDrawing() { return openGlDrawing; }
 
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
@@ -119,7 +119,7 @@ namespace LGraphics
 
         //bool initingTextures = false;
 
-        std::mutex initingTextures;
+        std::mutex openGlDrawing;
     };
 }
 
