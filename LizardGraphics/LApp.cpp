@@ -245,11 +245,11 @@ namespace LGraphics
 
     void LApp::initTextures()
     {
-        initingTextures = true;
+        initingTextures.lock();
         for (auto& w : texturesToInit)
             w->LImage::init();
         texturesToInit.clear();
-        initingTextures = false;
+        initingTextures.unlock();
     }
 
 }

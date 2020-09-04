@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <mutex>
+
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
 #include "include/glm/glm.hpp"
@@ -72,7 +74,7 @@ namespace LGraphics
         void addSizeToTexturesToInitVector(const size_t size);
         void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
 
-        bool isInitingTextures() const { return initingTextures; }
+        std::mutex& getInitingTextures() { return initingTextures; }
 
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
@@ -115,7 +117,9 @@ namespace LGraphics
 
         glm::mat4 view, projection;
 
-        bool initingTextures = false;
+        //bool initingTextures = false;
+
+        std::mutex initingTextures;
     };
 }
 
