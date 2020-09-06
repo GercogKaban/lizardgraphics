@@ -17,7 +17,8 @@ namespace LGraphics
 
     private:
 
-        glm::mat4 view, projection, model;
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 projection, view;
     };
 
 }
