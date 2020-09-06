@@ -80,7 +80,9 @@ namespace LGraphics
         view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 0.0f));
-        projection = glm::ortho(-1.0f, 1.0f, -1.0f * aspect, 1.0f * aspect, 0.1f, 100.0f);
+
+        projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
+        //projection = glm::ortho(-1.0f, 1.0f, -1.0f*aspect, 1.0f*aspect, 0.1f, 100.0f);
     }
 
     void LApp::addObject(LWidget * w)
@@ -157,7 +159,7 @@ namespace LGraphics
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         int width_, height_;
         glfwGetFramebufferSize(window, &width_, &height_);
