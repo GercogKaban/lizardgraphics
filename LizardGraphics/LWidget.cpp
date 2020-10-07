@@ -44,4 +44,5 @@ void LGraphics::LWidget::init(LApp* app, bool lazy)
 void LGraphics::LWidget::init()
 {
     this->LImage::init();
+    isInited_ = true;
 }
