@@ -70,10 +70,10 @@ namespace LGraphics
                 dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
     }
 
-    void LApp::addSizeToTexturesToInitVector(const size_t size)
-    {
-        texturesToInit.resize(texturesToInit.size() + size);
-    }
+    //void LApp::addSizeToTexturesToInitVector(const size_t size)
+    //{
+    //    texturesToInit.resize(texturesToInit.size() + size);
+    //}
 
     void LApp::setMatrices()
     {
@@ -250,9 +250,9 @@ namespace LGraphics
 
     void LApp::initTextures()
     {
-        for (auto& w : texturesToInit)
-            w->LImage::init();
-        texturesToInit.clear();
+        for (auto& w : objects)
+            if (!w->isInited())
+                w->init();
     }
 
 }

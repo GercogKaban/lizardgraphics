@@ -18,6 +18,7 @@ namespace LGraphics
     {
     public:
 
+        friend LApp;
         /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 
         virtual void tick() {}
@@ -114,6 +115,7 @@ namespace LGraphics
         void hide() { isHidden_ = true; }    ///< Скрыть виджет.
         void setHidden(bool hide) { isHidden_ = hide; }   ///< Установить видимость виджета.
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
+        bool isInited() const { return isInited_; }
 
         virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
@@ -134,6 +136,8 @@ namespace LGraphics
 
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;
+
+        bool isInited_ = false;
 
         //LIWidget()
         //    :LImage(nullptr){}
@@ -159,5 +163,6 @@ namespace LGraphics
         LWidget(LApp* app, const unsigned char* bytes, size_t size, bool lazy = true);
 
         virtual void init(LApp* app, bool lazy);
+        virtual void init();
     };
 }

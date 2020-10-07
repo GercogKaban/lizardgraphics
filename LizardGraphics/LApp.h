@@ -72,7 +72,7 @@ namespace LGraphics
         glm::mat4 getProjectionMatrix() const { return projection; }
 
         void addSizeToTexturesToInitVector(const size_t size);
-        void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
+        //void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
 
         std::mutex& getOpenGlDrawing() { return openGlDrawing; }
 
@@ -113,7 +113,7 @@ namespace LGraphics
         LBuffer* standartRectBuffer;
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader;
 
-        std::vector<LWidget*> texturesToInit;
+        //std::vector<LWidget*> texturesToInit;
 
         glm::mat4 view, projection;
 

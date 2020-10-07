@@ -37,5 +37,11 @@ LGraphics::LWidget::LWidget(LApp* app, const unsigned char * bytes, size_t size,
 void LGraphics::LWidget::init(LApp* app, bool lazy)
 {
     this->app = app;
-    if (lazy) app->addTextureToInit(this);
+    isInited_ = !lazy;
+    //if (!lazy) init();
+}
+
+void LGraphics::LWidget::init()
+{
+    this->LImage::init();
 }

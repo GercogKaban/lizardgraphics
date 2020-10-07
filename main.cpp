@@ -18,7 +18,7 @@ int main()
     auto t1 = "test1.png";
     auto t2 = "test2.png";
     //auto e = new LIButton(&app, "image.png");
-    auto d = new LIButton(&app, t1, false);
+    auto d = new LIButton(&app, t2);
     //auto d = new LIButton(&app, t1,false);
     
     //auto unit = new LWRectangle(&app,t1);
