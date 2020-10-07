@@ -123,7 +123,7 @@ $(function() {
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        glm::mat4 getProjectionMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> projection; }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">void</span> addSizeToTexturesToInitVector(<span class="keyword">const</span> <span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordtype">void</span> addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        std::mutex&amp; getOpenGlDrawing() { <span class="keywordflow">return</span> openGlDrawing; }</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
@@ -164,7 +164,7 @@ $(function() {
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        LBuffer* standartRectBuffer;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a>* standartInterfaceshader, *standartWorldObjShader;</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        std::vector&lt;LWidget*&gt; texturesToInit;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">//std::vector&lt;LWidget*&gt; texturesToInit;</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        glm::mat4 view, projection;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
