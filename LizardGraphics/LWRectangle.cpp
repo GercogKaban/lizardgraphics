@@ -38,6 +38,7 @@ void LGraphics::LWRectangle::draw()
     else glUniform1i(glGetUniformLocation(shader, "sampleTexture"), 0);
     glBindTexture(GL_TEXTURE_2D, getTexture());
 
+    model = glm::identity<glm::mat4>();
     model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
     model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
 
