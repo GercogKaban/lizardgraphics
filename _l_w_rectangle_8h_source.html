@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lizard Graphics: LizardGraphics/LWRectangle.h Source File</title>
+<title>Lizard Graphics: LWRectangle.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,6 +46,7 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +61,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_297523d8282d5907f9f6b343309d90f1.html">LizardGraphics</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">LWRectangle.h</div>  </div>
@@ -74,36 +70,35 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;LRectangleShape.h&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;include/glm/glm.hpp&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glm_8hpp.html">include/glm/glm.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_w_rectangle.html">    9</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html">LRectangleShape</a></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">class </span>LWRectangle : <span class="keyword">public</span> LRectangleShape</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <span class="keywordtype">bool</span> lazy = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        LWRectangle(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <span class="keywordtype">bool</span> lazy = <span class="keyword">true</span>);</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> setIsometricView(<span class="keywordtype">bool</span> isometric);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">void</span> setMatrices(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">void</span> setMatrices(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">app</a>);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">void</span> setMatrices();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">draw</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">   18</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">draw</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        glm::mat4 model;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        glm::mat4 projection, view;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="structglm_1_1mat.html">glm::mat4</a> model;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="structglm_1_1mat.html">glm::mat4</a> projection, view;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">bool</span> isometric = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    };</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html_acf5a98f89333b259e22da3343e94d07a"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">LGraphics::LWRectangle::draw</a></div><div class="ttdeci">void draw() override</div><div class="ttdoc">Рисует виджет на сцене.</div><div class="ttdef"><b>Definition:</b> LWRectangle.cpp:38</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:133</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:25</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html">LGraphics::LWRectangle</a></div><div class="ttdef"><b>Definition:</b> LWRectangle.h:10</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html_acf5a98f89333b259e22da3343e94d07a"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">LGraphics::LWRectangle::draw</a></div><div class="ttdeci">void draw() override</div><div class="ttdoc">Рисует виджет на сцене.</div></div>
+<div class="ttc" id="aglm_8hpp_html"><div class="ttname"><a href="glm_8hpp.html">glm.hpp</a></div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_a7db04a6fc7e29fe600b4717c4a28e2b4"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:133</div></div>
+<div class="ttc" id="astructglm_1_1mat_html"><div class="ttname"><a href="structglm_1_1mat.html">glm::mat</a></div><div class="ttdef"><b>Definition:</b> qualifier.hpp:36</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

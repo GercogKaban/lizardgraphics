@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lizard Graphics: LizardGraphics/vectors.h Source File</title>
+<title>Lizard Graphics: vectors.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,6 +46,7 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +61,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_297523d8282d5907f9f6b343309d90f1.html">LizardGraphics</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">vectors.h</div>  </div>
@@ -76,30 +72,30 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma pack(push, 1)</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="structvect2__data.html">    7</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structvect2__data.html">vect2_data</a></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">struct </span><a class="code" href="structvect2__data.html">vect2_data</a></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    T x, y;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;};</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structvect3__data.html">   13</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structvect3__data.html">vect3_data</a></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">struct </span><a class="code" href="structvect3__data.html">vect3_data</a></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    T x, y, z;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;};</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keywordtype">size_t</span> size&gt;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structvect__custom__data.html">   19</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structvect__custom__data.html">vect_custom_data</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">struct </span><a class="code" href="structvect__custom__data.html">vect_custom_data</a></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    T containers[size];</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="structcolor__data.html">   24</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structcolor__data.html">color_data</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">struct </span><a class="code" href="structcolor__data.html">color_data</a></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a, r, g, b;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keywordtype">size_t</span> S, <span class="keyword">typename</span> DATA&gt;</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="structvect__prototype2.html">   30</a></span>&#160;<span class="keyword">struct </span><span class="comment">/*lsclass*/</span> <a class="code" href="structvect__prototype2.html">vect_prototype2</a> : <span class="keyword">public</span> DATA</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">struct </span><span class="comment">/*lsclass*/</span> <a class="code" href="structvect__prototype2.html">vect_prototype2</a> : <span class="keyword">public</span> DATA</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="comment">/*NOT_METADATA*/</span> <span class="keyword">using</span> val_type = T;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
@@ -337,25 +333,29 @@ $(function() {
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="keyword">using</span> <a class="code" href="structvect__prototype2.html">ivect3</a> = <a class="code" href="structvect__prototype2.html">vect_prototype2&lt;int, 3, vect3_data&lt;int&gt;</a>&gt;;</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="keyword">using</span> <a class="code" href="structvect__prototype2.html">szvect2</a> = <a class="code" href="structvect__prototype2.html">vect_prototype2&lt;size_t, 2, vect2_data&lt;size_t&gt;</a>&gt;;</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="keyword">using</span> <a class="code" href="structvect__prototype2.html">szvect3</a> = <a class="code" href="structvect__prototype2.html">vect_prototype2&lt;size_t, 3, vect3_data&lt;size_t&gt;</a>&gt;;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="keyword">using</span> <a class="code" href="structvect__prototype2.html">color</a> = <a class="code" href="structvect__prototype2.html">vect_prototype2&lt;unsigned char, 4, color_data&gt;</a>;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="keyword">using</span> color = <a class="code" href="structvect__prototype2.html">vect_prototype2&lt;unsigned char, 4, color_data&gt;</a>;</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="keyword">inline</span> <a class="code" href="structvect__prototype2.html">fvect2</a> fvect2fromAngle(<span class="keywordtype">float</span> angle) </div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="keyword">inline</span> <a class="code" href="structvect__prototype2.html">fvect2</a> fvect2fromAngle(<span class="keywordtype">float</span> <a class="code" href="group__ext__quaternion__trigonometric.html#ga8aa248b31d5ade470c87304df5eb7bd8">angle</a>) </div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;{</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structvect__prototype2.html">fvect2</a>((<span class="keywordtype">float</span>)cos(angle), (<span class="keywordtype">float</span>)sin(angle));</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structvect__prototype2.html">fvect2</a>((<span class="keywordtype">float</span>)<a class="code" href="group__core__func__trigonometric.html#ga6a41efc740e3b3c937447d3a6284130e">cos</a>(<a class="code" href="group__ext__quaternion__trigonometric.html#ga8aa248b31d5ade470c87304df5eb7bd8">angle</a>), (<span class="keywordtype">float</span>)<a class="code" href="group__core__func__trigonometric.html#ga29747fd108cb7292ae5a284f69691a69">sin</a>(<a class="code" href="group__ext__quaternion__trigonometric.html#ga8aa248b31d5ade470c87304df5eb7bd8">angle</a>));</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">float</span> dist(<a class="code" href="structvect__prototype2.html">fvect2</a> a, <a class="code" href="structvect__prototype2.html">fvect2</a> b)</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;{</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keywordflow">return</span> sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__core__func__exponential.html#gaa83e5f1648b7ccdf33b87c07c76cb77c">sqrt</a>((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;}</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="preprocessor">#pragma pack(pop)</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="agroup__ext__quaternion__trigonometric_html_ga8aa248b31d5ade470c87304df5eb7bd8"><div class="ttname"><a href="group__ext__quaternion__trigonometric.html#ga8aa248b31d5ade470c87304df5eb7bd8">glm::angle</a></div><div class="ttdeci">GLM_FUNC_DECL T angle(qua&lt; T, Q &gt; const &amp;x)</div><div class="ttdef"><b>Definition:</b> quaternion_trigonometric.inl:4</div></div>
 <div class="ttc" id="astructvect2__data_html"><div class="ttname"><a href="structvect2__data.html">vect2_data</a></div><div class="ttdef"><b>Definition:</b> vectors.h:8</div></div>
+<div class="ttc" id="agroup__core__func__trigonometric_html_ga6a41efc740e3b3c937447d3a6284130e"><div class="ttname"><a href="group__core__func__trigonometric.html#ga6a41efc740e3b3c937447d3a6284130e">glm::cos</a></div><div class="ttdeci">GLM_FUNC_QUALIFIER vec&lt; L, T, Q &gt; cos(vec&lt; L, T, Q &gt; const &amp;v)</div><div class="ttdef"><b>Definition:</b> func_trigonometric.inl:50</div></div>
 <div class="ttc" id="astructvect__custom__data_html"><div class="ttname"><a href="structvect__custom__data.html">vect_custom_data</a></div><div class="ttdef"><b>Definition:</b> vectors.h:20</div></div>
 <div class="ttc" id="astructvect3__data_html"><div class="ttname"><a href="structvect3__data.html">vect3_data</a></div><div class="ttdef"><b>Definition:</b> vectors.h:14</div></div>
+<div class="ttc" id="agroup__core__func__trigonometric_html_ga29747fd108cb7292ae5a284f69691a69"><div class="ttname"><a href="group__core__func__trigonometric.html#ga29747fd108cb7292ae5a284f69691a69">glm::sin</a></div><div class="ttdeci">GLM_FUNC_QUALIFIER vec&lt; L, T, Q &gt; sin(vec&lt; L, T, Q &gt; const &amp;v)</div><div class="ttdef"><b>Definition:</b> func_trigonometric.inl:41</div></div>
 <div class="ttc" id="astructcolor__data_html"><div class="ttname"><a href="structcolor__data.html">color_data</a></div><div class="ttdef"><b>Definition:</b> vectors.h:25</div></div>
 <div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2</a></div><div class="ttdef"><b>Definition:</b> vectors.h:31</div></div>
+<div class="ttc" id="agroup__core__func__exponential_html_gaa83e5f1648b7ccdf33b87c07c76cb77c"><div class="ttname"><a href="group__core__func__exponential.html#gaa83e5f1648b7ccdf33b87c07c76cb77c">glm::sqrt</a></div><div class="ttdeci">GLM_FUNC_QUALIFIER vec&lt; L, T, Q &gt; sqrt(vec&lt; L, T, Q &gt; const &amp;x)</div><div class="ttdef"><b>Definition:</b> func_exponential.inl:128</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

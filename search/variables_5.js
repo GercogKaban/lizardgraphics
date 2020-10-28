@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['lasterrornum_213',['lastErrorNum',['../class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25',1,'LGraphics::LError']]]
+  ['green_4161',['green',['../struct_g_l_f_wgammaramp.html#affccc6f5df47820b6562d709da3a5a3a',1,'GLFWgammaramp']]],
+  ['greenbits_4162',['greenBits',['../struct_g_l_f_wvidmode.html#a292fdd281f3485fb3ff102a5bda43faa',1,'GLFWvidmode']]]
 ];
