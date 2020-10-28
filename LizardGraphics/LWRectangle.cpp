@@ -2,7 +2,7 @@
 #include "LBuffer.h"
 #include "LApp.h"
 
-#include "include/glm/gtc/matrix_transform.hpp"
+//#include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path, bool lazy)
@@ -11,6 +11,11 @@ LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path, bool lazy)
     shader = app->getStandartWorldObjShader();
     view = app->getViewMatrix();
     projection = app->getProjectionMatrix();
+}
+
+void LGraphics::LWRectangle::setIsometricView(bool isometric)
+{
+    this->isometric = isometric;
 }
 
 void LGraphics::LWRectangle::setMatrices(LApp* app)
@@ -34,11 +39,12 @@ void LGraphics::LWRectangle::draw()
 {
     getShader()->use();
     auto shader = getShader()->getShaderProgram();
-    if (isTextureTurnedOn()) glUniform1i(glGetUniformLocation(shader, "sampleTexture"), 1);
-    else glUniform1i(glGetUniformLocation(shader, "sampleTexture"), 0);
+    glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
+    glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
+
     glBindTexture(GL_TEXTURE_2D, getTexture());
 
-    model = glm::identity<glm::mat4>();
+    model = rotate_;
     model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
     model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
 

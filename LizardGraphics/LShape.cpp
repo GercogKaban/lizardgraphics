@@ -61,6 +61,21 @@ namespace LGraphics
         move(coords.x, coords.y, 0.0f);
     }
 
+    void LShape::rotateX(float angleDegree)
+    {
+        rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+
+    void LShape::rotateY(float angleDegree)
+    {
+        rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    void LShape::rotateZ(float angleDegree)
+    {
+        rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
     void LShape::setShader(LShaders::Shader* shader)
     {
         if (!shader) throw std::exception("error, no shader\n");

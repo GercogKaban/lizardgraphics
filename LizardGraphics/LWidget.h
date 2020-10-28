@@ -93,6 +93,10 @@ namespace LGraphics
         */
         void setMouseOnItEventFunction(std::function<void()> fun) { mouseOnItFunction = fun; }
 
+        virtual void rotateX(float angleDegree) = 0;
+        virtual void rotateY(float angleDegree) = 0;
+        virtual void rotateZ(float angleDegree) = 0;
+
         virtual void turnOffColor() = 0;
 
         void setAnimation(std::function<void()> fun);

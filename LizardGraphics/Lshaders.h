@@ -54,18 +54,27 @@ namespace LShaders
         "color = vec4(textColor, 1.0) * sampled;\n"
         "}\n";
 
-
-    const char world_w[] =
+    const char world_v[] =
         "#version 330 core\n"
         "layout (location = 0) in vec3 position;\n"
         "layout (location = 1) in vec2 texCoord;\n"
         "out vec2 TexCoord;\n"
+        "uniform bool isometric;\n"
         "uniform mat4 model;\n"
         "uniform mat4 view;\n"
         "uniform mat4 projection;\n"
         "void main()\n"
         "{\n"
+        "vec4 temp = projection * view * model * vec4(position, 1.0f);\n"
+        "if (!isometric){\n"
         "gl_Position = projection * view * model * vec4(position, 1.0f);\n"
+        "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
+        "}\n"
+        "else {\n"
+        "gl_Position = temp;\n"
+        "gl_Position.x = temp.x - temp.y;\n"
+        "gl_Position.y = (temp.x + temp.y)/2.0f;\n"
+        "}\n"
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
         "}\n";
 

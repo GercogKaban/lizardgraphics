@@ -18,7 +18,11 @@ int main()
     auto t1 = "test1.png";
     auto t2 = "test2.png";
     //auto e = new LIButton(&app, "image.png");
-    auto d = new LIButton(&app, t2);
+    auto d = new LWRectangle(&app, t2);
+    //d->setIsometricView(true);
+    //d->rotateX(45.0f);
+    //d->rotateY(50.0f);
+    //d->rotateZ(-50.0f);
     //auto d = new LIButton(&app, t1,false);
     
     //auto unit = new LWRectangle(&app,t1);
@@ -43,11 +47,11 @@ int main()
     //d->turnOffTexture();
 
     ////e->setClickEventFunction([&]() {textEdit->scale({ 1.5f,0.5f,1.0f }); });
-    d->setClickEventFunction([&]() 
-    {
-        auto t = new LIButton(&app, t1,false);
-        t->move(fvect3{ 0.1f,0.1f,0.1f });
-    });
+    //d->setClickEventFunction([&]() 
+    //{
+    //    auto t = new LIButton(&app, t1,false);
+    //    t->move(fvect3{ 0.1f,0.1f,0.1f });
+    //});
     //textEdit->move(800, 500);
     //textEdit->scale({ 1, 1, 1});
     app.loop();

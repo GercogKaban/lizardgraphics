@@ -3,6 +3,8 @@
 #include "LWidget.h"
 #include "LLine.h"
 
+#include "include/glm/gtc/matrix_transform.hpp"
+
 #include "vectors.h"
 
 namespace LGraphics
@@ -82,6 +84,10 @@ namespace LGraphics
         */
         void move(const szvect2 val) override;
 
+        void rotateX(float angleDegree) override;
+        void rotateY(float angleDegree) override;
+        void rotateZ(float angleDegree) override;
+
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         fvect3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
@@ -121,6 +127,8 @@ namespace LGraphics
         fvect3 scale_ = fvect3(0.5f, 0.5f, 1.0f);  ///< Вектор размеров виджета.
         fvect3 move_ = fvect3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
         fvect3 color_ = fvect3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
+
+        glm::mat4 rotate_ = glm::mat4(1.0f);
 
         Text label;
         float labelTextStartPosition = 0.0f;
