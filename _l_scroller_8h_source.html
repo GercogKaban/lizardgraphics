@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lizard Graphics: LScroller.h Source File</title>
+<title>Lizard Graphics: LizardGraphics/LScroller.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,7 +46,6 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,6 +60,11 @@ $(function() {
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_297523d8282d5907f9f6b343309d90f1.html">LizardGraphics</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">LScroller.h</div>  </div>
@@ -73,20 +77,20 @@ $(function() {
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="keyword">class </span>LText;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">class </span>LScroller : <span class="keyword">public</span> LIRectangle</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_scroller.html">    8</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_scroller.html">LScroller</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_i_rectangle.html">LIRectangle</a></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">friend</span> LText;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">friend</span> LApp;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> tick() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        LScroller(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_scroller.html">LScroller</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> setParent(LText* parent_) { this-&gt;parent = parent_; }</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> setParent(<a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>* parent_) { this-&gt;parent = parent_; }</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> moveScrollerToMouse() {}</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> moveScrollerToPos(<span class="keywordtype">int</span> position) = 0;</div>
@@ -95,16 +99,16 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">size_t</span> currentPos = 0;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">size_t</span> positions = 0;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        LText* parent;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>* parent;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">class </span>LVerticalScroller : <span class="keyword">public</span> LScroller</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_vertical_scroller.html">   33</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_vertical_scroller.html">LVerticalScroller</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_scroller.html">LScroller</a></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    {</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">friend</span> LText;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        LVerticalScroller(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_vertical_scroller.html">LVerticalScroller</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
@@ -113,12 +117,12 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">void</span> moveScrollerToPos(<span class="keywordtype">int</span> position) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    };</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">class </span>LHorizontalScroller : <span class="keyword">public</span> LScroller</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_horizontal_scroller.html">   48</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_horizontal_scroller.html">LHorizontalScroller</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_scroller.html">LScroller</a></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">friend</span> LText;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_text.html">LText</a>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        LHorizontalScroller(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_horizontal_scroller.html">LHorizontalScroller</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> reloadScroller(<span class="keywordtype">size_t</span> scrollPositions) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">protected</span>:</div>
@@ -129,7 +133,13 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_a7db04a6fc7e29fe600b4717c4a28e2b4"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#a7db04a6fc7e29fe600b4717c4a28e2b4">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:133</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_vertical_scroller_html"><div class="ttname"><a href="class_l_graphics_1_1_l_vertical_scroller.html">LGraphics::LVerticalScroller</a></div><div class="ttdef"><b>Definition:</b> LScroller.h:34</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_horizontal_scroller_html"><div class="ttname"><a href="class_l_graphics_1_1_l_horizontal_scroller.html">LGraphics::LHorizontalScroller</a></div><div class="ttdef"><b>Definition:</b> LScroller.h:49</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_scroller_html"><div class="ttname"><a href="class_l_graphics_1_1_l_scroller.html">LGraphics::LScroller</a></div><div class="ttdef"><b>Definition:</b> LScroller.h:9</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_i_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_rectangle.html">LGraphics::LIRectangle</a></div><div class="ttdoc">Класс четырёхугольника.</div><div class="ttdef"><b>Definition:</b> LIRectangle.h:12</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:133</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:25</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_text_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text.html">LGraphics::LText</a></div><div class="ttdef"><b>Definition:</b> LText.h:9</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

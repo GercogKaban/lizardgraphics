@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lizard Graphics: LApp.h Source File</title>
+<title>Lizard Graphics: LizardGraphics/LApp.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,7 +46,6 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,6 +60,11 @@ $(function() {
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_297523d8282d5907f9f6b343309d90f1.html">LizardGraphics</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">LApp.h</div>  </div>
@@ -71,8 +75,8 @@ $(function() {
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;include/GLEW/glew.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glfw3_8h.html">include/GLFW/glfw3.h</a>&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="glm_8hpp.html">include/glm/glm.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;include/GLFW/glfw3.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;include/glm/glm.hpp&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;Lshaders.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;LIRectangle.h&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
@@ -95,17 +99,17 @@ $(function() {
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_app.html#acce33d5422267c292fb5d208198a2640">   45</a></span>&#160;        <a class="code" href="structvect__prototype2.html">szvect2</a> <a class="code" href="class_l_graphics_1_1_l_app.html#acce33d5422267c292fb5d208198a2640">getWindowSize</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="structvect__prototype2.html">szvect2</a>(width, height); }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">   51</a></span>&#160;        <a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* <a class="code" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">getWindowHandler</a>() { <span class="keywordflow">return</span> window; }</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">   51</a></span>&#160;        GLFWwindow* <a class="code" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">getWindowHandler</a>() { <span class="keywordflow">return</span> window; }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">void</span> addText(std::string text, <a class="code" href="structvect__prototype2.html">fvect2</a> pos, <span class="keywordtype">float</span> <a class="code" href="group__ext__matrix__transform.html#ga05051adbee603fb3c5095d8cf5cc229b">scale</a>, <a class="code" href="structvect__prototype2.html">fvect3</a> color);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">void</span> addText(std::string text, <a class="code" href="structvect__prototype2.html">fvect2</a> pos, <span class="keywordtype">float</span> scale, <a class="code" href="structvect__prototype2.html">fvect3</a> <a class="code" href="structvect__prototype2.html">color</a>);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> popText();</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_widget.html">LWidget</a>* getActiveWidget();</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">void</span> lockFps(<span class="keywordtype">size_t</span> fps_) { fpsLock = fps_; }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">void</span> setResolution(<span class="keywordtype">size_t</span> resolutionX, <span class="keywordtype">size_t</span> resolutionY) { <a class="code" href="group__window.html#gae54d1f4915ded15e267ddd3f41496cd2">glfwSetWindowSize</a>(window, resolutionX, resolutionY); }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">void</span> setResolution(<span class="keywordtype">size_t</span> resolutionX, <span class="keywordtype">size_t</span> resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">void</span> setActiveWidget(LWidget* w) { activeWidget = w; }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> setMatrices(<a class="code" href="structglm_1_1mat.html">glm::mat4</a> view, <a class="code" href="structglm_1_1mat.html">glm::mat4</a> projection);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> setMatrices(glm::mat4 view, glm::mat4 projection);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> refreshObjectMatrices();</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
@@ -115,8 +119,8 @@ $(function() {
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a>* getStandartWorldObjShader()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> standartWorldObjShader; }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a>* getStandartInterfaceShader()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> standartInterfaceshader; }</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="structglm_1_1mat.html">glm::mat4</a> getViewMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> view; }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="structglm_1_1mat.html">glm::mat4</a> getProjectionMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> projection; }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        glm::mat4 getViewMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> view; }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        glm::mat4 getProjectionMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> projection; }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordtype">void</span> addSizeToTexturesToInitVector(<span class="keyword">const</span> <span class="keywordtype">size_t</span> size);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}</span></div>
@@ -142,12 +146,12 @@ $(function() {
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordtype">void</span> releaseResources();</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">void</span> mouse_button_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> button, <span class="keywordtype">int</span> action, <span class="keywordtype">int</span> mods);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">void</span> mouse_button_callback(GLFWwindow* window, <span class="keywordtype">int</span> button, <span class="keywordtype">int</span> action, <span class="keywordtype">int</span> mods);</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordtype">void</span> key_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> key, <span class="keywordtype">int</span> scancode, <span class="keywordtype">int</span> action, <span class="keywordtype">int</span> mods);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">void</span> character_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> codepoint);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordtype">void</span> key_callback(GLFWwindow* window, <span class="keywordtype">int</span> key, <span class="keywordtype">int</span> scancode, <span class="keywordtype">int</span> action, <span class="keywordtype">int</span> mods);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">void</span> character_callback(GLFWwindow* window, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> codepoint);</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        GLFWwindow* window;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        std::vector&lt;LWidget*&gt; objects;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        std::vector&lt;Text&gt; textObjects;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
@@ -162,7 +166,7 @@ $(function() {
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">//std::vector&lt;LWidget*&gt; texturesToInit;</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <a class="code" href="structglm_1_1mat.html">glm::mat4</a> view, projection;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        glm::mat4 view, projection;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="comment">//bool initingTextures = false;</span></div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
@@ -171,9 +175,6 @@ $(function() {
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aglm_8hpp_html"><div class="ttname"><a href="glm_8hpp.html">glm.hpp</a></div></div>
-<div class="ttc" id="aglfw3_8h_html"><div class="ttname"><a href="glfw3_8h.html">glfw3.h</a></div><div class="ttdoc">The header of the GLFW 3 API.</div></div>
-<div class="ttc" id="agroup__window_html_ga3c96d80d363e67d13a41b5d1821f3242"><div class="ttname"><a href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a></div><div class="ttdeci">struct GLFWwindow GLFWwindow</div><div class="ttdoc">Opaque window object.</div><div class="ttdef"><b>Definition:</b> glfw3.h:789</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html_a66ebf0f08e10ebbe392eca6db846f61e"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">LGraphics::LApp::getWindowHandler</a></div><div class="ttdeci">GLFWwindow * getWindowHandler()</div><div class="ttdoc">Возвращает дескриптор GLFW окна.</div><div class="ttdef"><b>Definition:</b> LApp.h:51</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
 <div class="ttc" id="aclass_l_shaders_1_1_shader_html"><div class="ttname"><a href="class_l_shaders_1_1_shader.html">LShaders::Shader</a></div><div class="ttdoc">Класс шейдера.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:88</div></div>
@@ -181,11 +182,8 @@ $(function() {
 <div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html_acce33d5422267c292fb5d208198a2640"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#acce33d5422267c292fb5d208198a2640">LGraphics::LApp::getWindowSize</a></div><div class="ttdeci">szvect2 getWindowSize() const</div><div class="ttdoc">Возвращает размеры окна (в пикселях).</div><div class="ttdef"><b>Definition:</b> LApp.h:45</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:25</div></div>
-<div class="ttc" id="astructglm_1_1mat_html"><div class="ttname"><a href="structglm_1_1mat.html">glm::mat</a></div><div class="ttdef"><b>Definition:</b> qualifier.hpp:36</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html_a2f0d137044067c3c98d097f5bfe63660"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html#a2f0d137044067c3c98d097f5bfe63660">LGraphics::LApp::loop</a></div><div class="ttdeci">void loop()</div><div class="ttdoc">Бесконечный цикл</div><div class="ttdef"><b>Definition:</b> LApp.cpp:16</div></div>
 <div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2</a></div><div class="ttdef"><b>Definition:</b> vectors.h:31</div></div>
-<div class="ttc" id="agroup__ext__matrix__transform_html_ga05051adbee603fb3c5095d8cf5cc229b"><div class="ttname"><a href="group__ext__matrix__transform.html#ga05051adbee603fb3c5095d8cf5cc229b">glm::scale</a></div><div class="ttdeci">GLM_FUNC_DECL mat&lt; 4, 4, T, Q &gt; scale(mat&lt; 4, 4, T, Q &gt; const &amp;m, vec&lt; 3, T, Q &gt; const &amp;v)</div><div class="ttdef"><b>Definition:</b> matrix_transform.inl:78</div></div>
-<div class="ttc" id="agroup__window_html_gae54d1f4915ded15e267ddd3f41496cd2"><div class="ttname"><a href="group__window.html#gae54d1f4915ded15e267ddd3f41496cd2">glfwSetWindowSize</a></div><div class="ttdeci">GLFWAPI void glfwSetWindowSize(GLFWwindow *window, int width, int height)</div><div class="ttdoc">Sets the size of the client area of the specified window.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20
