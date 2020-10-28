@@ -10,6 +10,7 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LRectangleShape"; }
         LWRectangle(LApp* app, const char* path = nullptr, bool lazy = true);
 
         void setIsometricView(bool isometric);

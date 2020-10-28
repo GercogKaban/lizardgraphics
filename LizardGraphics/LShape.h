@@ -17,6 +17,7 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LShape"; }
         void setShader(LShaders::Shader* shader) override;  ///< Устанавливает шейдер виджету.
 
         /*!

@@ -36,7 +36,7 @@ namespace LGraphics
                 o->tick();
             glfwSwapBuffers(window);
             openGlDrawing.unlock();
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
         }
         t.stop();
         glfwTerminate();
@@ -160,7 +160,7 @@ namespace LGraphics
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glfwSwapInterval(1);
+        //glfwSwapInterval(0);
 
         int width_, height_;
         glfwGetFramebufferSize(window, &width_, &height_);

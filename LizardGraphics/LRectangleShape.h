@@ -12,6 +12,8 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LRectanlgeShape"; }
+
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
         void draw() override; ///< Рисует виджет на сцене.
         //LRectangleShape(LApp* app);

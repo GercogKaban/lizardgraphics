@@ -18,6 +18,7 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LError"; }
         /*!
         @brief Инициализирует класс LError.
         */

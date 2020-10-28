@@ -1,4 +1,7 @@
 ﻿#pragma once
+
+#include "LObject.h"
+
 #include <string>
 #include <ft2build.h>
 #include "include/GLEW/glew.h"
@@ -24,9 +27,11 @@ namespace LGraphics
         fvect3 color = {0.0f,0.0f,0.0f};
     };
 
-    class LLine
+    class LLine : public LObject
     {   
     public:
+
+        const char* getObjectType() override { return "LLine"; }
         friend LText;
         struct Character
         {

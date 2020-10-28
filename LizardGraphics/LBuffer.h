@@ -15,6 +15,7 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LBuffer"; }
         //const GLuint* getVBO() const { return VBO; }
 
         /*!

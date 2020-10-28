@@ -9,6 +9,8 @@ namespace LGraphics
     {
     public:
         
+        const char* getObjectType() override { return "LText"; }
+
         friend LVerticalScroller;
         friend LHorizontalScroller;
 

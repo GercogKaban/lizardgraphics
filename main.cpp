@@ -54,6 +54,8 @@ int main()
     //});
     //textEdit->move(800, 500);
     //textEdit->scale({ 1, 1, 1});
+
+    app.setSleepTime(5);
     app.loop();
     return 0;
 }

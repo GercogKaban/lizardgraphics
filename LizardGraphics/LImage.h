@@ -12,6 +12,7 @@ namespace LGraphics
     {
     public:
         
+        const char* getObjectType() override { return "LImage"; }
         GLuint getTexture() const { return texture; } ///< Возвращает текстуру.
 
         /*!

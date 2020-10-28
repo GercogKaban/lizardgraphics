@@ -12,6 +12,7 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LIRectangle"; }
         /*!
         @brief Конструктор.
         @param app - указатель на приложение LApp.

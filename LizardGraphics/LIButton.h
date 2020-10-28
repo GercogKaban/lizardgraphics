@@ -14,6 +14,7 @@ namespace LGraphics
 
         friend LApp;
 
+        const char* getObjectType() override { return "LIButton"; }
         /*!
         @brief Конструктор.
         @param app - указатель на приложение LApp.

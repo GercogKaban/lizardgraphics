@@ -8,6 +8,8 @@ namespace LGraphics
     {
         //friend LSymbol;
     public:
+
+        const char* getObjectType() override { return "LTextBuffer"; }
         LTextBuffer();
     protected:
         GLfloat** textCoords;

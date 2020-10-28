@@ -18,6 +18,7 @@ namespace LGraphics
     {
     public:
 
+        const char* getObjectType() override { return "LWidget"; }
         friend LApp;
         /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 

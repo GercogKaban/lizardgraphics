@@ -76,6 +76,9 @@ namespace LGraphics
 
         std::mutex& getOpenGlDrawing() { return openGlDrawing; }
 
+        void setSleepTime(size_t milliseconds) { sleepTime = milliseconds;}
+        size_t getSleepTime() const { return sleepTime; }
+
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
     private:
@@ -107,6 +110,7 @@ namespace LGraphics
         size_t width, height;
 
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
+        size_t sleepTime = 0;
 
         LWidget* activeWidget = nullptr;
 
