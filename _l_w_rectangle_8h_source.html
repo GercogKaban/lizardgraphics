@@ -83,21 +83,24 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <span class="keywordtype">bool</span> lazy = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> setMatrices(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> setMatrices();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">draw</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> setIsometricView(<span class="keywordtype">bool</span> isometric);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">void</span> setMatrices(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">void</span> setMatrices();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">draw</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        glm::mat4 model = glm::mat4(1.0f);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        glm::mat4 projection, view;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    };</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        glm::mat4 model;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        glm::mat4 projection, view;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">bool</span> isometric = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    };</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html_acf5a98f89333b259e22da3343e94d07a"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">LGraphics::LWRectangle::draw</a></div><div class="ttdeci">void draw() override</div><div class="ttdoc">Рисует виджет на сцене.</div><div class="ttdef"><b>Definition:</b> LWRectangle.cpp:33</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:129</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html_acf5a98f89333b259e22da3343e94d07a"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html#acf5a98f89333b259e22da3343e94d07a">LGraphics::LWRectangle::draw</a></div><div class="ttdeci">void draw() override</div><div class="ttdoc">Рисует виджет на сцене.</div><div class="ttdef"><b>Definition:</b> LWRectangle.cpp:38</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:133</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:25</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html">LGraphics::LWRectangle</a></div><div class="ttdef"><b>Definition:</b> LWRectangle.h:10</div></div>
