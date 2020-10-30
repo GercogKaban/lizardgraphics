@@ -12,6 +12,8 @@ namespace LGraphics
         int width, height;
         unsigned char* image;
 
+        
+
         if (!path)
            image = SOIL_load_image_from_memory(LGraphics::notexture, notextureSize, &width, &height, 0, SOIL_LOAD_RGBA);
         else

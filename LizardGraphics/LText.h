@@ -16,8 +16,15 @@ namespace LGraphics
 
         LText(LApp* app, const std::string = "", const char* path = nullptr);
         void draw() override;
+
         void scale(const fvect3 val) override;
+        void scale(const float x, const float y, const float z) override;
+
         void move(const size_t x, const size_t y) override;
+        void move(const float x, const float y, const float z) override;
+        void move(const fvect3 val) override;
+
+        void setLabel(const std::string text) override { setText(text); }
 
         std::vector<Text> getText() const;
 
@@ -49,7 +56,7 @@ namespace LGraphics
 
         void pushNewString();
 
-        void setLabel(const std::string) override {}
+        //void setLabel(const std::string) override {}
 
         float leftBorder = 0.038f;
         float rightBorder = 0.03f;

@@ -59,6 +59,7 @@ namespace LGraphics
         void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
         void setActiveWidget(LWidget* w) { activeWidget = w; }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
+        void setWidgetsMovability(bool movability) { widgetsMovability = movability; }
 
         void refreshObjectMatrices();
 
@@ -67,11 +68,12 @@ namespace LGraphics
 
         LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
         LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
+        LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
 
         glm::mat4 getViewMatrix() const { return view; }
         glm::mat4 getProjectionMatrix() const { return projection; }
 
-        void addSizeToTexturesToInitVector(const size_t size);
+        //void addSizeToTexturesToInitVector(const size_t size);
         //void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
 
         std::mutex& getOpenGlDrawing() { return openGlDrawing; }
@@ -85,6 +87,7 @@ namespace LGraphics
 
         void setMatrices();
         void addObject(LWidget* w);
+        void moveWidgetToMouse(LWidget* w);
 
         LLine* textRenderer;
 
@@ -99,7 +102,7 @@ namespace LGraphics
         void releaseResources();
 
         void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-
+        void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
         void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         void character_callback(GLFWwindow* window, unsigned int codepoint);
 
@@ -107,15 +110,18 @@ namespace LGraphics
         std::vector<LWidget*> objects;
         std::vector<Text> textObjects;
 
-        size_t width, height;
+        int width, height;
 
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
         size_t sleepTime = 0;
 
         LWidget* activeWidget = nullptr;
+        LWidget* prevActiveWidget = nullptr;
+        LWidget* widgetToMove = nullptr;
+        bool widgetsMovability = false;
 
         LBuffer* standartRectBuffer;
-        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader;
+        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader;
 
         //std::vector<LWidget*> texturesToInit;
 

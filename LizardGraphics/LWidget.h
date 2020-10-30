@@ -3,6 +3,8 @@
 #include <functional>
 #include <vector>
 
+#include "include/glm/glm.hpp"
+
 #include "vectors.h"
 #include "Lshaders.h"
 #include "LImage.h"
@@ -18,10 +20,10 @@ namespace LGraphics
     {
     public:
 
-        const char* getObjectType() override { return "LWidget"; }
         friend LApp;
         /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 
+        const char* getObjectType() override { return "LWidget"; }
         virtual void tick() {}
         virtual void draw() = 0; ///< Рисует виджет.
 
@@ -97,9 +99,11 @@ namespace LGraphics
         virtual void rotateX(float angleDegree) = 0;
         virtual void rotateY(float angleDegree) = 0;
         virtual void rotateZ(float angleDegree) = 0;
+        virtual void setRotate(glm::mat4 mat) = 0;
 
         virtual void turnOffColor() = 0;
 
+        void setWidgetMovability(bool movability) { widgetMovability = movability; }
         void setAnimation(std::function<void()> fun);
         void doAnimation();
 
@@ -111,8 +115,13 @@ namespace LGraphics
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
         virtual fvect3 getMove() const = 0;          ///< Возвращает вектор move виджета.
         virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
+        virtual glm::mat4 getRotate() const = 0;
+        virtual std::string getLabel() const = 0;
+        virtual bool isIsometricView() const { return isometric; }
+        virtual bool getWidgetMovability() const { return widgetMovability; }
 
         virtual void setShader(LShaders::Shader* shader) = 0;  ///< Устанавливает шейдер виджету.
+        virtual void setIsometricView(bool isometric) { this->isometric = isometric; }
 
         virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
 
@@ -143,7 +152,9 @@ namespace LGraphics
         virtual void updateLabelPos() = 0;
 
         bool isInited_ = false;
+        bool isometric = false;
 
+        bool widgetMovability = true;
         //LIWidget()
         //    :LImage(nullptr){}
 
@@ -158,16 +169,16 @@ namespace LGraphics
         @brief Конструктор.
         @param path - Путь к изображению.
         */
-        LWidget(LApp* app, const char* path, bool lazy = true);
+        LWidget(LApp* app, const char* path);
 
         /*!
         @brief Конструктор.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        LWidget(LApp* app, const unsigned char* bytes, size_t size, bool lazy = true);
+        LWidget(LApp* app, const unsigned char* bytes, size_t size);
 
-        virtual void init(LApp* app, bool lazy);
+        virtual void init(LApp* app);
         virtual void init();
     };
 }

@@ -57,6 +57,8 @@ namespace LGraphics
         */
         bool isTextureTurnedOn() const;
 
+
+        std::string getTexturePath() const { return texturePath; }
         void init();
 
         ~LImage();
@@ -67,14 +69,14 @@ namespace LGraphics
         @brief Конструктор.
         @param path - путь к изображению.
         */
-        LImage(const char* path, bool lazy = true);
+        LImage(const char* path);
 
         /*!
         @brief Конструктор.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        LImage(const unsigned char* bytes, size_t size, bool lazy = true);
+        LImage(const unsigned char* bytes, size_t size);
 
         GLuint texture; ///< Дескриптор текстуры.
 

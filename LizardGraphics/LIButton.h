@@ -6,7 +6,7 @@ namespace LGraphics
 {
     /*!
     @brief Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция.
-    @todo Сделать, чтобы кнопка срабатывала при отжатии.
+    @todo Сделать, чтобы кнопка срабатывала при отжатии, поменять название (убрать I)
     */
     class LIButton : public LRectangleShape
     {
@@ -18,12 +18,11 @@ namespace LGraphics
         /*!
         @brief Конструктор.
         @param app - указатель на приложение LApp.
-        @param parent - родительский виджет (пока не работает).
         @param path - путь к текстуре.
-        @param component - указатель на LBaseComponent.
         */
-        LIButton(LApp* app, const char* path = nullptr, bool lazy = true);
+        LIButton(LApp* app, const char* path = nullptr);
 
+        LIButton(LApp* app, const unsigned char* bytes, size_t bytesSize);
         /*!
         @brief устанавливает функцию, которая будет срабатывать при нажатии на кнопку
 

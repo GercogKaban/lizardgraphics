@@ -22,11 +22,17 @@ namespace LShaders
         "#version 330 core\n"
         "in vec2 TexCoord;\n"
         "out vec4 color;\n"
+        //"layout(binding = 2, std430) buffer buffer1\n"
+        //"{\n"
+        //"int data_SSBO;\n"
+        //"};\n"
         "uniform sampler2D ourTexture;\n"
         "uniform vec4 color_;\n"
+        //"uniform vec2 mouse;\n"
         "uniform bool sampleTexture;\n"
         "void main()\n"
         "{\n"
+        //"if ((pow(mouse.x - gl_FragCoord.x,2) + pow(mouse.y - gl_FragCoord.y,2)) <= 1.0) data_SSBO = 1;\n"
         "if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n"
         "else color = color_;\n"
         "}\n\0";
@@ -78,6 +84,19 @@ namespace LShaders
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
         "}\n";
 
+    const char checkMark_f[] = 
+        "#version 330 core\n"
+        "in vec2 TexCoord;\n"
+        "out vec4 color;\n"
+        "uniform sampler2D ourTexture;\n"
+        "uniform vec4 color_;\n"
+        "uniform bool sampleTexture;\n"
+        "void main()\n"
+        "{\n"
+        "if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n"
+        "else color = color_;\n"
+        "if (color.a == 0.0) color.rgba = vec4(color_.rgb, 1.0f);\n"
+        "}\n\0";
 
     /*!
     @brief Класс шейдера.

@@ -25,7 +25,7 @@ namespace LGraphics
         @param path - путь к текстуре.
         @param component - указатель на LBaseComponent.
         */
-        LRectangleShape(LApp* app, const char* path = nullptr, bool lazy = true);
+        LRectangleShape(LApp* app, const char* path = nullptr);
 
         /*!
         @brief Конструктор.
@@ -35,7 +35,7 @@ namespace LGraphics
         @param size - размер массива bytes.
         @param component - указатель на LBaseComponent.
         */
-        LRectangleShape(LApp* app, const unsigned char* bytes = nullptr, size_t size = 0, bool lazy = true);
+        LRectangleShape(LApp* app, const unsigned char* bytes = nullptr, size_t size = 0);
 
         void setLabel(const std::string label) override;
         void alignLabel() override;

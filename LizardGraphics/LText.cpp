@@ -47,13 +47,28 @@ namespace LGraphics
             vertScroller->reloadScroller(hiddenStrings);
     }
 
+    void LText::scale(const float x, const float y, const float z)
+    {
+        scale(fvect3(x, y, z));
+    }
+
     void LGraphics::LText::move(const size_t x, const size_t y)
     {
         auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)x,(float)y });
-        move_ = { coords.x,coords.y, 0.0f };
+        move(coords.x, coords.y, 0.0f);
+    }
+
+    void LText::move(float x, float y, float z)
+    {
+        move_ = { x,y, z };
         if (vertScroller)
             vertScroller->reloadScroller(hiddenStrings);
         alignText();
+    }
+
+    void LText::move(const fvect3 val)
+    {
+        move(val.x, val.y, val.z);
     }
 
     std::vector<LGraphics::Text> LGraphics::LText::getText() const
@@ -64,7 +79,7 @@ namespace LGraphics
     void LGraphics::LText::setText(const std::string& text_)
     {
         text.clear();
-        pushNewString();
+        initWidget();
         addText(text_);
     }
 

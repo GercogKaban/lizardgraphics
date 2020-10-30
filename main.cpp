@@ -8,6 +8,11 @@
 #include "LIButton.h"
 #include "LTextEdit.h"
 #include "LWRectangle.h"
+#include "LFlag.h"
+#include "LCounter.h"
+
+#include "CodeGen.h"
+//#include "testFile.hxx"
 
 using namespace LGraphics;
 
@@ -15,47 +20,51 @@ int main()
 {
     LGraphics::LApp app;
 
-    auto t1 = "test1.png";
-    auto t2 = "test2.png";
-    //auto e = new LIButton(&app, "image.png");
-    auto d = new LWRectangle(&app, t2);
-    //d->setIsometricView(true);
-    //d->rotateX(45.0f);
-    //d->rotateY(50.0f);
-    //d->rotateZ(-50.0f);
-    //auto d = new LIButton(&app, t1,false);
-    
-    //auto unit = new LWRectangle(&app,t1);
+    //genWidgets(&app);
+    CodeGen gen;
 
-    //std::string test("test\ntest");
-    //auto textEdit = new LTextEdit(&app, test);
-    //textEdit->turnOffTexture();
-    //textEdit->color(255, 255, 255);
-    //textEdit->move(app.getWindowSize().x / 2, app.getWindowSize().y / 2);
-    //textEdit->setVerticalScroller(new LGraphics::LVerticalScroller(&app));
+    auto b1 = new LIButton(&app, "test.png");
+    b1->move(0.693590, -0.394444, 0.000000);
+    b1->setLabel("LIButton");
+    b1->turnOffTexture();
+    b1->scale(0.5f, 0.1f, 1.0f);
+    b1->setWidgetMovability(false);
+    b1->setClickEventFunction(([&]() 
+    {
+        auto obj = new LIButton(&app, "path...");
+    }));
+    gen.notGenerateData(b1);
 
-    ////textEdit->scale({0.5f ,0.5f,1.0f });
-    //textEdit->transparency(0.85f);
-    //textEdit->move(700, 500);
-    ////e->scale({ 0.1f,0.1f,1.0f });
-    ////e->move(100,50);
-    ////e->color(255, 0, 0);
+    auto b2 = new LIButton(&app, "test.png");
+    b2->move(0.694633, -0.214815, 0.000000);
+    b2->setLabel("LIRectangle");
+    b2->turnOffTexture();
+    b2->scale(0.5f, 0.1f, 1.0f);
+    b2->setWidgetMovability(false);
+    b2->setClickEventFunction(([&]()
+    {
+        auto obj = new LIRectangle(&app, "path...");
+    }));
+    gen.notGenerateData(b2);
 
-    ////d->move(700,200);
-    //d->color(255, 0, 0);
-    //d->setLabelColor(255, 255, 255);
-    //d->turnOffTexture();
+    auto b3 = new LIButton(&app, "test.png");
+    b3->move(0.694633, -0.016667, 0.000000);
+    b3->setLabel("LTextEdit");
+    b3->turnOffTexture();
+    b3->scale(0.5f, 0.1f, 1.0f);
+    b3->setWidgetMovability(false);
+    b3->setClickEventFunction(([&]()
+    {
+        auto obj = new LTextEdit(&app, "","path...");
+        obj->turnOffTexture();
+    }));
+    gen.notGenerateData(b3);
 
-    ////e->setClickEventFunction([&]() {textEdit->scale({ 1.5f,0.5f,1.0f }); });
-    //d->setClickEventFunction([&]() 
-    //{
-    //    auto t = new LIButton(&app, t1,false);
-    //    t->move(fvect3{ 0.1f,0.1f,0.1f });
-    //});
-    //textEdit->move(800, 500);
-    //textEdit->scale({ 1, 1, 1});
+    auto c1 = new LCounter(&app, "", "path...");
 
     app.setSleepTime(5);
+    app.setWidgetsMovability(true);
     app.loop();
+    gen.generateCode("testFile.hxx", &app, "app");
     return 0;
 }

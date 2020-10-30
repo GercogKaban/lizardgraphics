@@ -22,23 +22,21 @@ void LGraphics::LWidget::breakAnimation()
     breakingAnimation();
 }
 
-LGraphics::LWidget::LWidget(LApp* app, const char * path, bool lazy)
-    :LImage(path, lazy)
-{
-    init(app, lazy);
-}
-
-LGraphics::LWidget::LWidget(LApp* app, const unsigned char * bytes, size_t size, bool lazy)
-    : LImage(bytes, size, lazy)
-{
-    init(app, lazy);
-}
-
-void LGraphics::LWidget::init(LApp* app, bool lazy)
+LGraphics::LWidget::LWidget(LApp* app, const char * path)
+    :LImage(path)
 {
     this->app = app;
-    isInited_ = !lazy;
-    //if (!lazy) init();
+}
+
+LGraphics::LWidget::LWidget(LApp* app, const unsigned char * bytes, size_t size)
+    : LImage(bytes, size)
+{
+    this->app = app;
+}
+
+void LGraphics::LWidget::init(LApp* app)
+{
+    this->app = app;
 }
 
 void LGraphics::LWidget::init()

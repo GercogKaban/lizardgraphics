@@ -6,12 +6,12 @@ namespace LGraphics
 {
     void LShape::color(const fvect3 val)
     {
-        color_ = { (float)val.x / (float)sizeof(unsigned char), (float)val.y / (float)sizeof(unsigned char),(float)val.z / (float)sizeof(unsigned char) };
+        color_ = val;
     }
 
     void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
     {
-        color_ = { (float)r / (float)sizeof(unsigned char), (float)g / (float)sizeof(unsigned char),(float)b / (float)sizeof(unsigned char) };
+        color_ = { (float)r / (float)UINT8_MAX, (float)g / UINT8_MAX,(float)b / UINT8_MAX };
     }
 
     void LShape::transparency(const float val)
@@ -21,14 +21,16 @@ namespace LGraphics
 
     void LShape::scale(const fvect3 val)
     {
-        scale_ = val;
-        alignLabel();
+        scale(val.x, val.y, val.z);
     }
 
     void LShape::scale(const float x, const float y, const float z)
     {
+        auto scaleDif = fvect3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
-        //alignLabel();
+        for (auto& o : innerWidgets)
+            o->scale(o->getScale() + scaleDif);
+        alignLabel();
     }
 
     void LShape::scaleWithoutAlign(const fvect3 val)
@@ -47,6 +49,7 @@ namespace LGraphics
         move_ = { x,y,z };
         for (auto& o : innerWidgets)
             o->move(o->getMove() + moveDif);
+        alignLabel();
     }
 
     void LShape::move(const size_t x, const size_t y)
@@ -76,6 +79,11 @@ namespace LGraphics
         rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
+    void LShape::setRotate(glm::mat4 mat)
+    {
+        rotate_ = mat;
+    }
+
     void LShape::setShader(LShaders::Shader* shader)
     {
         if (!shader) throw std::exception("error, no shader\n");
@@ -89,14 +97,14 @@ namespace LGraphics
     //    //this->buffer = component->getBuffer();
     //}
 
-    LShape::LShape(LApp* app, const char * path, bool lazy)
-        : LWidget(app, path, lazy)
+    LShape::LShape(LApp* app, const char * path)
+        : LWidget(app, path)
     {
         if (path) turnOffColor();
     }
 
-    LShape::LShape(LApp* app, const unsigned char* bytes, size_t size, bool lazy)
-        : LWidget(app, bytes, size, lazy)
+    LShape::LShape(LApp* app, const unsigned char* bytes, size_t size)
+        : LWidget(app, bytes, size)
     {
         turnOffColor();
     }

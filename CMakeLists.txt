@@ -4,7 +4,11 @@ project (LS_Example C CXX)
 
 find_package(OpenGL REQUIRED)
 
-add_executable(LS_Example main.cpp)
+set(SOURCE_FILES main.cpp CodeGen.cpp)
+set(HEADER_FILES CodeGen.h)
+
+ADD_EXECUTABLE(LS_Example ${SOURCE_FILES} ${HEADER_FILES})
+
 add_subdirectory (LizardGraphics)
 
 IF (WIN32)

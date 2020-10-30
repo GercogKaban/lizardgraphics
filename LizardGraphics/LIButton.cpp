@@ -4,8 +4,11 @@
 
 namespace LGraphics
 {
-    LIButton::LIButton(LApp* app, const char* path, bool lazy)
-        :LRectangleShape(app, path, lazy){}
+    LIButton::LIButton(LApp* app, const char* path)
+        :LRectangleShape(app, path){}
+
+    LIButton::LIButton(LApp * app, const unsigned char * bytes, size_t bytesSize)
+        : LRectangleShape(app,bytes,bytesSize){}
 
     void LIButton::setClickEventFunction(std::function<void()> fun)
     {
@@ -22,6 +25,4 @@ namespace LGraphics
     {
         clickFunction();
     }
-
- 
 }

@@ -12,5 +12,12 @@ namespace LGraphics
     extern size_t notextureSize;      ///< @var size_t размер "notexture".
     extern unsigned char new_font[];  ///< @var unsigned char массив байт изображения "new_font".
     extern size_t new_fontSize;       ///< @var size_t размер "new_font".
+    extern unsigned char checkMark[];
+    extern size_t checkMarkSize;
+    extern unsigned char arrow_down[];
+    extern size_t arrow_downSize;
+    extern unsigned char arrow_up[];
+    extern size_t arrow_upSize;
+
 }
 

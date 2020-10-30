@@ -88,11 +88,14 @@ namespace LGraphics
         void rotateX(float angleDegree) override;
         void rotateY(float angleDegree) override;
         void rotateZ(float angleDegree) override;
+        void setRotate(glm::mat4 mat) override;
 
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         fvect3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         fvect3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
+        glm::mat4 getRotate() const override { return rotate_; }
+        std::string getLabel() const { return label.text; };
 
         void turnOffColor() override;
 
@@ -111,7 +114,7 @@ namespace LGraphics
         @param path - путь к изображению.
         @param component - указатель на LBaseComponent.
         */
-        LShape(LApp* app, const char* path, bool lazy = true);
+        LShape(LApp* app, const char* path);
 
         /*!
         @brief
@@ -119,7 +122,7 @@ namespace LGraphics
         @param size - размер массива bytes.
         @param component - указатель на LBaseComponent.
         */
-        LShape(LApp* app, const unsigned char* bytes, size_t size, bool lazy = true);
+        LShape(LApp* app, const unsigned char* bytes, size_t size);
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 

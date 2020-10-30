@@ -5,19 +5,18 @@
 
 namespace LGraphics
 {
-    LImage::LImage(const char* path, bool lazy)
+    LImage::LImage(const char* path)
     {
-        if (!lazy)
-            texture = resManager.loadTexture(path);
-        else
-            texturePath = path;
+        //if (!lazy)
+            //texture = resManager.loadTexture(path);
+        texturePath = path;
     }
 
-    LImage::LImage(const unsigned char* bytes, size_t size, bool lazy)
+    LImage::LImage(const unsigned char* bytes, size_t size)
     {
-        if (!lazy)
-            texture = resManager.loadTexture(bytes,size);
-        else
+        //if (!lazy)
+            //texture = resManager.loadTexture(bytes,size);
+        //else
         {
             texturesBytes = new unsigned char[size];
             memcpy(texturesBytes, bytes, size);
@@ -27,11 +26,14 @@ namespace LGraphics
 
     void LImage::bindTexture(const char* path)
     {
+        turnOnTexture();
+        texturePath = path;
         texture = resManager.loadTexture(path);
     }
 
     void LImage::bindTexture(const unsigned char* bytes, size_t size)
     {
+        //turnOnTexture();
         texture = resManager.loadTexture(bytes,size);
     }
 

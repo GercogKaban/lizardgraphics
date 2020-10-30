@@ -38,6 +38,7 @@ namespace LGraphics
             openGlDrawing.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
         }
+
         t.stop();
         glfwTerminate();
     }
@@ -91,6 +92,15 @@ namespace LGraphics
         objects.push_back(w);
     }
 
+    void LApp::moveWidgetToMouse(LWidget * w)
+    {
+        if (!widgetsMovability || !w->getWidgetMovability()) return;
+        double mouse_x, mouse_y;
+        glfwGetCursorPos(getWindowHandler(), &mouse_x, &mouse_y);
+        auto mouse = pointOnScreenToGlCoords(getWindowSize(), { (float)mouse_x ,(float)mouse_y });
+        w->move(fvect3{(float)mouse.x,(float)mouse.y,w->getMove().z});
+    }
+
     void LApp::init()
     {
         initOpenGl();
@@ -103,6 +113,7 @@ namespace LGraphics
         standartRectBuffer = new LRectangleBuffer();
         standartInterfaceshader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
         standartWorldObjShader = new LShaders::Shader(LShaders::world_v, LShaders::interface_f);
+        checkMarkShader = new LShaders::Shader(LShaders::interface_v, LShaders::checkMark_f);
         setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
     }
@@ -114,7 +125,7 @@ namespace LGraphics
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-        //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
@@ -136,6 +147,11 @@ namespace LGraphics
         
         glfwSetWindowUserPointer(window, this);
 
+        auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
+        {
+            static_cast<LApp*>(glfwGetWindowUserPointer(w))->cursor_position_callback(w, xpos,ypos);
+        };
+
         auto mouse = [](GLFWwindow* w, int button, int action, int mods)
         {
             static_cast<LApp*>(glfwGetWindowUserPointer(w))->mouse_button_callback(w, button, action, mods);
@@ -151,9 +167,11 @@ namespace LGraphics
             static_cast<LApp*>(glfwGetWindowUserPointer(window))->character_callback(window, codepoint);
         };
 
+        glfwSetCursorPosCallback(window, cursor_position);
         glfwSetMouseButtonCallback(window, mouse);
         glfwSetKeyCallback(window, key);
         glfwSetCharCallback(window, charCallback);
+        glfwGetFramebufferSize(window, &width, &height);
 
         glewExperimental = GL_TRUE;
         glewInit();
@@ -179,6 +197,7 @@ namespace LGraphics
         delete standartRectBuffer;
         delete standartInterfaceshader;
         delete standartWorldObjShader;
+        delete checkMarkShader;
         LError::releaseResources();
     }
 
@@ -186,6 +205,8 @@ namespace LGraphics
     {
         bool out = false;
         if (!objects.size()) return;
+
+        //LWidget* widgetToMove = nullptr;
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
             // нужно сменить итераторы на C-шный цикл
@@ -197,7 +218,10 @@ namespace LGraphics
                 if (o->mouseOnIt())
                 {
                     if (activeWidget) activeWidget->breakAnimation();
+                    prevActiveWidget = activeWidget;
                     activeWidget = o;
+                    widgetToMove = activeWidget;
+
                     if (dynamic_cast<LIButton*>(o))
                     {
                         ((LIButton*)o)->doClickEventFunction();
@@ -205,6 +229,7 @@ namespace LGraphics
                     }
                 }
 
+                // тут нужна рекурсия
                 for (auto& innerW : (o)->getInnerWidgets())
                     if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
                     {
@@ -218,6 +243,7 @@ namespace LGraphics
 
         else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
         {
+            widgetToMove = nullptr;
             for (auto& o : objects)
             {
                 for (auto& innerW : o->getInnerWidgets())
@@ -228,7 +254,14 @@ namespace LGraphics
                     }
             }
         }
+        if (widgetToMove) moveWidgetToMouse(widgetToMove);
     }
+
+    void LApp::cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
+    {
+        if (widgetToMove) moveWidgetToMouse(widgetToMove);
+    }
+
     void LApp::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
     {
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
