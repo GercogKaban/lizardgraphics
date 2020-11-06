@@ -63,6 +63,9 @@ namespace LGraphics
 
         void refreshObjectMatrices();
 
+        void setKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback);
+        void setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback);
+
         std::vector<LWidget*>* getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
 
@@ -130,6 +133,9 @@ namespace LGraphics
         //bool initingTextures = false;
 
         std::mutex openGlDrawing;
+
+        std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> keyCallback = [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
+        std::function<void(GLFWwindow* w, int button, int action, int mods)> mouseCallback = [](GLFWwindow* w, int button, int action, int mods) {};
     };
 }
 

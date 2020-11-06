@@ -47,6 +47,8 @@ LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * pa
         }
     });
     innerWidgets.push_back(b2);
+
+    textScalling = true;
     
     setCountInterval(0.5f);
     setFloatPrecision(2);
@@ -75,6 +77,69 @@ void LGraphics::LCounter::scale(const float x, const float y, const float z)
     LText::scale(fvect3(x, y, z));
 }
 
+void LGraphics::LCounter::addText(const unsigned int symbol)
+{
+    if (symbol == '-')
+    {
+        if (mode == Integer)
+        {
+            counterInt = -counterInt;
+            setText(std::to_string(counterInt));
+        }
+
+        else if (mode == Float)
+        {
+            counterFl = -counterFl;
+            setText(to_string_with_precision(counterFl, floatPrecision));
+        }
+    }
+
+    else if (!isdigit(symbol))
+        return;
+
+    else
+    {
+        if (mode == Integer)
+        {
+            counterInt = 10 * counterInt + std::stoi(std::string(1, symbol));
+            setText(std::to_string(counterInt));
+        }
+
+        else if (mode == Float)
+        {
+            counterFl = 10 * counterFl + std::stoi(std::string(1, symbol));
+            setText(to_string_with_precision(counterFl, floatPrecision));
+        }
+    }
+}
+
+void LGraphics::LCounter::addText(const std::string text_)
+{
+    for (auto& symbol : text_)
+        addText(symbol);
+}
+
+void LGraphics::LCounter::removeLastSymbol()
+{
+    if (mode == Integer)
+    {
+        counterInt /= 10;
+        setText(std::to_string(counterInt));
+    }
+
+    else if (mode == Float)
+    {
+        counterFl = (int)counterFl / 10;
+        setText(to_string_with_precision(counterFl, floatPrecision));
+    }
+
+    if (textScallingStack.size())
+    {
+        scaleText(getTextScale() - textScallingStack.top());
+        textScallingStack.pop();
+    }
+}
+
 void LGraphics::LCounter::setMode(int mode)
 {
     this->mode = mode;
@@ -88,4 +153,11 @@ void LGraphics::LCounter::setMode(int mode)
         counterFl = 0.0f;
         setText(to_string_with_precision(counterFl, floatPrecision));
     }
+}
+
+void LGraphics::LCounter::clear()
+{
+    LText::clear();
+    counterFl = 0.0f;
+    counterInt = 0;
 }

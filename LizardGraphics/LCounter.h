@@ -23,10 +23,18 @@ namespace LGraphics
         void scale(const fvect3 val) override;
         void scale(const float x, const float y, const float z) override;
 
+        void addText(const unsigned int symbol) override;
+        void addText(const std::string text) override;
+        void removeLastSymbol() override;
+
         void setCountInterval(float interval) { countInterval = interval; }
         void setMode(int mode);
         void setFloatPrecision(const size_t precision) { floatPrecision = precision; }
         bool getMode() const { return mode; }
+
+        void clear() override;
+
+        float getNum() const { return mode == Integer? counterInt : counterFl; }
 
         template <typename T>
         std::string to_string_with_precision(const T a_value, const int n = 6)
@@ -37,7 +45,7 @@ namespace LGraphics
             return out.str();
         }
 
-    private:
+    protected:
 
         int mode = Integer;
 

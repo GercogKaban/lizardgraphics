@@ -5,6 +5,7 @@
 #include "LRectangleBuffer.h"
 #include "LWRectangle.h"
 #include "LTimer.h"
+#include "LCounter.h"
 
 namespace LGraphics
 {
@@ -69,6 +70,16 @@ namespace LGraphics
         for (auto& obj : objects)
             if (dynamic_cast<LWRectangle*>(obj))
                 dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
+    }
+
+    void LApp::setKeyCallback(std::function<void(GLFWwindow*window, int key, int scancode, int action, int mods)> callback)
+    {
+        keyCallback = callback;
+    }
+
+    void LApp::setMouseCallback(std::function<void(GLFWwindow*w, int button, int action, int mods)> callback)
+    {
+        mouseCallback = callback;
     }
 
     //void LApp::addSizeToTexturesToInitVector(const size_t size)
@@ -203,6 +214,7 @@ namespace LGraphics
 
     void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
     {
+        mouseCallback(window, button, action, mods);
         bool out = false;
         if (!objects.size()) return;
 
@@ -264,6 +276,7 @@ namespace LGraphics
 
     void LApp::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
     {
+        keyCallback(window, key, scancode, action, mods);
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
         if (textEdit && action)
         {

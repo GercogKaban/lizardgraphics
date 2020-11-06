@@ -26,8 +26,6 @@ namespace LGraphics
 
     void LGraphics::LText::draw()
     {
-        //if (app->getActiveWidget() == this)
-        //    doAnimation();
         LRectangleShape::draw();
         for (auto str = begin; str < end; str++)
         {
@@ -35,7 +33,7 @@ namespace LGraphics
                continue;
             auto toScreen = glCoordsToScreenCoords(app->getWindowSize(), { str->pos.x, str->pos.y + (vertScroller ? vertScroller->currentPos : hiddenStrings) * strIndent });
             toScreen.y = app->getWindowSize().y - toScreen.y;
-            LLine::display(str->text, toScreen.x, toScreen.y, str->scale, str->color);
+            LLine::display(str->text, toScreen.x, toScreen.y, textScale, str->color);
         }
     }
 
@@ -52,6 +50,15 @@ namespace LGraphics
         scale(fvect3(x, y, z));
     }
 
+    void LText::scaleText(const float scale)
+    {
+        textScale = scale;
+        auto text = getText();
+        setText(text[0]);
+        for (size_t i = 1; i < text.size();++i)    
+            LText::addText(text[i]);
+    }
+
     void LGraphics::LText::move(const size_t x, const size_t y)
     {
         auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)x,(float)y });
@@ -60,7 +67,7 @@ namespace LGraphics
 
     void LText::move(float x, float y, float z)
     {
-        move_ = { x,y, z };
+        move_ = { x,y,z};
         if (vertScroller)
             vertScroller->reloadScroller(hiddenStrings);
         alignText();
@@ -71,42 +78,65 @@ namespace LGraphics
         move(val.x, val.y, val.z);
     }
 
-    std::vector<LGraphics::Text> LGraphics::LText::getText() const
+    std::vector<std::string> LText::getText() const
     {
-        return text;
+        std::vector<std::string> res;
+        res.reserve(text.size());
+        for (auto& str : text)
+            res.push_back(str.text);
+        return res;
     }
 
     void LGraphics::LText::setText(const std::string& text_)
     {
         text.clear();
         initWidget();
-        addText(text_);
+        LText::addText(text_);
     }
 
     void LGraphics::LText::addText(const std::string text_)
     {
+        depth++;
         for (auto& symbol : text_)
-            addText(symbol);
+            LText::addText(symbol);
+        depth--;
+
+        if (depth == 0 && textScalling && lastTextScalling)
+        {
+            textScallingStack.push(lastTextScalling);
+            lastTextScalling = 0.0f;
+        }
     }
 
     void LGraphics::LText::addText(const unsigned int symbol)
+    {
+        addSymb(symbol);
+    }
+
+    void LText::addSymb(const unsigned int symbol)
     {
         auto char_ = LLine::characters[symbol];
         if (symbol == '\n')
             pushNewString();
 
-        else if ((float)char_.advance / 64.0f + text.back().length + rightBorder * app->getWindowSize().x <= maxLength)
+        else if ((char_.advance >> 6)*textScale + text.back().length + rightBorder * app->getWindowSize().x <= maxLength)
         {
             text.back().text += (char)symbol;
-            text.back().length += (float)char_.advance / 64.0f;
+            text.back().length += (char_.advance >> 6) * textScale;
             if (vertScroller && hiddenStrings > 0)
                 vertScroller->reloadScroller(hiddenStrings);
         }
 
         else
         {
-            pushNewString();
-            addText(symbol);
+            if (!textScalling)
+                pushNewString();
+            else if (textScalling)
+            {
+                lastTextScalling += -getTextScale()*0.05;
+                scaleText(getTextScale() - getTextScale()*0.05);
+            }
+            LText::addSymb(symbol);
         }
     }
 
@@ -122,9 +152,19 @@ namespace LGraphics
         if (!text.back().text.empty())
         {
             auto char_ = LLine::characters[text.back().text.back()];
-            text.back().length -= (float)char_.advance / 64.0f;
+            text.back().length -= (char_.advance >> 6)*textScale;
             text.back().text.pop_back();
+            if (textScalling)
+            {
+                scaleText(getTextScale() - textScallingStack.top());
+                textScallingStack.pop();
+            }
         }
+    }
+
+    void LText::clear()
+    {
+        setText("");
     }
 
     void LGraphics::LText::setVerticalScroller(LVerticalScroller* scroller)
@@ -174,6 +214,7 @@ namespace LGraphics
         addText(wholeText);
     }
 
+
     void LText::showFrom(int position)
     {
         begin = text.begin() + position;
@@ -191,10 +232,7 @@ namespace LGraphics
         if (text.size())
             temp.pos = { topLeftCorner.x + leftBorder, text.back().pos.y - strIndent };
         else
-        {
-            //fvect3 topLeftCorner = getTopLeftCorner();
             temp.pos = { topLeftCorner.x + leftBorder, topLeftCorner.y - topBorder };
-        }
 
         text.push_back(temp);
         if (outOfBordersY(temp.pos.y))

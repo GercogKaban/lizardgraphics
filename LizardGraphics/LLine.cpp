@@ -147,8 +147,10 @@ namespace LGraphics
     {
         float res = 0.0f;
         for (auto& s : text.text)
-            res += (float)characters[s].advance / 64.0f;
-        res-= (float)characters[text.text.back()].advance / 64.0f;
+            res += (characters[s].advance >> 6) * text.scale;
+            //res += (float)characters[s].advance / 64.0f;
+        res -= (characters[text.text.back()].advance >> 6) * text.scale;
+        //res-= (float)characters[text.text.back()].advance / 64.0f;
         return res;
     }
 }
