@@ -11,7 +11,7 @@ var searchData=
   ['setmouseoniteventfunction_82',['setMouseOnItEventFunction',['../class_l_graphics_1_1_l_widget.html#a84d46235ec8d5e8844bdb899dbcfabc8',1,'LGraphics::LWidget']]],
   ['setshader_83',['setShader',['../class_l_graphics_1_1_l_shape.html#a793e8527051b1c2e424b957d631747b4',1,'LGraphics::LShape::setShader()'],['../class_l_graphics_1_1_l_widget.html#a9b1a651a95a2771147404ed349c16979',1,'LGraphics::LWidget::setShader()']]],
   ['setverts_84',['setVerts',['../class_l_graphics_1_1_l_buffer.html#a3000ed51fa57f1fd87b55b6f1f5ad9be',1,'LGraphics::LBuffer::setVerts()'],['../class_l_graphics_1_1_l_rectangle_buffer.html#a8655f91d6d2432cc5a9ad21c1958cfc4',1,'LGraphics::LRectangleBuffer::setVerts()']]],
-  ['shader_85',['Shader',['../class_l_shaders_1_1_shader.html',1,'LShaders::Shader'],['../class_l_shaders_1_1_shader.html#aad4c5852d69494b8e9796ae311e8899a',1,'LShaders::Shader::Shader()'],['../class_l_graphics_1_1_l_shape.html#a6fb798415e344e66055010768d73f2b3',1,'LGraphics::LShape::shader()']]],
+  ['shader_85',['Shader',['../class_l_shaders_1_1_shader.html',1,'LShaders::Shader'],['../class_l_graphics_1_1_l_shape.html#a6fb798415e344e66055010768d73f2b3',1,'LGraphics::LShape::shader()'],['../class_l_shaders_1_1_shader.html#aad4c5852d69494b8e9796ae311e8899a',1,'LShaders::Shader::Shader()']]],
   ['show_86',['show',['../class_l_graphics_1_1_l_widget.html#afa79345fc9f8d6f2d5d3627346aba23f',1,'LGraphics::LWidget']]],
   ['switchtexture_87',['switchTexture',['../class_l_graphics_1_1_l_image.html#a63c916f0c2ea2c9be528338e3b43dd5a',1,'LGraphics::LImage::switchTexture(bool show)'],['../class_l_graphics_1_1_l_image.html#ac098468eec05278adf88e306eb5dc01e',1,'LGraphics::LImage::switchTexture()']]]
 ];

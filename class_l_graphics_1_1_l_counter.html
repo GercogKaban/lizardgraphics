@@ -122,6 +122,15 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType
 <tr class="memitem:a08e47856015316d169655200d45c3eea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_counter.html#a08e47856015316d169655200d45c3eea">scale</a> (const float x, const float y, const float z) override</td></tr>
 <tr class="memdesc:a08e47856015316d169655200d45c3eea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает размеры виджету.  <a href="class_l_graphics_1_1_l_counter.html#a08e47856015316d169655200d45c3eea">More...</a><br /></td></tr>
 <tr class="separator:a08e47856015316d169655200d45c3eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb6e989a8e55adbc02e47b402420c3b0"><td class="memItemLeft" align="right" valign="top"><a id="abb6e989a8e55adbc02e47b402420c3b0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (const unsigned int symbol) override</td></tr>
+<tr class="separator:abb6e989a8e55adbc02e47b402420c3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a559b64edd2af3d3c208b31da6decc5c4"><td class="memItemLeft" align="right" valign="top"><a id="a559b64edd2af3d3c208b31da6decc5c4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (const std::string text) override</td></tr>
+<tr class="separator:a559b64edd2af3d3c208b31da6decc5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4afa7d2c9930c4da50f5d819fa8e0fbe"><td class="memItemLeft" align="right" valign="top"><a id="a4afa7d2c9930c4da50f5d819fa8e0fbe"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>removeLastSymbol</b> () override</td></tr>
+<tr class="separator:a4afa7d2c9930c4da50f5d819fa8e0fbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a573510b9e51e816301bf788a3231848c"><td class="memItemLeft" align="right" valign="top"><a id="a573510b9e51e816301bf788a3231848c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setCountInterval</b> (float interval)</td></tr>
 <tr class="separator:a573510b9e51e816301bf788a3231848c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,6 +143,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setFloatPrecision</b>
 <tr class="memitem:a6f547c69ecf42a25bc168aee2aa32e19"><td class="memItemLeft" align="right" valign="top"><a id="a6f547c69ecf42a25bc168aee2aa32e19"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>getMode</b> () const</td></tr>
 <tr class="separator:a6f547c69ecf42a25bc168aee2aa32e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab161c961b20ced30a0649e378d90e5fe"><td class="memItemLeft" align="right" valign="top"><a id="ab161c961b20ced30a0649e378d90e5fe"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () override</td></tr>
+<tr class="separator:ab161c961b20ced30a0649e378d90e5fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95ba5209422f50c1f31a0818e8cc1393"><td class="memItemLeft" align="right" valign="top"><a id="a95ba5209422f50c1f31a0818e8cc1393"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getNum</b> () const</td></tr>
+<tr class="separator:a95ba5209422f50c1f31a0818e8cc1393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf5e45392ec6a1b087612389897d41e4"><td class="memTemplParams" colspan="2"><a id="aaf5e45392ec6a1b087612389897d41e4"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aaf5e45392ec6a1b087612389897d41e4"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>to_string_with_precision</b> (const T a_value, const int n=6)</td></tr>
@@ -142,6 +157,12 @@ template&lt;typename T &gt; </td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_text.html#af1cb0249d4a7cb83e6c77f6ff634007b">draw</a> () override</td></tr>
 <tr class="memdesc:af1cb0249d4a7cb83e6c77f6ff634007b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Рисует виджет на сцене. <br /></td></tr>
 <tr class="separator:af1cb0249d4a7cb83e6c77f6ff634007b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd2198891abbe66de57fb7daa1f393c8"><td class="memItemLeft" align="right" valign="top"><a id="afd2198891abbe66de57fb7daa1f393c8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scaleText</b> (const float <a class="el" href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">scale</a>)</td></tr>
+<tr class="separator:afd2198891abbe66de57fb7daa1f393c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e2729909911897ceb5f0918ea99e71f"><td class="memItemLeft" align="right" valign="top"><a id="a7e2729909911897ceb5f0918ea99e71f"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getTextScale</b> () const</td></tr>
+<tr class="separator:a7e2729909911897ceb5f0918ea99e71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21668684bbdf39f05192b99d912456bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_text.html#a21668684bbdf39f05192b99d912456bc">move</a> (const size_t x, const size_t y) override</td></tr>
 <tr class="memdesc:a21668684bbdf39f05192b99d912456bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Перемещает виджет.  <a href="class_l_graphics_1_1_l_text.html#a21668684bbdf39f05192b99d912456bc">More...</a><br /></td></tr>
 <tr class="separator:a21668684bbdf39f05192b99d912456bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,21 +172,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a95ea5631486a4b7f9ea7f962a81ad1b0"><td class="memItemLeft" align="right" valign="top"><a id="a95ea5631486a4b7f9ea7f962a81ad1b0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setLabel</b> (const std::string text) override</td></tr>
 <tr class="separator:a95ea5631486a4b7f9ea7f962a81ad1b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b9b9608cfafa2ddb633e31e50b2aafc"><td class="memItemLeft" align="right" valign="top"><a id="a4b9b9608cfafa2ddb633e31e50b2aafc"></a>
-std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getText</b> () const</td></tr>
-<tr class="separator:a4b9b9608cfafa2ddb633e31e50b2aafc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0950e48e5fe001c96084701acf849280"><td class="memItemLeft" align="right" valign="top"><a id="a0950e48e5fe001c96084701acf849280"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getText</b> () const</td></tr>
+<tr class="separator:a0950e48e5fe001c96084701acf849280"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a042b04a41dcf2216c75423ccec41d546"><td class="memItemLeft" align="right" valign="top"><a id="a042b04a41dcf2216c75423ccec41d546"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setText</b> (const std::string &amp;text)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setText</b> (const std::string &amp;text)</td></tr>
 <tr class="separator:a042b04a41dcf2216c75423ccec41d546"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8c8047e3ca09a6bd583340e5d3583fe"><td class="memItemLeft" align="right" valign="top"><a id="ac8c8047e3ca09a6bd583340e5d3583fe"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (const std::string text)</td></tr>
-<tr class="separator:ac8c8047e3ca09a6bd583340e5d3583fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16e65e519c51e48b3a83622a0ae43f91"><td class="memItemLeft" align="right" valign="top"><a id="a16e65e519c51e48b3a83622a0ae43f91"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (const unsigned int symbol)</td></tr>
-<tr class="separator:a16e65e519c51e48b3a83622a0ae43f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64db0244c1a401f4789b3cb610bbc434"><td class="memItemLeft" align="right" valign="top"><a id="a64db0244c1a401f4789b3cb610bbc434"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>removeLastSymbol</b> ()</td></tr>
-<tr class="separator:a64db0244c1a401f4789b3cb610bbc434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af81164a92ab452f371768c9eb8b6d21d"><td class="memItemLeft" align="right" valign="top"><a id="af81164a92ab452f371768c9eb8b6d21d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setVerticalScroller</b> (<a class="el" href="class_l_graphics_1_1_l_vertical_scroller.html">LVerticalScroller</a> *scroller)</td></tr>
 <tr class="separator:af81164a92ab452f371768c9eb8b6d21d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -364,6 +376,12 @@ friend&#160;</td><td class="memItemRight" valign="bottom"><b>LApp</b></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:ac0deead34019f6e1f91eebfd58a1ed88"><td class="memItemLeft" align="right" valign="top"><a id="ac0deead34019f6e1f91eebfd58a1ed88"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addSymb</b> (const unsigned int symbol)</td></tr>
+<tr class="separator:ac0deead34019f6e1f91eebfd58a1ed88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7324b56c1060458a8bdeed0acc69ce91"><td class="memItemLeft" align="right" valign="top"><a id="a7324b56c1060458a8bdeed0acc69ce91"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>alignText</b> ()</td></tr>
+<tr class="separator:a7324b56c1060458a8bdeed0acc69ce91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d09bb53cf002fbda10d8832f76bd1d7"><td class="memItemLeft" align="right" valign="top"><a id="a1d09bb53cf002fbda10d8832f76bd1d7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initWidget</b> ()</td></tr>
 <tr class="separator:a1d09bb53cf002fbda10d8832f76bd1d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,9 +391,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateMaxLength</b
 <tr class="memitem:aa94f97c55cce782f0744d8a7209b5692"><td class="memItemLeft" align="right" valign="top"><a id="aa94f97c55cce782f0744d8a7209b5692"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>yAlign</b> ()</td></tr>
 <tr class="separator:aa94f97c55cce782f0744d8a7209b5692"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7324b56c1060458a8bdeed0acc69ce91"><td class="memItemLeft" align="right" valign="top"><a id="a7324b56c1060458a8bdeed0acc69ce91"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>alignText</b> ()</td></tr>
-<tr class="separator:a7324b56c1060458a8bdeed0acc69ce91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5db4d61fce0e23da8ee9c4920a0cd1f8"><td class="memItemLeft" align="right" valign="top"><a id="a5db4d61fce0e23da8ee9c4920a0cd1f8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>showFrom</b> (int position)</td></tr>
 <tr class="separator:a5db4d61fce0e23da8ee9c4920a0cd1f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -409,12 +424,36 @@ const <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:aaa2075e3f9a415dd389be0fca3359118"><td class="memItemLeft" align="right" valign="top"><a id="aaa2075e3f9a415dd389be0fca3359118"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> = Integer</td></tr>
+<tr class="separator:aaa2075e3f9a415dd389be0fca3359118"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d81410ecce9c1afdfce46ac928b87e9"><td class="memItemLeft" align="right" valign="top"><a id="a1d81410ecce9c1afdfce46ac928b87e9"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>counterInt</b> = 0</td></tr>
+<tr class="separator:a1d81410ecce9c1afdfce46ac928b87e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7780594136f7e3a2ab1dee776f3b3bd6"><td class="memItemLeft" align="right" valign="top"><a id="a7780594136f7e3a2ab1dee776f3b3bd6"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>counterFl</b> = 0.0f</td></tr>
+<tr class="separator:a7780594136f7e3a2ab1dee776f3b3bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99ce2c9b50144216610cd9433b450b52"><td class="memItemLeft" align="right" valign="top"><a id="a99ce2c9b50144216610cd9433b450b52"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>countInterval</b> = 1.0f</td></tr>
+<tr class="separator:a99ce2c9b50144216610cd9433b450b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50a622e3aab043c34a71528857cb3427"><td class="memItemLeft" align="right" valign="top"><a id="a50a622e3aab043c34a71528857cb3427"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>floatPrecision</b> = 6</td></tr>
+<tr class="separator:a50a622e3aab043c34a71528857cb3427"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf6eaa619af118bca4092bee68e6983b"><td class="memItemLeft" align="right" valign="top"><a id="acf6eaa619af118bca4092bee68e6983b"></a>
 std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b></td></tr>
 <tr class="separator:acf6eaa619af118bca4092bee68e6983b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5732c0c12d97b2984d760ee9f4f01f7d"><td class="memItemLeft" align="right" valign="top"><a id="a5732c0c12d97b2984d760ee9f4f01f7d"></a>
 std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b></td></tr>
 <tr class="separator:a5732c0c12d97b2984d760ee9f4f01f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab089849c26fec56b71ef2027b4b16666"><td class="memItemLeft" align="right" valign="top"><a id="ab089849c26fec56b71ef2027b4b16666"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>textScalling</b> = false</td></tr>
+<tr class="separator:ab089849c26fec56b71ef2027b4b16666"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ac9bc0d6f6be01fd9919cde7a82306f"><td class="memItemLeft" align="right" valign="top"><a id="a6ac9bc0d6f6be01fd9919cde7a82306f"></a>
+std::stack&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textScallingStack</b></td></tr>
+<tr class="separator:a6ac9bc0d6f6be01fd9919cde7a82306f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cc65097e99a4bc3dfc12bb7d65ba582"><td class="memItemLeft" align="right" valign="top"><a id="a1cc65097e99a4bc3dfc12bb7d65ba582"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>lastTextScalling</b> = 0.0f</td></tr>
+<tr class="separator:a1cc65097e99a4bc3dfc12bb7d65ba582"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd86b7ebcba0090ed478182b532c40f2"><td class="memItemLeft" align="right" valign="top"><a id="acd86b7ebcba0090ed478182b532c40f2"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>leftBorder</b> = 0.038f</td></tr>
 <tr class="separator:acd86b7ebcba0090ed478182b532c40f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -439,6 +478,15 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>hiddenStrings</b> =
 <tr class="memitem:a1ce3b6acd81367e9123762bc20e48183"><td class="memItemLeft" align="right" valign="top"><a id="a1ce3b6acd81367e9123762bc20e48183"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>maxLength</b> = 0.0f</td></tr>
 <tr class="separator:a1ce3b6acd81367e9123762bc20e48183"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3a62ec0dab5d17bc3cdc87b46fdeb19"><td class="memItemLeft" align="right" valign="top"><a id="ae3a62ec0dab5d17bc3cdc87b46fdeb19"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>deFaultTextScale</b> = 1.0f</td></tr>
+<tr class="separator:ae3a62ec0dab5d17bc3cdc87b46fdeb19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80639e84ac748d806481bbb413f48d35"><td class="memItemLeft" align="right" valign="top"><a id="a80639e84ac748d806481bbb413f48d35"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>textScale</b> = deFaultTextScale</td></tr>
+<tr class="separator:a80639e84ac748d806481bbb413f48d35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7b0a0cde3e821b9f544d9563d775387"><td class="memItemLeft" align="right" valign="top"><a id="af7b0a0cde3e821b9f544d9563d775387"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b> = 0</td></tr>
+<tr class="separator:af7b0a0cde3e821b9f544d9563d775387"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5390f7b68aa83a94a8fe685caaaa69fb"><td class="memItemLeft" align="right" valign="top"><a id="a5390f7b68aa83a94a8fe685caaaa69fb"></a>
 std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_i_button.html#a5390f7b68aa83a94a8fe685caaaa69fb">clickFunction</a> = [](){}</td></tr>
 <tr class="memdesc:a5390f7b68aa83a94a8fe685caaaa69fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Функция, срабатывающая при нажатии на кнопку. <br /></td></tr>

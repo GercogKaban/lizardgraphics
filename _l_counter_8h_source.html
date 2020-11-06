@@ -95,35 +95,43 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">scale</a>(<span class="keyword">const</span> <a class="code" href="structvect__prototype2.html">fvect3</a> val) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">scale</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> x, <span class="keyword">const</span> <span class="keywordtype">float</span> y, <span class="keyword">const</span> <span class="keywordtype">float</span> z) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">float</span> interval) { countInterval = interval; }</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">void</span> setMode(<span class="keywordtype">int</span> mode);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">void</span> setFloatPrecision(<span class="keyword">const</span> <span class="keywordtype">size_t</span> precision) { floatPrecision = precision; }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">bool</span> getMode()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mode; }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        std::string to_string_with_precision(<span class="keyword">const</span> T a_value, <span class="keyword">const</span> <span class="keywordtype">int</span> n = 6)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            std::ostringstream out;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            out.precision(n);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            out &lt;&lt; std::fixed &lt;&lt; a_value;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <span class="keywordflow">return</span> out.str();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        }</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">int</span> mode = Integer;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">int</span> counterInt = 0;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">float</span> counterFl = 0.0f;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">float</span> countInterval = 1.0f;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> std::string text) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">float</span> interval) { countInterval = interval; }</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">void</span> setMode(<span class="keywordtype">int</span> mode);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">void</span> setFloatPrecision(<span class="keyword">const</span> <span class="keywordtype">size_t</span> precision) { floatPrecision = precision; }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">bool</span> getMode()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mode; }</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">float</span> getNum()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mode == Integer? counterInt : counterFl; }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        std::string to_string_with_precision(<span class="keyword">const</span> T a_value, <span class="keyword">const</span> <span class="keywordtype">int</span> n = 6)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            std::ostringstream out;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            out.precision(n);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            out &lt;&lt; std::fixed &lt;&lt; a_value;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">return</span> out.str();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">size_t</span> floatPrecision = 6;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    };</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordtype">int</span> mode = Integer;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordtype">int</span> counterInt = 0;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">float</span> counterFl = 0.0f;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">float</span> countInterval = 1.0f;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">size_t</span> floatPrecision = 6;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    };</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a08336bfb8c23a8308cf022e29809cd10"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a08336bfb8c23a8308cf022e29809cd10">LGraphics::LCounter::move</a></div><div class="ttdeci">void move(const fvect3 val) override</div><div class="ttdoc">Перемещает виджет.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:56</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a08336bfb8c23a8308cf022e29809cd10"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a08336bfb8c23a8308cf022e29809cd10">LGraphics::LCounter::move</a></div><div class="ttdeci">void move(const fvect3 val) override</div><div class="ttdoc">Перемещает виджет.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:58</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_counter_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html">LGraphics::LCounter</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:8</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a0a71974bf7d75373a1e56db3126c1d44"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">LGraphics::LCounter::scale</a></div><div class="ttdeci">void scale(const fvect3 val) override</div><div class="ttdoc">Устанавливает размеры виджету.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:67</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a0a71974bf7d75373a1e56db3126c1d44"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">LGraphics::LCounter::scale</a></div><div class="ttdeci">void scale(const fvect3 val) override</div><div class="ttdoc">Устанавливает размеры виджету.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:69</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:143</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html">LGraphics::LTextEdit</a></div><div class="ttdef"><b>Definition:</b> LTextEdit.h:7</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:25</div></div>
