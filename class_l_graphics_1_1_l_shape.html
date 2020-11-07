@@ -102,6 +102,9 @@ Inheritance diagram for LGraphics::LShape:</div>
 <area href="class_l_graphics_1_1_l_horizontal_scroller.html" alt="LGraphics::LHorizontalScroller" shape="rect" coords="390,392,575,416"/>
 <area href="class_l_graphics_1_1_l_vertical_scroller.html" alt="LGraphics::LVerticalScroller" shape="rect" coords="585,392,770,416"/>
 <area href="class_l_graphics_1_1_l_counter.html" alt="LGraphics::LCounter" shape="rect" coords="195,448,380,472"/>
+<area href="class_l_graphics_1_1_l_counter_f.html" alt="LGraphics::LCounterF" shape="rect" coords="0,504,185,528"/>
+<area href="class_l_graphics_1_1_l_counter_i.html" alt="LGraphics::LCounterI" shape="rect" coords="195,504,380,528"/>
+<area href="class_l_graphics_1_1_l_counter_l_l.html" alt="LGraphics::LCounterLL" shape="rect" coords="390,504,575,528"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -214,6 +217,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setBreakingAnimation<
 <tr class="memitem:a618e748e57dc83b5a7e118d1f1fea665"><td class="memItemLeft" align="right" valign="top"><a id="a618e748e57dc83b5a7e118d1f1fea665"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>breakAnimation</b> ()</td></tr>
 <tr class="separator:a618e748e57dc83b5a7e118d1f1fea665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b718d917bb8b6c892c7164e79315e51"><td class="memItemLeft" align="right" valign="top"><a id="a6b718d917bb8b6c892c7164e79315e51"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (const char *name)</td></tr>
+<tr class="separator:a6b718d917bb8b6c892c7164e79315e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accef1889c9c5ac582ffddb7227d6cd93"><td class="memItemLeft" align="right" valign="top"><a id="accef1889c9c5ac582ffddb7227d6cd93"></a>
 virtual <a class="el" href="structvect__prototype2.html">fvect3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#accef1889c9c5ac582ffddb7227d6cd93">getCenter</a> () const =0</td></tr>
 <tr class="memdesc:accef1889c9c5ac582ffddb7227d6cd93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает центр виджета. <br /></td></tr>
@@ -224,6 +230,9 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isIsometricVi
 <tr class="memitem:a66ba48e45767228ede0ebe613873228c"><td class="memItemLeft" align="right" valign="top"><a id="a66ba48e45767228ede0ebe613873228c"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>getWidgetMovability</b> () const</td></tr>
 <tr class="separator:a66ba48e45767228ede0ebe613873228c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecddd219781e9c8ea2feb631e13d5733"><td class="memItemLeft" align="right" valign="top"><a id="aecddd219781e9c8ea2feb631e13d5733"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const</td></tr>
+<tr class="separator:aecddd219781e9c8ea2feb631e13d5733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5db8d80ae3ecc272c0710252e321bba9"><td class="memItemLeft" align="right" valign="top"><a id="a5db8d80ae3ecc272c0710252e321bba9"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setIsometricView</b> (bool isometric)</td></tr>
 <tr class="separator:a5db8d80ae3ecc272c0710252e321bba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -354,6 +363,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <a class="el" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#ad1333437d8bafc7188acf7aff744ea19">buffer</a> = nullptr</td></tr>
 <tr class="memdesc:ad1333437d8bafc7188acf7aff744ea19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Координатный буфер (вершини, индексы, текстурные координаты). <br /></td></tr>
 <tr class="separator:ad1333437d8bafc7188acf7aff744ea19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8739018d711f3fb1985147d1b5afc99c"><td class="memItemLeft" align="right" valign="top"><a id="a8739018d711f3fb1985147d1b5afc99c"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
+<tr class="separator:a8739018d711f3fb1985147d1b5afc99c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="memItemLeft" align="right" valign="top"><a id="afb1a6f0c4d6f17b768d2fb5d5c400e51"></a>
 <a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a> = nullptr</td></tr>
 <tr class="memdesc:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Указатель на приложение. <br /></td></tr>
