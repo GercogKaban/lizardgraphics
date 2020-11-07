@@ -1,4 +1,5 @@
 #include "LCounter.h"
+#include "LCounter.h"
 #include "textures.h"
 
 LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * path)
@@ -10,49 +11,22 @@ LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * pa
 
     auto b1 = new LIButton(app, arrow_up, arrow_upSize);
     b1->scale(0.025f, 0.03f, 1.0f);
-    b1->move(getMove() + fvect3(0.085f, 0.02f, 0.0f));
+    b1->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 5, 0.0f));
     b1->turnOnTexture();
     b1->setWidgetMovability(false);
-    b1->setClickEventFunction([&]() 
-    {
-        if (mode == Integer)
-        {
-            counterInt += countInterval;
-            setText(std::to_string(counterInt));
-        }
-        else if (mode == Float)
-        {
-            counterFl += countInterval;
-            setText(to_string_with_precision(counterFl, floatPrecision));
-        }       
-    });
+    b1->setName("up");
     innerWidgets.push_back(b1);
 
     auto b2 = new LIButton(app, arrow_down, arrow_downSize);
     b2->scale(0.025f, 0.03f, 1.0f);
     b2->turnOnTexture();
-    b2->move(getMove() + fvect3(0.085f, -0.02f, 0.0f));
+    b2->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 1.25f, 0.0f));
     b2->setWidgetMovability(false);
-    b2->setClickEventFunction([&]()
-    {
-        if (mode == Integer)
-        {
-            counterInt -= countInterval;
-            setText(std::to_string(counterInt));
-        }
-        else if (mode == Float)
-        {
-            counterFl -= countInterval;
-            setText(to_string_with_precision(counterFl, floatPrecision));
-        }
-    });
+    b2->setName("down");
     innerWidgets.push_back(b2);
-
     textScalling = true;
-    
-    setCountInterval(0.5f);
-    setFloatPrecision(2);
-    setMode(Float);
+
+    setOutPrecision(2);
 }
 
 void LGraphics::LCounter::move(const fvect3 val)
@@ -73,44 +47,15 @@ void LGraphics::LCounter::scale(const fvect3 val)
 
 void LGraphics::LCounter::scale(const float x, const float y, const float z)
 {
-    LShape::scale(x, y, z);
+    scaleWithoutAlign({ x,y,z });
+    for (auto& o : innerWidgets)
+    {
+        if (o->getName() == "up")
+            o->move(getTopRightCorner() - fvect3(0.015f, scale_.y/5, 0.0f));
+        else if (o->getName() == "down")
+            o->move(getTopRightCorner() - fvect3(0.015f, scale_.y/1.25f, 0.0f));
+    }
     LText::scale(fvect3(x, y, z));
-}
-
-void LGraphics::LCounter::addText(const unsigned int symbol)
-{
-    if (symbol == '-')
-    {
-        if (mode == Integer)
-        {
-            counterInt = -counterInt;
-            setText(std::to_string(counterInt));
-        }
-
-        else if (mode == Float)
-        {
-            counterFl = -counterFl;
-            setText(to_string_with_precision(counterFl, floatPrecision));
-        }
-    }
-
-    else if (!isdigit(symbol))
-        return;
-
-    else
-    {
-        if (mode == Integer)
-        {
-            counterInt = 10 * counterInt + std::stoi(std::string(1, symbol));
-            setText(std::to_string(counterInt));
-        }
-
-        else if (mode == Float)
-        {
-            counterFl = 10 * counterFl + std::stoi(std::string(1, symbol));
-            setText(to_string_with_precision(counterFl, floatPrecision));
-        }
-    }
 }
 
 void LGraphics::LCounter::addText(const std::string text_)
@@ -119,19 +64,136 @@ void LGraphics::LCounter::addText(const std::string text_)
         addText(symbol);
 }
 
-void LGraphics::LCounter::removeLastSymbol()
+LGraphics::LCounterI::LCounterI(LApp * app, const std::string str, const char * path)
+    :LCounter(app,str,path)
 {
-    if (mode == Integer)
+    for (auto& w : innerWidgets)
     {
-        counterInt /= 10;
-        setText(std::to_string(counterInt));
+        if (w->getName() == "up")
+            ((LIButton*)w)->setClickEventFunction([&]()
+            {
+             counter += countInterval;
+             setText(std::to_string(counter));
+            });
+        else if (w->getName() == "down")
+        {
+            ((LIButton*)w)->setClickEventFunction([&]()
+            {
+                counter -= countInterval;
+                setText(std::to_string(counter));
+            });
+        }
     }
+    setText(std::to_string(counter));
+}
 
-    else if (mode == Float)
+void LGraphics::LCounterI::addNumber(const double val)
+{
+    counter += val;
+    setText(std::to_string(counter));
+}
+
+void LGraphics::LCounterI::setCountInterval(double interval)
+{
+    countInterval = (int)interval;
+}
+
+void LGraphics::LCounterI::addText(const unsigned int symbol)
+{
+    if (symbol == '-')
     {
-        counterFl = (int)counterFl / 10;
-        setText(to_string_with_precision(counterFl, floatPrecision));
+        counter = -counter;
+        setText(std::to_string(counter));
     }
+        
+    else if (!isdigit(symbol))
+         return;
+        
+    else
+    {
+       counter = 10 * counter + std::stoi(std::string(1, symbol));
+       setText(std::to_string(counter));
+    }
+}
+
+void LGraphics::LCounterI::removeLastSymbol()
+{
+    counter /= 10;
+    setText(std::to_string(counter));
+
+    if (textScallingStack.size())
+    {
+        scaleText(getTextScale() - textScallingStack.top());
+        textScallingStack.pop();
+    }     
+}
+
+void LGraphics::LCounterI::clear()
+{
+    counter = 0;
+    setText(std::to_string(counter));
+}
+
+double LGraphics::LCounterI::getNum() const
+{
+    return counter;
+}
+
+LGraphics::LCounterF::LCounterF(LApp * app, const std::string str, const char * path)
+    :LCounter(app, str, path)
+{
+    LShape::scale(getScale().x + getScale().x*0.1f, getScale().y, getScale().z);
+    for (auto& w : innerWidgets)
+    {
+        if (w->getName() == "up")
+            ((LIButton*)w)->setClickEventFunction([&]()
+        {
+            counter += countInterval;
+            setText(to_string_with_precision(counter, outPrecision));
+        });
+        else if (w->getName() == "down")
+        {
+            ((LIButton*)w)->setClickEventFunction([&]()
+            {
+                counter -= countInterval;
+                setText(to_string_with_precision(counter, outPrecision));
+            });
+        }
+    }
+    setText(to_string_with_precision(counter,outPrecision));
+}
+
+void LGraphics::LCounterF::addNumber(const double val)
+{
+    counter += val;
+    setText(to_string_with_precision(counter, outPrecision));
+}
+
+void LGraphics::LCounterF::setCountInterval(double interval)
+{
+    countInterval = interval;
+}
+
+void LGraphics::LCounterF::addText(const unsigned int symbol)
+{
+    if (symbol == '-')
+    {
+        counter = -counter;
+        setText(to_string_with_precision(counter, outPrecision));
+    }
+    else if (!isdigit(symbol))
+        return;
+    else
+    {
+        counter = 10 * counter + std::stoi(std::string(1, symbol));
+        setText(to_string_with_precision(counter, outPrecision));
+    }
+}
+
+void LGraphics::LCounterF::removeLastSymbol()
+{
+    counter = (int)counter / 10;
+    setText(to_string_with_precision(counter, outPrecision));
 
     if (textScallingStack.size())
     {
@@ -140,24 +202,87 @@ void LGraphics::LCounter::removeLastSymbol()
     }
 }
 
-void LGraphics::LCounter::setMode(int mode)
+void LGraphics::LCounterF::clear()
 {
-    this->mode = mode;
-    if (mode == Integer)
+    counter = 0.0f;
+    setText(to_string_with_precision(counter, outPrecision));
+}
+
+double LGraphics::LCounterF::getNum() const
+{
+    return counter;
+}
+
+LGraphics::LCounterLL::LCounterLL(LApp * app, const std::string str, const char * path)
+    :LCounter(app, str, path)
+{
+    LShape::scale(fvect3(getScale().x*2, getScale().y, getScale().z));
+    for (auto& w : innerWidgets)
     {
-        counterInt = 0;
-        setText(std::to_string(counterInt));
+        if (w->getName() == "up")
+            ((LIButton*)w)->setClickEventFunction([&]()
+        {
+            counter += countInterval;
+            setText(std::to_string(counter));
+        });
+        else if (w->getName() == "down")
+        {
+            ((LIButton*)w)->setClickEventFunction([&]()
+            {
+                counter -= countInterval;
+                setText(std::to_string(counter));
+            });
+        }
     }
-    else if (mode == Float)
+    setText(std::to_string(counter));
+}
+
+void LGraphics::LCounterLL::addNumber(const double val)
+{
+    counter += val;
+    setText(std::to_string(counter));
+}
+
+void LGraphics::LCounterLL::setCountInterval(double interval)
+{
+    countInterval = interval;
+}
+
+void LGraphics::LCounterLL::addText(const unsigned int symbol)
+{
+    if (symbol == '-')
     {
-        counterFl = 0.0f;
-        setText(to_string_with_precision(counterFl, floatPrecision));
+        counter = -counter;
+        setText(std::to_string(counter));
+    }
+    else if (!isdigit(symbol))
+        return;
+    else
+    {
+        counter = 10 * counter + std::stoll(std::string(1, symbol));
+        setText(std::to_string(counter));
     }
 }
 
-void LGraphics::LCounter::clear()
+void LGraphics::LCounterLL::removeLastSymbol()
 {
-    LText::clear();
-    counterFl = 0.0f;
-    counterInt = 0;
+    counter /= 10;
+    setText(std::to_string(counter));
+
+    if (textScallingStack.size())
+    {
+        scaleText(getTextScale() - textScallingStack.top());
+        textScallingStack.pop();
+    }
+}
+
+void LGraphics::LCounterLL::clear()
+{
+    counter = 0;
+    setText(std::to_string(counter));
+}
+
+double LGraphics::LCounterLL::getNum() const
+{
+    return counter;
 }
