@@ -60,7 +60,7 @@ int main()
     }));
     gen.notGenerateData(b3);
 
-    auto c1 = new LCounterLL(&app, "", "path...");
+    auto c1 = new LCounter(&app, "", "path...");
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);

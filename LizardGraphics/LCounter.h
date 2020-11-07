@@ -8,7 +8,14 @@ namespace LGraphics
     {
     public:
 
+        enum LCounterModes 
+        {
+            Integer,
+            Float,
+        };
+
         const char* getObjectType() override { return "LCounter"; }
+        LCounter(LApp* app, const std::string = "", const char* path = nullptr);
 
         void move(const fvect3 val) override;
         void move(const float x, const float y, const float z) override;
@@ -16,21 +23,18 @@ namespace LGraphics
         void scale(const fvect3 val) override;
         void scale(const float x, const float y, const float z) override;
 
-        void addText(const unsigned int symbol) {}
+        void addText(const unsigned int symbol) override;
         void addText(const std::string text) override;
+        void removeLastSymbol() override;
 
-        virtual void addNumber(const double val) = 0;
+        void setCountInterval(float interval) { countInterval = interval; }
+        void setMode(int mode);
+        void setFloatPrecision(const size_t precision) { floatPrecision = precision; }
+        bool getMode() const { return mode; }
 
-        virtual void setCountInterval(double interval) = 0; //{ countInterval = interval; }
-        void setOutPrecision(const size_t precision) { outPrecision = precision; }
+        void clear() override;
 
-        //void clear() override;
-
-        virtual double getNum() const = 0;
-
-    protected:
-
-        LCounter(LApp* app, const std::string = "", const char* path = nullptr);
+        float getNum() const { return mode == Integer? counterInt : counterFl; }
 
         template <typename T>
         std::string to_string_with_precision(const T a_value, const int n = 6)
@@ -41,70 +45,14 @@ namespace LGraphics
             return out.str();
         }
 
-        size_t outPrecision = 6;
-    };
-
-    class LCounterI : public LCounter
-    {
-    public:
-
-        const char* getObjectType() override { return "LCounterI"; }
-        LCounterI(LApp* app, const std::string = "", const char* path = nullptr);
-
-        void addNumber(const double val) override;
-
-        void setCountInterval(double interval) override;
-        void addText(const unsigned int symbol) override;
-        void removeLastSymbol() override;
-        void clear() override;
-
-        double getNum() const override;
-
     protected:
 
-        int counter = 0;
-        int countInterval = 1;
-    };
+        int mode = Integer;
 
-    class LCounterF : public LCounter
-    {
-    public:
-
-        const char* getObjectType() override { return "LCounterF"; }
-        LCounterF(LApp* app, const std::string = "", const char* path = nullptr);
-
-        void addNumber(const double val) override;
-        void setCountInterval(double interval) override;
-        void addText(const unsigned int symbol) override;
-        void removeLastSymbol() override;
-        void clear() override;
-
-        double getNum() const override;
-
-    protected:
-
-        float counter = 0;
+        int counterInt = 0;
+        float counterFl = 0.0f;
         float countInterval = 1.0f;
-    };
 
-    class LCounterLL : public LCounter
-    {
-    public:
-
-        const char* getObjectType() override { return "LCounterLL"; }
-        LCounterLL(LApp* app, const std::string = "", const char* path = nullptr);
-
-        void addNumber(const double val) override;
-        void setCountInterval(double interval) override;
-        void addText(const unsigned int symbol) override;
-        void removeLastSymbol() override;
-        void clear() override;
-
-        double getNum() const override;
-
-    protected:
-
-        long long counter = 0;
-        long long countInterval = 1.0f;
+        size_t floatPrecision = 6;
     };
 }

@@ -110,8 +110,6 @@ namespace LGraphics
         void setBreakingAnimation(std::function<void()> fun);
         void breakAnimation();
 
-        void setName(const char* name) { this->name = name; }
-
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
         virtual fvect3 getColor() const = 0;         ///< Возвращает цвет виджета.
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
@@ -121,7 +119,6 @@ namespace LGraphics
         virtual std::string getLabel() const = 0;
         virtual bool isIsometricView() const { return isometric; }
         virtual bool getWidgetMovability() const { return widgetMovability; }
-        const std::string& getName() const { return name; }
 
         virtual void setShader(LShaders::Shader* shader) = 0;  ///< Устанавливает шейдер виджету.
         virtual void setIsometricView(bool isometric) { this->isometric = isometric; }
@@ -143,7 +140,6 @@ namespace LGraphics
 
     protected:
 
-        std::string name;
         LApp* app = nullptr;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
         std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.

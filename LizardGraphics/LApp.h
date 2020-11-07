@@ -65,7 +65,6 @@ namespace LGraphics
 
         void setKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback);
         void setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback);
-        void setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>callback);
 
         std::vector<LWidget*>* getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
@@ -109,7 +108,6 @@ namespace LGraphics
         void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
         void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         void character_callback(GLFWwindow* window, unsigned int codepoint);
-        void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
         GLFWwindow* window;
         std::vector<LWidget*> objects;
@@ -138,7 +136,6 @@ namespace LGraphics
 
         std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> keyCallback = [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
         std::function<void(GLFWwindow* w, int button, int action, int mods)> mouseCallback = [](GLFWwindow* w, int button, int action, int mods) {};
-        std::function<void(GLFWwindow* window, double xoffset, double yoffset)> scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
     };
 }
 

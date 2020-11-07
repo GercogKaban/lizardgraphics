@@ -82,10 +82,10 @@ namespace LGraphics
         mouseCallback = callback;
     }
 
-    void LApp::setScrollCallback(std::function<void(GLFWwindow*window, double xoffset, double yoffset)> callback)
-    {
-        scrollCallback = callback;
-    }
+    //void LApp::addSizeToTexturesToInitVector(const size_t size)
+    //{
+    //    texturesToInit.resize(texturesToInit.size() + size);
+    //}
 
     void LApp::setMatrices()
     {
@@ -178,16 +178,10 @@ namespace LGraphics
             static_cast<LApp*>(glfwGetWindowUserPointer(window))->character_callback(window, codepoint);
         };
 
-        auto scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset)
-        {
-            static_cast<LApp*>(glfwGetWindowUserPointer(window))->scroll_callback(window, xoffset, yoffset);
-        };
-
         glfwSetCursorPosCallback(window, cursor_position);
         glfwSetMouseButtonCallback(window, mouse);
         glfwSetKeyCallback(window, key);
         glfwSetCharCallback(window, charCallback);
-        glfwSetScrollCallback(window, scrollCallback);
         glfwGetFramebufferSize(window, &width, &height);
 
         glewExperimental = GL_TRUE;
@@ -272,7 +266,6 @@ namespace LGraphics
                     }
             }
         }
-
         if (widgetToMove) moveWidgetToMouse(widgetToMove);
     }
 
@@ -299,14 +292,6 @@ namespace LGraphics
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
         if (textEdit)
             textEdit->addText(std::string(1, codepoint));
-    }
-
-    void LApp::scroll_callback(GLFWwindow * window, double xoffset, double yoffset)
-    {
-        scrollCallback(window, xoffset, yoffset);
-        LCounter* counter = dynamic_cast<LCounter*>(activeWidget);
-        if (counter)
-            counter->addNumber(yoffset);
     }
 
     void LApp::initTextures()
