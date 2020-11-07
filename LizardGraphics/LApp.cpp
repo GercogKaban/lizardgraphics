@@ -87,6 +87,29 @@ namespace LGraphics
         scrollCallback = callback;
     }
 
+    bool LApp::isPressed(int key)
+    {
+        return pressedKeys[key];
+        //if (pressedKeys.find(key) == pressedKeys.end())
+        //    return false;
+        //else
+        //    return pressedKeys[key];
+    }
+
+    void LApp::switchScreenMode()
+    {
+        if (!fullscreen)
+        {
+            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, width, height, 10000);
+            fullscreen = true;
+        }
+        else
+        {
+            glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000);
+            fullscreen = false;
+        }
+    }
+
     void LApp::setMatrices()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
@@ -155,7 +178,6 @@ namespace LGraphics
 #endif
 
         glfwMakeContextCurrent(window);
-        
         glfwSetWindowUserPointer(window, this);
 
         auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
@@ -283,6 +305,10 @@ namespace LGraphics
 
     void LApp::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
     {
+        if (action == GLFW_PRESS)
+            pressedKeys[key] = true;
+        else if (action == GLFW_RELEASE)
+            pressedKeys[key] = false;
         keyCallback(window, key, scancode, action, mods);
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
         if (textEdit && action)
@@ -292,6 +318,8 @@ namespace LGraphics
             else if (key == GLFW_KEY_ENTER)
                 textEdit->addText(std::string(1, '\n'));
         }
+        if (pressedKeys[GLFW_KEY_LEFT_ALT] && pressedKeys[GLFW_KEY_ENTER])
+            switchScreenMode();
     }
 
     void LApp::character_callback(GLFWwindow* window, unsigned int codepoint)

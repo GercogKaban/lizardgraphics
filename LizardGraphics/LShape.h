@@ -97,6 +97,8 @@ namespace LGraphics
         glm::mat4 getRotate() const override { return rotate_; }
         std::string getLabel() const { return label.text; };
 
+        bool isPressed(int key) const;
+
         void turnOffColor() override;
 
         void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;

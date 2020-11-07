@@ -74,6 +74,8 @@ namespace LGraphics
         LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
         LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
 
+        bool isPressed(int key);
+
         glm::mat4 getViewMatrix() const { return view; }
         glm::mat4 getProjectionMatrix() const { return projection; }
 
@@ -85,6 +87,7 @@ namespace LGraphics
         void setSleepTime(size_t milliseconds) { sleepTime = milliseconds;}
         size_t getSleepTime() const { return sleepTime; }
 
+        void switchScreenMode();
         //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
             
     private:
@@ -135,6 +138,9 @@ namespace LGraphics
         //bool initingTextures = false;
 
         std::mutex openGlDrawing;
+        std::map<int, bool> pressedKeys;
+
+        bool fullscreen = false;
 
         std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> keyCallback = [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
         std::function<void(GLFWwindow* w, int button, int action, int mods)> mouseCallback = [](GLFWwindow* w, int button, int action, int mods) {};
