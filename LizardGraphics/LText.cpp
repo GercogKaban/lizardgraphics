@@ -211,7 +211,7 @@ namespace LGraphics
         wholeText.pop_back();
         text.clear();
         initWidget();
-        addText(wholeText);
+        LText::addText(wholeText);
     }
 
 
