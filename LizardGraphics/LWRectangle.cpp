@@ -45,13 +45,13 @@ void LGraphics::LWRectangle::draw()
     glBindVertexArray(buffer->getVaoNum());
 
     // test
-    int data = -1;
+    //int data = -1;
 
-    GLuint ssbo;
-    glGenBuffers(1, &ssbo);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
+    //GLuint ssbo;
+    //glGenBuffers(1, &ssbo);
+    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
     //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, 4, &data, GL_STATIC_DRAW);
+    //glBufferData(GL_SHADER_STORAGE_BUFFER, 4, &data, GL_STATIC_DRAW);
 
     glBindTexture(GL_TEXTURE_2D, getTexture());
 
@@ -59,7 +59,7 @@ void LGraphics::LWRectangle::draw()
     model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
     model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
 
-    glUniform2f(glGetUniformLocation(shader, "mouse"), xpos, ypos);
+    //glUniform2f(glGetUniformLocation(shader, "mouse"), xpos, ypos);
     //glUniform2f(glGetUniformLocation(shader, "resolution"), app->getWindowSize().x, app->getWindowSize().y);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
