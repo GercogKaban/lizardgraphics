@@ -90,10 +90,6 @@ namespace LGraphics
     bool LApp::isPressed(int key)
     {
         return pressedKeys[key];
-        //if (pressedKeys.find(key) == pressedKeys.end())
-        //    return false;
-        //else
-        //    return pressedKeys[key];
     }
 
     void LApp::switchScreenMode()
@@ -305,10 +301,7 @@ namespace LGraphics
 
     void LApp::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
     {
-        if (action == GLFW_PRESS)
-            pressedKeys[key] = true;
-        else if (action == GLFW_RELEASE)
-            pressedKeys[key] = false;
+        pressedKeys[key] = action == GLFW_PRESS;
         keyCallback(window, key, scancode, action, mods);
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
         if (textEdit && action)

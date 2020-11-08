@@ -60,7 +60,7 @@ void LGraphics::LWRectangle::draw()
     model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
 
     glUniform2f(glGetUniformLocation(shader, "mouse"), xpos, ypos);
-    glUniform2f(glGetUniformLocation(shader, "resolution"), app->getWindowSize().x, app->getWindowSize().y);
+    //glUniform2f(glGetUniformLocation(shader, "resolution"), app->getWindowSize().x, app->getWindowSize().y);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -68,15 +68,15 @@ void LGraphics::LWRectangle::draw()
     glBindVertexArray(buffer->getVaoNum());
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
 
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-    memcpy(&data, p, sizeof(data));
-    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    //GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
+    //memcpy(&data, p, sizeof(data));
+    //glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
-    std::cout << data << std::endl;
+    //std::cout << data << std::endl;
 
+    //glBindVertexArray(0);
+    //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
     glBindVertexArray(0);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
-    glBindVertexArray(0);
-    LLine::display(label);
+    //LLine::display(label);
 }

@@ -10,6 +10,7 @@
 #include "LWRectangle.h"
 #include "LFlag.h"
 #include "LCounter.h"
+#include "LMessageBox.h"
 
 #include "CodeGen.h"
 //#include "testFile.hxx"
@@ -60,7 +61,8 @@ int main()
     }));
     gen.notGenerateData(b3);
 
-    auto c1 = new LCounterLL(&app, "", "path...");
+    //auto c1 = new LCounterLL(&app, "", "path...");
+    auto msg = new LMessageBox(&app, "", "OK","path...");
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);
