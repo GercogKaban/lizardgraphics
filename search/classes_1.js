@@ -13,7 +13,7 @@ var searchData=
   ['limage_128',['LImage',['../class_l_graphics_1_1_l_image.html',1,'LGraphics']]],
   ['lirectangle_129',['LIRectangle',['../class_l_graphics_1_1_l_i_rectangle.html',1,'LGraphics']]],
   ['lline_130',['LLine',['../class_l_graphics_1_1_l_line.html',1,'LGraphics']]],
-  ['lmessagebox_131',['LMessageBox',['../class_l_message_box.html',1,'']]],
+  ['lmessagebox_131',['LMessageBox',['../class_l_graphics_1_1_l_message_box.html',1,'LGraphics']]],
   ['lobject_132',['LObject',['../class_l_graphics_1_1_l_object.html',1,'LGraphics']]],
   ['lrectanglebuffer_133',['LRectangleBuffer',['../class_l_graphics_1_1_l_rectangle_buffer.html',1,'LGraphics']]],
   ['lrectangleshape_134',['LRectangleShape',['../class_l_graphics_1_1_l_rectangle_shape.html',1,'LGraphics']]],

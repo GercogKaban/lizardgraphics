@@ -14,7 +14,7 @@ var searchData=
   ['limage_48',['LImage',['../class_l_graphics_1_1_l_image.html',1,'LGraphics::LImage'],['../class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56',1,'LGraphics::LImage::LImage(const char *path)'],['../class_l_graphics_1_1_l_image.html#a9649632f05b3b85ea011e2b9a4062805',1,'LGraphics::LImage::LImage(const unsigned char *bytes, size_t size)']]],
   ['lirectangle_49',['LIRectangle',['../class_l_graphics_1_1_l_i_rectangle.html',1,'LGraphics::LIRectangle'],['../class_l_graphics_1_1_l_i_rectangle.html#a66a5708d444749598d621f21161dff7a',1,'LGraphics::LIRectangle::LIRectangle()']]],
   ['lline_50',['LLine',['../class_l_graphics_1_1_l_line.html',1,'LGraphics']]],
-  ['lmessagebox_51',['LMessageBox',['../class_l_message_box.html',1,'']]],
+  ['lmessagebox_51',['LMessageBox',['../class_l_graphics_1_1_l_message_box.html',1,'LGraphics']]],
   ['lobject_52',['LObject',['../class_l_graphics_1_1_l_object.html',1,'LGraphics']]],
   ['loop_53',['loop',['../class_l_graphics_1_1_l_app.html#a2f0d137044067c3c98d097f5bfe63660',1,'LGraphics::LApp']]],
   ['lrectanglebuffer_54',['LRectangleBuffer',['../class_l_graphics_1_1_l_rectangle_buffer.html',1,'LGraphics']]],
