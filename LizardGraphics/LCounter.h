@@ -23,7 +23,7 @@ namespace LGraphics
 
         virtual void setCountInterval(double interval) = 0; //{ countInterval = interval; }
         void setOutPrecision(const size_t precision) { outPrecision = precision; }
-
+        void setChangingEventFunc(std::function<void()> f) { changingEventFunc = f; }
         //void clear() override;
 
         virtual double getNum() const = 0;
@@ -42,6 +42,7 @@ namespace LGraphics
         }
 
         size_t outPrecision = 6;
+        std::function<void()> changingEventFunc;
     };
 
     class LCounterI : public LCounter

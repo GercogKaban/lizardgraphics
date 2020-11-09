@@ -91,6 +91,7 @@ void LGraphics::LCounterI::addNumber(const double val)
 {
     counter += val;
     setText(std::to_string(counter));
+    changingEventFunc();
 }
 
 void LGraphics::LCounterI::setCountInterval(double interval)
@@ -114,6 +115,7 @@ void LGraphics::LCounterI::addText(const unsigned int symbol)
        counter = 10 * counter + std::stoi(std::string(1, symbol));
        setText(std::to_string(counter));
     }
+    changingEventFunc();
 }
 
 void LGraphics::LCounterI::removeLastSymbol()
@@ -125,13 +127,15 @@ void LGraphics::LCounterI::removeLastSymbol()
     {
         scaleText(getTextScale() - textScallingStack.top());
         textScallingStack.pop();
-    }     
+    }
+    changingEventFunc();
 }
 
 void LGraphics::LCounterI::clear()
 {
     counter = 0;
     setText(std::to_string(counter));
+    changingEventFunc();
 }
 
 double LGraphics::LCounterI::getNum() const
@@ -167,6 +171,7 @@ void LGraphics::LCounterF::addNumber(const double val)
 {
     counter += val;
     setText(to_string_with_precision(counter, outPrecision));
+    changingEventFunc();
 }
 
 void LGraphics::LCounterF::setCountInterval(double interval)
@@ -188,6 +193,7 @@ void LGraphics::LCounterF::addText(const unsigned int symbol)
         counter = 10 * counter + std::stoi(std::string(1, symbol));
         setText(to_string_with_precision(counter, outPrecision));
     }
+    changingEventFunc();
 }
 
 void LGraphics::LCounterF::removeLastSymbol()
@@ -200,12 +206,14 @@ void LGraphics::LCounterF::removeLastSymbol()
         scaleText(getTextScale() - textScallingStack.top());
         textScallingStack.pop();
     }
+    changingEventFunc();
 }
 
 void LGraphics::LCounterF::clear()
 {
     counter = 0.0f;
     setText(to_string_with_precision(counter, outPrecision));
+    changingEventFunc();
 }
 
 double LGraphics::LCounterF::getNum() const
@@ -241,6 +249,7 @@ void LGraphics::LCounterLL::addNumber(const double val)
 {
     counter += val;
     setText(std::to_string(counter));
+    changingEventFunc();
 }
 
 void LGraphics::LCounterLL::setCountInterval(double interval)
@@ -262,6 +271,7 @@ void LGraphics::LCounterLL::addText(const unsigned int symbol)
         counter = 10 * counter + std::stoll(std::string(1, symbol));
         setText(std::to_string(counter));
     }
+    changingEventFunc();
 }
 
 void LGraphics::LCounterLL::removeLastSymbol()
@@ -274,12 +284,14 @@ void LGraphics::LCounterLL::removeLastSymbol()
         scaleText(getTextScale() - textScallingStack.top());
         textScallingStack.pop();
     }
+    changingEventFunc();
 }
 
 void LGraphics::LCounterLL::clear()
 {
     counter = 0;
     setText(std::to_string(counter));
+    changingEventFunc();
 }
 
 double LGraphics::LCounterLL::getNum() const
