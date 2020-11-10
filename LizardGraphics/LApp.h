@@ -88,7 +88,9 @@ namespace LGraphics
         size_t getSleepTime() const { return sleepTime; }
 
         void switchScreenMode();
-        //void setWindowedMode() { glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000); }
+
+        void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
+        void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
             
     private:
 
@@ -120,8 +122,7 @@ namespace LGraphics
 
         int width, height;
 
-        size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX;
-        size_t sleepTime = 0;
+        size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX, sleepTime = 0;
 
         LWidget* activeWidget = nullptr;
         LWidget* prevActiveWidget = nullptr;
@@ -131,11 +132,7 @@ namespace LGraphics
         LBuffer* standartRectBuffer;
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader;
 
-        //std::vector<LWidget*> texturesToInit;
-
         glm::mat4 view, projection;
-
-        //bool initingTextures = false;
 
         std::mutex openGlDrawing;
         std::map<int, bool> pressedKeys;
@@ -145,6 +142,9 @@ namespace LGraphics
         std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> keyCallback = [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
         std::function<void(GLFWwindow* w, int button, int action, int mods)> mouseCallback = [](GLFWwindow* w, int button, int action, int mods) {};
         std::function<void(GLFWwindow* window, double xoffset, double yoffset)> scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
+
+        std::function<void()> beforeDrawingFunc = []() {};
+        std::function<void()> afterDrawingFunc = []() {};
     };
 }
 

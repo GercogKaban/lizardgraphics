@@ -62,6 +62,7 @@ int main()
     //gen.notGenerateData(b3);
 
     auto b3 = new LWRectangle(&app, "image1.bmp");
+    b3->setWidgetMovability(false);
     b3->setName("tile");
     //b3->setIsometricView();
     LGraphics::LCounterF* c1, *c2, *c3;
@@ -78,14 +79,15 @@ int main()
     c1 = new LGraphics::LCounterF(&app, "", "..");
     c1->move(-0.6f, 0.9f, 1.0f);
     c1->setChangingEventFunc(func);
+    c1->setWidgetMovability(false);
     c2 = new LGraphics::LCounterF(&app, "", "..");
     c2->move(-0.3f, 0.9f, 1.0f);
     c2->setChangingEventFunc(func);
+    c2->setWidgetMovability(false);
     c3 = new LGraphics::LCounterF(&app, "", "..");
     c3->move(-0.0f, 0.9f, 1.0f);
     c3->setChangingEventFunc(func);
-    //auto c1 = new LCounterLL(&app, "", "path...");
-    //auto msg = new LMessageBox(&app, "", "OK","path...");
+    c3->setWidgetMovability(false);
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);

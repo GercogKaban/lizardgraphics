@@ -27,6 +27,8 @@ namespace LGraphics
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
+
+            beforeDrawingFunc();
             for (auto& o : objects)
                 if (!o->isHidden())
                     o->draw();
@@ -35,6 +37,8 @@ namespace LGraphics
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
             for (auto& o : objects)
                 o->tick();
+
+            afterDrawingFunc();
             glfwSwapBuffers(window);
             openGlDrawing.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
