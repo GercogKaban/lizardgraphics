@@ -115,82 +115,83 @@ $(function() {
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">size_t</span> outPrecision = 6;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        std::function&lt;void()&gt; changingEventFunc;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    };</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_counter_i.html">   48</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_counter_i.html">LCounterI</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_counter.html">LCounter</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCounterI&quot;</span>; }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_counter_i.html">LCounterI</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">void</span> addNumber(<span class="keyword">const</span> <span class="keywordtype">double</span> val) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">double</span> interval) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">double</span> getNum() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordtype">int</span> counter = 0;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">int</span> countInterval = 1;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    };</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_counter_f.html">   70</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_counter_f.html">LCounterF</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_counter.html">LCounter</a></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCounterF&quot;</span>; }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_counter_f.html">LCounterF</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordtype">void</span> addNumber(<span class="keyword">const</span> <span class="keywordtype">double</span> val) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">double</span> interval) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordtype">double</span> getNum() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordtype">float</span> counter = 0;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">float</span> countInterval = 1.0f;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    };</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_counter_l_l.html">   91</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_counter_l_l.html">LCounterLL</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_counter.html">LCounter</a></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCounterLL&quot;</span>; }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_counter_l_l.html">LCounterLL</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">void</span> addNumber(<span class="keyword">const</span> <span class="keywordtype">double</span> val) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">double</span> interval) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">double</span> getNum() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordtype">long</span> <span class="keywordtype">long</span> counter = 0;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordtype">long</span> <span class="keywordtype">long</span> countInterval = 1.0f;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    };</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">void</span> calculateMaxLength() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    };</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_counter_i.html">   49</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_counter_i.html">LCounterI</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_counter.html">LCounter</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCounterI&quot;</span>; }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_counter_i.html">LCounterI</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> addNumber(<span class="keyword">const</span> <span class="keywordtype">double</span> val) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">double</span> interval) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">double</span> getNum() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">int</span> counter = 0;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">int</span> countInterval = 1;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    };</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_counter_f.html">   71</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_counter_f.html">LCounterF</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_counter.html">LCounter</a></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCounterF&quot;</span>; }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_counter_f.html">LCounterF</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">void</span> addNumber(<span class="keyword">const</span> <span class="keywordtype">double</span> val) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">double</span> interval) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordtype">double</span> getNum() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">float</span> counter = 0;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordtype">float</span> countInterval = 1.0f;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    };</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_counter_l_l.html">   92</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_counter_l_l.html">LCounterLL</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_counter.html">LCounter</a></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCounterLL&quot;</span>; }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_counter_l_l.html">LCounterLL</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> std::string = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">void</span> addNumber(<span class="keyword">const</span> <span class="keywordtype">double</span> val) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordtype">void</span> setCountInterval(<span class="keywordtype">double</span> interval) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">void</span> addText(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> symbol) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">void</span> removeLastSymbol() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">void</span> clear() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordtype">double</span> getNum() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordtype">long</span> <span class="keywordtype">long</span> counter = 0;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordtype">long</span> <span class="keywordtype">long</span> countInterval = 1.0f;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    };</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a08336bfb8c23a8308cf022e29809cd10"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a08336bfb8c23a8308cf022e29809cd10">LGraphics::LCounter::move</a></div><div class="ttdeci">void move(const fvect3 val) override</div><div class="ttdoc">Перемещает виджет.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:32</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_l_l_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter_l_l.html">LGraphics::LCounterLL</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:92</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a08336bfb8c23a8308cf022e29809cd10"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a08336bfb8c23a8308cf022e29809cd10">LGraphics::LCounter::move</a></div><div class="ttdeci">void move(const fvect3 val) override</div><div class="ttdoc">Перемещает виджет.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:43</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_l_l_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter_l_l.html">LGraphics::LCounterLL</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:93</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_counter_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html">LGraphics::LCounter</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:8</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a0a71974bf7d75373a1e56db3126c1d44"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">LGraphics::LCounter::scale</a></div><div class="ttdeci">void scale(const fvect3 val) override</div><div class="ttdoc">Устанавливает размеры виджету.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:43</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:147</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_html_a0a71974bf7d75373a1e56db3126c1d44"><div class="ttname"><a href="class_l_graphics_1_1_l_counter.html#a0a71974bf7d75373a1e56db3126c1d44">LGraphics::LCounter::scale</a></div><div class="ttdeci">void scale(const fvect3 val) override</div><div class="ttdoc">Устанавливает размеры виджету.</div><div class="ttdef"><b>Definition:</b> LCounter.cpp:54</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:149</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_text_edit_html"><div class="ttname"><a href="class_l_graphics_1_1_l_text_edit.html">LGraphics::LTextEdit</a></div><div class="ttdef"><b>Definition:</b> LTextEdit.h:7</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_i_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter_i.html">LGraphics::LCounterI</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:49</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_i_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter_i.html">LGraphics::LCounterI</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:50</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:25</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_counter_f_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter_f.html">LGraphics::LCounterF</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:71</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_counter_f_html"><div class="ttname"><a href="class_l_graphics_1_1_l_counter_f.html">LGraphics::LCounterF</a></div><div class="ttdef"><b>Definition:</b> LCounter.h:72</div></div>
 <div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2&lt; float, 3, vect3_data&lt; float &gt; &gt;</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

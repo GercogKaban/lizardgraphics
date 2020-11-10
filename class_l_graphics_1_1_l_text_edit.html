@@ -303,6 +303,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInited</b> () const
 const std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#a09c99b01f68a304cb10c9e7d84ef0261">getInnerWidgets</a> () const</td></tr>
 <tr class="memdesc:a09c99b01f68a304cb10c9e7d84ef0261"><td class="mdescLeft">&#160;</td><td class="mdescRight">Устанавливает текст метке виджета. <br /></td></tr>
 <tr class="separator:a09c99b01f68a304cb10c9e7d84ef0261"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcd60a063a514a5f5d60ac66b0af08f4"><td class="memItemLeft" align="right" valign="top"><a id="abcd60a063a514a5f5d60ac66b0af08f4"></a>
+<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getWidgetByName</b> (const char *name)</td></tr>
+<tr class="separator:abcd60a063a514a5f5d60ac66b0af08f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2742b8c770d7cf2aa5d4a02f6d4ef095"><td class="memItemLeft" align="right" valign="top"><a id="a2742b8c770d7cf2aa5d4a02f6d4ef095"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a2742b8c770d7cf2aa5d4a02f6d4ef095">getTexture</a> () const</td></tr>
 <tr class="memdesc:a2742b8c770d7cf2aa5d4a02f6d4ef095"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает текстуру. <br /></td></tr>
@@ -364,12 +367,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addSymb</b> (const un
 <tr class="memitem:a7324b56c1060458a8bdeed0acc69ce91"><td class="memItemLeft" align="right" valign="top"><a id="a7324b56c1060458a8bdeed0acc69ce91"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>alignText</b> ()</td></tr>
 <tr class="separator:a7324b56c1060458a8bdeed0acc69ce91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6d243ff65b4138fa0291c7baa3c232e"><td class="memItemLeft" align="right" valign="top"><a id="ae6d243ff65b4138fa0291c7baa3c232e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateMaxLength</b> ()</td></tr>
+<tr class="separator:ae6d243ff65b4138fa0291c7baa3c232e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d09bb53cf002fbda10d8832f76bd1d7"><td class="memItemLeft" align="right" valign="top"><a id="a1d09bb53cf002fbda10d8832f76bd1d7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initWidget</b> ()</td></tr>
 <tr class="separator:a1d09bb53cf002fbda10d8832f76bd1d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6d243ff65b4138fa0291c7baa3c232e"><td class="memItemLeft" align="right" valign="top"><a id="ae6d243ff65b4138fa0291c7baa3c232e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>calculateMaxLength</b> ()</td></tr>
-<tr class="separator:ae6d243ff65b4138fa0291c7baa3c232e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa94f97c55cce782f0744d8a7209b5692"><td class="memItemLeft" align="right" valign="top"><a id="aa94f97c55cce782f0744d8a7209b5692"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>yAlign</b> ()</td></tr>
 <tr class="separator:aa94f97c55cce782f0744d8a7209b5692"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1119,7 +1122,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 </div><!-- contents -->
 <div class="ttc" id="aclass_l_graphics_1_1_l_i_button_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_button.html">LGraphics::LIButton</a></div><div class="ttdoc">Класс кнопки. При нажатии на неё мышкой срабатывает привязанная к ней функция.</div><div class="ttdef"><b>Definition:</b> LIButton.h:12</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_i_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_i_rectangle.html">LGraphics::LIRectangle</a></div><div class="ttdoc">Класс четырёхугольника.</div><div class="ttdef"><b>Definition:</b> LIRectangle.h:12</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:147</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:149</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20
