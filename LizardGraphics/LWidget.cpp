@@ -44,3 +44,11 @@ void LGraphics::LWidget::init()
     this->LImage::init();
     isInited_ = true;
 }
+
+LGraphics::LWidget* LGraphics::LWidget::getWidgetByName(const char * name)
+{
+    for (auto& w : innerWidgets)
+        if (w->name == name)
+            return w;
+    return nullptr;
+}

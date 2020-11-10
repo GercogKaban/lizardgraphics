@@ -139,6 +139,8 @@ namespace LGraphics
 
         const std::vector<LWidget*>& getInnerWidgets() const { return innerWidgets; }
 
+        LWidget* getWidgetByName(const char* name);
+
         virtual ~LWidget() {}
 
     protected:

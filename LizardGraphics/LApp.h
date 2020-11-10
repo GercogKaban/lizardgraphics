@@ -79,9 +79,6 @@ namespace LGraphics
         glm::mat4 getViewMatrix() const { return view; }
         glm::mat4 getProjectionMatrix() const { return projection; }
 
-        //void addSizeToTexturesToInitVector(const size_t size);
-        //void addTextureToInit(LWidget* widget) { texturesToInit.push_back(widget);}
-
         std::mutex& getOpenGlDrawing() { return openGlDrawing; }
 
         void setSleepTime(size_t milliseconds) { sleepTime = milliseconds;}

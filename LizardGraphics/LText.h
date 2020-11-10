@@ -56,10 +56,9 @@ namespace LGraphics
         std::vector<Text>::const_iterator end;
 
         virtual void alignText();
+        virtual void calculateMaxLength();
 
         void initWidget();
-
-        void calculateMaxLength();
 
         void yAlign();
         void showFrom(int position);

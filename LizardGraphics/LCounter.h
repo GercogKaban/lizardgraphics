@@ -43,6 +43,7 @@ namespace LGraphics
 
         size_t outPrecision = 6;
         std::function<void()> changingEventFunc;
+        void calculateMaxLength() override;
     };
 
     class LCounterI : public LCounter

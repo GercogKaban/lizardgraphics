@@ -29,6 +29,7 @@ namespace LGraphics
             glClear(GL_COLOR_BUFFER_BIT);
 
             beforeDrawingFunc();
+
             for (auto& o : objects)
                 if (!o->isHidden())
                     o->draw();
@@ -39,6 +40,7 @@ namespace LGraphics
                 o->tick();
 
             afterDrawingFunc();
+
             glfwSwapBuffers(window);
             openGlDrawing.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
