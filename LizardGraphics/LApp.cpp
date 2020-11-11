@@ -26,7 +26,7 @@ namespace LGraphics
             //initTextures();
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             beforeDrawingFunc();
 
@@ -190,6 +190,7 @@ namespace LGraphics
         //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
+
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 #ifndef NDEBUG
@@ -246,6 +247,7 @@ namespace LGraphics
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
         //glfwSwapInterval(0);
 
         int width_, height_;

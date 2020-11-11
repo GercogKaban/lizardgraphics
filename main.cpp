@@ -48,21 +48,23 @@ int main()
     //}));
     //gen.notGenerateData(b2);
 
-    //auto b3 = new LIButton(&app, "test.png");
-    //b3->move(0.694633, -0.016667, 0.000000);
-    //b3->setLabel("LTextEdit");
-    //b3->turnOffTexture();
-    //b3->scale(0.5f, 0.1f, 1.0f);
-    //b3->setWidgetMovability(false);
-    //b3->setClickEventFunction(([&]()
-    //{
-    //    auto obj = new LTextEdit(&app, "","path...");
-    //    obj->turnOffTexture();
-    //}));
-    //gen.notGenerateData(b3);
+    auto r = new LIButton(&app, "image11.bmp");
+    r->scale(0.1f, 0.1f,1.0f);
+    r->setWidgetMovability(false);
 
-    auto b3 = new LWRectangle(&app, "image11.bmp");
-    b3->setWidgetMovability(false);
+    auto b = new LIButton(&app);
+    b->scale(0.1f, 0.1f, 1.0f);
+    b->move(-0.5f, -0.5f, 1.0f);
+
+    b->setClickEventFunction([&]()
+    {
+        auto scale = r->getScale();
+        auto move = r->getMove();
+        r->scale(scale.x + 0.05f, scale.y, scale.z);
+        r->move(move.x + 0.05f/2, move.y, move.z);
+    });
+
+
     //b3->setName("tile");
     //b3->setIsometricView();
     //LGraphics::LCounterF* c1, *c2, *c3;
@@ -95,8 +97,6 @@ int main()
     //msg->setVerticalScroller(new LVerticalScroller(&app));
     //msg->setTextColor(255, 0, 0);
     //msg->color(0, 0, 0);
-
-    auto msg = new LMessageBox(&app, "ERROR 228ggg tregre gerger ggfewweg gwregwerg gwergewrg grwegewr g");
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);

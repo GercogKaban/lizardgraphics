@@ -55,9 +55,11 @@ void LGraphics::LWRectangle::draw()
 
     glBindTexture(GL_TEXTURE_2D, getTexture());
 
+    // нужно фиксануть
     model = rotate_;
-    model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
     model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
+    model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
+    //model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
 
     //glUniform2f(glGetUniformLocation(shader, "mouse"), xpos, ypos);
     //glUniform2f(glGetUniformLocation(shader, "resolution"), app->getWindowSize().x, app->getWindowSize().y);
