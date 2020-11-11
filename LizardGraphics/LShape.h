@@ -85,11 +85,6 @@ namespace LGraphics
         */
         void move(const szvect2 val) override;
 
-        void rotateX(float angleDegree);
-        void rotateY(float angleDegree);
-        void rotateZ(float angleDegree);
-        void setRotate(glm::mat4 mat);
-
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         fvect3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.

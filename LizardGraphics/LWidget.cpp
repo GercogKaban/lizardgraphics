@@ -2,6 +2,29 @@
 #include "LApp.h"
 #include "pch.h"
 
+
+void LGraphics::LWidget::rotateX(float angleDegree)
+{
+    rotateX_ += angleDegree;
+}
+
+void LGraphics::LWidget::rotateY(float angleDegree)
+{
+    rotateY_ += angleDegree;
+}
+
+void LGraphics::LWidget::rotateZ(float angleDegree)
+{
+    rotateZ_ += angleDegree;
+}
+
+void LGraphics::LWidget::setRotate(fvect3 val)
+{
+    rotateX_ = val.x;
+    rotateY_ = val.y;
+    rotateZ_ = val.z;
+}
+
 void LGraphics::LWidget::setAnimation(std::function<void()> fun)
 {
     animation = fun;

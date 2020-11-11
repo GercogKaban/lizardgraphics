@@ -96,10 +96,10 @@ namespace LGraphics
         */
         void setMouseOnItEventFunction(std::function<void()> fun) { mouseOnItFunction = fun; }
 
-        virtual void rotateX(float angleDegree) = 0;
-        virtual void rotateY(float angleDegree) = 0;
-        virtual void rotateZ(float angleDegree) = 0;
-        virtual void setRotate(glm::mat4 mat) = 0;
+        void rotateX(float angleDegree);
+        void rotateY(float angleDegree);
+        void rotateZ(float angleDegree);
+        void setRotate(fvect3 val);
 
         virtual void turnOffColor() = 0;
 
@@ -117,7 +117,7 @@ namespace LGraphics
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
         virtual fvect3 getMove() const = 0;          ///< Возвращает вектор move виджета.
         virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
-        virtual glm::mat4 getRotate() const = 0;
+        virtual fvect3 getRotate() const { return fvect3{ rotateX_,rotateY_,rotateZ_ }; }
         virtual std::string getLabel() const = 0;
         virtual bool isIsometricView() const { return isometric; }
         virtual bool getWidgetMovability() const { return widgetMovability; }

@@ -84,12 +84,13 @@ std::string CodeGen::getTransparencyData(LGraphics::LWidget* w)
 std::string CodeGen::getRotateData(LGraphics::LWidget* w)
 {
     std::string res;
-    auto rotate = w->getRotate();
-    for (size_t i = 0; i < rotate.length(); ++i)
-        for (size_t j = 0; j < rotate[i].length(); ++j)
-            res+= std::to_string(rotate[i][j]) + ",";
-    res.pop_back();
+    //auto rotate = w->getRotate();
+    //for (size_t i = 0; i < rotate.length(); ++i)
+    //    for (size_t j = 0; j < rotate[i].length(); ++j)
+    //        res+= std::to_string(rotate[i][j]) + ",";
+    //res.pop_back();
     return res;
+    //return res;
 }
 
 std::string CodeGen::getLabelData(LGraphics::LWidget * w)
