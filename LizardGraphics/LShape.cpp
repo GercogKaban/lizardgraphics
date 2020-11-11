@@ -66,22 +66,25 @@ namespace LGraphics
 
     void LShape::rotateX(float angleDegree)
     {
-        rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(1.0f, 0.0f, 0.0f));
+        rotateX_ += angleDegree;
+        //rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(1.0f, 0.0f, 0.0f));
     }
 
     void LShape::rotateY(float angleDegree)
     {
-        rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 1.0f, 0.0f));
+        rotateY_ += angleDegree;
+        //rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
     void LShape::rotateZ(float angleDegree)
     {
-        rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 0.0f, 1.0f));
+        rotateZ_ += angleDegree;
+        //rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
     void LShape::setRotate(glm::mat4 mat)
     {
-        rotate_ = mat;
+    //    rotate_ = mat;
     }
 
     void LShape::setShader(LShaders::Shader* shader)

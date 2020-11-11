@@ -85,16 +85,16 @@ namespace LGraphics
         */
         void move(const szvect2 val) override;
 
-        void rotateX(float angleDegree) override;
-        void rotateY(float angleDegree) override;
-        void rotateZ(float angleDegree) override;
-        void setRotate(glm::mat4 mat) override;
+        void rotateX(float angleDegree);
+        void rotateY(float angleDegree);
+        void rotateZ(float angleDegree);
+        void setRotate(glm::mat4 mat);
 
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         fvect3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         fvect3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
-        glm::mat4 getRotate() const override { return rotate_; }
+        //glm::mat4 getRotate() const override { return rotate_; }
         std::string getLabel() const { return label.text; };
 
         void turnOffColor() override;
@@ -129,7 +129,7 @@ namespace LGraphics
         fvect3 move_ = fvect3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
         fvect3 color_ = fvect3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
 
-        glm::mat4 rotate_ = glm::mat4(1.0f);
+        //glm::mat4 rotate_ = glm::mat4(1.0f);
 
         Text label;
         float labelTextStartPosition = 0.0f;

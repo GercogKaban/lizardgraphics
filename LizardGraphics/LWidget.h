@@ -150,6 +150,8 @@ namespace LGraphics
 
     protected:
 
+        float rotateX_ = 0.0f, rotateY_ = 0.0f, rotateZ_ = 0.0f;
+
         std::string name;
         LApp* app = nullptr;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
