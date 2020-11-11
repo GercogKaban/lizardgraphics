@@ -142,11 +142,24 @@ namespace LGraphics
     void LApp::setMatrices()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
-        view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::vec3 pos(14.0f, 14.0f, 0.0f);
+        float d = 10.0f;
 
-        projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
+        float t = sqrt(3);
+        view = glm::lookAt(pos + d * glm::vec3(t, t, t),
+            glm::vec3(pos),
+            glm::vec3(0.0f, 0.0f, 1.0f));
+
+
+        //projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
+        projection = glm::ortho(d*-1.0f, d*1.0f, d*-1.0f, d*1.0f / aspect, 0.1f, 1000.0f);
+
+        //auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
+        //view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
+        //    glm::vec3(0.0f, 0.0f, 0.0f),
+        //    glm::vec3(0.0f, 1.0f, 0.0f));
+
+        ////projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
         //projection = glm::ortho(-1.0f, 1.0f, -1.0f*aspect, 1.0f*aspect, 0.1f, 100.0f);
     }
 

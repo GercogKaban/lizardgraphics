@@ -50,11 +50,12 @@ int main()
 
     auto r = new LIButton(&app, "image11.bmp");
     r->scale(0.1f, 0.1f,1.0f);
+    r->move(r->getMove().x, r->getMove().y, 0.0f);
     r->setWidgetMovability(false);
 
     auto b = new LIButton(&app);
     b->scale(0.1f, 0.1f, 1.0f);
-    b->move(-0.5f, -0.5f, 1.0f);
+    b->move(-0.5f, -0.5f, 0.0f);
 
     b->setClickEventFunction([&]()
     {
