@@ -16,7 +16,7 @@ namespace LGraphics
         friend LVerticalScroller;
         friend LHorizontalScroller;
 
-        LText(LApp* app, const std::string = "", const char* path = nullptr);
+        LText(LApp* app, const std::string = "", const char* path = nullptr, bool vertScroller = false);
         void draw() override;
 
         void scale(const fvect3 val) override;
@@ -28,6 +28,8 @@ namespace LGraphics
         void move(const size_t x, const size_t y) override;
         void move(const float x, const float y, const float z) override;
         void move(const fvect3 val) override;
+
+        void setTextColor(const unsigned char r, const unsigned char g, const unsigned char b);
 
         void setLabel(const std::string text) override { setText(text); }
 
@@ -70,7 +72,7 @@ namespace LGraphics
         //bool outOfBordersX(float x);
         bool outOfBordersY(float y);
 
-        void pushNewString();
+        void pushNewString(bool gap);
 
         //void setLabel(const std::string) override {}
 
@@ -89,6 +91,10 @@ namespace LGraphics
         float textScale = deFaultTextScale;
 
         int depth = 0;
+
+        bool wordGap = false;
+
+        fvect3 textColor = fvect3(0.0f,0.0f,0.0f);
     };
 }
 

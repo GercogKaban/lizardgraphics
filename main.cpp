@@ -61,33 +61,42 @@ int main()
     //}));
     //gen.notGenerateData(b3);
 
-    auto b3 = new LWRectangle(&app, "image1.bmp");
+    auto b3 = new LWRectangle(&app, "image11.bmp");
     b3->setWidgetMovability(false);
-    b3->setName("tile");
+    //b3->setName("tile");
     //b3->setIsometricView();
-    LGraphics::LCounterF* c1, *c2, *c3;
+    //LGraphics::LCounterF* c1, *c2, *c3;
 
-    auto func = [&]()
-    {
-        glm::mat4 rot(1.0f);
-        rot = glm::rotate(rot, glm::radians((float)c1->getNum()), { 1.0f,0.0f,0.0f });
-        rot = glm::rotate(rot, glm::radians((float)c2->getNum()), { 0.0f,1.0f,0.0f });
-        rot = glm::rotate(rot, glm::radians((float)c3->getNum()), { 0.0f,0.0f,1.0f });
-        b3->setRotate(rot);
-    };
+    //auto func = [&]()
+    //{
+    //    glm::mat4 rot(1.0f);
+    //    rot = glm::rotate(rot, glm::radians((float)c1->getNum()), { 1.0f,0.0f,0.0f });
+    //    rot = glm::rotate(rot, glm::radians((float)c2->getNum()), { 0.0f,1.0f,0.0f });
+    //    rot = glm::rotate(rot, glm::radians((float)c3->getNum()), { 0.0f,0.0f,1.0f });
+    //    b3->setRotate(rot);
+    //};
 
-    c1 = new LGraphics::LCounterF(&app, "", "..");
-    c1->move(-0.6f, 0.9f, 1.0f);
-    c1->setChangingEventFunc(func);
-    c1->setWidgetMovability(false);
-    c2 = new LGraphics::LCounterF(&app, "", "..");
-    c2->move(-0.3f, 0.9f, 1.0f);
-    c2->setChangingEventFunc(func);
-    c2->setWidgetMovability(false);
-    c3 = new LGraphics::LCounterF(&app, "", "..");
-    c3->move(-0.0f, 0.9f, 1.0f);
-    c3->setChangingEventFunc(func);
-    c3->setWidgetMovability(false);
+    //c1 = new LGraphics::LCounterF(&app, "", "..");
+    //c1->move(-0.6f, 0.9f, 1.0f);
+    //c1->setChangingEventFunc(func);
+    //c1->setWidgetMovability(false);
+    //c2 = new LGraphics::LCounterF(&app, "", "..");
+    //c2->move(-0.3f, 0.9f, 1.0f);
+    //c2->setChangingEventFunc(func);
+    //c2->setWidgetMovability(false);
+    //c3 = new LGraphics::LCounterF(&app, "", "..");
+    //c3->move(-0.0f, 0.9f, 1.0f);
+    //c3->setChangingEventFunc(func);
+    //c3->setWidgetMovability(false);
+
+    //auto edit = new LGraphics::LTextEdit(&app);
+    //edit->setVerticalScroller(new LVerticalScroller(&app));
+    //auto msg = new LGraphics::LMessageBox(&app,"Error 228");
+    //msg->setVerticalScroller(new LVerticalScroller(&app));
+    //msg->setTextColor(255, 0, 0);
+    //msg->color(0, 0, 0);
+
+    auto msg = new LMessageBox(&app, "ERROR 228ggg tregre gerger ggfewweg gwregwerg gwergewrg grwegewr g");
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);

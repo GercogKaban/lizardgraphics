@@ -5,6 +5,7 @@
 namespace LGraphics
 {
     class LText;
+    class LMessageBox;
     class LScroller : public LIRectangle
     {
     public:
@@ -34,6 +35,7 @@ namespace LGraphics
     {
     public:
 
+        friend LMessageBox;
         friend LText;
 
         LVerticalScroller(LApp* app, const char* path = nullptr);

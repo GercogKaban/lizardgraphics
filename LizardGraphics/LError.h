@@ -3,7 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include "LObject.h"
+//#include "LObject.h"
+#include "LMessageBox.h"
 
 #define LWRITE(...) LError::writeError(__VA_ARGS__)
 #define LPRINT(...) LError::printErrors()
@@ -22,8 +23,9 @@ namespace LGraphics
         /*!
         @brief Инициализирует класс LError.
         */
-        static void init()
+        static void init(LApp* app)
         {
+            app_ = app;
             errors.push_back("");
         }
 
@@ -43,7 +45,8 @@ namespace LGraphics
         */
         static void printToDisplay(const std::string& error)
         {
-            // ...
+            lastErrorNum++;
+            auto msg = new LGraphics::LMessageBox(app_,error);
         }
 
         /*!
@@ -77,6 +80,11 @@ namespace LGraphics
             std::for_each(errors.begin() + lastErrorNum, errors.end() - 1, printToConsole);
         }
 
+        static void displayErrors()
+        {
+            std::for_each(errors.begin() + lastErrorNum, errors.end() - 1, printToDisplay);
+        }
+
         /*!
         @brief Освобождает ресурсы.
         */
@@ -88,6 +96,7 @@ namespace LGraphics
 
     protected:
 
+        static LApp* app_;
         static std::vector<std::string> errors; ///< Коллекция ошибок.
         static size_t lastErrorNum;             ///< Индекс последней выведенной ошибки.
     };

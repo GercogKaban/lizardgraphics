@@ -3,7 +3,7 @@
 #include "textures.h"
 
 LGraphics::LFlag::LFlag(LApp * app, const char * path)
-    :LIButton(app," ")
+    :LIButton(app,path)
 {
     scale({ 0.025f,0.03f,1.0f });
     setClickEventFunction([&]() {switchState();});

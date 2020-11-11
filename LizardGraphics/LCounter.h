@@ -42,7 +42,7 @@ namespace LGraphics
         }
 
         size_t outPrecision = 6;
-        std::function<void()> changingEventFunc;
+        std::function<void()> changingEventFunc = [](){};
         void calculateMaxLength() override;
     };
 

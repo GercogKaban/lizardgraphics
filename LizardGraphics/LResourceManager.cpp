@@ -25,7 +25,7 @@ namespace LGraphics
             if (!image)
             {
                 image = SOIL_load_image_from_memory(LGraphics::notexture, notextureSize, &width, &height, 0, SOIL_LOAD_RGBA);
-                LWRITE("item at address: ", path, " is missing"), LPRINT();
+                LWRITE("item at address: ", path, " is missing"), LDISPLAY();
             }
         }
         GLuint texture = initTexture(image, width, height);

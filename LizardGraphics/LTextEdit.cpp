@@ -2,6 +2,8 @@
 
 namespace LGraphics
 {
-    LTextEdit::LTextEdit(LApp * app, const std::string text_, const char* path)
-        :LText(app, text_, path) {}
+    LTextEdit::LTextEdit(LApp * app, const std::string text_, const char* path, bool verticalScroller)
+        :LText(app, text_, path, verticalScroller)
+    {
+    }
 }

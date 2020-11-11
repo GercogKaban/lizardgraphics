@@ -113,30 +113,10 @@ namespace LGraphics
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
         glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
 
-        //double xpos, ypos;
-        //glfwGetCursorPos(app->getWindowHandler(), &xpos, &ypos);
-        //glUniform2f(glGetUniformLocation(shader->getShaderProgram(), "mouse"), (float)xpos, (float)ypos);
         glBindVertexArray(buffer->getVaoNum());
 
-        // test
-        //struct DATA {
-            //int data = 0;
-            //float res = 0.0f;
-        //}data;
-        //GLuint ssbo;
-        //glGenBuffers(1, &ssbo);
-        //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
-        //glBufferData(GL_SHADER_STORAGE_BUFFER, 8, &data, GL_STATIC_DRAW);
-
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
-
-        //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-        //GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-        //memcpy(&data, p, sizeof(data));
-        //glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-        //if (data.data == 1) std::cout << data.res << std::endl;
         glBindVertexArray(0);
-        //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
         LLine::display(label);
     }
 

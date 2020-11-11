@@ -45,10 +45,31 @@ void LGraphics::LWidget::init()
     isInited_ = true;
 }
 
+void LGraphics::LWidget::drawOver(bool over)
+{
+    drawOver_ = over;
+    for (auto& w : innerWidgets)
+        w->drawOver(over);
+}
+
 LGraphics::LWidget* LGraphics::LWidget::getWidgetByName(const char * name)
+{
+    for (auto& w : *app->getObjects())
+        if (w->name == name)
+            return w;
+    return nullptr;
+}
+
+LGraphics::LWidget * LGraphics::LWidget::getInnerWidgetByName(const char * name)
 {
     for (auto& w : innerWidgets)
         if (w->name == name)
             return w;
     return nullptr;
+}
+
+LGraphics::LWidget::~LWidget()
+{
+    // нужна рекурсия
+    //app->deleteWidget(this);
 }

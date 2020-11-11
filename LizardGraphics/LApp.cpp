@@ -23,16 +23,29 @@ namespace LGraphics
         {
             openGlDrawing.lock();
             fps++;
-            initTextures();
+            //initTextures();
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             beforeDrawingFunc();
 
+            std::vector<LWidget*> drawOver;
             for (auto& o : objects)
+            {
+                if (o->getDrawOver())
+                {
+                    drawOver.push_back(o);
+                    continue;
+                }
                 if (!o->isHidden())
                     o->draw();
+            }
+
+            for (auto& m : drawOver)
+                if (!m->isHidden())
+                    m->draw();
+
             for (auto& t : textObjects)
                 LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
@@ -93,6 +106,20 @@ namespace LGraphics
         scrollCallback = callback;
     }
 
+    void LApp::deleteWidget(LWidget* w)
+    {
+        for (size_t i = 0; i < this->objects.size(); ++i)
+            if (objects[i] == w)
+            {
+                for (size_t j = 0; j < w->innerWidgets.size(); ++j)
+                    deleteWidget(w->innerWidgets[j]);
+                if (activeWidget == w) activeWidget = nullptr;
+                if (widgetToMove == w) widgetToMove = nullptr;
+                objects.erase(objects.begin() + i);
+                delete w;
+            }
+    }
+
     bool LApp::isPressed(int key)
     {
         return pressedKeys[key];
@@ -130,7 +157,7 @@ namespace LGraphics
 
     void LApp::moveWidgetToMouse(LWidget * w)
     {
-        if (!widgetsMovability || !w->getWidgetMovability()) return;
+        if (!w || !widgetsMovability || !w->getWidgetMovability()) return;
         double mouse_x, mouse_y;
         glfwGetCursorPos(getWindowHandler(), &mouse_x, &mouse_y);
         auto mouse = pointOnScreenToGlCoords(getWindowSize(), { (float)mouse_x ,(float)mouse_y });
@@ -145,7 +172,7 @@ namespace LGraphics
 
     void LApp::initLEngine()
     {
-        LError::init();
+        LError::init(this);
         standartRectBuffer = new LRectangleBuffer();
         standartInterfaceshader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
         standartWorldObjShader = new LShaders::Shader(LShaders::world_v, LShaders::interface_f);
@@ -234,7 +261,7 @@ namespace LGraphics
     void LApp::releaseResources()
     {
         for (auto& x : objects)
-            delete x;
+            deleteWidget(x);
         delete standartRectBuffer;
         delete standartInterfaceshader;
         delete standartWorldObjShader;
@@ -248,7 +275,6 @@ namespace LGraphics
         bool out = false;
         if (!objects.size()) return;
 
-        //LWidget* widgetToMove = nullptr;
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
             // нужно сменить итераторы на C-шный цикл
@@ -277,6 +303,7 @@ namespace LGraphics
                     {
                         if (activeWidget) activeWidget->breakAnimation();
                         activeWidget = innerW;
+                        widgetToMove = innerW;
                         return;
                     }
                 if (out) return;
@@ -286,15 +313,16 @@ namespace LGraphics
         else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
         {
             widgetToMove = nullptr;
-            for (auto& o : objects)
-            {
-                for (auto& innerW : o->getInnerWidgets())
-                    if (dynamic_cast<LScroller*>(innerW) && activeWidget == (LScroller*)innerW)
-                    {
-                        if (activeWidget) activeWidget->breakAnimation();
-                        activeWidget = ((LScroller*)innerW)->parent;
-                    }
-            }
+            activeWidget = nullptr;
+        //    for (auto& o : objects)
+        //    {
+        //        for (auto& innerW : o->getInnerWidgets())
+        //            if (dynamic_cast<LScroller*>(innerW) && activeWidget == (LScroller*)innerW)
+        //            {
+        //                if (activeWidget) activeWidget->breakAnimation();
+        //                activeWidget = ((LScroller*)innerW)->parent;
+        //            }
+        //    }
         }
 
         if (widgetToMove) moveWidgetToMouse(widgetToMove);

@@ -114,6 +114,7 @@ namespace LGraphics
         this->buffer = buffer;
     }
 
+    // нужно проверить эту функцию
     void LShape::turnOffColor()
     {
         color_ = rgbToFloat(1, 1, 1);

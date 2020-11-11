@@ -5,7 +5,7 @@
 #include "LApp.h"
 
 LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * path)
-    :LTextEdit(app,str, path)
+    :LTextEdit(app,str, path,false)
 {
     scale(0.2f, 0.1f, 1.0f);
     turnOffTexture();
@@ -34,7 +34,7 @@ LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * pa
 
 void LGraphics::LCounter::calculateMaxLength()
 {
-    auto arrowUp = (LIButton*)getWidgetByName("up");
+    auto arrowUp = (LIButton*)getInnerWidgetByName("up");
     auto arrowXSize = arrowUp ? xGlCoordToScreenCoord(app->getWindowSize(), arrowUp->getTopRightCorner().x) - 
         xGlCoordToScreenCoord(app->getWindowSize(), arrowUp->getTopLeftCorner().x) : 0;
     maxLength = calculateWidgetLength() - rightBorder - arrowXSize;
@@ -59,8 +59,8 @@ void LGraphics::LCounter::scale(const fvect3 val)
 void LGraphics::LCounter::scale(const float x, const float y, const float z)
 {
     scaleWithoutAlign({ x,y,z });
-    if (auto up = getWidgetByName("up")) up->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 5, 0.0f));
-    if (auto down = getWidgetByName("down")) down->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 5, 0.0f));
+    if (auto up = getInnerWidgetByName("up")) up->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 5, 0.0f));
+    if (auto down = getInnerWidgetByName("down")) down->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 5, 0.0f));
 
     LText::scale(fvect3(x, y, z));
 }
@@ -74,13 +74,13 @@ void LGraphics::LCounter::addText(const std::string text_)
 LGraphics::LCounterI::LCounterI(LApp * app, const std::string str, const char * path)
     :LCounter(app,str,path)
 {
-    if (auto up = getWidgetByName("up"))
+    if (auto up = getInnerWidgetByName("up"))
         ((LIButton*)up)->setClickEventFunction([&]()
     {
         counter += countInterval;
         setText(std::to_string(counter));
     });
-    else if (auto down = getWidgetByName("down"))
+    if (auto down = getInnerWidgetByName("down"))
         ((LIButton*)down)->setClickEventFunction([&]()
     {
         counter -= countInterval;
@@ -110,8 +110,7 @@ void LGraphics::LCounterI::addText(const unsigned int symbol)
     }
         
     else if (!isdigit(symbol))
-         return;
-        
+         return;       
     else
     {
        counter = 10 * counter + std::stoi(std::string(1, symbol));
@@ -150,13 +149,13 @@ LGraphics::LCounterF::LCounterF(LApp * app, const std::string str, const char * 
 {
     LShape::scale(getScale().x + getScale().x*0.1f, getScale().y, getScale().z);
 
-    if (auto up = getWidgetByName("up"))
+    if (auto up = getInnerWidgetByName("up"))
         ((LIButton*)up)->setClickEventFunction([&]()
     {
         counter += countInterval;
         setText(to_string_with_precision(counter, outPrecision));
     });
-    else if (auto down = getWidgetByName("down"))
+    if (auto down = getInnerWidgetByName("down"))
         ((LIButton*)down)->setClickEventFunction([&]()
     {
         counter -= countInterval;
@@ -225,13 +224,13 @@ LGraphics::LCounterLL::LCounterLL(LApp * app, const std::string str, const char 
 {
     LShape::scale(fvect3(getScale().x*2, getScale().y, getScale().z));
 
-    if (auto up = getWidgetByName("up"))
+    if (auto up = getInnerWidgetByName("up"))
         ((LIButton*)up)->setClickEventFunction([&]()
     {
         counter += countInterval;
         setText(std::to_string(counter));
     });
-    else if (auto down = getWidgetByName("down"))
+    if (auto down = getInnerWidgetByName("down"))
         ((LIButton*)down)->setClickEventFunction([&]()
     {
         counter -= countInterval;

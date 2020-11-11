@@ -134,14 +134,19 @@ namespace LGraphics
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
         bool isInited() const { return isInited_; }
 
+        bool getDrawOver() const{ return drawOver_; }
+        virtual void drawOver(bool over);
+
+
         virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
         const std::vector<LWidget*>& getInnerWidgets() const { return innerWidgets; }
 
         LWidget* getWidgetByName(const char* name);
+        LWidget* getInnerWidgetByName(const char* name);
 
-        virtual ~LWidget() {}
+        virtual ~LWidget();
 
     protected:
 
@@ -152,12 +157,14 @@ namespace LGraphics
         std::function<void()> animation = std::function<void()>([](){});
         std::function<void()> breakingAnimation = std::function<void()>([]() {});
 
+        bool drawOver_ = false;
+
         std::vector<LWidget*> innerWidgets;
 
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;
 
-        bool isInited_ = false;
+        bool isInited_ = true;
         bool isometric = false;
 
         bool widgetMovability = true;

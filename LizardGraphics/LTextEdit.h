@@ -10,7 +10,7 @@ namespace LGraphics
         const char* getObjectType() override { return "LTextEdit"; }
 
         // необходимо поменять  местами 2-й и 3-й параметры
-        LTextEdit(LApp* app, const std::string = "", const char* path = nullptr);
+        LTextEdit(LApp* app, const std::string = "", const char* path = nullptr, bool verticalScroller = true);
     };
 }
 

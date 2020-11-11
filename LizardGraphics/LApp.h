@@ -61,6 +61,8 @@ namespace LGraphics
         void setMatrices(glm::mat4 view, glm::mat4 projection);
         void setWidgetsMovability(bool movability) { widgetsMovability = movability; }
 
+        void deleteWidget(LWidget* w);
+
         void refreshObjectMatrices();
 
         void setKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback);
@@ -89,7 +91,9 @@ namespace LGraphics
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
             
-    private:
+    protected:
+
+
 
         void setMatrices();
         void addObject(LWidget* w);

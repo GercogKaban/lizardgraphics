@@ -11,14 +11,13 @@ namespace LGraphics
     {
         if (app->getActiveWidget() == this)
             moveScrollerToMouse();
-        //if (mouseOnIt())
-        //    std::cout << "mouse on it\n";
-        //else
-        //    std::cout << "NO\n";
     }
 
     LScroller::LScroller(LApp * app, const char * path)
-        :LIRectangle(app, path){}
+        :LIRectangle(app, path)
+    {
+        setWidgetMovability(false);
+    }
 
     LGraphics::LVerticalScroller::LVerticalScroller(LApp * app, const char * path)
         : LScroller(app, path){}
