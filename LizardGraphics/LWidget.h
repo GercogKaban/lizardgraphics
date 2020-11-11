@@ -164,7 +164,7 @@ namespace LGraphics
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;
 
-        bool isInited_ = true;
+        bool isInited_ = false;
         bool isometric = false;
 
         bool widgetMovability = true;

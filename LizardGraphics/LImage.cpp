@@ -11,7 +11,7 @@ namespace LGraphics
             //texture = resManager.loadTexture(path);
         texturePath = !path?"":path;
         if (!texturePath.size()) turnOffTexture();
-        init();
+        //init();
     }
 
     LImage::LImage(const unsigned char* bytes, size_t size)
@@ -23,7 +23,7 @@ namespace LGraphics
             texturesBytes = new unsigned char[size];
             memcpy(texturesBytes, bytes, size);
             texturesBytesSize = size;
-            init();
+            //init();
         }
     }
 

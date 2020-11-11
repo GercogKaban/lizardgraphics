@@ -23,7 +23,7 @@ namespace LGraphics
         {
             openGlDrawing.lock();
             fps++;
-            //initTextures();
+            initTextures();
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -382,7 +382,7 @@ namespace LGraphics
     void LApp::initTextures()
     {
         for (auto& w : objects)
-            if (!w->isInited())
+            if (w && !w->isInited())
                 w->init();
     }
 
