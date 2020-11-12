@@ -6,11 +6,11 @@
 
 void CodeGen::generateCode(const char* outPath, LGraphics::LApp* app, const char* appName)
 {
-    std::vector<std::string> includeFilesVector;
+    /*std::vector<std::string> includeFilesVector;
     std::string includeFiles = "#include \"LApp.h\"\n";
     std::string mainCode = "namespace LGraphics{\nvoid genWidgets(LGraphics::LApp* app)\n{\n";
 
-    for (size_t i = 0; i < app->getObjects()->size(); ++i)
+    for (size_t i = 0; i < app->getObjects().size(); ++i)
     {
         auto obj = (*app->getObjects())[i];
         if (std::find(notGenerateList.begin(), notGenerateList.end(), obj) != notGenerateList.end())
@@ -30,7 +30,7 @@ void CodeGen::generateCode(const char* outPath, LGraphics::LApp* app, const char
     }
     includeFiles += "\n";
     mainCode += "}}\n";
-    writeToFile(outPath, includeFiles + mainCode);
+    writeToFile(outPath, includeFiles + mainCode);*/
 }
 
 void CodeGen::notGenerateData(LGraphics::LWidget* w)

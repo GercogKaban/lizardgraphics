@@ -17,7 +17,8 @@ LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * pa
     b1->turnOnTexture();
     b1->setWidgetMovability(false);
     b1->setName("up");
-    innerWidgets.push_back(b1);
+    addInnerWidget(b1);
+    //innerWidgets.push_back(b1);
 
     auto b2 = new LIButton(app, arrow_down, arrow_downSize);
     b2->scale(0.025f, 0.03f, 1.0f);
@@ -25,7 +26,8 @@ LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * pa
     b2->move(getTopRightCorner() - fvect3(0.015f, scale_.y / 1.25f, 0.0f));
     b2->setWidgetMovability(false);
     b2->setName("down");
-    innerWidgets.push_back(b2);
+    addInnerWidget(b2);
+    //innerWidgets.push_back(b2);
     textScalling = true;
 
     calculateMaxLength();

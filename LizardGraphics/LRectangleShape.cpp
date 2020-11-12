@@ -5,16 +5,16 @@
 
 namespace LGraphics
 {
-    LRectangleShape::LRectangleShape(LApp* app, const char* path)
+    LRectangleShape::LRectangleShape(LApp* app, const char* path, bool isInterfaceObj)
         :LShape(app,path)
     {
-        init(app);
+        init(app, isInterfaceObj);
     }
 
-    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size)
+    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size, bool isInterfaceObj)
         :LShape(app,bytes,size)
     {
-        init(app);
+        init(app, isInterfaceObj);
     }
 
     void LRectangleShape::setLabel(const std::string label)
@@ -69,12 +69,12 @@ namespace LGraphics
         return ((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_;
     }
 
-    void LRectangleShape::init(LApp* app)
+    void LRectangleShape::init(LApp* app, bool isInterfaceObj)
     {
         this->app = app;
         buffer = app->standartRectBuffer;
         shader = app->standartInterfaceshader;
-        app->addObject(this);
+        app->addObject(this, isInterfaceObj);
     }
 
     void LRectangleShape::updateLabelPos()
@@ -103,6 +103,8 @@ namespace LGraphics
 
     void LRectangleShape::draw()
     {
+        if (isHidden()) return;
+
         auto shader = getShader();
         shader->use();
 
@@ -118,6 +120,9 @@ namespace LGraphics
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         LLine::display(label);
+
+        for (auto& i : innerWidgets)
+            i->draw();
     }
 
     //LRectangleShape::LRectangleShape(LApp* app)

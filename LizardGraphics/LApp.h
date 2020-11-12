@@ -69,7 +69,9 @@ namespace LGraphics
         void setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback);
         void setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>callback);
 
-        std::vector<LWidget*>* getObjects() { return &objects; }
+        std::vector<LWidget*>& getInterfaceObjects(){ return interfaceObjects; }
+        std::vector<LWidget*>& getNonInterfaceObjects() { return nonInterfaceObjects; }
+        //std::vector<LWidget*>& getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
 
         LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
@@ -90,13 +92,13 @@ namespace LGraphics
 
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
+
             
     protected:
 
-
-
+        void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();
-        void addObject(LWidget* w);
+        void addObject(LWidget* w, bool isInterfaceObj);
         void moveWidgetToMouse(LWidget* w);
 
         LLine* textRenderer;
@@ -118,7 +120,12 @@ namespace LGraphics
         void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
         GLFWwindow* window;
-        std::vector<LWidget*> objects;
+
+
+        std::vector<LWidget*> interfaceObjects;
+        std::vector<LWidget*> nonInterfaceObjects;
+
+        //std::vector<LWidget*> objects;
         std::vector<Text> textObjects;
 
         int width, height;
@@ -126,7 +133,7 @@ namespace LGraphics
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX, sleepTime = 0;
 
         LWidget* activeWidget = nullptr;
-        LWidget* prevActiveWidget = nullptr;
+        //LWidget* prevActiveWidget = nullptr;
         LWidget* widgetToMove = nullptr;
         bool widgetsMovability = false;
 

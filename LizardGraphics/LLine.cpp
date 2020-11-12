@@ -94,6 +94,7 @@ namespace LGraphics
     
     void LLine::display(const std::string text, float x, float y, const float scale, const fvect3 color)
     {
+        //glDepthFunc(GL_ALWAYS);
         y = app->getWindowSize().y - y;
         getShader()->use();
         glUniform3f(glGetUniformLocation(getShader()->getShaderProgram(), "textColor"), color.x, color.y, color.z);
@@ -135,6 +136,7 @@ namespace LGraphics
         }
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
+        //glDepthFunc(GL_LESS);
     }
 
     void LLine::display(Text text)

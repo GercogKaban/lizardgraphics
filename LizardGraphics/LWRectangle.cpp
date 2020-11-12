@@ -9,7 +9,7 @@
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
-    :LRectangleShape(app, path)
+    :LRectangleShape(app, path, false)
 {
     shader = app->getStandartWorldObjShader();
     view = app->getViewMatrix();
@@ -30,11 +30,14 @@ void LGraphics::LWRectangle::setMatrices()
         glm::vec3(0.0f, 1.0f, 0.0f));
 
     auto aspect = (float)app->getWindowSize().x / (float)app->getWindowSize().y;
-    projection = glm::ortho(-1.0f, 1.0f, -1.0f * aspect, 1.0f * aspect, 0.1f, 100.0f);
+    //projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+    projection = glm::ortho(-1.0f, 1.0f, -1.0f / aspect, 1.0f / aspect, 0.1f, 1000.0f);
 }
 
 void LGraphics::LWRectangle::draw()
 {
+    if (isHidden()) return;
+
     getShader()->use();
     auto shader = getShader()->getShaderProgram();
     glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
@@ -55,7 +58,6 @@ void LGraphics::LWRectangle::draw()
 
     glBindTexture(GL_TEXTURE_2D, getTexture());
 
-    // нужно фиксануть
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
     model = glm::rotate(model, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
@@ -83,5 +85,8 @@ void LGraphics::LWRectangle::draw()
     //glBindVertexArray(0);
     //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
     glBindVertexArray(0);
+
+    for (auto& i : innerWidgets)
+        i->draw();
     //LLine::display(label);
 }

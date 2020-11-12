@@ -27,32 +27,29 @@ namespace LGraphics
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
             beforeDrawingFunc();
 
-            std::vector<LWidget*> drawOver;
-            for (auto& o : objects)
-            {
-                if (o->getDrawOver())
-                {
-                    drawOver.push_back(o);
-                    continue;
-                }
+
+            glEnable(GL_DEPTH_TEST);
+            for (auto& o : nonInterfaceObjects)
                 if (!o->isHidden())
                     o->draw();
-            }
 
-            for (auto& m : drawOver)
-                if (!m->isHidden())
-                    m->draw();
+            glDisable(GL_DEPTH_TEST);
+            LDISPLAY();
+            for (auto& o : interfaceObjects)
+                if (!o->isHidden())
+                    o->draw();
 
             for (auto& t : textObjects)
                 LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
-            for (auto& o : objects)
-                o->tick();
 
             afterDrawingFunc();
+            for (auto& o : interfaceObjects)
+                o->tick();
+            for (auto& o : nonInterfaceObjects)
+                o->tick();
 
             glfwSwapBuffers(window);
             openGlDrawing.unlock();
@@ -86,7 +83,7 @@ namespace LGraphics
 
     void LApp::refreshObjectMatrices()
     {
-        for (auto& obj : objects)
+        for (auto& obj : nonInterfaceObjects)
             if (dynamic_cast<LWRectangle*>(obj))
                 dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
     }
@@ -108,14 +105,15 @@ namespace LGraphics
 
     void LApp::deleteWidget(LWidget* w)
     {
-        for (size_t i = 0; i < this->objects.size(); ++i)
-            if (objects[i] == w)
+        std::vector<LWidget*>& obj = w->isInterfaceObject() ? interfaceObjects  : nonInterfaceObjects;
+        for (size_t i = 0; i < obj.size(); ++i)
+            if (obj.operator[](i) == w)
             {
                 for (size_t j = 0; j < w->innerWidgets.size(); ++j)
                     deleteWidget(w->innerWidgets[j]);
                 if (activeWidget == w) activeWidget = nullptr;
                 if (widgetToMove == w) widgetToMove = nullptr;
-                objects.erase(objects.begin() + i);
+                obj.erase(obj.begin() + i);
                 delete w;
             }
     }
@@ -139,6 +137,17 @@ namespace LGraphics
         }
     }
 
+    void LApp::initTextures(std::vector<LWidget*>& objects)
+    {
+        for (auto& w : objects)
+            if (!w->isInited())
+            {
+                w->init();
+                if (w->innerWidgets.size())
+                    initTextures(w->innerWidgets);
+            }
+    }
+
     void LApp::setMatrices()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
@@ -152,7 +161,7 @@ namespace LGraphics
 
 
         //projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
-        projection = glm::ortho(d*-1.0f, d*1.0f, d*-1.0f, d*1.0f / aspect, 0.1f, 1000.0f);
+        projection = glm::ortho(d*-1.0f, d*1.0f, d*-1.0f / aspect, d*1.0f / aspect, 0.1f, 1000.0f);
 
         //auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
         //view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
@@ -163,9 +172,12 @@ namespace LGraphics
         //projection = glm::ortho(-1.0f, 1.0f, -1.0f*aspect, 1.0f*aspect, 0.1f, 100.0f);
     }
 
-    void LApp::addObject(LWidget * w)
+    void LApp::addObject(LWidget* w, bool isInterfaceObj)
     {
-        objects.push_back(w);
+        if (isInterfaceObj)
+            interfaceObjects.push_back(w);
+        else
+            nonInterfaceObjects.push_back(w);
     }
 
     void LApp::moveWidgetToMouse(LWidget * w)
@@ -260,7 +272,6 @@ namespace LGraphics
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_DEPTH_TEST);
         //glfwSwapInterval(0);
 
         int width_, height_;
@@ -275,7 +286,9 @@ namespace LGraphics
 
     void LApp::releaseResources()
     {
-        for (auto& x : objects)
+        for (auto& x : interfaceObjects)
+            deleteWidget(x);
+        for (auto& x : nonInterfaceObjects)
             deleteWidget(x);
         delete standartRectBuffer;
         delete standartInterfaceshader;
@@ -287,48 +300,56 @@ namespace LGraphics
     void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
     {
         mouseCallback(window, button, action, mods);
-        bool out = false;
+        //bool out = false;
+        auto objects = interfaceObjects;
+
         if (!objects.size()) return;
 
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
-            // нужно сменить итераторы на C-шный цикл
             size_t num = 0;
             for (int i = objects.size()-1; i > -1; --i)
             //for (auto& o = objects.rbegin(); o < objects.rend(); o++, num++)
             {
                 auto o = objects[i];
+
+                // тут нужна рекурсия
+                for (auto& innerW : (o)->getInnerWidgets())
+                {
+                    if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
+                    {
+                        if (activeWidget) activeWidget->breakAnimation();
+                        activeWidget = innerW;
+                        //widgetToMove = innerW;
+                        //((LScroller*)innerW)->moveScrollerToMouse();
+                    }
+                    else if (dynamic_cast<LIButton*>(innerW) && ((LIButton*)innerW)->mouseOnIt())
+                    {
+                        ((LIButton*)innerW)->doClickEventFunction();
+                        return;
+                    }
+                }
+
                 if (o->mouseOnIt())
                 {
                     if (activeWidget) activeWidget->breakAnimation();
-                    prevActiveWidget = activeWidget;
+                    //prevActiveWidget = activeWidget;
                     activeWidget = o;
                     widgetToMove = activeWidget;
 
                     if (dynamic_cast<LIButton*>(o))
                     {
                         ((LIButton*)o)->doClickEventFunction();
-                        out = true;
-                    }
-                }
-
-                // тут нужна рекурсия
-                for (auto& innerW : (o)->getInnerWidgets())
-                    if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
-                    {
-                        if (activeWidget) activeWidget->breakAnimation();
-                        activeWidget = innerW;
-                        widgetToMove = innerW;
                         return;
                     }
-                if (out) return;
+                }
             }
         }
 
         else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
         {
             widgetToMove = nullptr;
-            activeWidget = nullptr;
+            //activeWidget = nullptr;
         //    for (auto& o : objects)
         //    {
         //        for (auto& innerW : o->getInnerWidgets())
@@ -381,9 +402,19 @@ namespace LGraphics
 
     void LApp::initTextures()
     {
-        for (auto& w : objects)
-            if (w && !w->isInited())
-                w->init();
+        initTextures(interfaceObjects);
+        initTextures(nonInterfaceObjects);
+        //for (auto& w : interfaceObjects)
+        //    if (w && !w->isInited())
+        //    {
+        //        w->init();
+        //        for (auto& i : w->innerWidgets)
+        //            i->init();
+        //    }
+
+        //for (auto& w : nonInterfaceObjects)
+        //    if (w && !w->isInited())
+        //        w->init();
     }
 
 }

@@ -68,20 +68,13 @@ void LGraphics::LWidget::init()
     isInited_ = true;
 }
 
-void LGraphics::LWidget::drawOver(bool over)
-{
-    drawOver_ = over;
-    for (auto& w : innerWidgets)
-        w->drawOver(over);
-}
-
-LGraphics::LWidget* LGraphics::LWidget::getWidgetByName(const char * name)
-{
-    for (auto& w : *app->getObjects())
-        if (w->name == name)
-            return w;
-    return nullptr;
-}
+//LGraphics::LWidget* LGraphics::LWidget::getWidgetByName(const char * name)
+//{
+//    for (auto& w : *app->getObjects())
+//        if (w->name == name)
+//            return w;
+//    return nullptr;
+//}
 
 LGraphics::LWidget * LGraphics::LWidget::getInnerWidgetByName(const char * name)
 {
@@ -91,8 +84,16 @@ LGraphics::LWidget * LGraphics::LWidget::getInnerWidgetByName(const char * name)
     return nullptr;
 }
 
+void LGraphics::LWidget::addInnerWidget(LWidget* innerWidget)
+{
+    innerWidgets.push_back(innerWidget);
+    std::vector<LWidget*>& obj = innerWidget->isInterfaceObject() ? app->getInterfaceObjects() : app->getNonInterfaceObjects();
+    for (size_t i = 0; i < obj.size(); ++i)
+        if (obj[i] == innerWidget)
+            obj.erase(obj.begin() + i);
+}
+
 LGraphics::LWidget::~LWidget()
 {
-    // нужна рекурсия
     //app->deleteWidget(this);
 }

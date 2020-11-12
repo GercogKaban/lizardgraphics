@@ -12,6 +12,7 @@ namespace LGraphics
 
         const char* getObjectType() override { return "LRectangleShape"; }
         LWRectangle(LApp* app, const char* path = nullptr);
+        bool isInterfaceObject() const override { return false; }
 
         void setMatrices(LApp* app);
         void setMatrices();
@@ -19,6 +20,7 @@ namespace LGraphics
 
     private:
 
+        
         glm::mat4 model;
         glm::mat4 projection, view;
     };

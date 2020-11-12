@@ -10,7 +10,7 @@ LGraphics::LMessageBox::LMessageBox(LApp* app, const std::string text, const std
     scaleText(getTextScale()/1.7f);
     auto b1 = new LIButton(app);
     b1->scale(0.1f, 0.1f, 1.0f);
-    b1->move(getCenter().x, getBottomLeftCorner().y + 0.07f, 1.0f);
+    b1->move(getCenter().x, getBottomLeftCorner().y + 0.07f, 0.0f);
     b1->setWidgetMovability(false);
     b1->setLabel(buttonText);
     b1->color(0, 0, 0);
@@ -28,9 +28,8 @@ LGraphics::LMessageBox::LMessageBox(LApp* app, const std::string text, const std
     vertScroller->moveScrollerToPos(0); 
     button = b1;
     setAnimation([]() {});
-    innerWidgets.push_back(b1);
+    addInnerWidget(b1);
     widgetMovability = true;
-    drawOver(true);
 }
 
 void LGraphics::LMessageBox::move(const fvect3 val)

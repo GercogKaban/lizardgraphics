@@ -186,10 +186,10 @@ namespace LGraphics
     {
         if (vertScroller)
         {
-            auto obj = app->getObjects();
-            for (size_t i = 0; i < obj->size(); ++i)
-                if ((*obj)[i] == vertScroller)
-                    obj->erase(obj->begin() + i);
+            auto obj = app->getInterfaceObjects();
+            for (size_t i = 0; i < obj.size(); ++i)
+                if (obj[i] == vertScroller)
+                    obj.erase(obj.begin() + i);
             delete vertScroller;
         }
         scroller->setParent(this);
@@ -198,7 +198,8 @@ namespace LGraphics
         //scroller->move(getTopRightCorner());
         //scroller->move(fvect3(getTopRightCorner().x, move_.y, move_.z));
         scroller->reloadScroller(hiddenStrings);
-        innerWidgets.push_back(scroller);
+        addInnerWidget(scroller);
+        //innerWidgets.push_back(scroller);
     }
 
     void LGraphics::LText::setHorizontalScroller(LHorizontalScroller * scroller)
