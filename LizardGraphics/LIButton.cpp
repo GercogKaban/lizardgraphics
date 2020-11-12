@@ -19,6 +19,9 @@ namespace LGraphics
     {
         if (app->getActiveWidget() == this)
             doAnimation();
+        if (innerWidgets.size())
+            for (auto& w : innerWidgets)
+                w->tick();
     }
 
     void LIButton::doClickEventFunction()

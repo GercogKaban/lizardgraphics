@@ -320,6 +320,7 @@ namespace LGraphics
                     {
                         if (activeWidget) activeWidget->breakAnimation();
                         activeWidget = innerW;
+                        return;
                         //widgetToMove = innerW;
                         //((LScroller*)innerW)->moveScrollerToMouse();
                     }
@@ -349,7 +350,7 @@ namespace LGraphics
         else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
         {
             widgetToMove = nullptr;
-            //activeWidget = nullptr;
+            activeWidget = nullptr;
         //    for (auto& o : objects)
         //    {
         //        for (auto& innerW : o->getInnerWidgets())
