@@ -21,8 +21,6 @@ namespace LGraphics
         t.start();
         while (!glfwWindowShouldClose(window))
         {
-            if (isPressed(GLFW_KEY_A)) 
-                std::cout << 'a';
             openGlDrawing.lock();
             fps++;
             initTextures();
@@ -221,11 +219,9 @@ namespace LGraphics
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 #ifndef NDEBUG
-        window = glfwCreateWindow(800, 600, "My Title", NULL, NULL);
-        //width = mode->width - 1;
-        width = 800;
-        height = 600;
-        //height = mode->height;
+        window = glfwCreateWindow(mode->width - 1, mode->height, "My Title", NULL, NULL);
+        width = mode->width - 1;
+        height = mode->height;
 #else
         width = mode->width;
         height = mode->height;
