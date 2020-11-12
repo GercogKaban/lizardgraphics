@@ -29,7 +29,6 @@ namespace LGraphics
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             beforeDrawingFunc();
 
-
             glEnable(GL_DEPTH_TEST);
             for (auto& o : nonInterfaceObjects)
                 if (!o->isHidden())
@@ -372,7 +371,7 @@ namespace LGraphics
 
     void LApp::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
     {
-        pressedKeys[key] = action == (GLFW_PRESS || GLFW_REPEAT);
+        pressedKeys[key] = action != GLFW_RELEASE;
         keyCallback(window, key, scancode, action, mods);
         LTextEdit* textEdit = dynamic_cast<LTextEdit*>(activeWidget);
         if (textEdit && action)
