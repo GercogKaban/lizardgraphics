@@ -187,6 +187,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setBeforeDrawingFunc<
 <tr class="memitem:ab13bbbc785da73c8c610cfcd29b8d545"><td class="memItemLeft" align="right" valign="top"><a id="ab13bbbc785da73c8c610cfcd29b8d545"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setAfterDrawingFunc</b> (std::function&lt; void()&gt; func)</td></tr>
 <tr class="separator:ab13bbbc785da73c8c610cfcd29b8d545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa64906e9349554f0e97e10446a91f1c5"><td class="memItemLeft" align="right" valign="top"><a id="aa64906e9349554f0e97e10446a91f1c5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setViewPoint</b> (glm::vec3 view)</td></tr>
+<tr class="separator:aa64906e9349554f0e97e10446a91f1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac854489ea75752fc058423de91d2bf9a"><td class="memItemLeft" align="right" valign="top"><a id="ac854489ea75752fc058423de91d2bf9a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setViewRadius</b> (float radius)</td></tr>
+<tr class="separator:ac854489ea75752fc058423de91d2bf9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86265377ae390e3f4f194eaa4a4fe554"><td class="memItemLeft" align="right" valign="top"><a id="a86265377ae390e3f4f194eaa4a4fe554"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getViewPoint</b> () const</td></tr>
+<tr class="separator:a86265377ae390e3f4f194eaa4a4fe554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58d1c9b5c3645f2678ccf5433f63f07c"><td class="memItemLeft" align="right" valign="top"><a id="a58d1c9b5c3645f2678ccf5433f63f07c"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getViewRadius</b> () const</td></tr>
+<tr class="separator:a58d1c9b5c3645f2678ccf5433f63f07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487bd05904dd7f65278332d0fd4d4cad"><td class="memItemLeft" align="right" valign="top"><a id="a487bd05904dd7f65278332d0fd4d4cad"></a>
 virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> ()</td></tr>
 <tr class="separator:a487bd05904dd7f65278332d0fd4d4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,6 +217,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a cla
 <tr class="memitem:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memItemLeft" align="right" valign="top"><a id="a1dde3b366b5bd49db35b97ec6f776a85"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>moveWidgetToMouse</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
 <tr class="separator:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a222be0984d4707bf1c5719df4e8a8e33"><td class="memItemLeft" align="right" valign="top"><a id="a222be0984d4707bf1c5719df4e8a8e33"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshCamera</b> ()</td></tr>
+<tr class="separator:a222be0984d4707bf1c5719df4e8a8e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4498d92672e65150cdcb03d99028abf9"><td class="memItemLeft" align="right" valign="top"><a id="a4498d92672e65150cdcb03d99028abf9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshProjection</b> ()</td></tr>
+<tr class="separator:a4498d92672e65150cdcb03d99028abf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0406b79920f4449e3244ea4ca061d9d"><td class="memItemLeft" align="right" valign="top"><a id="aa0406b79920f4449e3244ea4ca061d9d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
 <tr class="separator:aa0406b79920f4449e3244ea4ca061d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,6 +265,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ad7cd9fc2d081c638732d4048e03034df"><td class="memItemLeft" align="right" valign="top"><a id="ad7cd9fc2d081c638732d4048e03034df"></a>
 GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>window</b></td></tr>
 <tr class="separator:ad7cd9fc2d081c638732d4048e03034df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d192d678b0e700e54d69aced0c320a2"><td class="memItemLeft" align="right" valign="top"><a id="a4d192d678b0e700e54d69aced0c320a2"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>viewPoint</b> = glm::vec3(14.0f, 14.0f, 0.0f)</td></tr>
+<tr class="separator:a4d192d678b0e700e54d69aced0c320a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9070eb37548c8c3de1cb13e986c37be"><td class="memItemLeft" align="right" valign="top"><a id="ad9070eb37548c8c3de1cb13e986c37be"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>viewRadius</b> = 10.0f</td></tr>
+<tr class="separator:ad9070eb37548c8c3de1cb13e986c37be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa42b7178a120cd31c92ad8958c096086"><td class="memItemLeft" align="right" valign="top"><a id="aa42b7178a120cd31c92ad8958c096086"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>interfaceObjects</b></td></tr>
 <tr class="separator:aa42b7178a120cd31c92ad8958c096086"><td class="memSeparator" colspan="2">&#160;</td></tr>

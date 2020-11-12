@@ -104,10 +104,10 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="stringliteral">&quot;uniform bool sampleTexture;\n&quot;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="stringliteral">&quot;void main()\n&quot;</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="stringliteral">&quot;{\n&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="stringliteral">&quot;if (color.a &gt; 0) discard;\n&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="comment">//&quot;if ((pow(mouse.x - gl_FragCoord.x,2) + pow(mouse.y - gl_FragCoord.y,2)) &lt;= 1.0) data_SSBO = 1;\n&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="stringliteral">&quot;if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="stringliteral">&quot;else color = color_;\n&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="comment">//&quot;if ((pow(mouse.x - gl_FragCoord.x,2) + pow(mouse.y - gl_FragCoord.y,2)) &lt;= 1.0) data_SSBO = 1;\n&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="stringliteral">&quot;if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="stringliteral">&quot;else color = color_;\n&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="stringliteral">&quot;if (color.a - 0.1f &lt; 0) discard;\n&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="stringliteral">&quot;}\n\0&quot;</span>;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> symbol_v[] =</div>
