@@ -93,6 +93,12 @@ namespace LGraphics
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
+        void setViewPoint(glm::vec3 view) { viewPoint = view; refreshCamera(); };
+        void setViewRadius(float radius) { viewRadius = radius; refreshCamera(); refreshProjection(); }
+
+        glm::vec3 getViewPoint() const { return viewPoint; }
+        float getViewRadius() const { return viewRadius; }
+
             
     protected:
 
@@ -100,6 +106,9 @@ namespace LGraphics
         void setMatrices();
         void addObject(LWidget* w, bool isInterfaceObj);
         void moveWidgetToMouse(LWidget* w);
+
+        void refreshCamera();
+        void refreshProjection();
 
         LLine* textRenderer;
 
@@ -121,7 +130,8 @@ namespace LGraphics
 
         GLFWwindow* window;
 
-
+        glm::vec3 viewPoint = glm::vec3(14.0f, 14.0f, 0.0f);
+        float viewRadius = 10.0f;
         std::vector<LWidget*> interfaceObjects;
         std::vector<LWidget*> nonInterfaceObjects;
 

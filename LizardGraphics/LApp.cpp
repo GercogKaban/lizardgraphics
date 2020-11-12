@@ -149,18 +149,17 @@ namespace LGraphics
 
     void LApp::setMatrices()
     {
-        auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
-        glm::vec3 pos(14.0f, 14.0f, 0.0f);
-        float d = 10.0f;
+        refreshCamera();
+        refreshProjection();
+        //glm::vec3 pos(14.0f, 14.0f, 0.0f);
+        //float d = 10.0f;
 
-        float t = sqrt(3);
-        view = glm::lookAt(pos + d * glm::vec3(t, t, t),
-            glm::vec3(pos),
-            glm::vec3(0.0f, 0.0f, 1.0f));
+        //view = glm::lookAt(pos + d * glm::vec3(t, t, t),
+        //    glm::vec3(pos),
+        //    glm::vec3(0.0f, 0.0f, 1.0f));
 
 
         //projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
-        projection = glm::ortho(d*-1.0f, d*1.0f, d*-1.0f / aspect, d*1.0f / aspect, 0.1f, 1000.0f);
 
         //auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
         //view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
@@ -186,6 +185,20 @@ namespace LGraphics
         glfwGetCursorPos(getWindowHandler(), &mouse_x, &mouse_y);
         auto mouse = pointOnScreenToGlCoords(getWindowSize(), { (float)mouse_x ,(float)mouse_y });
         w->move(fvect3{(float)mouse.x,(float)mouse.y,w->getMove().z});
+    }
+
+    void LApp::refreshCamera()
+    {
+        float t = sqrt(3);
+        view = glm::lookAt(viewPoint + viewRadius * glm::vec3(t, t, t),
+            glm::vec3(viewPoint),
+            glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
+    void LApp::refreshProjection()
+    {
+        auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
+        projection = glm::ortho(viewRadius*-1.0f, viewRadius*1.0f, viewRadius*-1.0f / aspect, viewRadius*1.0f / aspect, 0.1f, 1000.0f);
     }
 
     void LApp::init()

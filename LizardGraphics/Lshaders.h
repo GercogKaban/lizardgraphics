@@ -32,10 +32,10 @@ namespace LShaders
         "uniform bool sampleTexture;\n"
         "void main()\n"
         "{\n"
-        "if (color.a > 0) discard;\n"
         //"if ((pow(mouse.x - gl_FragCoord.x,2) + pow(mouse.y - gl_FragCoord.y,2)) <= 1.0) data_SSBO = 1;\n"
         "if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n"
         "else color = color_;\n"
+        "if (color.a - 0.1f < 0) discard;\n"
         "}\n\0";
     
     const char symbol_v[] =
