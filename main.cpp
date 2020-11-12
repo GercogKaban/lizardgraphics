@@ -98,7 +98,7 @@ int main()
     //msg->color(0, 0, 0);
 
     auto msg = new LMessageBox(&app, "gfreo[gker[ok gker[ogkero[g gker[ogkre[o kgkereo");
-
+    
     app.setSleepTime(5);
     app.setWidgetsMovability(true);
     app.loop();
