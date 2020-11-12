@@ -13,9 +13,6 @@ namespace LGraphics
         const szvect2 textureSize = { 1180,79 };
         fvect2 textureSizeF = textureSize.xy;
 
-
-        
-
         textCoords = new GLfloat*[charIndex_to - charIndex_from];
         for (size_t i = 0; i < charIndex_to - charIndex_from; ++i)
             textCoords[i] = new GLfloat[8];
