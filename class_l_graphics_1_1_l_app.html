@@ -142,9 +142,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setMouseCallback</b> 
 <tr class="memitem:a15f3c7de558e00fe9df67a634e4fe4a8"><td class="memItemLeft" align="right" valign="top"><a id="a15f3c7de558e00fe9df67a634e4fe4a8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setScrollCallback</b> (std::function&lt; void(GLFWwindow *window, double xoffset, double yoffset)&gt;callback)</td></tr>
 <tr class="separator:a15f3c7de558e00fe9df67a634e4fe4a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba4c2c68f7bd0d981861ecd025e10cca"><td class="memItemLeft" align="right" valign="top"><a id="aba4c2c68f7bd0d981861ecd025e10cca"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjects</b> ()</td></tr>
-<tr class="separator:aba4c2c68f7bd0d981861ecd025e10cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadb52da3a324e0068e351ec6e4952a56"><td class="memItemLeft" align="right" valign="top"><a id="aadb52da3a324e0068e351ec6e4952a56"></a>
+std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getInterfaceObjects</b> ()</td></tr>
+<tr class="separator:aadb52da3a324e0068e351ec6e4952a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6940fc46372109a0bd0129df3cbaa25"><td class="memItemLeft" align="right" valign="top"><a id="ae6940fc46372109a0bd0129df3cbaa25"></a>
+std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getNonInterfaceObjects</b> ()</td></tr>
+<tr class="separator:ae6940fc46372109a0bd0129df3cbaa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f431aed51af3686bd8cf50025d3803b"><td class="memItemLeft" align="right" valign="top"><a id="a9f431aed51af3686bd8cf50025d3803b"></a>
 std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getTextObjects</b> ()</td></tr>
 <tr class="separator:a9f431aed51af3686bd8cf50025d3803b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,12 +193,15 @@ virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getOb
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a8eb4796162bb6ee9bd5ff0a93cf09a2c"><td class="memItemLeft" align="right" valign="top"><a id="a8eb4796162bb6ee9bd5ff0a93cf09a2c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initTextures</b> (std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;objects)</td></tr>
+<tr class="separator:a8eb4796162bb6ee9bd5ff0a93cf09a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfe898eb0fa1eecfea9ebf6ee38453ef"><td class="memItemLeft" align="right" valign="top"><a id="abfe898eb0fa1eecfea9ebf6ee38453ef"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> ()</td></tr>
 <tr class="separator:abfe898eb0fa1eecfea9ebf6ee38453ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb4b5004d5d8ad1be75bee12802514e1"><td class="memItemLeft" align="right" valign="top"><a id="adb4b5004d5d8ad1be75bee12802514e1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
-<tr class="separator:adb4b5004d5d8ad1be75bee12802514e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d789e46003a8db6e390a7757362a7bd"><td class="memItemLeft" align="right" valign="top"><a id="a4d789e46003a8db6e390a7757362a7bd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, bool isInterfaceObj)</td></tr>
+<tr class="separator:a4d789e46003a8db6e390a7757362a7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memItemLeft" align="right" valign="top"><a id="a1dde3b366b5bd49db35b97ec6f776a85"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>moveWidgetToMouse</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
 <tr class="separator:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -241,9 +247,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ad7cd9fc2d081c638732d4048e03034df"><td class="memItemLeft" align="right" valign="top"><a id="ad7cd9fc2d081c638732d4048e03034df"></a>
 GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>window</b></td></tr>
 <tr class="separator:ad7cd9fc2d081c638732d4048e03034df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21d43fe9019686cc4d0df53635009362"><td class="memItemLeft" align="right" valign="top"><a id="a21d43fe9019686cc4d0df53635009362"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>objects</b></td></tr>
-<tr class="separator:a21d43fe9019686cc4d0df53635009362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa42b7178a120cd31c92ad8958c096086"><td class="memItemLeft" align="right" valign="top"><a id="aa42b7178a120cd31c92ad8958c096086"></a>
+std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>interfaceObjects</b></td></tr>
+<tr class="separator:aa42b7178a120cd31c92ad8958c096086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab34f59e41dda5b1386e77cc85ab011bf"><td class="memItemLeft" align="right" valign="top"><a id="ab34f59e41dda5b1386e77cc85ab011bf"></a>
+std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nonInterfaceObjects</b></td></tr>
+<tr class="separator:ab34f59e41dda5b1386e77cc85ab011bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1e1330416ea85067929923545ffbda1"><td class="memItemLeft" align="right" valign="top"><a id="af1e1330416ea85067929923545ffbda1"></a>
 std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textObjects</b></td></tr>
 <tr class="separator:af1e1330416ea85067929923545ffbda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,9 +277,6 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sleepTime</b> = 0</
 <tr class="memitem:acceef3b39a6fd0159be42a7425605a95"><td class="memItemLeft" align="right" valign="top"><a id="acceef3b39a6fd0159be42a7425605a95"></a>
 <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>activeWidget</b> = nullptr</td></tr>
 <tr class="separator:acceef3b39a6fd0159be42a7425605a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4373f59d0ccd3c2d149a7c7a90ef853"><td class="memItemLeft" align="right" valign="top"><a id="ad4373f59d0ccd3c2d149a7c7a90ef853"></a>
-<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>prevActiveWidget</b> = nullptr</td></tr>
-<tr class="separator:ad4373f59d0ccd3c2d149a7c7a90ef853"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fc1aa7f99b5f09d06706d5782e28aaf"><td class="memItemLeft" align="right" valign="top"><a id="a6fc1aa7f99b5f09d06706d5782e28aaf"></a>
 <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>widgetToMove</b> = nullptr</td></tr>
 <tr class="separator:a6fc1aa7f99b5f09d06706d5782e28aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
