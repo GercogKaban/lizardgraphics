@@ -10,6 +10,7 @@
 
 namespace LGraphics
 {
+    class LColorBar;
     namespace
     {
     }
@@ -24,6 +25,7 @@ namespace LGraphics
     class LApp : public LObject
     {
         friend LRectangleShape;
+        friend LColorBar;
 
     public:
         
@@ -148,7 +150,7 @@ namespace LGraphics
         bool widgetsMovability = false;
 
         LBuffer* standartRectBuffer;
-        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader;
+        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader;
 
         glm::mat4 view, projection;
 

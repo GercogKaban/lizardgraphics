@@ -95,6 +95,19 @@ namespace LShaders
         "if (color.a == 0.0) color.rgba = vec4(color_.rgb, 1.0f);\n"
         "}\n\0";
 
+    const char colorBar_f[]=
+        "#version 330 core\n"
+        "in vec2 TexCoord;\n"
+        "out vec4 color;\n"
+        "uniform vec4 firstColor;\n"
+        "uniform vec4 secondColor;\n"
+        "uniform int border;\n"
+        "void main()\n"
+        "{\n"
+        "if (gl_FragCoord.x < border) color = secondColor; \n"
+        "else color = firstColor;"
+        "}\n\0";
+
     /*!
     @brief Класс шейдера.
 

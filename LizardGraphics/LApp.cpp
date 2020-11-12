@@ -214,6 +214,7 @@ namespace LGraphics
         standartInterfaceshader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
         standartWorldObjShader = new LShaders::Shader(LShaders::world_v, LShaders::interface_f);
         checkMarkShader = new LShaders::Shader(LShaders::interface_v, LShaders::checkMark_f);
+        colorBarShader = new LShaders::Shader(LShaders::interface_v, LShaders::colorBar_f);
         setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
     }

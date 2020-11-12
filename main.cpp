@@ -11,6 +11,7 @@
 #include "LFlag.h"
 #include "LCounter.h"
 #include "LMessageBox.h"
+#include "LColorBar.h"
 
 #include "CodeGen.h"
 //#include "testFile.hxx"
@@ -97,7 +98,9 @@ int main()
     //msg->setTextColor(255, 0, 0);
     //msg->color(0, 0, 0);
 
-    auto msg = new LMessageBox(&app, "gfreo[gker[ok gker[ogkero[g gker[ogkre[o kgkereo");
+    auto colorBar = new LColorBar(&app);
+    colorBar->setFullness(1.0f);
+    //auto msg = new LMessageBox(&app, "gfreo[gker[ok gker[ogkero[g gker[ogkre[o kgkereo");
     
     app.setSleepTime(5);
     app.setWidgetsMovability(true);
