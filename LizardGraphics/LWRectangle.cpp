@@ -26,8 +26,8 @@ void LGraphics::LWRectangle::setMatrices()
 {
     view =
         glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f));
 
     auto aspect = (float)app->getWindowSize().x / (float)app->getWindowSize().y;
     //projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
@@ -74,7 +74,7 @@ void LGraphics::LWRectangle::draw()
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
 
-    glUniform3f(glGetUniformLocation(shader, "lightPos"), camera.x - 0.5f, camera.y - 0.5f, camera.z);
+    glUniform3f(glGetUniformLocation(shader, "lightPos"), camera.x, camera.y, camera.z);
     glBindVertexArray(buffer->getVaoNum());
 
     glBindVertexArray(buffer->getVaoNum());

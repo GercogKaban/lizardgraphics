@@ -37,7 +37,7 @@ namespace LShaders
         "else color = color_;\n"
         "if (color.a - 0.1f < 0) discard;\n"
         "}\n\0";
-    
+
     const char symbol_v[] =
         "#version 330 core\n"
         "layout (location = 0) in vec4 vertex;\n"
@@ -81,7 +81,7 @@ namespace LShaders
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
         "}\n";
 
-    const char checkMark_f[] = 
+    const char checkMark_f[] =
         "#version 330 core\n"
         "in vec2 TexCoord;\n"
         "out vec4 color;\n"
@@ -95,7 +95,7 @@ namespace LShaders
         "if (color.a == 0.0) color.rgba = vec4(color_.rgb, 1.0f);\n"
         "}\n\0";
 
-    const char colorBar_f[]=
+    const char colorBar_f[] =
         "#version 330 core\n"
         "in vec2 TexCoord;\n"
         "out vec4 color;\n"
@@ -114,31 +114,33 @@ namespace LShaders
         "layout (location = 0) in vec3 position;\n"
         "layout (location = 1) in vec2 texCoord;\n"
         "out vec2 TexCoord;\n"
-        "out vec3 FragPos;\n"
-        "out vec3 Normal;\n"
+        "out vec3 eyeCordFs;\n"
+        "out vec3 eyeNormalFs;\n"
         "uniform bool isometric;\n"
         "uniform mat4 model;\n"
         "uniform mat4 view;\n"
         "uniform mat4 projection;\n"
         "void main()\n"
         "{\n"
-        "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
-        "vec4 temp = projection * view * model * vec4(position, 1.0f);\n"
+        "mat4 modelView = view*model;\n"
+        "vec4 temp = projection * modelView * vec4(position, 1.0f);\n"
         "gl_Position = temp;\n"
         "if (isometric) {\n"
         "gl_Position.x = temp.x - temp.y;\n"
         "gl_Position.y = (temp.x + temp.y)/2.0f;\n"
         "}\n"
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
-        "FragPos = vec3(model * vec4(position, 1.0f));\n"
-        "Normal = mat3(transpose(inverse(model*view * projection))) * normal;"
+        "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
+        "mat4 normalMatrix = transpose(inverse(modelView));\n"
+        "eyeCordFs = vec3(modelView * vec4(position, 1.0f));\n"
+        "eyeNormalFs = normalize(vec3(normalMatrix * vec4(normal,0.0f)));\n"
         "}\n";
 
     const char lightningShader_f[] =
         "#version 330 core\n"
         "in vec2 TexCoord;\n"
-        "in vec3 FragPos;\n"
-        "in vec3 Normal;\n"
+        "in vec3 eyeCordFs;\n"
+        "in vec3 eyeNormalFs;\n"
         "out vec4 color;\n"
         "uniform sampler2D ourTexture;\n"
         "uniform vec4 color_;\n"
@@ -146,9 +148,8 @@ namespace LShaders
         "uniform vec3 lightPos;\n"
         "void main()\n"
         "{\n"
-        "vec3 norm = normalize(Normal);\n"
-        "vec3 lightDir = normalize(lightPos - FragPos);\n"
-        "float diff = max(dot(norm, lightDir), 0.0);\n"
+        "vec3 lightDir = normalize(lightPos - eyeCordFs);\n"
+        "float diff = max(dot(eyeNormalFs, lightDir), 0.0);\n"
         "vec3 diffuse = diff * vec3(1.0f,1.0f,1.0f);\n"
         "float ambientStrength = 0.25f;\n"
         "vec3 ambient = ambientStrength * vec3(1.0f,1.0f,1.0f);\n"
