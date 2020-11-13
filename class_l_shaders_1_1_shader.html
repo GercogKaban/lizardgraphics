@@ -81,9 +81,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aad4c5852d69494b8e9796ae311e8899a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_shaders_1_1_shader.html#aad4c5852d69494b8e9796ae311e8899a">Shader</a> (const GLchar *v_shader, const GLchar *f_shader)</td></tr>
-<tr class="memdesc:aad4c5852d69494b8e9796ae311e8899a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор  <a href="class_l_shaders_1_1_shader.html#aad4c5852d69494b8e9796ae311e8899a">More...</a><br /></td></tr>
-<tr class="separator:aad4c5852d69494b8e9796ae311e8899a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd07e4d6b98c0c66ab2fcaf9bc562c1d"><td class="memItemLeft" align="right" valign="top"><a id="acd07e4d6b98c0c66ab2fcaf9bc562c1d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadShaders</b> (const char *vertShader, const char *fragShader)</td></tr>
+<tr class="separator:acd07e4d6b98c0c66ab2fcaf9bc562c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbd6c2497f4103bd7c35cfb389f4a87d"><td class="memItemLeft" align="right" valign="top"><a id="afbd6c2497f4103bd7c35cfb389f4a87d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initShaders</b> (const GLchar *v_shader, const GLchar *f_shader)</td></tr>
+<tr class="separator:afbd6c2497f4103bd7c35cfb389f4a87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb835ae39a7de18070cf949e6e2a9fb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">Shader</a> (const GLchar *v_shader, const GLchar *f_shader, bool sourceCode=true)</td></tr>
+<tr class="memdesc:aeb835ae39a7de18070cf949e6e2a9fb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор  <a href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">More...</a><br /></td></tr>
+<tr class="separator:aeb835ae39a7de18070cf949e6e2a9fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3294787b69e6869b0788e24824bd19e5"><td class="memItemLeft" align="right" valign="top"><a id="a3294787b69e6869b0788e24824bd19e5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bindShader</b> (const GLchar *shader, short shaderType)</td></tr>
 <tr class="separator:a3294787b69e6869b0788e24824bd19e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,8 +106,8 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <div class="textblock"><p>Класс шейдера. </p>
 <p>Создаёт вершинный и фрагментный шейдер. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aad4c5852d69494b8e9796ae311e8899a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad4c5852d69494b8e9796ae311e8899a">&#9670;&nbsp;</a></span>Shader()</h2>
+<a id="aeb835ae39a7de18070cf949e6e2a9fb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb835ae39a7de18070cf949e6e2a9fb1">&#9670;&nbsp;</a></span>Shader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -119,7 +125,13 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const GLchar *&#160;</td>
-          <td class="paramname"><em>f_shader</em>&#160;</td>
+          <td class="paramname"><em>f_shader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sourceCode</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
