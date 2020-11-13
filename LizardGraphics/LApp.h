@@ -101,6 +101,8 @@ namespace LGraphics
         glm::vec3 getViewPoint() const { return viewPoint; }
         float getViewRadius() const { return viewRadius; }
 
+        LShaders::Shader* getLightningShader() { return experimentalLightShader; }
+
             
     protected:
 
@@ -151,7 +153,6 @@ namespace LGraphics
 
         LBuffer* standartRectBuffer;
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader;
-        LShaders::Shader* getLightShader(){ return experimentalLightShader; }
 
         glm::mat4 view, projection;
 
