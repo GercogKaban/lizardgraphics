@@ -151,6 +151,7 @@ namespace LGraphics
 
         LBuffer* standartRectBuffer;
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader;
+        LShaders::Shader* getLightShader(){ return experimentalLightShader; }
 
         glm::mat4 view, projection;
 
