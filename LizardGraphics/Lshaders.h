@@ -108,6 +108,55 @@ namespace LShaders
         "else color = firstColor;"
         "}\n\0";
 
+
+    const char lightningShader_v[] =
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 position;\n"
+        "layout (location = 1) in vec2 texCoord;\n"
+        "out vec2 TexCoord;\n"
+        "out vec3 FragPos;\n"
+        "out vec3 Normal;\n"
+        "uniform bool isometric;\n"
+        "uniform mat4 model;\n"
+        "uniform mat4 view;\n"
+        "uniform mat4 projection;\n"
+        "void main()\n"
+        "{\n"
+        "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
+        "vec4 temp = projection * view * model * vec4(position, 1.0f);\n"
+        "gl_Position = temp;\n"
+        "if (isometric) {\n"
+        "gl_Position.x = temp.x - temp.y;\n"
+        "gl_Position.y = (temp.x + temp.y)/2.0f;\n"
+        "}\n"
+        "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
+        "FragPos = vec3(model * vec4(position, 1.0f));\n"
+        "Normal = mat3(transpose(inverse(model*view * projection))) * normal;"
+        "}\n";
+
+    const char lightningShader_f[] =
+        "#version 330 core\n"
+        "in vec2 TexCoord;\n"
+        "in vec3 FragPos;\n"
+        "in vec3 Normal;\n"
+        "out vec4 color;\n"
+        "uniform sampler2D ourTexture;\n"
+        "uniform vec4 color_;\n"
+        "uniform bool sampleTexture;\n"
+        "uniform vec3 lightPos;\n"
+        "void main()\n"
+        "{\n"
+        "vec3 norm = normalize(Normal);\n"
+        "vec3 lightDir = normalize(lightPos - FragPos);\n"
+        "float diff = max(dot(norm, lightDir), 0.0);\n"
+        "vec3 diffuse = diff * vec3(1.0f,1.0f,1.0f);\n"
+        "float ambientStrength = 0.25f;\n"
+        "vec3 ambient = ambientStrength * vec3(1.0f,1.0f,1.0f);\n"
+        "vec4 result = vec4(ambient + diffuse,1.0f) * color_;\n"
+        "if (sampleTexture) color = texture(ourTexture, TexCoord)*result;\n"
+        "else color = result;\n"
+        "}\n\0";
+
     /*!
     @brief Класс шейдера.
 

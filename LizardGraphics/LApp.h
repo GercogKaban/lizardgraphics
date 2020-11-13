@@ -150,7 +150,7 @@ namespace LGraphics
         bool widgetsMovability = false;
 
         LBuffer* standartRectBuffer;
-        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader;
+        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader;
 
         glm::mat4 view, projection;
 

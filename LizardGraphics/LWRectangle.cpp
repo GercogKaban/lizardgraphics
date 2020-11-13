@@ -47,6 +47,7 @@ void LGraphics::LWRectangle::draw()
     glfwGetCursorPos(app->getWindowHandler(), &xpos, &ypos);
     glBindVertexArray(buffer->getVaoNum());
 
+    auto camera = app->getViewPoint();
     // test
     //int data = -1;
 
@@ -72,6 +73,10 @@ void LGraphics::LWRectangle::draw()
     glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
+
+    glUniform3f(glGetUniformLocation(shader, "lightPos"), camera.x - 0.5f, camera.y - 0.5f, camera.z);
+    glBindVertexArray(buffer->getVaoNum());
+
     glBindVertexArray(buffer->getVaoNum());
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
 
