@@ -104,7 +104,7 @@ namespace LGraphics
 
     void LApp::deleteWidget(LWidget* w)
     {
-        std::vector<LWidget*>& obj = w->isInterfaceObject() ? interfaceObjects  : nonInterfaceObjects;
+        std::vector<LWidget*>& obj = w->isInterfaceObject() ? interfaceObjects : nonInterfaceObjects;
         for (size_t i = 0; i < obj.size(); ++i)
             if (obj.operator[](i) == w)
             {
@@ -184,7 +184,7 @@ namespace LGraphics
         double mouse_x, mouse_y;
         glfwGetCursorPos(getWindowHandler(), &mouse_x, &mouse_y);
         auto mouse = pointOnScreenToGlCoords(getWindowSize(), { (float)mouse_x ,(float)mouse_y });
-        w->move(fvect3{(float)mouse.x,(float)mouse.y,w->getMove().z});
+        w->move(fvect3{ (float)mouse.x,(float)mouse.y,w->getMove().z });
     }
 
     void LApp::refreshCamera()
@@ -215,7 +215,7 @@ namespace LGraphics
         standartWorldObjShader = new LShaders::Shader(LShaders::world_v, LShaders::interface_f);
         checkMarkShader = new LShaders::Shader(LShaders::interface_v, LShaders::checkMark_f);
         colorBarShader = new LShaders::Shader(LShaders::interface_v, LShaders::colorBar_f);
-        experimentalLightShader = new LShaders::Shader(LShaders::lightningShader_v, LShaders::lightningShader_f);
+        experimentalLightShader = new LShaders::Shader("light_v.vs", "light_f.fs", false);
         setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
     }
@@ -251,7 +251,7 @@ namespace LGraphics
 
         auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
         {
-            static_cast<LApp*>(glfwGetWindowUserPointer(w))->cursor_position_callback(w, xpos,ypos);
+            static_cast<LApp*>(glfwGetWindowUserPointer(w))->cursor_position_callback(w, xpos, ypos);
         };
 
         auto mouse = [](GLFWwindow* w, int button, int action, int mods)
@@ -322,8 +322,8 @@ namespace LGraphics
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         {
             size_t num = 0;
-            for (int i = objects.size()-1; i > -1; --i)
-            //for (auto& o = objects.rbegin(); o < objects.rend(); o++, num++)
+            for (int i = objects.size() - 1; i > -1; --i)
+                //for (auto& o = objects.rbegin(); o < objects.rend(); o++, num++)
             {
                 auto o = objects[i];
 
@@ -365,15 +365,15 @@ namespace LGraphics
         {
             widgetToMove = nullptr;
             activeWidget = nullptr;
-        //    for (auto& o : objects)
-        //    {
-        //        for (auto& innerW : o->getInnerWidgets())
-        //            if (dynamic_cast<LScroller*>(innerW) && activeWidget == (LScroller*)innerW)
-        //            {
-        //                if (activeWidget) activeWidget->breakAnimation();
-        //                activeWidget = ((LScroller*)innerW)->parent;
-        //            }
-        //    }
+            //    for (auto& o : objects)
+            //    {
+            //        for (auto& innerW : o->getInnerWidgets())
+            //            if (dynamic_cast<LScroller*>(innerW) && activeWidget == (LScroller*)innerW)
+            //            {
+            //                if (activeWidget) activeWidget->breakAnimation();
+            //                activeWidget = ((LScroller*)innerW)->parent;
+            //            }
+            //    }
         }
 
         if (widgetToMove) moveWidgetToMouse(widgetToMove);

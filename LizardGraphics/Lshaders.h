@@ -1,7 +1,10 @@
 ﻿#pragma once
 
 #include <string>
+#include <fstream>
+#include <iostream>
 #include "include/GLEW/glew.h"
+
 
 namespace LShaders
 {
@@ -114,33 +117,31 @@ namespace LShaders
         "layout (location = 0) in vec3 position;\n"
         "layout (location = 1) in vec2 texCoord;\n"
         "out vec2 TexCoord;\n"
-        "out vec3 eyeCordFs;\n"
-        "out vec3 eyeNormalFs;\n"
+        "out vec3 FragPos;\n"
+        "out vec3 Normal;\n"
         "uniform bool isometric;\n"
         "uniform mat4 model;\n"
         "uniform mat4 view;\n"
         "uniform mat4 projection;\n"
         "void main()\n"
         "{\n"
-        "mat4 modelView = view*model;\n"
-        "vec4 temp = projection * modelView * vec4(position, 1.0f);\n"
+        "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
+        "vec4 temp = projection * view * model * vec4(position, 1.0f);\n"
         "gl_Position = temp;\n"
         "if (isometric) {\n"
         "gl_Position.x = temp.x - temp.y;\n"
         "gl_Position.y = (temp.x + temp.y)/2.0f;\n"
         "}\n"
         "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
-        "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
-        "mat4 normalMatrix = transpose(inverse(modelView));\n"
-        "eyeCordFs = vec3(modelView * vec4(position, 1.0f));\n"
-        "eyeNormalFs = normalize(vec3(normalMatrix * vec4(normal,0.0f)));\n"
+        "FragPos = vec3(model * vec4(position, 1.0f));\n"
+        "Normal = mat3(transpose(inverse(model*view * projection))) * normal;"
         "}\n";
 
     const char lightningShader_f[] =
         "#version 330 core\n"
         "in vec2 TexCoord;\n"
-        "in vec3 eyeCordFs;\n"
-        "in vec3 eyeNormalFs;\n"
+        "in vec3 FragPos;\n"
+        "in vec3 Normal;\n"
         "out vec4 color;\n"
         "uniform sampler2D ourTexture;\n"
         "uniform vec4 color_;\n"
@@ -148,8 +149,9 @@ namespace LShaders
         "uniform vec3 lightPos;\n"
         "void main()\n"
         "{\n"
-        "vec3 lightDir = normalize(lightPos - eyeCordFs);\n"
-        "float diff = max(dot(eyeNormalFs, lightDir), 0.0);\n"
+        "vec3 norm = normalize(Normal);\n"
+        "vec3 lightDir = normalize(lightPos - FragPos);\n"
+        "float diff = max(dot(norm, lightDir), 0.0);\n"
         "vec3 diffuse = diff * vec3(1.0f,1.0f,1.0f);\n"
         "float ambientStrength = 0.25f;\n"
         "vec3 ambient = ambientStrength * vec3(1.0f,1.0f,1.0f);\n"
@@ -157,6 +159,55 @@ namespace LShaders
         "if (sampleTexture) color = texture(ourTexture, TexCoord)*result;\n"
         "else color = result;\n"
         "}\n\0";
+
+    //const char lightningShader_v[] =
+    //    "#version 330 core\n"
+    //    "layout (location = 0) in vec3 position;\n"
+    //    "layout (location = 1) in vec2 texCoord;\n"
+    //    "out vec2 TexCoord;\n"
+    //    "out vec3 eyeCordFs;\n"
+    //    "out vec3 eyeNormalFs;\n"
+    //    "uniform bool isometric;\n"
+    //    "uniform mat4 model;\n"
+    //    "uniform mat4 view;\n"
+    //    "uniform mat4 projection;\n"
+    //    "void main()\n"
+    //    "{\n"
+    //    "mat4 modelView = view*model;\n"
+    //    "vec4 temp = projection * modelView * vec4(position, 1.0f);\n"
+    //    "gl_Position = temp;\n"
+    //    "if (isometric) {\n"
+    //    "gl_Position.x = temp.x - temp.y;\n"
+    //    "gl_Position.y = (temp.x + temp.y)/2.0f;\n"
+    //    "}\n"
+    //    "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
+    //    "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
+    //    "mat4 normalMatrix = transpose(inverse(model*view));\n"
+    //    "eyeCordFs = vec3(model*view * vec4(position, 1.0f));\n"
+    //    "eyeNormalFs = normalize(vec3(normalMatrix * vec4(normal,0.0f)));\n"
+    //    "}\n";
+
+    //const char lightningShader_f[] =
+    //    "#version 330 core\n"
+    //    "in vec2 TexCoord;\n"
+    //    "in vec3 eyeCordFs;\n"
+    //    "in vec3 eyeNormalFs;\n"
+    //    "out vec4 color;\n"
+    //    "uniform sampler2D ourTexture;\n"
+    //    "uniform vec4 color_;\n"
+    //    "uniform bool sampleTexture;\n"
+    //    "uniform vec3 lightPos;\n"
+    //    "void main()\n"
+    //    "{\n"
+    //    "vec3 lightDir = normalize(lightPos - eyeCordFs);\n"
+    //    "float diff = max(dot(eyeNormalFs, lightDir), 0.0);\n"
+    //    "vec3 diffuse = diff * vec3(1.0f,1.0f,1.0f);\n"
+    //    "float ambientStrength = 0.25f;\n"
+    //    "vec3 ambient = ambientStrength * vec3(1.0f,1.0f,1.0f);\n"
+    //    "vec4 result = vec4(ambient + diffuse,1.0f) * color_;\n"
+    //    "if (sampleTexture) color = texture(ourTexture, TexCoord)*result;\n"
+    //    "else color = result;\n"
+    //    "}\n\0";
 
     /*!
     @brief Класс шейдера.
@@ -173,15 +224,33 @@ namespace LShaders
 
         }
 
-        /*!
-        @brief Конструктор
 
-        Создаёт вершинный и фрагментный шейдер.
-        @param v_shader - массив вершинного шейдера
-        @param v_shader - массив фрагментного шейдера
-        */
-        Shader(const GLchar* v_shader, const GLchar* f_shader)
+        void loadShaders(const char* vertShader, const char* fragShader)
         {
+            std::ifstream in;
+            in.open(vertShader);
+            std::string vertShaderSource, fragShaderSource;
+            char temp[256];
+            while (in.getline(temp, 256))
+            {
+                vertShaderSource += temp;
+                vertShaderSource += '\n';
+            }
+            in.close();
+            in.open(fragShader);
+            while (in.getline(temp, 256))
+            {
+                fragShaderSource += temp;
+                fragShaderSource += '\n';
+            }
+            in.close();
+
+            initShaders(vertShaderSource.data(), fragShaderSource.data());
+        }
+
+        void initShaders(const GLchar* v_shader, const GLchar* f_shader)
+        {
+            char infoLog[1488];
             GLuint vertex, fragment;
             GLint success;
             vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -189,7 +258,10 @@ namespace LShaders
             glCompileShader(vertex);
             glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
             if (!success)
+            {
                 throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
+            }
+
 
             // Fragment Shader
             fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -198,7 +270,12 @@ namespace LShaders
 
             glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
             if (!success)
-                throw std::exception("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
+            {
+                int a = 0;
+                glGetProgramInfoLog(fragment, 1488, &a, infoLog);
+                auto err = glGetError();
+                std::cout << "ERROR::FRAGMENT_SHADER_FAILED\n" << infoLog << std::endl;
+            }
 
             // Shader Program
             this->program = glCreateProgram();
@@ -206,13 +283,32 @@ namespace LShaders
             glAttachShader(this->program, fragment);
             glLinkProgram(this->program);
 
+
             glGetProgramiv(this->program, GL_LINK_STATUS, &success);
             if (!success)
-                throw std::exception("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
+            {
+                glGetProgramInfoLog(this->program, 512, NULL, infoLog);
+                std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+            }
+
 
             glDeleteShader(vertex);
             glDeleteShader(fragment);
+        }
 
+        /*!
+        @brief Конструктор
+
+        Создаёт вершинный и фрагментный шейдер.
+        @param v_shader - массив вершинного шейдера
+        @param v_shader - массив фрагментного шейдера
+        */
+        Shader(const GLchar* v_shader, const GLchar* f_shader, bool sourceCode = true)
+        {
+            if (sourceCode)
+                initShaders(v_shader, f_shader);
+            else
+                loadShaders(v_shader, f_shader);
         }
 
         void bindShader(const GLchar* shader, short shaderType)
