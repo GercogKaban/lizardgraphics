@@ -49,9 +49,20 @@ void LGraphics::LWRectangle::draw()
     if (isHidden()) return;
 
     getShader()->use();
+
+    glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+    glm::mat4 lightProjection, lightView;
+    glm::mat4 lightSpaceMatrix;
+    float near_plane = 1.0f, far_plane = 7.5f;
+    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+    lightSpaceMatrix = lightProjection * lightView;
+
     auto shader = getShader()->getShaderProgram();
     glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
     glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
+
+    glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 
     double xpos, ypos;
     glfwGetCursorPos(app->getWindowHandler(), &xpos, &ypos);
@@ -67,9 +78,16 @@ void LGraphics::LWRectangle::draw()
     //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
     //glBufferData(GL_SHADER_STORAGE_BUFFER, 4, &data, GL_STATIC_DRAW);
 
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, getTexture());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, app->getDepthMap());
 
     model = calculateModelMatrix();
+
+    float t = sqrt(3);
+    glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
+    glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
     //model = glm::mat4(1.0f);
     //model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
     //model = glm::rotate(model, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
@@ -85,7 +103,7 @@ void LGraphics::LWRectangle::draw()
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
 
-    glUniform3f(glGetUniformLocation(shader, "lightPos"), camera.x, camera.y, camera.z);
+    //glUniform3f(glGetUniformLocation(shader, "lightPos"), camera.x, camera.y, camera.z);
     glBindVertexArray(buffer->getVaoNum());
 
     glBindVertexArray(buffer->getVaoNum());

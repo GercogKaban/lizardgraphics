@@ -19,6 +19,8 @@ namespace LGraphics
         LTimer t([&]()
         {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
         t.start();
+
+
         while (!glfwWindowShouldClose(window))
         {
             openGlDrawing.lock();
@@ -29,10 +31,43 @@ namespace LGraphics
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             beforeDrawingFunc();
 
+
+            glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+            glm::mat4 lightProjection, lightView;
+            glm::mat4 lightSpaceMatrix;
+            float near_plane = 1.0f, far_plane = 7.5f;
+            //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+            lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+            lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+            lightSpaceMatrix = lightProjection * lightView;
+            // render scene from light's point of view
+
+            glViewport(0, 0, shadowHeight, shadowWidth);
+            glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
+
             glEnable(GL_DEPTH_TEST);
             for (auto& o : nonInterfaceObjects)
                 if (!o->isHidden())
+                {
+                    o->setShader(shadowMap);
                     o->draw();
+                }
+            //simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glViewport(0, 0, getWindowSize().x, getWindowSize().y);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+            glEnable(GL_DEPTH_TEST);
+            for (auto& o : nonInterfaceObjects)
+                if (!o->isHidden())
+                {
+                    o->setShader(defaultShader);
+                    o->draw();
+                }
 
             glDisable(GL_DEPTH_TEST);
             LDISPLAY();
@@ -216,8 +251,32 @@ namespace LGraphics
         checkMarkShader = new LShaders::Shader(LShaders::interface_v, LShaders::checkMark_f);
         colorBarShader = new LShaders::Shader(LShaders::interface_v, LShaders::colorBar_f);
         experimentalLightShader = new LShaders::Shader("light_v.vs", "light_f.fs", false);
+        shadowMap = new LShaders::Shader("shadowMap.vs", "shadowMap.fs", false);
+        defaultShader = new LShaders::Shader("shadows.vs", "shadows.fs", false);
+
         setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
+
+        //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+        //unsigned int depthMapFBO;
+        glGenFramebuffers(1, &depthMapFBO);
+        // create depth texture
+        //unsigned int depthMap;
+        glGenTextures(1, &depthMap);
+        glBindTexture(GL_TEXTURE_2D, depthMap);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        float borderColor_[] = { borderColor.x,borderColor.y,borderColor.z,borderColor.w };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
+        // attach depth texture as FBO's depth buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void LApp::initOpenGl()

@@ -19,6 +19,7 @@ namespace LGraphics
         void setMatrices(LApp* app);
         void setMatrices();
         void draw() override;
+        glm::mat4 getModelMatric() const { return calculateModelMatrix(); }
 
     private:
 

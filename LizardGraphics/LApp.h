@@ -103,6 +103,8 @@ namespace LGraphics
 
         LShaders::Shader* getLightningShader() { return experimentalLightShader; }
 
+        unsigned int getDepthMap() const { return depthMap; }
+
             
     protected:
 
@@ -152,7 +154,9 @@ namespace LGraphics
         bool widgetsMovability = false;
 
         LBuffer* standartRectBuffer;
-        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader;
+
+        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader,
+            *shadowMap,*defaultShader;
 
         glm::mat4 view, projection;
 
@@ -167,6 +171,16 @@ namespace LGraphics
 
         std::function<void()> beforeDrawingFunc = []() {};
         std::function<void()> afterDrawingFunc = []() {};
+
+
+
+        // shadowMapping
+
+
+        unsigned int shadowWidth = 1024, shadowHeight = 1024;
+
+        unsigned int depthMapFBO, depthMap;
+        fvect4 borderColor = fvect4(1.0, 1.0, 1.0, 1.0);
     };
 }
 
