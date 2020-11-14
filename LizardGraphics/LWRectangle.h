@@ -14,15 +14,17 @@ namespace LGraphics
         LWRectangle(LApp* app, const char* path = nullptr);
         bool isInterfaceObject() const override { return false; }
 
+        virtual glm::vec2 getScreenCoords() const;
+
         void setMatrices(LApp* app);
         void setMatrices();
         void draw() override;
 
     private:
 
-        
+        glm::mat4 calculateModelMatrix() const;
         glm::mat4 model;
-        glm::mat4 projection, view;
+        glm::mat4 projection;
     };
 
 }

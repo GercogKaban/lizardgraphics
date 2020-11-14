@@ -1,9 +1,9 @@
 #include "LWRectangle.h"
-#include "LBuffer.h"
+#include "LRectangleBuffer.h"
 #include "LApp.h"
 #include "additional.h"
 
-#include <iostream>
+//#include <iostream>
 
 //#include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
@@ -12,22 +12,31 @@ LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
     :LRectangleShape(app, path, false)
 {
     shader = app->getStandartWorldObjShader();
-    view = app->getViewMatrix();
+    //view = app->getViewMatrix();
     projection = app->getProjectionMatrix();
+}
+
+glm::vec2 LGraphics::LWRectangle::getScreenCoords() const
+{
+    glm::vec4 coords_ = glm::vec4{
+    (((LRectangleBuffer*)buffer)->getBottomLeftCorner().x + ((LRectangleBuffer*)buffer)->getBottomRightCorner().x)/2.0f,
+    (((LRectangleBuffer*)buffer)->getTopRightCorner().y + ((LRectangleBuffer*)buffer)->getBottomRightCorner().y) / 2.0f,
+    0.0f, 1.0f};
+    return projection * app->getViewMatrix() * calculateModelMatrix() * coords_;
 }
 
 void LGraphics::LWRectangle::setMatrices(LApp* app)
 {
-    view = app->getViewMatrix();
+    //view = app->getViewMatrix();
     projection = app->getProjectionMatrix();
 }
 
 void LGraphics::LWRectangle::setMatrices()
 {
-    view =
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f));
+    //view =
+    //    glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
+    //        glm::vec3(0.0f, 0.0f, 0.0f),
+    //        glm::vec3(0.0f, 1.0f, 0.0f));
 
     auto aspect = (float)app->getWindowSize().x / (float)app->getWindowSize().y;
     //projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
@@ -59,18 +68,19 @@ void LGraphics::LWRectangle::draw()
 
     glBindTexture(GL_TEXTURE_2D, getTexture());
 
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
-    model = glm::rotate(model, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
-    model = glm::rotate(model, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
-    model = glm::rotate(model, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
-    model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
+    model = calculateModelMatrix();
+    //model = glm::mat4(1.0f);
+    //model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
+    //model = glm::rotate(model, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
+    //model = glm::rotate(model, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
+    //model = glm::rotate(model, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
+    //model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
     //model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
 
     //glUniform2f(glGetUniformLocation(shader, "mouse"), xpos, ypos);
     //glUniform2f(glGetUniformLocation(shader, "resolution"), app->getWindowSize().x, app->getWindowSize().y);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(app->getViewMatrix()));
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
 
@@ -94,4 +104,15 @@ void LGraphics::LWRectangle::draw()
     for (auto& i : innerWidgets)
         i->draw();
     //LLine::display(label);
+}
+
+glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
+{
+    glm::mat4 model_ = glm::mat4(1.0f);
+    model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
+    model_ = glm::rotate(model_, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
+    model_ = glm::rotate(model_, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
+    model_ = glm::rotate(model_, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
+    model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
+    return model_;
 }

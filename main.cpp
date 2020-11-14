@@ -13,6 +13,8 @@
 #include "LMessageBox.h"
 #include "LColorBar.h"
 
+#include "additional.h"
+
 #include "CodeGen.h"
 //#include "testFile.hxx"
 
@@ -98,10 +100,15 @@ int main()
     //msg->setTextColor(255, 0, 0);
     //msg->color(0, 0, 0);
 
-    auto colorBar = new LColorBar(&app);
-    colorBar->setFullness(1.0f);
+    //auto colorBar = new LColorBar(&app);
+    //colorBar->setFullness(1.0f);
     //auto msg = new LMessageBox(&app, "gfreo[gker[ok gker[ogkero[g gker[ogkre[o kgkereo");
     
+    auto test = new LWRectangle(&app);
+    //test->move(-0.5f,0.5f,0.0f);
+    auto coords = test->getScreenCoords();
+    auto screenCoords = glCoordsToScreenCoords(app.getWindowSize(), fvect2(coords.x,coords.y));
+
     app.setSleepTime(5);
     app.setWidgetsMovability(true);
     app.loop();
