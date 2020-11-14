@@ -202,6 +202,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>getViewRadius</b> ()
 <tr class="memitem:ab28a47af2408e8279e3d7e65d7db9568"><td class="memItemLeft" align="right" valign="top"><a id="ab28a47af2408e8279e3d7e65d7db9568"></a>
 <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getLightningShader</b> ()</td></tr>
 <tr class="separator:ab28a47af2408e8279e3d7e65d7db9568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21c58ec78b63659b5a854f1084b05e34"><td class="memItemLeft" align="right" valign="top"><a id="a21c58ec78b63659b5a854f1084b05e34"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getDepthMap</b> () const</td></tr>
+<tr class="separator:a21c58ec78b63659b5a854f1084b05e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487bd05904dd7f65278332d0fd4d4cad"><td class="memItemLeft" align="right" valign="top"><a id="a487bd05904dd7f65278332d0fd4d4cad"></a>
 virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> ()</td></tr>
 <tr class="separator:a487bd05904dd7f65278332d0fd4d4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -328,6 +331,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>widgetsMovability</b>
 <tr class="memitem:a8349c2430c67db2af5159e236b71883b"><td class="memItemLeft" align="right" valign="top"><a id="a8349c2430c67db2af5159e236b71883b"></a>
 <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>experimentalLightShader</b></td></tr>
 <tr class="separator:a8349c2430c67db2af5159e236b71883b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a390dd2ecdc77a437b7cdc463414a2167"><td class="memItemLeft" align="right" valign="top"><a id="a390dd2ecdc77a437b7cdc463414a2167"></a>
+<a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>shadowMap</b></td></tr>
+<tr class="separator:a390dd2ecdc77a437b7cdc463414a2167"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a109cc9a0d5f5c74590f7af40fc317d88"><td class="memItemLeft" align="right" valign="top"><a id="a109cc9a0d5f5c74590f7af40fc317d88"></a>
+<a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>defaultShader</b></td></tr>
+<tr class="separator:a109cc9a0d5f5c74590f7af40fc317d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a210929a0e08641d8c7e9dd4e52cbee0a"><td class="memItemLeft" align="right" valign="top"><a id="a210929a0e08641d8c7e9dd4e52cbee0a"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>view</b></td></tr>
 <tr class="separator:a210929a0e08641d8c7e9dd4e52cbee0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -358,6 +367,21 @@ std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom">
 <tr class="memitem:af091146bd0c80f15913a31adb86df3b7"><td class="memItemLeft" align="right" valign="top"><a id="af091146bd0c80f15913a31adb86df3b7"></a>
 std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>afterDrawingFunc</b> = []() {}</td></tr>
 <tr class="separator:af091146bd0c80f15913a31adb86df3b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3065c7c4a4edbd59b2e22855d667f1c"><td class="memItemLeft" align="right" valign="top"><a id="ac3065c7c4a4edbd59b2e22855d667f1c"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>shadowWidth</b> = 1024</td></tr>
+<tr class="separator:ac3065c7c4a4edbd59b2e22855d667f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2da22ad716b0e227eaf824e4268652cc"><td class="memItemLeft" align="right" valign="top"><a id="a2da22ad716b0e227eaf824e4268652cc"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>shadowHeight</b> = 1024</td></tr>
+<tr class="separator:a2da22ad716b0e227eaf824e4268652cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58e79ca4d5dae992ed7822ee0caf5a6a"><td class="memItemLeft" align="right" valign="top"><a id="a58e79ca4d5dae992ed7822ee0caf5a6a"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>depthMapFBO</b></td></tr>
+<tr class="separator:a58e79ca4d5dae992ed7822ee0caf5a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af90c0384b9d4f212400c0cbeab74ba3c"><td class="memItemLeft" align="right" valign="top"><a id="af90c0384b9d4f212400c0cbeab74ba3c"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>depthMap</b></td></tr>
+<tr class="separator:af90c0384b9d4f212400c0cbeab74ba3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e37c458e43bab5144ad625dec81feef"><td class="memItemLeft" align="right" valign="top"><a id="a7e37c458e43bab5144ad625dec81feef"></a>
+<a class="el" href="structvect__prototype2.html">fvect4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>borderColor</b> = <a class="el" href="structvect__prototype2.html">fvect4</a>(1.0, 1.0, 1.0, 1.0)</td></tr>
+<tr class="separator:a7e37c458e43bab5144ad625dec81feef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Класс приложения Lizard Graphics. </p>
