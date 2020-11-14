@@ -10,12 +10,12 @@ void LGraphics::LWidget::rotateX(float angleDegree)
 
 void LGraphics::LWidget::rotateY(float angleDegree)
 {
-    glm::rotate(rotate_, glm::radians(angleDegree), { 0.0f,1.0f,0.0f });
+    rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), { 0.0f,1.0f,0.0f });
 }
 
 void LGraphics::LWidget::rotateZ(float angleDegree)
 {
-    glm::rotate(rotate_, glm::radians(angleDegree), { 0.0f,0.0f,1.0f });
+    rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), { 0.0f,0.0f,1.0f });
 }
 
 //void LGraphics::LWidget::setRotate(fvect3 val)
