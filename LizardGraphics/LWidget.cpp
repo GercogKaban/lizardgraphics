@@ -5,7 +5,7 @@
 
 void LGraphics::LWidget::rotateX(float angleDegree)
 {
-    glm::rotate(rotate_, glm::radians(angleDegree), { 1.0f,0.0f,0.0f });
+    rotate_ = glm::rotate(rotate_, glm::radians(angleDegree), { 1.0f,0.0f,0.0f });
 }
 
 void LGraphics::LWidget::rotateY(float angleDegree)
