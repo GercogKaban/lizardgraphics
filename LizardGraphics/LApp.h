@@ -109,8 +109,11 @@ namespace LGraphics
         glm::vec3 getLightPos() const { return lightPos; }
         glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
 
+        bool lightIsInited() const { return lightIsInited_; }
+        void initLight() { lightIsInited_ = true; }
     protected:
 
+        bool lightIsInited_ = false;
         glm::vec3 lightPos;
         glm::mat4 lightSpaceMatrix;
 

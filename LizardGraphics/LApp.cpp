@@ -20,14 +20,18 @@ namespace LGraphics
         {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
         t.start();
         
-        //
-        setLightSpaceMatrix();
-        setLightPos(glm::vec3(4.0f, 2.0f, 3.0f));
-        //
 
         while (!glfwWindowShouldClose(window))
         {
             openGlDrawing.lock();
+            if (!lightIsInited())
+            {
+                setLightPos(glm::vec3(4.0f, 2.0f, 3.0f));
+                setLightSpaceMatrix();
+                initLight();
+            }
+
+
             fps++;
             initTextures();
             glfwPollEvents();
@@ -169,11 +173,10 @@ namespace LGraphics
 
     void LApp::setLightSpaceMatrix()
     {
-        glm::mat4 lightProjection, lightView;
         float near_plane = 1.0f, far_plane = 7.5f;
         //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-        lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-        lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+        glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
     }
 
