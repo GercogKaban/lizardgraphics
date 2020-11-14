@@ -1,4 +1,5 @@
 #include "LTextEdit.h"
+#include "pch.h"
 
 namespace LGraphics
 {

@@ -99,7 +99,7 @@ namespace LGraphics
         void rotateX(float angleDegree);
         void rotateY(float angleDegree);
         void rotateZ(float angleDegree);
-        void setRotate(fvect3 val);
+        //void setRotate(fvect3 val);
 
         virtual void turnOffColor() = 0;
 
@@ -117,7 +117,7 @@ namespace LGraphics
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
         virtual fvect3 getMove() const = 0;          ///< Возвращает вектор move виджета.
         virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
-        virtual fvect3 getRotate() const { return fvect3{ rotateX_,rotateY_,rotateZ_ }; }
+        virtual glm::mat4 getRotate() const { return rotate_; }
         virtual std::string getLabel() const = 0;
         virtual bool isIsometricView() const { return isometric; }
         virtual bool getWidgetMovability() const { return widgetMovability; }
@@ -149,7 +149,8 @@ namespace LGraphics
 
     protected:
 
-        float rotateX_ = 0.0f, rotateY_ = 0.0f, rotateZ_ = 0.0f;
+        glm::mat4 rotate_ = glm::mat4(1.0f);
+        //float rotateX_ = 0.0f, rotateY_ = 0.0f, rotateZ_ = 0.0f;
 
         std::string name;
         LApp* app = nullptr;    ///< Указатель на приложение.

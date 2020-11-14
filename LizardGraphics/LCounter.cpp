@@ -3,6 +3,7 @@
 #include "textures.h"
 #include "additional.h"
 #include "LApp.h"
+#include "pch.h"
 
 LGraphics::LCounter::LCounter(LApp * app, const std::string str, const char * path)
     :LTextEdit(app,str, path,false)

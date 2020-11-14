@@ -1,7 +1,6 @@
 #include "LMessageBox.h"
-#include "LMessageBox.h"
-#include "LMessageBox.h"
 #include "LApp.h"
+#include "pch.h"
 
 LGraphics::LMessageBox::LMessageBox(LApp* app, const std::string text, const std::string buttonText, const char* path)
     :LText(app,text,path)

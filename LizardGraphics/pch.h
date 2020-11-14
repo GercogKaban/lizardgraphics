@@ -22,6 +22,7 @@
 #include <thread>
 
 #include "vectors.h"
+
 #include "include/GLEW/glew.h"
 #include "include/GLFW/glfw3.h"
 

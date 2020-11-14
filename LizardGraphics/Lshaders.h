@@ -5,7 +5,6 @@
 #include <iostream>
 #include "include/GLEW/glew.h"
 
-
 namespace LShaders
 {
     const char interface_v[] =

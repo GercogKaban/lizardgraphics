@@ -2,6 +2,7 @@
 #include "LBuffer.h"
 #include "LColorBar.h"
 #include "additional.h"
+#include "pch.h"
 
 LGraphics::LColorBar::LColorBar(LApp* app)
     :LRectangleShape(app,nullptr,true)

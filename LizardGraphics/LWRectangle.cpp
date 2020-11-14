@@ -2,6 +2,7 @@
 #include "LRectangleBuffer.h"
 #include "LApp.h"
 #include "additional.h"
+#include "pch.h"
 
 //#include <iostream>
 
@@ -110,9 +111,10 @@ glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
 {
     glm::mat4 model_ = glm::mat4(1.0f);
     model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
-    model_ = glm::rotate(model_, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
-    model_ = glm::rotate(model_, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
-    model_ = glm::rotate(model_, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
+    model_ *= rotate_;
+    //model_ = glm::rotate(model_, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
+    //model_ = glm::rotate(model_, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
+    //model_ = glm::rotate(model_, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
     model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
     return model_;
 }

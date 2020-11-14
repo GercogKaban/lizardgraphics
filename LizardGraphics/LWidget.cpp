@@ -5,25 +5,25 @@
 
 void LGraphics::LWidget::rotateX(float angleDegree)
 {
-    rotateX_ += angleDegree;
+    glm::rotate(rotate_, angleDegree, { 1.0f,0.0f,0.0f });
 }
 
 void LGraphics::LWidget::rotateY(float angleDegree)
 {
-    rotateY_ += angleDegree;
+    glm::rotate(rotate_, angleDegree, { 0.0f,1.0f,0.0f });
 }
 
 void LGraphics::LWidget::rotateZ(float angleDegree)
 {
-    rotateZ_ += angleDegree;
+    glm::rotate(rotate_, angleDegree, { 0.0f,0.0f,1.0f });
 }
 
-void LGraphics::LWidget::setRotate(fvect3 val)
-{
-    rotateX_ = val.x;
-    rotateY_ = val.y;
-    rotateZ_ = val.z;
-}
+//void LGraphics::LWidget::setRotate(fvect3 val)
+//{
+//    rotateX_ = val.x;
+//    rotateY_ = val.y;
+//    rotateZ_ = val.z;
+//}
 
 void LGraphics::LWidget::setAnimation(std::function<void()> fun)
 {
