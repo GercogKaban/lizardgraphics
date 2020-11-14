@@ -19,7 +19,11 @@ namespace LGraphics
         LTimer t([&]()
         {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
         t.start();
-
+        
+        //
+        setLightSpaceMatrix();
+        setLightPos(glm::vec3(4.0f, 2.0f, 3.0f));
+        //
 
         while (!glfwWindowShouldClose(window))
         {
@@ -31,17 +35,7 @@ namespace LGraphics
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             beforeDrawingFunc();
 
-
-            glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
-            glm::mat4 lightProjection, lightView;
-            glm::mat4 lightSpaceMatrix;
-            float near_plane = 1.0f, far_plane = 7.5f;
-            //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-            lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-            lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-            lightSpaceMatrix = lightProjection * lightView;
-            // render scene from light's point of view
-
+            // рисуем в карту теней
             glViewport(0, 0, shadowHeight, shadowWidth);
             glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
             glClear(GL_DEPTH_BUFFER_BIT);
@@ -53,14 +47,11 @@ namespace LGraphics
                     o->setShader(shadowMap);
                     o->draw();
                 }
-            //simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, getWindowSize().x, getWindowSize().y);
+
+            // рисуем сцену
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
             glEnable(GL_DEPTH_TEST);
             for (auto& o : nonInterfaceObjects)
                 if (!o->isHidden())
@@ -169,6 +160,21 @@ namespace LGraphics
             glfwSetWindowMonitor(window, NULL, 0, 0, width, height, 10000);
             fullscreen = false;
         }
+    }
+
+    void LApp::setLightPos(glm::vec3 lightPos)
+    {
+        this->lightPos = lightPos;
+    }
+
+    void LApp::setLightSpaceMatrix()
+    {
+        glm::mat4 lightProjection, lightView;
+        float near_plane = 1.0f, far_plane = 7.5f;
+        //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+        lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
     }
 
     void LApp::initTextures(std::vector<LWidget*>& objects)

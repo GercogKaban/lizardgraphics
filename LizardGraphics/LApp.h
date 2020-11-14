@@ -106,7 +106,18 @@ namespace LGraphics
         unsigned int getDepthMap() const { return depthMap; }
 
             
+        glm::vec3 getLightPos() const { return lightPos; }
+        glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
+
     protected:
+
+        glm::vec3 lightPos;
+        glm::mat4 lightSpaceMatrix;
+
+        void setLightPos(glm::vec3 lightPos);
+        void setLightSpaceMatrix();
+
+
 
         void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();

@@ -49,20 +49,13 @@ void LGraphics::LWRectangle::draw()
     if (isHidden()) return;
 
     getShader()->use();
-
-    glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
-    glm::mat4 lightProjection, lightView;
-    glm::mat4 lightSpaceMatrix;
-    float near_plane = 1.0f, far_plane = 7.5f;
-    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightSpaceMatrix = lightProjection * lightView;
-
     auto shader = getShader()->getShaderProgram();
+    auto lightPos = app->getLightPos();
     glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
     glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
 
-    glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->getLightSpaceMatrix()));
+    glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
     double xpos, ypos;
     glfwGetCursorPos(app->getWindowHandler(), &xpos, &ypos);

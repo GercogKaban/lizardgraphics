@@ -67,11 +67,9 @@ uniform vec3 viewPos;
 uniform sampler2D ourTexture;
 uniform sampler2D shadowMap;
 uniform vec4 color_;
-
+uniform vec3 lightPos;
 uniform bool sampleTexture;
-//uniform vec3 lightPos;
 
-vec3 lightPos = vec3(4.0f, 2.0f, 3.0f);
 // function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -138,12 +136,12 @@ void main()
      
     vec3 result;
 
-    result += CalcPointLight(pointLight, norm, FragPos, viewDir);
+    //result += CalcPointLight(pointLight, norm, FragPos, viewDir);
 
     //pointLight.position.y += 12.0f;
     //pointLight.position.z = 0;
 
-    //result += CalcPointLight(pointLight, norm, FragPos, viewDir);
+    result += CalcPointLight(pointLight, norm, FragPos, viewDir);
    
     color = vec4(result,1.0f)* texture(ourTexture, TexCoords);
 
