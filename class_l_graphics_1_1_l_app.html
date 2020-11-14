@@ -205,12 +205,24 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>getViewRadius</b> ()
 <tr class="memitem:a21c58ec78b63659b5a854f1084b05e34"><td class="memItemLeft" align="right" valign="top"><a id="a21c58ec78b63659b5a854f1084b05e34"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getDepthMap</b> () const</td></tr>
 <tr class="separator:a21c58ec78b63659b5a854f1084b05e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87dae5e77e3209bcd53308c9e34cf9ad"><td class="memItemLeft" align="right" valign="top"><a id="a87dae5e77e3209bcd53308c9e34cf9ad"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getLightPos</b> () const</td></tr>
+<tr class="separator:a87dae5e77e3209bcd53308c9e34cf9ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a708e30e2645c04f7b3a56c7d9938e648"><td class="memItemLeft" align="right" valign="top"><a id="a708e30e2645c04f7b3a56c7d9938e648"></a>
+glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>getLightSpaceMatrix</b> () const</td></tr>
+<tr class="separator:a708e30e2645c04f7b3a56c7d9938e648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487bd05904dd7f65278332d0fd4d4cad"><td class="memItemLeft" align="right" valign="top"><a id="a487bd05904dd7f65278332d0fd4d4cad"></a>
 virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> ()</td></tr>
 <tr class="separator:a487bd05904dd7f65278332d0fd4d4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a06be2c20c689c7630041ff8acbdd7127"><td class="memItemLeft" align="right" valign="top"><a id="a06be2c20c689c7630041ff8acbdd7127"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLightPos</b> (glm::vec3 lightPos)</td></tr>
+<tr class="separator:a06be2c20c689c7630041ff8acbdd7127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a256184e0c3c9642e20f35fcd48d3ea3a"><td class="memItemLeft" align="right" valign="top"><a id="a256184e0c3c9642e20f35fcd48d3ea3a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLightSpaceMatrix</b> ()</td></tr>
+<tr class="separator:a256184e0c3c9642e20f35fcd48d3ea3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8eb4796162bb6ee9bd5ff0a93cf09a2c"><td class="memItemLeft" align="right" valign="top"><a id="a8eb4796162bb6ee9bd5ff0a93cf09a2c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initTextures</b> (std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;objects)</td></tr>
 <tr class="separator:a8eb4796162bb6ee9bd5ff0a93cf09a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,6 +277,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_callback</b> (
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:aac820b00851897531d0cdb06f00599b2"><td class="memItemLeft" align="right" valign="top"><a id="aac820b00851897531d0cdb06f00599b2"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>lightPos</b></td></tr>
+<tr class="separator:aac820b00851897531d0cdb06f00599b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a587d8c210fe7a8a08bbed3782d935731"><td class="memItemLeft" align="right" valign="top"><a id="a587d8c210fe7a8a08bbed3782d935731"></a>
+glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>lightSpaceMatrix</b></td></tr>
+<tr class="separator:a587d8c210fe7a8a08bbed3782d935731"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a7e0dfa3888df3199bf42bb1083413f"><td class="memItemLeft" align="right" valign="top"><a id="a0a7e0dfa3888df3199bf42bb1083413f"></a>
 <a class="el" href="class_l_graphics_1_1_l_line.html">LLine</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>textRenderer</b></td></tr>
 <tr class="separator:a0a7e0dfa3888df3199bf42bb1083413f"><td class="memSeparator" colspan="2">&#160;</td></tr>
