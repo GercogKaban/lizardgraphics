@@ -198,9 +198,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateY</b> (float an
 <tr class="memitem:a6cff4d9c74ffc863683d6f6918b9a585"><td class="memItemLeft" align="right" valign="top"><a id="a6cff4d9c74ffc863683d6f6918b9a585"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateZ</b> (float angleDegree)</td></tr>
 <tr class="separator:a6cff4d9c74ffc863683d6f6918b9a585"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a706a5cab5588cf42003d477f61d55c37"><td class="memItemLeft" align="right" valign="top"><a id="a706a5cab5588cf42003d477f61d55c37"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setRotate</b> (<a class="el" href="structvect__prototype2.html">fvect3</a> val)</td></tr>
-<tr class="separator:a706a5cab5588cf42003d477f61d55c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a624b81e98fa024cfc505113370f77078"><td class="memItemLeft" align="right" valign="top"><a id="a624b81e98fa024cfc505113370f77078"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setWidgetMovability</b> (bool movability)</td></tr>
 <tr class="separator:a624b81e98fa024cfc505113370f77078"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,9 +220,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (const ch
 virtual <a class="el" href="structvect__prototype2.html">fvect3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_widget.html#accef1889c9c5ac582ffddb7227d6cd93">getCenter</a> () const =0</td></tr>
 <tr class="memdesc:accef1889c9c5ac582ffddb7227d6cd93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает центр виджета. <br /></td></tr>
 <tr class="separator:accef1889c9c5ac582ffddb7227d6cd93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a865e53c6ef32d9e6f70b9fc5e09f859f"><td class="memItemLeft" align="right" valign="top"><a id="a865e53c6ef32d9e6f70b9fc5e09f859f"></a>
-virtual <a class="el" href="structvect__prototype2.html">fvect3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getRotate</b> () const</td></tr>
-<tr class="separator:a865e53c6ef32d9e6f70b9fc5e09f859f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22192dca0c69a8f1db1a0e159a510b7"><td class="memItemLeft" align="right" valign="top"><a id="aa22192dca0c69a8f1db1a0e159a510b7"></a>
+virtual glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>getRotate</b> () const</td></tr>
+<tr class="separator:aa22192dca0c69a8f1db1a0e159a510b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfc6f2c1b33651d69cd12a4976b2ecc0"><td class="memItemLeft" align="right" valign="top"><a id="abfc6f2c1b33651d69cd12a4976b2ecc0"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isIsometricView</b> () const</td></tr>
 <tr class="separator:abfc6f2c1b33651d69cd12a4976b2ecc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -371,15 +368,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <a class="el" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#ad1333437d8bafc7188acf7aff744ea19">buffer</a> = nullptr</td></tr>
 <tr class="memdesc:ad1333437d8bafc7188acf7aff744ea19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Координатный буфер (вершини, индексы, текстурные координаты). <br /></td></tr>
 <tr class="separator:ad1333437d8bafc7188acf7aff744ea19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5284e4094c2b2af284d02e02f66a782d"><td class="memItemLeft" align="right" valign="top"><a id="a5284e4094c2b2af284d02e02f66a782d"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>rotateX_</b> = 0.0f</td></tr>
-<tr class="separator:a5284e4094c2b2af284d02e02f66a782d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93f80e28fcc254291badf29ba375397c"><td class="memItemLeft" align="right" valign="top"><a id="a93f80e28fcc254291badf29ba375397c"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>rotateY_</b> = 0.0f</td></tr>
-<tr class="separator:a93f80e28fcc254291badf29ba375397c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39ad4b6dfd94fed48959493d1a27b2a0"><td class="memItemLeft" align="right" valign="top"><a id="a39ad4b6dfd94fed48959493d1a27b2a0"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>rotateZ_</b> = 0.0f</td></tr>
-<tr class="separator:a39ad4b6dfd94fed48959493d1a27b2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40c8ce12285e9cad81ebc924432ca010"><td class="memItemLeft" align="right" valign="top"><a id="a40c8ce12285e9cad81ebc924432ca010"></a>
+glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>rotate_</b> = glm::mat4(1.0f)</td></tr>
+<tr class="separator:a40c8ce12285e9cad81ebc924432ca010"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8739018d711f3fb1985147d1b5afc99c"><td class="memItemLeft" align="right" valign="top"><a id="a8739018d711f3fb1985147d1b5afc99c"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
 <tr class="separator:a8739018d711f3fb1985147d1b5afc99c"><td class="memSeparator" colspan="2">&#160;</td></tr>
