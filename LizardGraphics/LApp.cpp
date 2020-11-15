@@ -151,7 +151,19 @@ namespace LGraphics
                 if (activeWidget == w) activeWidget = nullptr;
                 if (widgetToMove == w) widgetToMove = nullptr;
                 obj.erase(obj.begin() + i);
-                delete w;
+            }
+        delete w;
+    }
+
+    void LApp::removeWidget(LWidget * w)
+    {
+        std::vector<LWidget*>& obj = w->isInterfaceObject() ? interfaceObjects : nonInterfaceObjects;
+        for (size_t i = 0; i < obj.size(); ++i)
+            if (obj.operator[](i) == w)
+            {
+                if (activeWidget == w) activeWidget = nullptr;
+                if (widgetToMove == w) widgetToMove = nullptr;
+                obj.erase(obj.begin() + i);
             }
     }
 
@@ -271,6 +283,19 @@ namespace LGraphics
         experimentalLightShader = new LShaders::Shader("light_v.vs", "light_f.fs", false);
         shadowMap = new LShaders::Shader("shadowMap.vs", "shadowMap.fs", false);
         defaultShader = new LShaders::Shader("shadows.vs", "shadows.fs", false);
+
+        lwRectPool.setCreationCallback([&]()
+        {
+            auto lwRect = new LWRectangle(this);
+            getNonInterfaceObjects().pop_back();
+            return lwRect;
+        });
+
+        lwRectPool.setReleaseFunction([&]()
+        {
+            while (auto w = lwRectPool.pop())
+                deleteWidget(w);
+        });
 
         setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });

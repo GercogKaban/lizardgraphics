@@ -104,10 +104,19 @@ int main()
     //colorBar->setFullness(1.0f);
     //auto msg = new LMessageBox(&app, "gfreo[gker[ok gker[ogkero[g gker[ogkre[o kgkereo");
     
-    auto test = new LWRectangle(&app);
+    //auto test = new LWRectangle(&app);
     //test->move(-0.5f,0.5f,0.0f);
-    auto coords = test->getScreenCoords();
-    auto screenCoords = glCoordsToScreenCoords(app.getWindowSize(), fvect2(coords.x,coords.y));
+    //auto coords = test->getScreenCoords();
+    //auto screenCoords = glCoordsToScreenCoords(app.getWindowSize(), fvect2(coords.x,coords.y));
+
+    auto test = app.lwRectPool.pop();
+    test->color(255, 0, 0);
+
+    app.lwRectPool.addToPool(test);
+
+    auto test1 = app.lwRectPool.pop();
+
+    app.removeWidget(test);
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);
