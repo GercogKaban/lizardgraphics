@@ -8,7 +8,7 @@ public:
 
     void addToPool(T obj) 
     { 
-        resetObject(obj);
+        resetFunc(obj);
         pool.push_back(obj); 
     }
 

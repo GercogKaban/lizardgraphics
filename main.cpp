@@ -111,11 +111,8 @@ int main()
 
     auto test = app.lwRectPool.pop();
     test->color(255, 0, 0);
-
     app.lwRectPool.addToPool(test);
-
     auto test1 = app.lwRectPool.pop();
-
     app.removeWidget(test);
 
     app.setSleepTime(5);

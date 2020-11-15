@@ -19,16 +19,13 @@ namespace LGraphics
         void setMatrices(LApp* app);
         void setMatrices();
         void draw() override;
-        glm::mat4 getModelMatric() const { return calculateModelMatrix(); }
+        glm::mat4 getModelMatrix() const { return calculateModelMatrix(); }
 
     private:
 
         glm::mat4 calculateModelMatrix() const;
         glm::mat4 model;
         glm::mat4 projection;
-
-
-
     };
 
 }
