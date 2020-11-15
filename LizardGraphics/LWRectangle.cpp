@@ -51,6 +51,10 @@ void LGraphics::LWRectangle::draw()
     getShader()->use();
     auto shader = getShader()->getShaderProgram();
     auto lightPos = app->getLightPos();
+
+    glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
+    glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
+
     glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
     glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
 
