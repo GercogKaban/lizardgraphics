@@ -8,6 +8,7 @@ public:
 
     void addToPool(T obj) 
     { 
+        resetObject(obj);
         pool.push_back(obj); 
     }
 
@@ -48,10 +49,13 @@ public:
 
 private:
 
-    size_t expansionSize = 5;
     std::vector<T> pool;
+    size_t expansionSize = 5;
+
     std::function<T()> creationCallback;
     std::function<void()> releaseFunction = []() {};
+    std::function<void(T)> resetObject = [](T obj) {};
+
     T createObj() { return creationCallback(); }
 
     bool autoExpansion = true;
