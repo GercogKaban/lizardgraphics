@@ -26,6 +26,9 @@ namespace LGraphics
         glm::mat4 calculateModelMatrix() const;
         glm::mat4 model;
         glm::mat4 projection;
+
+
+
     };
 
 }

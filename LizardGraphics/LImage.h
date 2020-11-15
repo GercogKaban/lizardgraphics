@@ -15,6 +15,7 @@ namespace LGraphics
         const char* getObjectType() override { return "LImage"; }
         GLuint getTexture() const { return texture; } ///< Возвращает текстуру.
 
+        void setTexture(GLuint id) { texture = id; }
         /*!
         @brief Привязывает текстуру.
         @param path - путь к изображению.
