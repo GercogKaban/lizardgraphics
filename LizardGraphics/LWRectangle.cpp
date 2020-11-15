@@ -55,17 +55,12 @@ void LGraphics::LWRectangle::draw()
     glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
 
-    glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
-    glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
+    //glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
+    //glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
 
     glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->getLightSpaceMatrix()));
     glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-    double xpos, ypos;
-    glfwGetCursorPos(app->getWindowHandler(), &xpos, &ypos);
-    glBindVertexArray(buffer->getVaoNum());
-
-    auto camera = app->getViewPoint();
     // test
     //int data = -1;
 
@@ -82,26 +77,14 @@ void LGraphics::LWRectangle::draw()
 
     model = calculateModelMatrix();
 
-    float t = sqrt(3);
+    const float t = sqrt(3);
     glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
     glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
-    //model = glm::mat4(1.0f);
-    //model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
-    //model = glm::rotate(model, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
-    //model = glm::rotate(model, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
-    //model = glm::rotate(model, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
-    //model = glm::scale(model, glm::vec3(scale_.x, scale_.y, scale_.z));
-    //model = glm::translate(model, glm::vec3(move_.x, move_.y, move_.z));
-
-    //glUniform2f(glGetUniformLocation(shader, "mouse"), xpos, ypos);
-    //glUniform2f(glGetUniformLocation(shader, "resolution"), app->getWindowSize().x, app->getWindowSize().y);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(app->getViewMatrix()));
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
 
-    //glUniform3f(glGetUniformLocation(shader, "lightPos"), camera.x, camera.y, camera.z);
-    glBindVertexArray(buffer->getVaoNum());
 
     glBindVertexArray(buffer->getVaoNum());
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);

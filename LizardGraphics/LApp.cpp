@@ -20,7 +20,6 @@ namespace LGraphics
         {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
         t.start();
         
-
         while (!glfwWindowShouldClose(window))
         {
             openGlDrawing.lock();
