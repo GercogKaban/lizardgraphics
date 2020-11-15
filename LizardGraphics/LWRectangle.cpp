@@ -52,6 +52,12 @@ void LGraphics::LWRectangle::draw()
     auto shader = getShader()->getShaderProgram();
     auto lightPos = app->getLightPos();
 
+    const glm::vec3 normal = { 0.0f,0.0f,1.0f };
+    const glm::vec3 Normal = glm::mat3(glm::transpose(glm::inverse(model))) * normal;
+
+    model = calculateModelMatrix();
+
+
     glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
 
@@ -60,6 +66,7 @@ void LGraphics::LWRectangle::draw()
 
     glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->getLightSpaceMatrix()));
     glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+    glUniform3f(glGetUniformLocation(shader, "Normal"), Normal.x, Normal.y, Normal.z);
 
     // test
     //int data = -1;
@@ -75,7 +82,6 @@ void LGraphics::LWRectangle::draw()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, app->getDepthMap());
 
-    model = calculateModelMatrix();
 
     const float t = sqrt(3);
     glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
@@ -102,7 +108,6 @@ void LGraphics::LWRectangle::draw()
 
     for (auto& i : innerWidgets)
         i->draw();
-    //LLine::display(label);
 }
 
 glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
@@ -110,9 +115,6 @@ glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
     glm::mat4 model_ = glm::mat4(1.0f);
     model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
     model_ *= rotate_;
-    //model_ = glm::rotate(model_, glm::radians(rotateX_), { 1.0f,0.0f,0.0f });
-    //model_ = glm::rotate(model_, glm::radians(rotateY_), { 0.0f,1.0f,0.0f });
-    //model_ = glm::rotate(model_, glm::radians(rotateZ_), { 0.0f,0.0f,1.0f });
     model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
     return model_;
 }
