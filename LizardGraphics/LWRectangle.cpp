@@ -52,11 +52,7 @@ void LGraphics::LWRectangle::draw()
     auto shader = getShader()->getShaderProgram();
     auto lightPos = app->getLightPos();
 
-    const glm::vec3 normal = { 0.0f,0.0f,1.0f };
-    const glm::vec3 Normal = glm::mat3(glm::transpose(glm::inverse(model))) * normal;
-
     model = calculateModelMatrix();
-
 
     glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
@@ -66,7 +62,6 @@ void LGraphics::LWRectangle::draw()
 
     glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->getLightSpaceMatrix()));
     glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-    glUniform3f(glGetUniformLocation(shader, "Normal"), Normal.x, Normal.y, Normal.z);
 
     // test
     //int data = -1;
@@ -84,7 +79,7 @@ void LGraphics::LWRectangle::draw()
 
 
     const float t = sqrt(3);
-    glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
+    const glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
     glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(app->getViewMatrix()));
@@ -104,7 +99,7 @@ void LGraphics::LWRectangle::draw()
 
     //glBindVertexArray(0);
     //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
-    glBindVertexArray(0);
+    //glBindVertexArray(0);
 
     for (auto& i : innerWidgets)
         i->draw();

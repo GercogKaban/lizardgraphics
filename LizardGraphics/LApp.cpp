@@ -30,12 +30,11 @@ namespace LGraphics
                 initLight();
             }
 
-
             fps++;
             initTextures();
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             beforeDrawingFunc();
 
             // рисуем в карту теней
@@ -76,12 +75,12 @@ namespace LGraphics
                 LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
 
-            afterDrawingFunc();
             for (auto& o : interfaceObjects)
                 o->tick();
             for (auto& o : nonInterfaceObjects)
                 o->tick();
 
+            afterDrawingFunc();
             glfwSwapBuffers(window);
             openGlDrawing.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
