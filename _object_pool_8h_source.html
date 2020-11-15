@@ -116,30 +116,32 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> setCreationCallback(std::function&lt;T()&gt; callback) { creationCallback = callback; }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> setReleaseFunction(std::function&lt;<span class="keywordtype">void</span>()&gt; func) { releaseFunction = func; }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> setExpansionSize(<span class="keywordtype">size_t</span> size) { expansionSize = size; }</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> setAutoExpansion(<span class="keywordtype">bool</span> autoExpansion) { this-&gt;autoExpansion = autoExpansion; }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> setResetFunction(std::function&lt;<span class="keywordtype">void</span>(T)&gt; func) { resetFunc = func; }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> setExpansionSize(<span class="keywordtype">size_t</span> size) { expansionSize = size; }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> setAutoExpansion(<span class="keywordtype">bool</span> autoExpansion) { this-&gt;autoExpansion = autoExpansion; }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;T&gt; pool;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">size_t</span> expansionSize = 5;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::function&lt;T()&gt; creationCallback;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::function&lt;void()&gt; releaseFunction = []() {};</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::function&lt;void(T)&gt; resetObject = [](T obj) {};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    T createObj() { <span class="keywordflow">return</span> creationCallback(); }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::vector&lt;T&gt; pool;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">size_t</span> expansionSize = 5;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::function&lt;T()&gt; creationCallback;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    std::function&lt;void()&gt; releaseFunction = []() {};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::function&lt;void(T)&gt; resetFunc = [](T obj) {};</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> autoExpansion = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    T createObj() { <span class="keywordflow">return</span> creationCallback(); }</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    T popElem()</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        T ret = pool.back();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        pool.pop_back();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;};</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">bool</span> autoExpansion = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    T popElem()</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        T ret = pool.back();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        pool.pop_back();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclass_object_pool_html"><div class="ttname"><a href="class_object_pool.html">ObjectPool</a></div><div class="ttdef"><b>Definition:</b> ObjectPool.h:6</div></div>
 <!-- start footer part -->
