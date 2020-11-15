@@ -44,6 +44,8 @@ public:
 
     void setCreationCallback(std::function<T()> callback) { creationCallback = callback; }
     void setReleaseFunction(std::function<void()> func) { releaseFunction = func; }
+    void setResetFunction(std::function<void(T)> func) { resetFunc = func; }
+
     void setExpansionSize(size_t size) { expansionSize = size; }
     void setAutoExpansion(bool autoExpansion) { this->autoExpansion = autoExpansion; }
 
@@ -54,7 +56,7 @@ private:
 
     std::function<T()> creationCallback;
     std::function<void()> releaseFunction = []() {};
-    std::function<void(T)> resetObject = [](T obj) {};
+    std::function<void(T)> resetFunc = [](T obj) {};
 
     T createObj() { return creationCallback(); }
 
