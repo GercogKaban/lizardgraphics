@@ -99,7 +99,7 @@ namespace LGraphics
         void rotateX(float angleDegree);
         void rotateY(float angleDegree);
         void rotateZ(float angleDegree);
-        //void setRotate(fvect3 val);
+        void setRotate(glm::mat4 rotate) { rotate_ = rotate; }
 
         virtual void turnOffColor() = 0;
 
