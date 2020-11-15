@@ -17,12 +17,17 @@ namespace LGraphics
     void LApp::loop()
     {
         LTimer t([&]()
-        {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
+            {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
         t.start();
-        
+
         while (!glfwWindowShouldClose(window))
         {
+            beforeDrawingFunc();
+
+#if LG_MULTITHREAD
             openGlDrawing.lock();
+#endif
+
             if (!lightIsInited())
             {
                 setLightPos(glm::vec3(4.0f, 2.0f, 3.0f));
@@ -35,7 +40,6 @@ namespace LGraphics
             glfwPollEvents();
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
             //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            beforeDrawingFunc();
 
             // рисуем в карту теней
             glViewport(0, 0, shadowHeight, shadowWidth);
@@ -82,8 +86,11 @@ namespace LGraphics
 
             afterDrawingFunc();
             glfwSwapBuffers(window);
+
+#if LG_MULTITHREAD
             openGlDrawing.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
+#endif
         }
 
         t.stop();
@@ -100,7 +107,7 @@ namespace LGraphics
         textObjects.pop_back();
     }
 
-    LWidget * LApp::getActiveWidget()
+    LWidget* LApp::getActiveWidget()
     {
         return activeWidget;
     }
@@ -118,17 +125,17 @@ namespace LGraphics
                 dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
     }
 
-    void LApp::setKeyCallback(std::function<void(GLFWwindow*window, int key, int scancode, int action, int mods)> callback)
+    void LApp::setKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback)
     {
         keyCallback = callback;
     }
 
-    void LApp::setMouseCallback(std::function<void(GLFWwindow*w, int button, int action, int mods)> callback)
+    void LApp::setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback)
     {
         mouseCallback = callback;
     }
 
-    void LApp::setScrollCallback(std::function<void(GLFWwindow*window, double xoffset, double yoffset)> callback)
+    void LApp::setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)> callback)
     {
         scrollCallback = callback;
     }
@@ -224,7 +231,7 @@ namespace LGraphics
             nonInterfaceObjects.push_back(w);
     }
 
-    void LApp::moveWidgetToMouse(LWidget * w)
+    void LApp::moveWidgetToMouse(LWidget* w)
     {
         if (!w || !widgetsMovability || !w->getWidgetMovability()) return;
         double mouse_x, mouse_y;
@@ -244,7 +251,7 @@ namespace LGraphics
     void LApp::refreshProjection()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
-        projection = glm::ortho(viewRadius*-1.0f, viewRadius*1.0f, viewRadius*-1.0f / aspect, viewRadius*1.0f / aspect, 0.1f, 1000.0f);
+        projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, 0.1f, 1000.0f);
     }
 
     void LApp::init()
@@ -381,7 +388,7 @@ namespace LGraphics
         LError::releaseResources();
     }
 
-    void LApp::mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
+    void LApp::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
         mouseCallback(window, button, action, mods);
         //bool out = false;
@@ -449,12 +456,12 @@ namespace LGraphics
         if (widgetToMove) moveWidgetToMouse(widgetToMove);
     }
 
-    void LApp::cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
+    void LApp::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     {
         if (widgetToMove) moveWidgetToMouse(widgetToMove);
     }
 
-    void LApp::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
+    void LApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         pressedKeys[key] = action != GLFW_RELEASE;
         keyCallback(window, key, scancode, action, mods);
@@ -477,7 +484,7 @@ namespace LGraphics
             textEdit->addText(std::string(1, codepoint));
     }
 
-    void LApp::scroll_callback(GLFWwindow * window, double xoffset, double yoffset)
+    void LApp::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
         scrollCallback(window, xoffset, yoffset);
         LCounter* counter = dynamic_cast<LCounter*>(activeWidget);
