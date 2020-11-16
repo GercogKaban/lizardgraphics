@@ -10,9 +10,9 @@
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LMultiWRectangle::LMultiWRectangle(LApp* app, size_t rectCount)
-    : LRectangleShape(app, (const char*)nullptr), rectCount(rectCount)
+    : LNonWidget(app), rectCount(rectCount)
 {
-    shader = app->getStandartMultiObjShader();
+    //shader = app->multi_defaultShader;
     view = app->getViewMatrix();
     projection = app->getProjectionMatrix();
 
@@ -30,7 +30,7 @@ LGraphics::LMultiWRectangle::LMultiWRectangle(LApp* app, size_t rectCount)
 
 void LGraphics::LMultiWRectangle::draw()
 {
-    if (isHidden()) return;
+    //if (isHidden()) return;
 
     this->shader->use();
     auto shader = this->shader->getShaderProgram();
@@ -38,7 +38,7 @@ void LGraphics::LMultiWRectangle::draw()
 
     textures.clear();
     for (auto& r : rectangles)
-        textures.push_back(r.getTexture());
+        textures.push_back(r->getTexture());
 
     glUniform1iv(glGetUniformLocation(shader, "ourTexture"), rectCount, (GLint*)&textures[0]);
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 0);
@@ -74,7 +74,7 @@ void LGraphics::LMultiWRectangle::draw()
    
     models.clear();
     for (auto& r : rectangles)
-        models.push_back(r.getModelMatrix());
+        models.push_back(r->getModelMatrix());
     
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), rectCount, GL_FALSE, (GLfloat*)(&models[0]));
     

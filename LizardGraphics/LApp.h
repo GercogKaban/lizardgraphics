@@ -10,6 +10,7 @@
 #include "ObjectPool.h"
 
 #include "LWRectangle.h"
+#include "LMultiWRectangle.h"
 
 namespace LGraphics
 {
@@ -80,7 +81,6 @@ namespace LGraphics
         //std::vector<LWidget*>& getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
 
-        LShaders::Shader* getStandartMultiObjShader() const { return standartMultiObjShader; }
         LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
         LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
         LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
@@ -160,6 +160,7 @@ namespace LGraphics
         float viewRadius = 10.0f;
         std::vector<LWidget*> interfaceObjects;
         std::vector<LWidget*> nonInterfaceObjects;
+        std::vector<LNonWidget*> customObjects;
 
         //std::vector<LWidget*> objects;
         std::vector<Text> textObjects;
@@ -176,7 +177,7 @@ namespace LGraphics
         LBuffer* standartRectBuffer;
 
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader,
-            *shadowMap,*defaultShader, *standartMultiObjShader;
+            *shadowMap,*defaultShader, *multi_shadowMap, *multi_defaultShader;
 
         glm::mat4 view, projection;
 

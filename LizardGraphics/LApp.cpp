@@ -53,6 +53,12 @@ namespace LGraphics
                     o->setShader(shadowMap);
                     o->draw();
                 }
+            for (auto& o : customObjects)
+            {
+                o->shader = multi_shadowMap;
+                o->draw();
+            }
+
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, getWindowSize().x, getWindowSize().y);
 
@@ -68,6 +74,11 @@ namespace LGraphics
                     o->setShader(defaultShader);
                     o->draw();
                 }
+            for (auto& o : customObjects)
+            {
+                o->shader = multi_defaultShader;
+                o->draw();
+            }
 
             glDisable(GL_DEPTH_TEST);
             LDISPLAY();
@@ -78,7 +89,7 @@ namespace LGraphics
             for (auto& t : textObjects)
                 LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
-
+            
             for (auto& o : interfaceObjects)
                 o->tick();
             for (auto& o : nonInterfaceObjects)
@@ -283,6 +294,8 @@ namespace LGraphics
         experimentalLightShader = new LShaders::Shader("light_v.vs", "light_f.fs", false);
         shadowMap = new LShaders::Shader("shadowMap.vs", "shadowMap.fs", false);
         defaultShader = new LShaders::Shader("shadows.vs", "shadows.fs", false);
+        //multi_shadowMap = new LShaders::Shader("multi_shadowMap.vs", "multi_shadowMap.fs", false);
+        //multi_defaultShader = new LShaders::Shader("multi_shadows.vs", "multi_shadows.fs", false);
 
         lwRectPool.setCreationCallback([&]()
         {

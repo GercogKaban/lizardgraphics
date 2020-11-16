@@ -229,15 +229,15 @@ namespace LShaders
             std::ifstream in;
             in.open(vertShader);
             std::string vertShaderSource, fragShaderSource;
-            char temp[256];
-            while (in.getline(temp, 256))
+            char temp[512];
+            while (in.getline(temp, 512))
             {
                 vertShaderSource += temp;
                 vertShaderSource += '\n';
             }
             in.close();
             in.open(fragShader);
-            while (in.getline(temp, 256))
+            while (in.getline(temp, 512))
             {
                 fragShaderSource += temp;
                 fragShaderSource += '\n';
