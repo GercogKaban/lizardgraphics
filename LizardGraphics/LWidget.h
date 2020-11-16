@@ -125,7 +125,7 @@ namespace LGraphics
         const std::string& getName() const { return name; }
 
         virtual void setShader(LShaders::Shader* shader) = 0;  ///< Устанавливает шейдер виджету.
-        virtual void setIsometricView(bool isometric) { this->isometric = isometric; }
+        //virtual void setIsometricView(bool isometric) { this->isometric = isometric; }
 
         virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
 
@@ -141,8 +141,8 @@ namespace LGraphics
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
         const std::vector<LWidget*>& getInnerWidgets() const { return *innerWidgets; }
+        std::vector<LWidget*>* getInnerWidgetsPtr() const { return innerWidgets; }
 
-        //LWidget* getWidgetByName(const char* name);
         LWidget* getInnerWidgetByName(const char* name);
         virtual void addInnerWidget(LWidget* innerWidget);
 

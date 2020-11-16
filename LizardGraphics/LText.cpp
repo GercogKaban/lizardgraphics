@@ -35,7 +35,7 @@ namespace LGraphics
                continue;
             auto toScreen = glCoordsToScreenCoords(app->getWindowSize(), { str->pos.x, str->pos.y + (vertScroller ? vertScroller->currentPos : hiddenStrings) * strIndent });
             toScreen.y = app->getWindowSize().y - toScreen.y;
-            LLine::display(str->text, toScreen.x, toScreen.y, textScale, textColor);
+            //LLine::display(str->text, toScreen.x, toScreen.y, textScale, textColor);
         }
     }
 
@@ -250,7 +250,7 @@ namespace LGraphics
 
     void LGraphics::LText::pushNewString(bool gap)
     {
-        fvect3 topLeftCorner = getTopLeftCorner();
+        /*fvect3 topLeftCorner = getTopLeftCorner();
         Text temp;
         if (gap)
         {
@@ -274,7 +274,7 @@ namespace LGraphics
 
         if (vertScroller && hiddenStrings > 0)
             vertScroller->reloadScroller(hiddenStrings);
-        yAlign();
+        yAlign();*/
     }
 
     void LGraphics::LText::initWidget()

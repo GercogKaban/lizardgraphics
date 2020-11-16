@@ -21,7 +21,7 @@ namespace LGraphics
 
     void LShape::scale(const fvect3 val)
     {
-        scale(val.x, val.y, val.z);
+        LShape::scale(val.x, val.y, val.z);
     }
 
     void LShape::scale(const float x, const float y, const float z)
@@ -41,7 +41,7 @@ namespace LGraphics
 
     void LShape::move(const fvect3 val)
     {
-        move(val.x, val.y, val.z);
+        LShape::move(val.x, val.y, val.z);
     }
 
     void LShape::move(const float x, const float y, const float z)
@@ -57,13 +57,13 @@ namespace LGraphics
     void LShape::move(const size_t x, const size_t y)
     {
         auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)x,(float)y });
-        move(coords.x, coords.y, 0.0f);
+        LShape::move(coords.x, coords.y, 0.0f);
     }   
 
     void LShape::move(const szvect2 v)
     {
         auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)v.x, (float)v.y });
-        move(coords.x, coords.y, 0.0f);
+        LShape::move(coords.x, coords.y, 0.0f);
     }
 
     void LShape::setShader(LShaders::Shader* shader)

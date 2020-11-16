@@ -13,12 +13,29 @@ namespace LGraphics
     LLine::Character LLine::characters[CHAR_MAX+1];
     unsigned int LLine::VAO, LLine::VBO;
     LGraphics::LApp* LLine::app;
+    unsigned int LLine::stringFBO, LLine::stringTexture;
+    LIRectangle* LLine::textRect;
+    LShaders::Shader* LLine::textRectShader;
+    glm::mat4 LLine::projection;
 
     LLine::LLine(LGraphics::LApp* app)
     {
         this->app = app;
+        textRectShader = new LShaders::Shader(LShaders::interface_vProj, LShaders::interface_f);
         symbShader = new LShaders::Shader(LShaders::symbol_v, LShaders::symbol_f);
-        glm::mat4 projection = glm::ortho(0.0f, (float)app->getWindowSize().x, 0.0f, (float)app->getWindowSize().y);
+
+        projection = glm::ortho(0.0f, (float)app->getWindowSize().x, 0.0f, (float)app->getWindowSize().y);
+        textRect = new LIRectangle(app);
+        textRect->scale(2.0f, 2.0f, 1.0f);
+        textRect->setShader(textRectShader);
+        textRect->getShader()->use();
+        textRect->turnOnTexture();
+        textRect->color(255, 255, 255);
+        textRect->projection_ = projection;
+
+        app->removeWidget(textRect);
+        glUniformMatrix4fv(glGetUniformLocation(textRect->getShader()->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+      
         symbShader->use();
         glUniformMatrix4fv(glGetUniformLocation(symbShader->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -85,23 +102,37 @@ namespace LGraphics
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+
+        glGenFramebuffers(1, &stringFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, stringFBO);
+        glGenTextures(1, &stringTexture);
+        glBindTexture(GL_TEXTURE_2D, stringTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, app->getWindowSize().x, app->getWindowSize().y, 0, GL_RGBA, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D, 0);     
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, stringTexture, 0);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        textRect->setTexture(stringTexture);
     }
 
     LLine::~LLine()
     {
         delete symbShader;
+        delete textRect;
     }
     
     void LLine::display(const std::string text, float x, float y, const float scale, const fvect3 color)
     {
-        //glDepthFunc(GL_ALWAYS);
+        //glBindFramebuffer(GL_FRAMEBUFFER, stringFBO);
         y = app->getWindowSize().y - y;
         getShader()->use();
         glUniform3f(glGetUniformLocation(getShader()->getShaderProgram(), "textColor"), color.x, color.y, color.z);
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
- 
-        for (const unsigned int const c: text)
+
+        for (const unsigned int const c : text)
         {
             const Character ch = characters[c];
             const float xpos = x + ch.bearing.x * scale;
@@ -111,7 +142,7 @@ namespace LGraphics
             const float h = ch.size.y * scale;
             // update VBO for each character
 
-            const float vertices[6][4] = 
+            const float vertices[6][4] =
             {
                 { xpos,     ypos + h,   0.0f, 0.0f },
                 { xpos,     ypos,       0.0f, 1.0f },
@@ -122,7 +153,6 @@ namespace LGraphics
                 { xpos + w, ypos + h,   1.0f, 0.0f }
             };
 
-     
             // render glyph texture over quad
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
             // update content of VBO memory
@@ -134,18 +164,40 @@ namespace LGraphics
             // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
             x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
         }
-        glBindVertexArray(0);
+        //glBindVertexArray(0);
+        //glBindTexture(GL_TEXTURE_2D, 0);
+        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+       
+        //static auto rect = new LIRectangle(app);
+        //rect->setTexture(stringTexture);
+        //rect->color(255, 255, 255);
+        //rect->turnOnTexture();
+        //rect->scale(2.0f, 2.0f, 1.0f);
+        //rect->draw();
         glBindTexture(GL_TEXTURE_2D, 0);
-        //glDepthFunc(GL_LESS);
     }
 
-    void LLine::display(Text text)
+    void LLine::display(Text& text)
     {
         fvect2 pos = glCoordsToScreenCoords(app->getWindowSize(), { text.pos.x,text.pos.y});
         display(text.text, pos.x, app->getWindowSize().y - pos.y, text.scale, text.color);
     }
 
-    float LLine::getTextLength(Text text)
+    void LLine::displayStaticText(std::vector<Text> textObjects, bool& refresh)
+    {
+        if (refresh)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, stringFBO);
+            for (auto& t : textObjects)
+                display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        textRect->draw();
+        refresh = false;
+    }
+
+    float LLine::getTextLength(const Text& text)
     {
         float res = 0.0f;
         for (auto& s : text.text)

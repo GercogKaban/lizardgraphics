@@ -4,7 +4,7 @@ project (LS_Example C CXX)
 
 find_package(OpenGL REQUIRED)
 
-set(SOURCE_FILES main.cpp CodeGen.cpp)
+set(SOURCE_FILES CodeGen.cpp main.cpp)
 set(HEADER_FILES CodeGen.h)
 
 ADD_EXECUTABLE(LS_Example ${SOURCE_FILES} ${HEADER_FILES})

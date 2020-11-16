@@ -12,6 +12,7 @@
 #include "LCounter.h"
 #include "LMessageBox.h"
 #include "LColorBar.h"
+#include "LList.h"
 
 #include "additional.h"
 
@@ -47,7 +48,7 @@ int main()
     //b2->setWidgetMovability(false);
     //b2->setClickEventFunction(([&]()
     //{
-    //    auto obj = new LIRectangle(&app, "path...");
+    //    auto obj = new LIRectangle(&app);
     //}));
     //gen.notGenerateData(b2);
 
@@ -73,7 +74,64 @@ int main()
 
     //b3->setName("tile");
     //b3->setIsometricView();
-    LGraphics::LCounterF* c1, *c2, *c3;
+    //LGraphics::LCounterF* c1, *c2, *c3;
+
+    /*auto list = new LList(&app);
+    list->color(255, 255, 255);
+    list->setLabel("Widgets");
+    list->scale(0.1f, 0.1f, 1.0f);
+
+    list->setVertOrientation(LList::bottom);
+    list->setHorizOrientation(LList::right);
+
+    auto b1 = new LIButton(&app);
+    b1->color(255, 255, 255);
+    b1->setClickEventFunction([&]() {new LIButton(&app); });
+    auto b2 = new LIButton(&app);
+    b2->color(255, 255, 255);
+    b2->setClickEventFunction([&]() {new LList(&app); });
+    auto b3 = new LIButton(&app);
+    b3->color(255, 255, 255);
+    b3->setClickEventFunction([&]() {new LCounterF(&app); });
+    auto b4 = new LIButton(&app);
+    b4->color(255, 255, 255);
+    b4->setClickEventFunction([&]() {new LIRectangle(&app); });
+    auto b5 = new LIButton(&app);
+    b5->color(255, 255, 255);
+    b5->setClickEventFunction([&]() {new LText(&app); });
+    auto b6 = new LIButton(&app);
+    b6->color(255, 255, 255);
+    b6->setClickEventFunction([&]() {new LTextEdit(&app); });
+    auto b7 = new LIButton(&app);
+    b7->color(255, 255, 255);
+    b7->setClickEventFunction([&]() {new LFlag(&app); });
+    auto b8 = new LIButton(&app);
+    b8->color(255, 255, 255);
+    b8->setClickEventFunction([&]() {new LColorBar(&app); });
+
+    list->addInnerWidget(b1);
+    list->addInnerWidget(b2);
+    list->addInnerWidget(b3);
+    list->addInnerWidget(b4);
+    list->addInnerWidget(b5);
+    list->addInnerWidget(b6);
+    list->addInnerWidget(b7);
+    list->addInnerWidget(b8);
+
+    b1->setLabel("LIButton");
+    b2->setLabel("LList");
+    b3->setLabel("LCounterF");
+    b4->setLabel("LIRectangle");
+    b5->setLabel("LText");
+    b6->setLabel("LTextEdit");
+    b7->setLabel("LFlag");
+    b8->setLabel("LColorBar");*/
+
+    auto bar = new LColorBar(&app);
+    bar->move(500, 60);
+    bar->setFullness(0.0f);
+
+
 
     //auto func = [&]()
     //{
@@ -108,12 +166,6 @@ int main()
     //test->move(-0.5f,0.5f,0.0f);
     //auto coords = test->getScreenCoords();
     //auto screenCoords = glCoordsToScreenCoords(app.getWindowSize(), fvect2(coords.x,coords.y));
-
-    auto test = app.lwRectPool.pop();
-    test->color(255, 0, 0);
-    app.lwRectPool.addToPool(test);
-    auto test1 = app.lwRectPool.pop();
-    app.removeWidget(test);
 
     app.setSleepTime(5);
     app.setWidgetsMovability(true);

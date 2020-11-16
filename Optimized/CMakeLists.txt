@@ -7,7 +7,7 @@ set(CMAKE_BUILD_TYPE Release)
 set (SOURCE_FILES optimized.h optimized.cpp)
 set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-add_library(Optimized SHARED ${HEADER_FILES} ${SOURCE_FILES})
+add_library(Optimized SHARED ${SOURCE_FILES})
 target_include_directories(Optimized PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra")
