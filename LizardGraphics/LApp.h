@@ -76,6 +76,7 @@ namespace LGraphics
         //std::vector<LWidget*>& getObjects() { return &objects; }
         std::vector<Text>& getTextObjects() { return textObjects; }
 
+        LShaders::Shader* getStandartMultiObjShader() const { return standartMultiObjShader; }
         LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
         LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
         LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
@@ -170,7 +171,7 @@ namespace LGraphics
         LBuffer* standartRectBuffer;
 
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader,
-            *shadowMap,*defaultShader;
+            *shadowMap,*defaultShader, *standartMultiObjShader;
 
         glm::mat4 view, projection;
 

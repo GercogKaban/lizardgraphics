@@ -85,12 +85,12 @@ namespace LGraphics
         /*!
         @brief Создаёт VAO и привязывает к нему VBO,EBO.
         */
-        void genBuffers();
+        virtual void genBuffers();
 
         GLfloat* textures = nullptr; ///< Массив текстурных координат.
         GLfloat* vertices = nullptr; ///< Массив вершин.*/
         GLuint* ebo = nullptr;       ///< Массив индексов.*/
-        GLuint VBO[2], VAO, EBO;     ///< OpenGL буфферы.*/
+        GLuint VBO[4]/*на всякий случай больше, для потомков*/, VAO, EBO;     ///< OpenGL буфферы.*/
 
         const size_t coordsCount = 3;
         size_t verticesCount, indicesCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
