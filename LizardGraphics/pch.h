@@ -34,5 +34,7 @@
 
 #include <ft2build.h>
 #include "additional.h"
+#include "ObjectPool.h"
+#include "textures.h"
 
 #endif //PCH_H

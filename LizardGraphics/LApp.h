@@ -7,6 +7,9 @@
 #include "include/glm/glm.hpp"
 #include "Lshaders.h"
 #include "LIRectangle.h"
+#include "ObjectPool.h"
+
+#include "LWRectangle.h"
 
 namespace LGraphics
 {
@@ -64,6 +67,7 @@ namespace LGraphics
         void setWidgetsMovability(bool movability) { widgetsMovability = movability; }
 
         void deleteWidget(LWidget* w);
+        void removeWidget(LWidget* w);
 
         void refreshObjectMatrices();
 
@@ -112,6 +116,9 @@ namespace LGraphics
 
         bool lightIsInited() const { return lightIsInited_; }
         void initLight() { lightIsInited_ = true; }
+
+        ObjectPool<LWRectangle*> lwRectPool;
+
     protected:
 
         bool lightIsInited_ = false;
@@ -120,8 +127,6 @@ namespace LGraphics
 
         void setLightPos(glm::vec3 lightPos);
         void setLightSpaceMatrix();
-
-
 
         void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();
