@@ -109,12 +109,15 @@ static <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a>
 <tr class="memitem:a73b275e90210fcc6d4b23fcfdcce2621"><td class="memItemLeft" align="right" valign="top"><a id="a73b275e90210fcc6d4b23fcfdcce2621"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>display</b> (const std::string text, float x, float y, const float scale, const <a class="el" href="structvect__prototype2.html">fvect3</a> <a class="el" href="structvect__prototype2.html">color</a>)</td></tr>
 <tr class="separator:a73b275e90210fcc6d4b23fcfdcce2621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76f908c0f0f7a9032e282548647740e9"><td class="memItemLeft" align="right" valign="top"><a id="a76f908c0f0f7a9032e282548647740e9"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>display</b> (<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> text)</td></tr>
-<tr class="separator:a76f908c0f0f7a9032e282548647740e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabbdbb3579423825cbf28a970a273b2f"><td class="memItemLeft" align="right" valign="top"><a id="aabbdbb3579423825cbf28a970a273b2f"></a>
-static float&#160;</td><td class="memItemRight" valign="bottom"><b>getTextLength</b> (<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> text)</td></tr>
-<tr class="separator:aabbdbb3579423825cbf28a970a273b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a222babf45250ad864ec7ba4779bbe09c"><td class="memItemLeft" align="right" valign="top"><a id="a222babf45250ad864ec7ba4779bbe09c"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>display</b> (<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &amp;text)</td></tr>
+<tr class="separator:a222babf45250ad864ec7ba4779bbe09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa597e649063791dcefc0a7f6f492d91"><td class="memItemLeft" align="right" valign="top"><a id="afa597e649063791dcefc0a7f6f492d91"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>displayStaticText</b> (std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt; textObjects, bool &amp;refresh)</td></tr>
+<tr class="separator:afa597e649063791dcefc0a7f6f492d91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefb9e3e652fb75b7fb7a949690edff38"><td class="memItemLeft" align="right" valign="top"><a id="aefb9e3e652fb75b7fb7a949690edff38"></a>
+static float&#160;</td><td class="memItemRight" valign="bottom"><b>getTextLength</b> (const <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &amp;text)</td></tr>
+<tr class="separator:aefb9e3e652fb75b7fb7a949690edff38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -124,9 +127,18 @@ friend&#160;</td><td class="memItemRight" valign="bottom"><b>LText</b></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a0e06dd70bbffd386f5011ed34c6c91a2"><td class="memItemLeft" align="right" valign="top"><a id="a0e06dd70bbffd386f5011ed34c6c91a2"></a>
+static <a class="el" href="class_l_graphics_1_1_l_i_rectangle.html">LIRectangle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>textRect</b></td></tr>
+<tr class="separator:a0e06dd70bbffd386f5011ed34c6c91a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a903056e9ca7625e7ba6305bc1d982caa"><td class="memItemLeft" align="right" valign="top"><a id="a903056e9ca7625e7ba6305bc1d982caa"></a>
+static glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>projection</b></td></tr>
+<tr class="separator:a903056e9ca7625e7ba6305bc1d982caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af704dce7148ff91dcc897224d3a6f5c7"><td class="memItemLeft" align="right" valign="top"><a id="af704dce7148ff91dcc897224d3a6f5c7"></a>
 static <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>symbShader</b></td></tr>
 <tr class="separator:af704dce7148ff91dcc897224d3a6f5c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a419014c5dcd69a27e4637da31eb041f2"><td class="memItemLeft" align="right" valign="top"><a id="a419014c5dcd69a27e4637da31eb041f2"></a>
+static <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>textRectShader</b></td></tr>
+<tr class="separator:a419014c5dcd69a27e4637da31eb041f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a214759a56f14511fbc5eff0e559c3a34"><td class="memItemLeft" align="right" valign="top"><a id="a214759a56f14511fbc5eff0e559c3a34"></a>
 static <a class="el" href="struct_l_graphics_1_1_l_line_1_1_character.html">Character</a>&#160;</td><td class="memItemRight" valign="bottom"><b>characters</b> [CHAR_MAX+1]</td></tr>
 <tr class="separator:a214759a56f14511fbc5eff0e559c3a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,6 +151,12 @@ static GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>VBO</b></td>
 <tr class="memitem:ae8258314d47afd2bd3a89271fab92bbf"><td class="memItemLeft" align="right" valign="top"><a id="ae8258314d47afd2bd3a89271fab92bbf"></a>
 static <a class="el" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>app</b></td></tr>
 <tr class="separator:ae8258314d47afd2bd3a89271fab92bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a176c6422ce68477a44be8b1bba20e73d"><td class="memItemLeft" align="right" valign="top"><a id="a176c6422ce68477a44be8b1bba20e73d"></a>
+static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>stringFBO</b></td></tr>
+<tr class="separator:a176c6422ce68477a44be8b1bba20e73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a770ee92c2a523afba8113ea699ead5eb"><td class="memItemLeft" align="right" valign="top"><a id="a770ee92c2a523afba8113ea699ead5eb"></a>
+static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>stringTexture</b></td></tr>
+<tr class="separator:a770ee92c2a523afba8113ea699ead5eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>LizardGraphics/<a class="el" href="_l_line_8h_source.html">LLine.h</a></li>
