@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lizard Graphics: LGraphics::LMultiWRectangle Class Reference</title>
+<title>Lizard Graphics: LGraphics::LNonWidget Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,62 +62,52 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>LGraphics</b></li><li class="navelem"><a class="el" href="class_l_graphics_1_1_l_multi_w_rectangle.html">LMultiWRectangle</a></li>  </ul>
+<li class="navelem"><b>LGraphics</b></li><li class="navelem"><a class="el" href="class_l_graphics_1_1_l_non_widget.html">LNonWidget</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="class_l_graphics_1_1_l_multi_w_rectangle-members.html">List of all members</a>  </div>
+<a href="class_l_graphics_1_1_l_non_widget-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">LGraphics::LMultiWRectangle Class Reference</div>  </div>
+<div class="title">LGraphics::LNonWidget Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for LGraphics::LMultiWRectangle:</div>
+Inheritance diagram for LGraphics::LNonWidget:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="class_l_graphics_1_1_l_multi_w_rectangle.png" usemap="#LGraphics::LMultiWRectangle_map" alt=""/>
-  <map id="LGraphics::LMultiWRectangle_map" name="LGraphics::LMultiWRectangle_map">
-<area href="class_l_graphics_1_1_l_non_widget.html" alt="LGraphics::LNonWidget" shape="rect" coords="0,56,177,80"/>
+  <img src="class_l_graphics_1_1_l_non_widget.png" usemap="#LGraphics::LNonWidget_map" alt=""/>
+  <map id="LGraphics::LNonWidget_map" name="LGraphics::LNonWidget_map">
 <area href="class_l_graphics_1_1_l_object.html" alt="LGraphics::LObject" shape="rect" coords="0,0,177,24"/>
+<area href="class_l_graphics_1_1_l_multi_w_rectangle.html" alt="LGraphics::LMultiWRectangle" shape="rect" coords="0,112,177,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a93bd3484c34bd4e28eb201f6bd40ae39"><td class="memItemLeft" align="right" valign="top"><a id="a93bd3484c34bd4e28eb201f6bd40ae39"></a>
-const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> () override</td></tr>
-<tr class="separator:a93bd3484c34bd4e28eb201f6bd40ae39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabef1123931a365971cd53954ea83418"><td class="memItemLeft" align="right" valign="top"><a id="aabef1123931a365971cd53954ea83418"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>LMultiWRectangle</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *app, size_t rectCount)</td></tr>
-<tr class="separator:aabef1123931a365971cd53954ea83418"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37c48d208ddf4f5eefd281ce430f613e"><td class="memItemLeft" align="right" valign="top"><a id="a37c48d208ddf4f5eefd281ce430f613e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> () override</td></tr>
-<tr class="separator:a37c48d208ddf4f5eefd281ce430f613e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e023e223287741711cd2137125ccab"><td class="memItemLeft" align="right" valign="top"><a id="ab9e023e223287741711cd2137125ccab"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()=0</td></tr>
+<tr class="separator:ab9e023e223287741711cd2137125ccab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af05c67871290f120b594673ac457f675"><td class="memItemLeft" align="right" valign="top"><a id="af05c67871290f120b594673ac457f675"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LNonWidget</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *app)</td></tr>
+<tr class="separator:af05c67871290f120b594673ac457f675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a487bd05904dd7f65278332d0fd4d4cad"><td class="memItemLeft" align="right" valign="top"><a id="a487bd05904dd7f65278332d0fd4d4cad"></a>
+virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> ()</td></tr>
+<tr class="separator:a487bd05904dd7f65278332d0fd4d4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a3b82358a9e27e0c2b5d783ae0eddbff1"><td class="memItemLeft" align="right" valign="top"><a id="a3b82358a9e27e0c2b5d783ae0eddbff1"></a>
-std::vector&lt; GLint &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textures</b></td></tr>
-<tr class="separator:a3b82358a9e27e0c2b5d783ae0eddbff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2dabe36e443d36536fa9318329edebc"><td class="memItemLeft" align="right" valign="top"><a id="af2dabe36e443d36536fa9318329edebc"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>rectangles</b></td></tr>
-<tr class="separator:af2dabe36e443d36536fa9318329edebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d3e83b31d4bad398463209d6984ece0"><td class="memItemLeft" align="right" valign="top"><a id="a1d3e83b31d4bad398463209d6984ece0"></a>
-std::vector&lt; glm::mat4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>models</b></td></tr>
-<tr class="separator:a1d3e83b31d4bad398463209d6984ece0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab81dffc8b743da64891ebfe9d6d73652"><td class="memItemLeft" align="right" valign="top"><a id="ab81dffc8b743da64891ebfe9d6d73652"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>rectCount</b></td></tr>
-<tr class="separator:ab81dffc8b743da64891ebfe9d6d73652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8afc4a97b4db0d8f668958b588b612ed"><td class="memItemLeft" align="right" valign="top"><a id="a8afc4a97b4db0d8f668958b588b612ed"></a>
 <a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>app</b></td></tr>
 <tr class="separator:a8afc4a97b4db0d8f668958b588b612ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca173d979e5d825c7ffca7b9584824d7"><td class="memItemLeft" align="right" valign="top"><a id="aca173d979e5d825c7ffca7b9584824d7"></a>
+<a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>shader</b></td></tr>
+<tr class="separator:aca173d979e5d825c7ffca7b9584824d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>LizardGraphics/<a class="el" href="_l_multi_w_rectangle_8h_source.html">LMultiWRectangle.h</a></li>
-<li>LizardGraphics/LMultiWRectangle.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

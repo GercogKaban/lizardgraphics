@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['init_206',['init',['../class_l_graphics_1_1_l_buffer.html#ab4f83135432a6a8c5fa2f7e27468d3c9',1,'LGraphics::LBuffer::init()'],['../class_l_graphics_1_1_l_error.html#a81734fd1df13f5a68c7ecd77b06b233f',1,'LGraphics::LError::init()']]],
-  ['ishidden_207',['isHidden',['../class_l_graphics_1_1_l_widget.html#ac9ec3943fb1eeab1188f9bbc7bcf0150',1,'LGraphics::LWidget']]],
-  ['istextureturnedon_208',['isTextureTurnedOn',['../class_l_graphics_1_1_l_image.html#ac5dd290a7783ff1b7e0670555249b7ee',1,'LGraphics::LImage']]]
+  ['init_208',['init',['../class_l_graphics_1_1_l_buffer.html#ab4f83135432a6a8c5fa2f7e27468d3c9',1,'LGraphics::LBuffer::init()'],['../class_l_graphics_1_1_l_error.html#a81734fd1df13f5a68c7ecd77b06b233f',1,'LGraphics::LError::init()']]],
+  ['ishidden_209',['isHidden',['../class_l_graphics_1_1_l_widget.html#ac9ec3943fb1eeab1188f9bbc7bcf0150',1,'LGraphics::LWidget']]],
+  ['istextureturnedon_210',['isTextureTurnedOn',['../class_l_graphics_1_1_l_image.html#ac5dd290a7783ff1b7e0670555249b7ee',1,'LGraphics::LImage']]]
 ];
