@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['genbuffers_13',['genBuffers',['../class_l_graphics_1_1_l_buffer.html#a9147209c1c2746bd541594d696079853',1,'LGraphics::LBuffer']]],
+  ['genbuffers_13',['genBuffers',['../class_l_graphics_1_1_l_buffer.html#a9147209c1c2746bd541594d696079853',1,'LGraphics::LBuffer::genBuffers()'],['../class_l_graphics_1_1_l_multi_rectangle_buffer.html#a291a274cde7c5f10d3aa40db43032b3f',1,'LGraphics::LMultiRectangleBuffer::genBuffers()']]],
   ['getcenter_14',['getCenter',['../class_l_graphics_1_1_l_rectangle_shape.html#a82ddcd75573da92fb052086767a29dbf',1,'LGraphics::LRectangleShape::getCenter()'],['../class_l_graphics_1_1_l_widget.html#accef1889c9c5ac582ffddb7227d6cd93',1,'LGraphics::LWidget::getCenter()']]],
   ['getcolor_15',['getColor',['../class_l_graphics_1_1_l_shape.html#aed3866748136ef71c8c9ba83de30582e',1,'LGraphics::LShape::getColor()'],['../class_l_graphics_1_1_l_widget.html#a3c7ff81262c502419b388c04d5f9cc1d',1,'LGraphics::LWidget::getColor()']]],
   ['getindcount_16',['getIndCount',['../class_l_graphics_1_1_l_buffer.html#ac45dc1115cc6f2642fadb3680056001a',1,'LGraphics::LBuffer']]],
