@@ -78,7 +78,8 @@ void LGraphics::LWidget::init()
 
 LGraphics::LWidget * LGraphics::LWidget::getInnerWidgetByName(const char * name)
 {
-    for (auto& w : innerWidgets)
+    if (innerWidgets)
+    for (auto& w : *innerWidgets)
         if (w->name == name)
             return w;
     return nullptr;
@@ -86,7 +87,9 @@ LGraphics::LWidget * LGraphics::LWidget::getInnerWidgetByName(const char * name)
 
 void LGraphics::LWidget::addInnerWidget(LWidget* innerWidget)
 {
-    innerWidgets.push_back(innerWidget);
+    if (!innerWidgets) innerWidgets = new std::vector<LGraphics::LWidget*>();
+
+    innerWidgets->push_back(innerWidget);
     std::vector<LWidget*>& obj = innerWidget->isInterfaceObject() ? app->getInterfaceObjects() : app->getNonInterfaceObjects();
     for (size_t i = 0; i < obj.size(); ++i)
         if (obj[i] == innerWidget)

@@ -35,7 +35,8 @@ void LGraphics::LColorBar::draw()
     glBindVertexArray(0);
     LLine::display(label);
 
-    for (auto& i : innerWidgets)
+    if (innerWidgets)
+    for (auto& i : *innerWidgets)
         i->draw();
 }
 

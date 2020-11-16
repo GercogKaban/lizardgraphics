@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 
+//#define GLM_EXTERNAL_TEMPLATE
 #include "include/glm/glm.hpp"
 
 #include "vectors.h"
@@ -99,7 +100,7 @@ namespace LGraphics
         void rotateX(float angleDegree);
         void rotateY(float angleDegree);
         void rotateZ(float angleDegree);
-        void setRotate(glm::mat4 rotate) { rotate_ = rotate; }
+        void setRotate(const glm::mat4& rotate) { rotate_ = rotate; }
 
         virtual void turnOffColor() = 0;
 
@@ -139,7 +140,7 @@ namespace LGraphics
         virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
         virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
-        const std::vector<LWidget*>& getInnerWidgets() const { return innerWidgets; }
+        const std::vector<LWidget*>& getInnerWidgets() const { return *innerWidgets; }
 
         //LWidget* getWidgetByName(const char* name);
         LWidget* getInnerWidgetByName(const char* name);
@@ -161,7 +162,7 @@ namespace LGraphics
 
         bool drawOver_ = false;
 
-        std::vector<LWidget*> innerWidgets;
+        std::vector<LWidget*>* innerWidgets = nullptr;
 
         virtual void alignLabel() = 0;
         virtual void updateLabelPos() = 0;

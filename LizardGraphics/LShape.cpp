@@ -28,7 +28,8 @@ namespace LGraphics
     {
         auto scaleDif = fvect3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
-        for (auto& o : innerWidgets)
+        if (innerWidgets)
+        for (auto& o : *innerWidgets)
             o->scale(o->getScale() + scaleDif);
         alignLabel();
     }
@@ -47,7 +48,8 @@ namespace LGraphics
     {
         auto moveDif = fvect3(x,y,z) - move_;
         move_ = { x,y,z };
-        for (auto& o : innerWidgets)
+        if (innerWidgets)
+        for (auto& o : *innerWidgets)
             o->move(o->getMove() + moveDif);
         alignLabel();
     }

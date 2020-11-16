@@ -205,13 +205,14 @@ namespace LGraphics
     void LGraphics::LText::setHorizontalScroller(LHorizontalScroller * scroller)
     {
         scroller->setParent(this);
-        if (horizScroller)
-            std::remove(innerWidgets.begin(), innerWidgets.end(), horizScroller);
+        if (horizScroller && innerWidgets)
+            std::remove(innerWidgets->begin(), innerWidgets->end(), horizScroller);
         horizScroller = scroller;
         scroller->scale({ scale_.x, scale_.y / 25.0f, scale_.z });
         //scroller->move(fvect3(move_.x, move_.y + (getTopLeftCorner().x + getBottomLeftCorner().y) / 2.0f, move_.z));
         scroller->move(fvect3(move_.x, getTopLeftCorner().y, move_.z));
-        innerWidgets.push_back(scroller);
+        if (!innerWidgets) innerWidgets = new std::vector<LGraphics::LWidget*>();
+        innerWidgets->push_back(scroller);
     }
 
     void LGraphics::LText::calculateMaxLength()

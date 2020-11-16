@@ -157,8 +157,9 @@ namespace LGraphics
         for (size_t i = 0; i < obj.size(); ++i)
             if (obj.operator[](i) == w)
             {
-                for (size_t j = 0; j < w->innerWidgets.size(); ++j)
-                    deleteWidget(w->innerWidgets[j]);
+                if (w->innerWidgets)
+                for (size_t j = 0; j < w->innerWidgets->size(); ++j)
+                    deleteWidget(w->innerWidgets->operator[](j));
                 if (activeWidget == w) activeWidget = nullptr;
                 if (widgetToMove == w) widgetToMove = nullptr;
                 obj.erase(obj.begin() + i);
@@ -218,8 +219,8 @@ namespace LGraphics
             if (!w->isInited())
             {
                 w->init();
-                if (w->innerWidgets.size())
-                    initTextures(w->innerWidgets);
+                if (w->innerWidgets)
+                    initTextures(*w->innerWidgets);
             }
     }
 

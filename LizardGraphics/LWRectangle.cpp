@@ -1,11 +1,12 @@
+#include "pch.h"
 #include "LWRectangle.h"
 #include "LRectangleBuffer.h"
 #include "LApp.h"
 #include "additional.h"
-#include "pch.h"
 
 //#include <iostream>
 
+//#define GLM_EXTERNAL_TEMPLATE
 //#include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
 
@@ -100,16 +101,21 @@ void LGraphics::LWRectangle::draw()
     //glBindVertexArray(0);
     //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
     //glBindVertexArray(0);
-
-    for (auto& i : innerWidgets)
+    if (innerWidgets)
+    for (auto& i : *innerWidgets)
         i->draw();
 }
 
 glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
 {
+#if _DEBUG
+#include "../Optimized/optimized.h"
+    return _calculateModelMatrix(move_, rotate_, scale_);
+#else
     glm::mat4 model_ = glm::mat4(1.0f);
     model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
     model_ *= rotate_;
     model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
     return model_;
+#endif
 }
