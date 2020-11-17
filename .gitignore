@@ -294,3 +294,5 @@ latex/
 Doxyfile/
 *.png
 *.hxx
+LizardGraphics/Optimized/Optimized.dir/MinSizeRel/objects.txt
+LizardGraphics/Optimized/Optimized.dir/RelWithDebInfo/objects.txt

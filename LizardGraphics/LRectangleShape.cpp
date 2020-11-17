@@ -108,18 +108,26 @@ namespace LGraphics
         auto shader = getShader();
         shader->use();
 
-        if (isTextureTurnedOn()) glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
-        else glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 0);
+        if (isTextureTurnedOn()) 
+            glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
+        else 
+            glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 0);
         glBindTexture(GL_TEXTURE_2D, getTexture());
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
         glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
 
+        glm::mat4 rotate_ = glm::mat4(1.0f);
+        rotate_ = glm::rotate(rotate_, glm::radians(180.0f), {1.0f,0.0f,0.0f});
+        rotate_ = glm::scale(rotate_,glm::vec3(scale_.x, scale_.y, scale_.z));
+        glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "rotate"), 1, GL_FALSE, glm::value_ptr(rotate_));
+
         glBindVertexArray(buffer->getVaoNum());
 
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-        LLine::display(label);
+        //if (label.text.size())
+        //    LLine::display(label);
 
         if (innerWidgets)
         for (auto& i : *innerWidgets)

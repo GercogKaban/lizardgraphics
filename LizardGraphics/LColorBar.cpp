@@ -40,6 +40,36 @@ void LGraphics::LColorBar::draw()
         i->draw();
 }
 
+void LGraphics::LColorBar::move(const fvect3 val)
+{
+    LRectangleShape::move(val);
+    setFullness(fullness);
+}
+
+void LGraphics::LColorBar::move(const float x, const float y, const float z)
+{
+    LRectangleShape::move(fvect3{x,y,z});
+    setFullness(fullness);
+}
+
+void LGraphics::LColorBar::move(size_t x, size_t y)
+{
+    LRectangleShape::move(x, y);
+    setFullness(fullness);
+}
+
+void LGraphics::LColorBar::scale(const fvect3 scale)
+{
+    LRectangleShape::scale(scale);
+    setFullness(fullness);
+}
+
+void LGraphics::LColorBar::scale(const float x, const float y, const float z)
+{
+    LRectangleShape::scale(fvect3{x,y,z});
+    setFullness(fullness);
+}
+
 void LGraphics::LColorBar::setFirstColor(const unsigned char r, const unsigned char g, const unsigned char b)
 {
     firstColor = rgbToFloat(r, g, b);
@@ -52,6 +82,7 @@ void LGraphics::LColorBar::setSecondColor(const unsigned char r, const unsigned 
 
 void LGraphics::LColorBar::setFullness(float fullness)
 {
+    this->fullness = fullness;
     auto dif = xGlCoordToScreenCoord(app->getWindowSize(), getBottomRightCorner().x)
         - xGlCoordToScreenCoord(app->getWindowSize(), getBottomLeftCorner().x);
     border = xGlCoordToScreenCoord(app->getWindowSize(), getBottomLeftCorner().x) + dif* fullness;

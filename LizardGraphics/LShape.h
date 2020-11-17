@@ -96,9 +96,10 @@ namespace LGraphics
 
         void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;
         void setLabel(const std::string label) override;
+
+        const LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
            
         virtual ~LShape();
-
     protected:
 
         /*!
@@ -117,8 +118,6 @@ namespace LGraphics
         LShape(LApp* app, const unsigned char* bytes, size_t size);
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
-
-        const LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
 
         fvect3 scale_ = fvect3(0.5f, 0.5f, 1.0f);  ///< Вектор размеров виджета.
         fvect3 move_ = fvect3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.

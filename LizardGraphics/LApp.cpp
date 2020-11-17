@@ -87,9 +87,9 @@ namespace LGraphics
                 if (!o->isHidden())
                     o->draw();
 
-            for (auto& t : textObjects)
-                LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
+            //for (auto& t : textObjects)
+                //LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             
             for (auto& o : interfaceObjects)
                 o->tick();
@@ -97,6 +97,7 @@ namespace LGraphics
                 o->tick();
 
             afterDrawingFunc();
+            drawStaticText();
             glfwSwapBuffers(window);
 
 #if LG_MULTITHREAD
@@ -111,12 +112,15 @@ namespace LGraphics
 
     void LApp::addText(std::string text, fvect2 pos, float scale, fvect3 color)
     {
-        textObjects.push_back({ text,pos,scale,0.0f,color });
+        Text t(text,pos,scale,color);
+        textObjects.push_back(t);
+        refreshStaticText = true;
     }
 
     void LApp::popText()
     {
         textObjects.pop_back();
+        refreshStaticText = true;
     }
 
     LWidget* LApp::getActiveWidget()
@@ -265,6 +269,11 @@ namespace LGraphics
         w->move(fvect3{ (float)mouse.x,(float)mouse.y,w->getMove().z });
     }
 
+    void LApp::drawStaticText()
+    {
+        LLine::displayStaticText(textObjects, refreshStaticText);
+    }
+
     void LApp::refreshCamera()
     {
         //float t = sqrt(3);
@@ -300,6 +309,7 @@ namespace LGraphics
         defaultShader = new LShaders::Shader("shadows.vs", "shadows.fs", false);
         //multi_shadowMap = new LShaders::Shader("multi_shadowMap.vs", "multi_shadowMap.fs", false);
         //multi_defaultShader = new LShaders::Shader("multi_shadows.vs", "multi_shadows.fs", false);
+        textRenderer = new LLine(this);
 
         lwRectPool.setCreationCallback([&]()
         {
@@ -410,7 +420,6 @@ namespace LGraphics
         int width_, height_;
         glfwGetFramebufferSize(window, &width_, &height_);
         glViewport(0, 0, width_, height_);
-        textRenderer = new LLine(this);
     }
 
     void LApp::checkEvents()
@@ -447,23 +456,26 @@ namespace LGraphics
                 auto o = objects[i];
 
                 // тут нужна рекурсия
-                for (auto& innerW : (o)->getInnerWidgets())
+                if (o->getInnerWidgetsPtr())
                 {
-                    if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
+                    for (auto& innerW : (o)->getInnerWidgets())
                     {
-                        if (activeWidget) activeWidget->breakAnimation();
-                        activeWidget = innerW;
-                        return;
-                        //widgetToMove = innerW;
-                        //((LScroller*)innerW)->moveScrollerToMouse();
-                    }
-                    else if (dynamic_cast<LIButton*>(innerW) && ((LIButton*)innerW)->mouseOnIt())
-                    {
-                        ((LIButton*)innerW)->doClickEventFunction();
-                        return;
+                        if (dynamic_cast<LScroller*>(innerW) && ((LScroller*)innerW)->mouseOnIt())
+                        {
+                            if (activeWidget) activeWidget->breakAnimation();
+                            activeWidget = innerW;
+                            return;
+                            //widgetToMove = innerW;
+                            //((LScroller*)innerW)->moveScrollerToMouse();
+                        }
+                        else if (dynamic_cast<LIButton*>(innerW) && ((LIButton*)innerW)->mouseOnIt())
+                        {
+                            ((LIButton*)innerW)->doClickEventFunction();
+                            return;
+                        }
                     }
                 }
-
+               
                 if (o->mouseOnIt())
                 {
                     if (activeWidget) activeWidget->breakAnimation();
@@ -500,6 +512,7 @@ namespace LGraphics
 
     void LApp::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        mouseCoords = { (float)xpos,(float)ypos };
         if (widgetToMove) moveWidgetToMouse(widgetToMove);
     }
 

@@ -109,13 +109,14 @@ namespace LGraphics
         LShaders::Shader* getLightningShader() { return experimentalLightShader; }
 
         unsigned int getDepthMap() const { return depthMap; }
-
-            
+         
         glm::vec3 getLightPos() const { return lightPos; }
         glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
 
         bool lightIsInited() const { return lightIsInited_; }
         void initLight() { lightIsInited_ = true; }
+
+        fvect2 getMouseCoords() const { return mouseCoords; }
 
         ObjectPool<LWRectangle*> lwRectPool;
 
@@ -123,6 +124,8 @@ namespace LGraphics
         bool perspectiveProjection = false;
 
     protected:
+
+        fvect2 mouseCoords = fvect2(0.0f);
 
         bool lightIsInited_ = false;
         glm::vec3 lightPos;
@@ -135,6 +138,8 @@ namespace LGraphics
         void setMatrices();
         void addObject(LWidget* w, bool isInterfaceObj);
         void moveWidgetToMouse(LWidget* w);
+
+        void drawStaticText();
 
         void refreshCamera();
         void refreshProjection();
@@ -196,15 +201,12 @@ namespace LGraphics
         std::function<void()> beforeDrawingFunc = []() {};
         std::function<void()> afterDrawingFunc = []() {};
 
-
-
-        // shadowMapping
-
-
         unsigned int shadowWidth = 1024, shadowHeight = 1024;
 
         unsigned int depthMapFBO, depthMap;
         fvect4 borderColor = fvect4(1.0, 1.0, 1.0, 1.0);
+
+        bool refreshStaticText = false;
     };
 }
 
