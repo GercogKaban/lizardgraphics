@@ -10,7 +10,7 @@
 #include "ObjectPool.h"
 
 #include "LWRectangle.h"
-#include "LMultiWRectangle.h"
+//#include "LMultiWRectangle.h"
 
 namespace LGraphics
 {
@@ -18,6 +18,8 @@ namespace LGraphics
     namespace
     {
     }
+
+    class LNonWidget;
 
     /*!
     @brief Класс приложения Lizard Graphics
@@ -119,9 +121,12 @@ namespace LGraphics
         fvect2 getMouseCoords() const { return mouseCoords; }
 
         ObjectPool<LWRectangle*> lwRectPool;
+        ObjectPool<LColorBar*> lColorBarPool;
 
         glm::vec3 viewAxonometricVector = glm::vec3(1/sqrt(3));
         bool perspectiveProjection = false;
+
+        std::vector<LNonWidget*> customObjects;
 
     protected:
 
@@ -168,7 +173,6 @@ namespace LGraphics
         float viewRadius = 10.0f;
         std::vector<LWidget*> interfaceObjects;
         std::vector<LWidget*> nonInterfaceObjects;
-        std::vector<LNonWidget*> customObjects;
 
         //std::vector<LWidget*> objects;
         std::vector<Text> textObjects;

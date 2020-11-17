@@ -284,10 +284,16 @@ namespace LShaders
             glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
             if (!success)
             {
-                int a = 0;
-                glGetProgramInfoLog(fragment, 1488, &a, infoLog);
-                auto err = glGetError();
-                std::cout << "ERROR::FRAGMENT_SHADER_FAILED\n" << infoLog << std::endl;
+                GLint maxLength = 0;
+                glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
+
+                // The maxLength includes the NULL character
+                std::vector<GLchar> errorLog(maxLength);
+                glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
+                //int a = 0;
+                //glGetProgramInfoLog(fragment, 1488, &a, infoLog);
+                //auto err = glGetError();
+                std::cout << "ERROR::FRAGMENT_SHADER_FAILED\n" << &errorLog[0] << std::endl;
             }
 
             // Shader Program

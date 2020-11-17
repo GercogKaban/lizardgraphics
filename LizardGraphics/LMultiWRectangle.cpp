@@ -10,7 +10,7 @@
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LMultiWRectangle::LMultiWRectangle(LApp* app, size_t rectCount)
-    : LNonWidget(app), rectCount(rectCount)
+    : LWidgetGroup<LWRectangle>(app), rectCount(rectCount)
 {
     //shader = app->multi_defaultShader;
     view = app->getViewMatrix();
@@ -32,15 +32,33 @@ void LGraphics::LMultiWRectangle::draw()
 {
     //if (isHidden()) return;
 
+    if (!widgets.size())
+        return;
+
     this->shader->use();
     auto shader = this->shader->getShaderProgram();
     auto lightPos = app->getLightPos();
 
     textures.clear();
-    for (auto& r : rectangles)
+    for (auto& r : widgets)
         textures.push_back(r->getTexture());
 
-    glUniform1iv(glGetUniformLocation(shader, "ourTexture"), rectCount, (GLint*)&textures[0]);
+    char buf[16];
+    strcpy(buf, "ourTexture_");
+
+    for (size_t i = 0; i < rectCount; i++)
+    {
+        buf[11] = (i + 1) / 10 + '0';
+        buf[12] = (i+1) % 10 + '0';
+        buf[13] = 0;
+
+        glUniform1i(glGetUniformLocation(shader, buf), i);
+
+        glActiveTexture(GL_TEXTURE1 + i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+    }
+
+
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 0);
 
     //glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
@@ -58,11 +76,6 @@ void LGraphics::LMultiWRectangle::draw()
     //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
     //glBufferData(GL_SHADER_STORAGE_BUFFER, 4, &data, GL_STATIC_DRAW);
 
-    for (size_t i = 0; i < rectCount; i++)
-    {
-        glActiveTexture(GL_TEXTURE1 + i);
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
-    }
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, app->getDepthMap());
@@ -73,7 +86,7 @@ void LGraphics::LMultiWRectangle::draw()
     glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
    
     models.clear();
-    for (auto& r : rectangles)
+    for (auto& r : widgets)
         models.push_back(r->getModelMatrix());
     
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), rectCount, GL_FALSE, (GLfloat*)(&models[0]));

@@ -2,6 +2,7 @@
 
 #include "LWRectangle.h"
 #include "Lshaders.h"
+#include "LApp.h"
 
 #include "include/glm/glm.hpp"
 
@@ -11,6 +12,8 @@ namespace LGraphics
     {
     public:
         virtual void draw() = 0;
+
+        bool isInterface;
 
         LApp* app;
 
@@ -22,12 +25,47 @@ namespace LGraphics
         }
     };
 
-    class LMultiWRectangle : public LNonWidget
+    //using T = LWidget;
+    template <typename T>
+    class LWidgetGroup : public LNonWidget
+    {
+    public:
+        std::vector<T*> widgets;
+
+        LWidgetGroup(LApp* app) : LNonWidget(app)
+        {
+
+        }
+
+        void addWidget(T* widget)
+        {
+            widgets.push_back(widget);
+            app->removeWidget(widget);
+        }
+
+        virtual void clear()
+        {
+            for (auto* w : widgets)
+                delete w;
+            widgets.clear();
+        }
+
+        virtual void draw() override
+        {
+            for (auto* w : widgets)
+            {
+                w->setShader(shader);
+                w->draw();
+            }
+        }
+    };
+
+    class LMultiWRectangle : public LWidgetGroup<LWRectangle>
     {
     public:
 
         std::vector<GLint> textures;
-        std::vector<LWRectangle*> rectangles;
+        //std::vector<LWRectangle*> rectangles;
         std::vector<glm::mat4> models;
 
         const char* getObjectType() override { return "LMultiWRectangle"; }
@@ -48,7 +86,7 @@ namespace LGraphics
 
         LBuffer* buffer;
 
-        LShaders::Shader* shader;
+        //LShaders::Shader* shader;
 
         //glm::mat4 model;
         glm::mat4 view;

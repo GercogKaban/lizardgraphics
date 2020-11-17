@@ -97,7 +97,7 @@ namespace LGraphics
         void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;
         void setLabel(const std::string label) override;
 
-        const LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
+        LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
            
         virtual ~LShape();
     protected:

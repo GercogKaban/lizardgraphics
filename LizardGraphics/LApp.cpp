@@ -6,6 +6,8 @@
 #include "LWRectangle.h"
 #include "LTimer.h"
 #include "LCounter.h"
+#include "LMultiWRectangle.h"
+#include "LColorBar.h"
 
 namespace LGraphics
 {
@@ -55,8 +57,9 @@ namespace LGraphics
                     o->draw();
                 }
             for (auto& o : customObjects)
+                if (!o->isInterface)
             {
-                o->shader = multi_shadowMap;
+                o->shader = shadowMap;
                 o->draw();
             }
 
@@ -76,8 +79,9 @@ namespace LGraphics
                     o->draw();
                 }
             for (auto& o : customObjects)
+                if (!o->isInterface)
             {
-                o->shader = multi_defaultShader;
+                o->shader = defaultShader;
                 o->draw();
             }
 
@@ -86,6 +90,11 @@ namespace LGraphics
             for (auto& o : interfaceObjects)
                 if (!o->isHidden())
                     o->draw();
+
+            for (auto& o : customObjects)
+                if (o->isInterface)
+                    o->draw();
+
 
             LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
             //for (auto& t : textObjects)
@@ -314,15 +323,30 @@ namespace LGraphics
         lwRectPool.setCreationCallback([&]()
         {
             auto lwRect = new LWRectangle(this);
-            getNonInterfaceObjects().pop_back();
+            removeWidget(lwRect);
+            //getNonInterfaceObjects().pop_back();
             return lwRect;
         });
 
         lwRectPool.setReleaseFunction([&]()
         {
-            while (auto w = lwRectPool.pop())
-                deleteWidget(w);
+            //while (auto w = lwRectPool.pop())
+            //    deleteWidget(w);
         });
+
+        lColorBarPool.setCreationCallback([&]()
+            {
+                auto lBar = new LColorBar(this);
+                removeWidget(lBar);
+                //getNonInterfaceObjects().pop_back();
+                return lBar;
+            });
+
+        lColorBarPool.setReleaseFunction([&]()
+            {
+                //while (auto w = lwRectPool.pop())
+                //    deleteWidget(w);
+            });
 
         setMatrices();
         addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });

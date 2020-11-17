@@ -22,7 +22,8 @@ public:
             setSize(expansionSize);
             return popElem();
         } 
-        return nullptr;
+        throw 12345;
+        //return nullptr;
     }
 
     void setSize(size_t size)
