@@ -34,6 +34,8 @@ var searchData=
   ['ltimer_68',['LTimer',['../class_l_timer.html',1,'']]],
   ['lverticalscroller_69',['LVerticalScroller',['../class_l_graphics_1_1_l_vertical_scroller.html',1,'LGraphics']]],
   ['lwidget_70',['LWidget',['../class_l_graphics_1_1_l_widget.html',1,'LGraphics::LWidget'],['../class_l_graphics_1_1_l_widget.html#a6a90f9014b3ad09a2a4c24b486f0bd81',1,'LGraphics::LWidget::LWidget(LApp *app, const char *path)'],['../class_l_graphics_1_1_l_widget.html#a991b8f7ec1b39e0d0ab31eae49955e7a',1,'LGraphics::LWidget::LWidget(LApp *app, const unsigned char *bytes, size_t size)']]],
-  ['lwrectangle_71',['LWRectangle',['../class_l_graphics_1_1_l_w_rectangle.html',1,'LGraphics']]],
-  ['lizardgraphics_72',['lizardgraphics',['../md__r_e_a_d_m_e.html',1,'']]]
+  ['lwidgetgroup_71',['LWidgetGroup',['../class_l_graphics_1_1_l_widget_group.html',1,'LGraphics']]],
+  ['lwidgetgroup_3c_20lwrectangle_20_3e_72',['LWidgetGroup&lt; LWRectangle &gt;',['../class_l_graphics_1_1_l_widget_group.html',1,'LGraphics']]],
+  ['lwrectangle_73',['LWRectangle',['../class_l_graphics_1_1_l_w_rectangle.html',1,'LGraphics']]],
+  ['lizardgraphics_74',['lizardgraphics',['../md__r_e_a_d_m_e.html',1,'']]]
 ];

@@ -351,74 +351,80 @@ $(function() {
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            glGetShaderiv(fragment, GL_COMPILE_STATUS, &amp;success);</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">if</span> (!success)</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                <span class="keywordtype">int</span> a = 0;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                glGetProgramInfoLog(fragment, 1488, &amp;a, infoLog);</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                <span class="keyword">auto</span> err = glGetError();</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR::FRAGMENT_SHADER_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;            }</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            <span class="comment">// Shader Program</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            this-&gt;program = glCreateProgram();</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            glAttachShader(this-&gt;program, vertex);</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;            glAttachShader(this-&gt;program, fragment);</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            glLinkProgram(this-&gt;program);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                GLint maxLength = 0;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &amp;maxLength);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                <span class="comment">// The maxLength includes the NULL character</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;                std::vector&lt;GLchar&gt; errorLog(maxLength);</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;                glGetShaderInfoLog(fragment, maxLength, &amp;maxLength, &amp;errorLog[0]);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;                <span class="comment">//int a = 0;</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;                <span class="comment">//glGetProgramInfoLog(fragment, 1488, &amp;a, infoLog);</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                <span class="comment">//auto err = glGetError();</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR::FRAGMENT_SHADER_FAILED\n&quot;</span> &lt;&lt; &amp;errorLog[0] &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            }</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            glGetProgramiv(this-&gt;program, GL_LINK_STATUS, &amp;success);</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            <span class="keywordflow">if</span> (!success)</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;            {</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                glGetProgramInfoLog(this-&gt;program, 512, NULL, infoLog);</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;            }</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            glDeleteShader(vertex);</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            glDeleteShader(fragment);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00319"></a><span class="lineno"><a class="line" href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">  319</a></span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">Shader</a>(<span class="keyword">const</span> GLchar* v_shader, <span class="keyword">const</span> GLchar* f_shader, <span class="keywordtype">bool</span> sourceCode = <span class="keyword">true</span>)</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        {</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            <span class="keywordflow">if</span> (sourceCode)</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                initShaders(v_shader, f_shader);</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                loadShaders(v_shader, f_shader);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        }</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="keywordtype">void</span> bindShader(<span class="keyword">const</span> GLchar* shader, <span class="keywordtype">short</span> shaderType)</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        {</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            GLuint sh;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;            GLint success;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;            sh = glCreateShader(GL_VERTEX_SHADER);</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            glShaderSource(sh, 1, &amp;shader, NULL);</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            glCompileShader(sh);</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            glGetShaderiv(sh, GL_COMPILE_STATUS, &amp;success);</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;            <span class="keywordflow">if</span> (!success)</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;                <span class="keywordflow">throw</span> std::exception(<span class="stringliteral">&quot;ERROR::SHADER::VERTEX::COMPILATION_FAILED\n&quot;</span>);</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            this-&gt;program = glCreateProgram();</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;            glAttachShader(this-&gt;program, sh);</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;            glLinkProgram(this-&gt;program);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;            glGetProgramiv(this-&gt;program, GL_LINK_STATUS, &amp;success);</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            <span class="comment">// Shader Program</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            this-&gt;program = glCreateProgram();</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            glAttachShader(this-&gt;program, vertex);</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;            glAttachShader(this-&gt;program, fragment);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            glLinkProgram(this-&gt;program);</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            glGetProgramiv(this-&gt;program, GL_LINK_STATUS, &amp;success);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;            <span class="keywordflow">if</span> (!success)</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            {</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                glGetProgramInfoLog(this-&gt;program, 512, NULL, infoLog);</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;                std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            }</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;            glDeleteShader(vertex);</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            glDeleteShader(fragment);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        }</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
+<div class="line"><a name="l00325"></a><span class="lineno"><a class="line" href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">  325</a></span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">Shader</a>(<span class="keyword">const</span> GLchar* v_shader, <span class="keyword">const</span> GLchar* f_shader, <span class="keywordtype">bool</span> sourceCode = <span class="keyword">true</span>)</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        {</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;            <span class="keywordflow">if</span> (sourceCode)</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                initShaders(v_shader, f_shader);</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;                loadShaders(v_shader, f_shader);</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        }</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="keywordtype">void</span> bindShader(<span class="keyword">const</span> GLchar* shader, <span class="keywordtype">short</span> shaderType)</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        {</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;            GLuint sh;</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            GLint success;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            sh = glCreateShader(GL_VERTEX_SHADER);</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;            glShaderSource(sh, 1, &amp;shader, NULL);</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;            glCompileShader(sh);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;            glGetShaderiv(sh, GL_COMPILE_STATUS, &amp;success);</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;            <span class="keywordflow">if</span> (!success)</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                <span class="keywordflow">throw</span> std::exception(<span class="stringliteral">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span>);</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;            glDeleteShader(sh);</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        }</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno"><a class="line" href="class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447">  349</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447">use</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;            glUseProgram(program);</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        }</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
-<div class="line"><a name="l00357"></a><span class="lineno"><a class="line" href="class_l_shaders_1_1_shader.html#adec284feb22711ac6c90684d0ed23a93">  357</a></span>&#160;        GLuint <a class="code" href="class_l_shaders_1_1_shader.html#adec284feb22711ac6c90684d0ed23a93">getShaderProgram</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;            <span class="keywordflow">return</span> program;</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        }</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    };</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;}</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                <span class="keywordflow">throw</span> std::exception(<span class="stringliteral">&quot;ERROR::SHADER::VERTEX::COMPILATION_FAILED\n&quot;</span>);</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;            this-&gt;program = glCreateProgram();</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;            glAttachShader(this-&gt;program, sh);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;            glLinkProgram(this-&gt;program);</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;            glGetProgramiv(this-&gt;program, GL_LINK_STATUS, &amp;success);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;            <span class="keywordflow">if</span> (!success)</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                <span class="keywordflow">throw</span> std::exception(<span class="stringliteral">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span>);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;            glDeleteShader(sh);</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        }</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno"><a class="line" href="class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447">  355</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447">use</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;            glUseProgram(program);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;        }</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
+<div class="line"><a name="l00363"></a><span class="lineno"><a class="line" href="class_l_shaders_1_1_shader.html#adec284feb22711ac6c90684d0ed23a93">  363</a></span>&#160;        GLuint <a class="code" href="class_l_shaders_1_1_shader.html#adec284feb22711ac6c90684d0ed23a93">getShaderProgram</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            <span class="keywordflow">return</span> program;</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        }</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    };</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_l_shaders_1_1_shader_html_adec284feb22711ac6c90684d0ed23a93"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#adec284feb22711ac6c90684d0ed23a93">LShaders::Shader::getShaderProgram</a></div><div class="ttdeci">GLuint getShaderProgram() const</div><div class="ttdoc">Возвращает шейдерную программу.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:357</div></div>
-<div class="ttc" id="aclass_l_shaders_1_1_shader_html_a5a41a15a33b90a37881b6283dfc89447"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447">LShaders::Shader::use</a></div><div class="ttdeci">void use() const</div><div class="ttdoc">Активирует шейдер (перед отрисовкой).</div><div class="ttdef"><b>Definition:</b> Lshaders.h:349</div></div>
+<div class="ttc" id="aclass_l_shaders_1_1_shader_html_adec284feb22711ac6c90684d0ed23a93"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#adec284feb22711ac6c90684d0ed23a93">LShaders::Shader::getShaderProgram</a></div><div class="ttdeci">GLuint getShaderProgram() const</div><div class="ttdoc">Возвращает шейдерную программу.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:363</div></div>
+<div class="ttc" id="aclass_l_shaders_1_1_shader_html_a5a41a15a33b90a37881b6283dfc89447"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447">LShaders::Shader::use</a></div><div class="ttdeci">void use() const</div><div class="ttdoc">Активирует шейдер (перед отрисовкой).</div><div class="ttdef"><b>Definition:</b> Lshaders.h:355</div></div>
 <div class="ttc" id="aclass_l_shaders_1_1_shader_html"><div class="ttname"><a href="class_l_shaders_1_1_shader.html">LShaders::Shader</a></div><div class="ttdoc">Класс шейдера.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:231</div></div>
-<div class="ttc" id="aclass_l_shaders_1_1_shader_html_aeb835ae39a7de18070cf949e6e2a9fb1"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">LShaders::Shader::Shader</a></div><div class="ttdeci">Shader(const GLchar *v_shader, const GLchar *f_shader, bool sourceCode=true)</div><div class="ttdoc">Конструктор</div><div class="ttdef"><b>Definition:</b> Lshaders.h:319</div></div>
+<div class="ttc" id="aclass_l_shaders_1_1_shader_html_aeb835ae39a7de18070cf949e6e2a9fb1"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#aeb835ae39a7de18070cf949e6e2a9fb1">LShaders::Shader::Shader</a></div><div class="ttdeci">Shader(const GLchar *v_shader, const GLchar *f_shader, bool sourceCode=true)</div><div class="ttdoc">Конструктор</div><div class="ttdef"><b>Definition:</b> Lshaders.h:325</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

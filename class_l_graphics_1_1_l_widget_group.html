@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Lizard Graphics: LGraphics::LNonWidget Class Reference</title>
+<title>Lizard Graphics: LGraphics::LWidgetGroup&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,45 +62,52 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>LGraphics</b></li><li class="navelem"><a class="el" href="class_l_graphics_1_1_l_non_widget.html">LNonWidget</a></li>  </ul>
+<li class="navelem"><b>LGraphics</b></li><li class="navelem"><a class="el" href="class_l_graphics_1_1_l_widget_group.html">LWidgetGroup</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="class_l_graphics_1_1_l_non_widget-members.html">List of all members</a>  </div>
+<a href="class_l_graphics_1_1_l_widget_group-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">LGraphics::LNonWidget Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">LGraphics::LWidgetGroup&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for LGraphics::LNonWidget:</div>
+Inheritance diagram for LGraphics::LWidgetGroup&lt; T &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="class_l_graphics_1_1_l_non_widget.png" usemap="#LGraphics::LNonWidget_map" alt=""/>
-  <map id="LGraphics::LNonWidget_map" name="LGraphics::LNonWidget_map">
-<area href="class_l_graphics_1_1_l_object.html" alt="LGraphics::LObject" shape="rect" coords="132,0,386,24"/>
-<area href="class_l_graphics_1_1_l_widget_group.html" alt="LGraphics::LWidgetGroup&lt; T &gt;" shape="rect" coords="0,112,254,136"/>
-<area href="class_l_graphics_1_1_l_widget_group.html" alt="LGraphics::LWidgetGroup&lt; LWRectangle &gt;" shape="rect" coords="264,112,518,136"/>
-<area href="class_l_graphics_1_1_l_multi_w_rectangle.html" alt="LGraphics::LMultiWRectangle" shape="rect" coords="264,168,518,192"/>
+  <img src="class_l_graphics_1_1_l_widget_group.png" usemap="#LGraphics::LWidgetGroup_3C_20T_20_3E_map" alt=""/>
+  <map id="LGraphics::LWidgetGroup_3C_20T_20_3E_map" name="LGraphics::LWidgetGroup_3C_20T_20_3E_map">
+<area href="class_l_graphics_1_1_l_non_widget.html" alt="LGraphics::LNonWidget" shape="rect" coords="0,56,187,80"/>
+<area href="class_l_graphics_1_1_l_object.html" alt="LGraphics::LObject" shape="rect" coords="0,0,187,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab9e023e223287741711cd2137125ccab"><td class="memItemLeft" align="right" valign="top"><a id="ab9e023e223287741711cd2137125ccab"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()=0</td></tr>
-<tr class="separator:ab9e023e223287741711cd2137125ccab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af05c67871290f120b594673ac457f675"><td class="memItemLeft" align="right" valign="top"><a id="af05c67871290f120b594673ac457f675"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>LNonWidget</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *app)</td></tr>
-<tr class="separator:af05c67871290f120b594673ac457f675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adad3bee626a3801652515ad1aa03072d"><td class="memItemLeft" align="right" valign="top"><a id="adad3bee626a3801652515ad1aa03072d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LWidgetGroup</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *app)</td></tr>
+<tr class="separator:adad3bee626a3801652515ad1aa03072d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f56e29d6feee7c02d8ff3ec6692142d"><td class="memItemLeft" align="right" valign="top"><a id="a3f56e29d6feee7c02d8ff3ec6692142d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addWidget</b> (T *widget)</td></tr>
+<tr class="separator:a3f56e29d6feee7c02d8ff3ec6692142d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7e48642e033004f7f2497c5412dea11"><td class="memItemLeft" align="right" valign="top"><a id="aa7e48642e033004f7f2497c5412dea11"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+<tr class="separator:aa7e48642e033004f7f2497c5412dea11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a714cf55ffc42ff1e8bb06e9241866d88"><td class="memItemLeft" align="right" valign="top"><a id="a714cf55ffc42ff1e8bb06e9241866d88"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> () override</td></tr>
+<tr class="separator:a714cf55ffc42ff1e8bb06e9241866d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487bd05904dd7f65278332d0fd4d4cad"><td class="memItemLeft" align="right" valign="top"><a id="a487bd05904dd7f65278332d0fd4d4cad"></a>
 virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> ()</td></tr>
 <tr class="separator:a487bd05904dd7f65278332d0fd4d4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:afbccc4ff18e2ad21c776c79c15d88860"><td class="memItemLeft" align="right" valign="top"><a id="afbccc4ff18e2ad21c776c79c15d88860"></a>
+std::vector&lt; T * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>widgets</b></td></tr>
+<tr class="separator:afbccc4ff18e2ad21c776c79c15d88860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9da142e01c4caca41eded9ce51db0cc"><td class="memItemLeft" align="right" valign="top"><a id="ad9da142e01c4caca41eded9ce51db0cc"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInterface</b></td></tr>
 <tr class="separator:ad9da142e01c4caca41eded9ce51db0cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
