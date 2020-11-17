@@ -100,8 +100,8 @@ namespace LGraphics
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
-        void setViewPoint(glm::vec3 view) { viewPoint = view; refreshCamera(); };
-        void setViewRadius(float radius) { viewRadius = radius; refreshCamera(); refreshProjection(); }
+        void setViewPoint(glm::vec3 view) { viewPoint = view; /*refreshCamera();*/ };
+        void setViewRadius(float radius) { viewRadius = radius; /*refreshCamera(); refreshProjection();*/ }
 
         glm::vec3 getViewPoint() const { return viewPoint; }
         float getViewRadius() const { return viewRadius; }
@@ -118,6 +118,9 @@ namespace LGraphics
         void initLight() { lightIsInited_ = true; }
 
         ObjectPool<LWRectangle*> lwRectPool;
+
+        glm::vec3 viewAxonometricVector = glm::vec3(1/sqrt(3));
+        bool perspectiveProjection = false;
 
     protected:
 

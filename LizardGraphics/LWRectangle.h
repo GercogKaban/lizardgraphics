@@ -21,6 +21,8 @@ namespace LGraphics
         void draw() override;
         glm::mat4 getModelMatrix() const { return calculateModelMatrix(); }
 
+        int effectIndex = 0;
+
     private:
 
         glm::mat4 calculateModelMatrix() const;

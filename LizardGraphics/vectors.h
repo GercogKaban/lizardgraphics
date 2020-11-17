@@ -263,6 +263,11 @@ struct vect_prototype2 : public DATA
 		return ret;
 	}
 
+	vect_prototype2 operator+() const
+	{
+		return *this;
+	}
+
 	vect_prototype2 operator-() const
 	{
 		vect_prototype2 ret;
@@ -424,6 +429,14 @@ struct vect_prototype2 : public DATA
 		return len;
 	}
 
+	T length2() const
+	{
+		T len = T();
+		for (size_t i = 0; i < csize; i++)
+			len += (*this)[i] * (*this)[i];
+		return len;
+	}
+
 	T dist(const vect_prototype2& v) const
 	{
 		T len = T();
@@ -460,6 +473,9 @@ using ivect4 = vect_prototype2<int, 4, vect4_data<int>>;
 using szvect2 = vect_prototype2<size_t, 2, vect2_data<size_t>>;
 using szvect3 = vect_prototype2<size_t, 3, vect3_data<size_t>>;
 using szvect4 = vect_prototype2<size_t, 4, vect4_data<size_t>>;
+using dvect2 = vect_prototype2<double, 2, vect2_data<double>>;
+using dvect3 = vect_prototype2<double, 3, vect3_data<double>>;
+using dvect4 = vect_prototype2<double, 4, vect4_data<double>>;
 using color = vect_prototype2<unsigned char, 4, color_data>;
 
 inline fvect2 fvect2fromAngle(float angle) 
@@ -471,5 +487,15 @@ inline fvect2 fvect2fromAngle(float angle)
 //{
 //	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 //}
+
+inline float angleTo(fvect2 from, fvect2 to)
+{
+	float r = dist(from, to);
+	fvect2 delta = to - from;
+	fvect2 cs = delta / r;
+	cs.x = acosf(cs.x);
+	if (cs.y < 0) cs.x = -cs.x;
+	return cs.x;
+}
 
 #pragma pack(pop)

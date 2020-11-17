@@ -27,6 +27,7 @@ namespace LGraphics
 #if LG_MULTITHREAD
             openGlDrawing.lock();
 #endif
+            setMatrices();
 
             if (!lightIsInited())
             {
@@ -266,8 +267,8 @@ namespace LGraphics
 
     void LApp::refreshCamera()
     {
-        float t = sqrt(3);
-        view = glm::lookAt(viewPoint + viewRadius * glm::vec3(t, t, t),
+        //float t = sqrt(3);
+        view = glm::lookAt(viewPoint + viewRadius * viewAxonometricVector,
             glm::vec3(viewPoint),
             glm::vec3(0.0f, 0.0f, 1.0f));
     }
@@ -275,7 +276,9 @@ namespace LGraphics
     void LApp::refreshProjection()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
-        projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, 0.1f, 1000.0f);
+        if (perspectiveProjection)
+            projection = glm::perspective(45.0f, aspect, 0.01f, 100.0f);
+        else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 100.0f);
     }
 
     void LApp::init()
