@@ -14,7 +14,7 @@ namespace LGraphics
         LWRectangle(LApp* app, const char* path = nullptr);
         bool isInterfaceObject() const override { return false; }
 
-        virtual glm::vec2 getScreenCoords() const;
+        virtual glm::vec4 getScreenCoords() const;
 
         void setMatrices(LApp* app);
         void setMatrices();

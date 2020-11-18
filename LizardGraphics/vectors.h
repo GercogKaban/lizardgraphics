@@ -17,6 +17,23 @@ struct vect2_data
 	{
 		return ((T*)this)[index];
 	}
+
+	template <typename X>
+	static vect2_data from(const X& value)
+	{
+		vect2_data data;
+		data.x = value.x;
+		data.y = value.y;
+		return data;
+	}
+
+	template <typename X>
+	X to()
+	{
+		X x;
+		x.x = x;
+		x.y = y;
+	}
 };
 
 template <typename T>
@@ -33,6 +50,25 @@ struct vect3_data
 	{
 		return ((T*)this)[index];
 	}
+
+	template <typename X>
+	static vect3_data from(const X& value)
+	{
+		vect3_data data;
+		data.x = value.x;
+		data.y = value.y;
+		data.z = value.z;
+		return data;
+	}
+
+	template <typename X>
+	X to()
+	{
+		X x;
+		x.x = x;
+		x.y = y;
+		x.z = z;
+	}
 };
 
 template <typename T>
@@ -48,6 +84,27 @@ struct vect4_data
 	T& operator[](size_t index) const
 	{
 		return ((T*)this)[index];
+	}
+
+	template <typename X>
+	static vect4_data from(const X& value)
+	{
+		vect4_data data;
+		data.x = value.x;
+		data.y = value.y;
+		data.z = value.z;
+		data.w = value.w;
+		return data;
+	}
+
+	template <typename X>
+	X to()
+	{
+		X x;
+		x.x = x;
+		x.y = y;
+		x.z = z;
+		x.w = w;
 	}
 };
 
@@ -176,6 +233,14 @@ struct vect_prototype2 : public DATA
 		(*this)[3] = d;
 	}
 
+	template <typename X>
+	static vect_prototype2 from(const X& object)
+	{
+		vect_prototype2 r;
+		*(DATA*)&r = DATA::from<X>(object);
+		return r;
+	}
+
 	//================================================================================================
 	//	PARTIAL ACCESS
 	//================================================================================================
@@ -186,20 +251,6 @@ struct vect_prototype2 : public DATA
 #if VECTOR_PARTIAL_ACCESS
 #include "vectors_ext.inl"
 #endif
-
-	//================================================================================================
-	//	INDEXER
-	//================================================================================================
-
-	//T& operator[](size_t index)
-	//{
-	//	return ((T*)this)[index];
-	//}
-
-	//T& operator[](size_t index) const
-	//{
-	//	return ((T*)this)[index];
-	//}
 
 	//================================================================================================
 	//	VECTOR & SCALAR
@@ -380,6 +431,11 @@ struct vect_prototype2 : public DATA
 	//	converters
 	//================================================================================================
 
+	//operator bool()
+	//{
+	//	return *this != 0.0f;
+	//}
+
 	template <size_t TOS>
 	operator vect_prototype2<T, TOS, DATA>&()
 	{
@@ -420,6 +476,22 @@ struct vect_prototype2 : public DATA
 		return s;
 	}
 
+	T product() const
+	{
+		T s = T(1);
+		for (size_t i = 0; i < csize; i++)
+			s *= (*this)[i];
+		return s;
+	}
+
+	T scalar_product(const vect_prototype2& other) const
+	{
+		T s = T(0);
+		for (size_t i = 0; i < csize; i++)
+			s += (*this)[i] * other[i];
+		return s;
+	}
+
 	T length() const
 	{
 		T len = T();
@@ -446,9 +518,22 @@ struct vect_prototype2 : public DATA
 		return len;
 	}
 
+	T dist2(const vect_prototype2& v) const
+	{
+		T len = T();
+		for (size_t i = 0; i < csize; i++)
+			len += ((*this)[i] - v[i]) * ((*this)[i] - v[i]);
+		return len;
+	}
+
 	friend T dist(const vect_prototype2& t, const vect_prototype2& v)
 	{
 		return t.dist(v);
+	}
+
+	friend T dist2(const vect_prototype2& t, const vect_prototype2& v)
+	{
+		return t.dist2(v);
 	}
 
 	vect_prototype2 normalize() const
@@ -493,6 +578,21 @@ inline float angleTo(fvect2 from, fvect2 to)
 	float r = dist(from, to);
 	fvect2 delta = to - from;
 	fvect2 cs = delta / r;
+	cs.x = acosf(cs.x);
+	if (cs.y < 0) cs.x = -cs.x;
+	return cs.x;
+}
+
+inline fvect2 sinCosTo(fvect2 from, fvect2 to)
+{
+	float r = dist(from, to);
+	fvect2 delta = to - from;
+	fvect2 cs = delta / r;
+	return cs;
+}
+
+inline float angleFromSinCos(fvect2 cs)
+{
 	cs.x = acosf(cs.x);
 	if (cs.y < 0) cs.x = -cs.x;
 	return cs.x;
