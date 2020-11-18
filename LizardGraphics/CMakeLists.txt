@@ -9,12 +9,12 @@ add_subdirectory (../Optimized Optimized)
 set (SOURCE_FILES textures.cpp LTextBuffer.cpp LText.cpp LTextEdit.cpp 
 LShape.cpp LRectangleShape.cpp LIRectangle.cpp LImage.cpp LIButton.cpp 
 LScroller.cpp LRectangleBuffer.cpp LError.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
-LLine.cpp LTimer.cpp additional.cpp LMultiRectangleBuffer.cpp LMultiWRectangle.cpp 
+LTextRender.cpp LTimer.cpp additional.cpp LMultiRectangleBuffer.cpp LMultiWRectangle.cpp 
 LWRectangle.cpp LResourceManager.cpp LFlag.cpp LCounter.cpp LMessageBox.cpp LColorBar.cpp LList.cpp)
 set (HEADER_FILES pch.h textures.h Lshaders.h vectors.h LTextBuffer.h 
 LText.h LTextEdit.h LShape.h LRectangleShape.h LRectangleBuffer.h 
 LIRectangle.h LScroller.h LImage.h LIButton.h LError.h LBuffer.h 
-LApp.h LWidget.h LLine.h LTimer.h additional.h LMultiRectangleBuffer.h 
+LApp.h LWidget.h LTextRender.h LTimer.h additional.h LMultiRectangleBuffer.h 
 LMultiWRectangle.h LWRectangle.h LResourceManager.h LFlag.h LCounter.h 
 LMessageBox.h LColorBar.h ObjectPool.h LList.h)
 

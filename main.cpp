@@ -24,6 +24,15 @@ using namespace LGraphics;
 int main()
 {
     LGraphics::LApp app;
+    auto t = new Text("Test", { 500,500 }, 1.0f, { 255,0,0 });
+    app.addText(t);
+    //auto length = LTextRender::getTextLength(t);
+
+    //auto textLength = LTextRender::getTextLength(*t);
+    //auto rect = new LIRectangle(&app);
+    //auto pos = pointOnScreenToGlCoords(app.getWindowSize(), { 500,500 });
+    //rect->move(fvect3(pos.x, pos.y, 0.0f));
+    //rect->scale(textLength / (float)(app.getWindowSize().x / 4), (float)48 / (float)(app.getWindowSize().y / 4), 1.0f);
 
     //genWidgets(&app);
     //CodeGen gen;
@@ -127,9 +136,9 @@ int main()
     b7->setLabel("LFlag");
     b8->setLabel("LColorBar");*/
 
-    auto bar = new LColorBar(&app);
-    bar->move(500, 60);
-    bar->setFullness(0.0f);
+    //auto bar = new LColorBar(&app);
+    //bar->move(500, 60);
+    //bar->setFullness(0.0f);
 
 
 

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "LWidget.h"
-#include "LLine.h"
+#include "LTextRender.h"
 
 #include "include/glm/gtc/matrix_transform.hpp"
 

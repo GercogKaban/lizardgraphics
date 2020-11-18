@@ -31,9 +31,10 @@ namespace LGraphics
         LRectangleShape::draw();
         for (auto str = begin; str < end; str++)
         {
-           if (outOfBordersY(str->pos.y + (vertScroller? vertScroller->currentPos : hiddenStrings) * strIndent))
+           if (outOfBordersY(str->getPos().y + (vertScroller? vertScroller->currentPos : hiddenStrings) * strIndent))
                continue;
-            auto toScreen = glCoordsToScreenCoords(app->getWindowSize(), { str->pos.x, str->pos.y + (vertScroller ? vertScroller->currentPos : hiddenStrings) * strIndent });
+            auto toScreen = glCoordsToScreenCoords(app->getWindowSize(), 
+                { str->getPos().x, str->getPos().y + (vertScroller ? vertScroller->currentPos : hiddenStrings) * strIndent });
             toScreen.y = app->getWindowSize().y - toScreen.y;
             //LLine::display(str->text, toScreen.x, toScreen.y, textScale, textColor);
         }
@@ -90,7 +91,7 @@ namespace LGraphics
         std::vector<std::string> res;
         res.reserve(text.size());
         for (auto& str : text)
-            res.push_back(str.text);
+            res.push_back(str.getText());
         return res;
     }
 
@@ -122,14 +123,15 @@ namespace LGraphics
 
     void LText::addSymb(const unsigned int symbol)
     {
-        auto char_ = LLine::characters[symbol];
+        auto char_ = LTextRender::characters[symbol];
+        auto& b = text.back();
         if (symbol == '\n')
             pushNewString(false);
 
-        else if ((char_.advance >> 6)*textScale + text.back().length + rightBorder * app->getWindowSize().x <= maxLength)
+        else if ((char_.advance >> 6)*textScale + b.getLength() + rightBorder * app->getWindowSize().x <= maxLength)
         {
-            text.back().text += (char)symbol;
-            text.back().length += (char_.advance >> 6) * textScale;
+            b.setText(b.getText() + (char)symbol);
+            b.setLength(b.getLength() + (char_.advance >> 6) * textScale);
             if (vertScroller && hiddenStrings > 0)
                 vertScroller->reloadScroller(hiddenStrings);
         }
@@ -142,7 +144,7 @@ namespace LGraphics
                     pushNewString(false);
                 else
                 {
-                    bool gap = text.back().text.size()? text.back().text.back() != ' ' : false;
+                    bool gap = b.getText().size()? b.getText().back() != ' ' : false;
                     pushNewString(gap);
                 }
             }
@@ -157,18 +159,21 @@ namespace LGraphics
 
     void LGraphics::LText::removeLastSymbol()
     {
-        if (text.back().text.empty() && text.size() != 1)
+        auto& b = text.back();
+        if (b.getText().empty() && text.size() != 1)
         {
             hiddenStrings > 0 ? hiddenStrings--, vertScroller? vertScroller->reloadScroller(hiddenStrings), vertScroller->moveScrollerToPos(hiddenStrings) :void() : hiddenStrings;
             text.pop_back();
             yAlign();
         }
 
-        if (!text.back().text.empty())
+        if (!b.getText().empty())
         {
-            auto char_ = LLine::characters[text.back().text.back()];
-            text.back().length -= (char_.advance >> 6)*textScale;
-            text.back().text.pop_back();
+            auto char_ = LTextRender::characters[b.getText().back()];
+            b.setLength(b.getLength() - (char_.advance >> 6)*textScale);
+            auto newText = b.getTextCopy();
+            newText.pop_back();
+            b.setText(newText);
             if (textScalling)
             {
                 scaleText(getTextScale() - textScallingStack.top());
@@ -230,7 +235,10 @@ namespace LGraphics
     {
         std::string wholeText;
         for (size_t i = 0; i < text.size(); ++i)
-            wholeText += text[i].text += '\n';
+        {
+            text[i].setText(text[i].getText() + '\n');
+            wholeText += text[i].getText();
+        }
         wholeText.pop_back();
         text.clear();
         initWidget();

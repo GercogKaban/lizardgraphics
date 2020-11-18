@@ -96,7 +96,7 @@ namespace LGraphics
                     o->draw();
 
 
-            LLine::display(std::to_string(prevFps), 50.0f, (float)getWindowSize().y - 50.0f, 1.5f, { 1.0f,0.0f,0.0f });
+            LTextRender::display(std::to_string(prevFps), { 50.0f, (float)getWindowSize().y - 50.0f }, 1.5f, { 1.0f,0.0f,0.0f });
             //for (auto& t : textObjects)
                 //LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             
@@ -106,7 +106,7 @@ namespace LGraphics
                 o->tick();
 
             afterDrawingFunc();
-            drawStaticText();
+            textRenderer->displayText();
             glfwSwapBuffers(window);
 
 #if LG_MULTITHREAD
@@ -119,17 +119,17 @@ namespace LGraphics
         glfwTerminate();
     }
 
-    void LApp::addText(std::string text, fvect2 pos, float scale, fvect3 color)
+    void LApp::addText(Text* text)
     {
-        Text t(text,pos,scale,color);
-        textObjects.push_back(t);
-        refreshStaticText = true;
+        textRenderer->lastTextureNum++;
+        textObjects.push_back(text);
     }
 
-    void LApp::popText()
+    Text* LApp::popText(int refreshingMode)
     {
+        auto res = textObjects.back();
         textObjects.pop_back();
-        refreshStaticText = true;
+        return res;
     }
 
     LWidget* LApp::getActiveWidget()
@@ -219,9 +219,8 @@ namespace LGraphics
 
     void LApp::setLightSpaceMatrix()
     {
-        float near_plane = 0.1f, far_plane = 35.0f;
-        float d = 12.0f;
-        //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+        const float near_plane = 0.1f, far_plane = 35.0f;
+        const float d = 12.0f;
         glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
         glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f)/*!!!*/, glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
@@ -242,23 +241,6 @@ namespace LGraphics
     {
         refreshCamera();
         refreshProjection();
-        //glm::vec3 pos(14.0f, 14.0f, 0.0f);
-        //float d = 10.0f;
-
-        //view = glm::lookAt(pos + d * glm::vec3(t, t, t),
-        //    glm::vec3(pos),
-        //    glm::vec3(0.0f, 0.0f, 1.0f));
-
-
-        //projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
-
-        //auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
-        //view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-        //    glm::vec3(0.0f, 0.0f, 0.0f),
-        //    glm::vec3(0.0f, 1.0f, 0.0f));
-
-        ////projection = glm::perspective(45.0f, (float)getWindowSize().x / (float)getWindowSize().y, 0.1f, 100.0f);
-        //projection = glm::ortho(-1.0f, 1.0f, -1.0f*aspect, 1.0f*aspect, 0.1f, 100.0f);
     }
 
     void LApp::addObject(LWidget* w, bool isInterfaceObj)
@@ -278,10 +260,11 @@ namespace LGraphics
         w->move(fvect3{ (float)mouse.x,(float)mouse.y,w->getMove().z });
     }
 
-    void LApp::drawStaticText()
-    {
-        LLine::displayStaticText(textObjects, refreshStaticText);
-    }
+    //void LApp::drawText()
+    //{
+    //    for (size_t i = 0; i < 3; ++i)
+    //        LTextRender::displayText(textObjects[i], i);
+    //}
 
     void LApp::refreshCamera()
     {
@@ -318,7 +301,7 @@ namespace LGraphics
         defaultShader = new LShaders::Shader("shadows.vs", "shadows.fs", false);
         //multi_shadowMap = new LShaders::Shader("multi_shadowMap.vs", "multi_shadowMap.fs", false);
         //multi_defaultShader = new LShaders::Shader("multi_shadows.vs", "multi_shadows.fs", false);
-        textRenderer = new LLine(this);
+        textRenderer = new LTextRender(this);
 
         lwRectPool.setCreationCallback([&]()
         {
@@ -349,7 +332,7 @@ namespace LGraphics
             });
 
         setMatrices();
-        addText("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 });
+        addText(new Text("Lizard Graphics v. 0.2", { static_cast<float>(width) - 400.0f,50.0f }, 0.7, { 1,0.75,0.81 }));
 
         //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
         //unsigned int depthMapFBO;

@@ -14,12 +14,14 @@
 
 namespace LGraphics
 {
+    class LTextRender;
     class LColorBar;
     namespace
     {
     }
 
     class LNonWidget;
+    class Text;
 
     /*!
     @brief Класс приложения Lizard Graphics
@@ -32,6 +34,7 @@ namespace LGraphics
     {
         friend LRectangleShape;
         friend LColorBar;
+        friend LTextRender;
 
     public:
         
@@ -58,8 +61,9 @@ namespace LGraphics
         */
         GLFWwindow* getWindowHandler() { return window; }
 
-        void addText(std::string text, fvect2 pos, float scale, fvect3 color);
-        void popText();
+        void addText(Text* text);
+        //void addText(std::string text, fvect2 pos, float scale, fvect3 color, int refreshingMode);
+        Text* popText(int refreshingMode);
         LWidget* getActiveWidget();
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
@@ -81,7 +85,7 @@ namespace LGraphics
         std::vector<LWidget*>& getInterfaceObjects(){ return interfaceObjects; }
         std::vector<LWidget*>& getNonInterfaceObjects() { return nonInterfaceObjects; }
         //std::vector<LWidget*>& getObjects() { return &objects; }
-        std::vector<Text>& getTextObjects() { return textObjects; }
+        //std::vector<Text>* getTextObjects() { return textObjects; }
 
         LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
         LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
@@ -144,12 +148,9 @@ namespace LGraphics
         void addObject(LWidget* w, bool isInterfaceObj);
         void moveWidgetToMouse(LWidget* w);
 
-        void drawStaticText();
-
         void refreshCamera();
         void refreshProjection();
 
-        LLine* textRenderer;
 
         void init();
         void initLEngine();
@@ -168,6 +169,7 @@ namespace LGraphics
         void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
         GLFWwindow* window;
+        LTextRender* textRenderer;
 
         glm::vec3 viewPoint = glm::vec3(14.0f, 14.0f, 0.0f);
         float viewRadius = 10.0f;
@@ -175,7 +177,7 @@ namespace LGraphics
         std::vector<LWidget*> nonInterfaceObjects;
 
         //std::vector<LWidget*> objects;
-        std::vector<Text> textObjects;
+        std::vector<Text*> textObjects;
 
         int width, height;
 
@@ -210,7 +212,7 @@ namespace LGraphics
         unsigned int depthMapFBO, depthMap;
         fvect4 borderColor = fvect4(1.0, 1.0, 1.0, 1.0);
 
-        bool refreshStaticText = false;
+        //bool refreshStaticText = false;
     };
 }
 

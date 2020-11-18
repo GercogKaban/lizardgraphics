@@ -33,7 +33,7 @@ void LGraphics::LColorBar::draw()
 
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    LLine::display(label);
+    //LTextRender::display(label);
 
     if (innerWidgets)
     for (auto& i : *innerWidgets)

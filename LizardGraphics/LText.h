@@ -2,7 +2,7 @@
 #include <stack>
 
 #include "LIButton.h"
-#include "LLine.h"
+#include "LTextRender.h"
 #include "LScroller.h"
 
 namespace LGraphics

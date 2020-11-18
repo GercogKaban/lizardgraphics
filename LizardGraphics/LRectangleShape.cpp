@@ -20,17 +20,17 @@ namespace LGraphics
     void LRectangleShape::setLabel(const std::string label)
     {
         fvect2 coords = { getBottomLeftCorner().x , getBottomLeftCorner().y};
-        this->label.pos = { coords.x + labelTextStartPosition, coords.y};
-        this->label.text = label;
+        this->label.setPos ({ coords.x + labelTextStartPosition, coords.y});
+        this->label.setText(label);
         alignLabel();
     }
 
     void LRectangleShape::alignLabel()
     {
-        if (label.text.empty())
+        if (label.getText().empty())
             return;
         float widgetLength = calculateWidgetLength();
-        float textLength = LLine::getTextLength(label);
+        float textLength = LTextRender::getTextLength(label);
 
         if (textLength > widgetLength)
             scaleWithoutAlign({ ((getScale().x * textLength)/widgetLength) + 0.05f ,getScale().y,getScale().z });
@@ -80,7 +80,7 @@ namespace LGraphics
     void LRectangleShape::updateLabelPos()
     {
         fvect2 coords = { getBottomLeftCorner().x, getBottomLeftCorner().y };
-        this->label.pos = { coords.x + labelTextStartPosition/app->getWindowSize().x, coords.y };
+        this->label.setPos({ coords.x + labelTextStartPosition/app->getWindowSize().x, coords.y });
     }
 
     bool LRectangleShape::mouseOnIt()
@@ -116,22 +116,17 @@ namespace LGraphics
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
         glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
-
-        glm::mat4 rotate_ = glm::mat4(1.0f);
-        rotate_ = glm::rotate(rotate_, glm::radians(180.0f), {1.0f,0.0f,0.0f});
-        rotate_ = glm::scale(rotate_,glm::vec3(scale_.x, scale_.y, scale_.z));
-        glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "rotate"), 1, GL_FALSE, glm::value_ptr(rotate_));
+        //glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "rotate"), 1, GL_FALSE, glm::value_ptr(rotate_));
 
         glBindVertexArray(buffer->getVaoNum());
-
         glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        //glBindVertexArray(0);
         //if (label.text.size())
         //    LLine::display(label);
 
         if (innerWidgets)
-        for (auto& i : *innerWidgets)
-            i->draw();
+            for (auto& i : *innerWidgets)
+                i->draw();
     }
 
     //LRectangleShape::LRectangleShape(LApp* app)
