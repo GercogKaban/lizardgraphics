@@ -131,13 +131,13 @@ namespace LGraphics
         bool perspectiveProjection = false;
 
         std::vector<LNonWidget*> customObjects;
+        glm::vec3 lightPos;
 
     protected:
 
         fvect2 mouseCoords = fvect2(0.0f);
 
         bool lightIsInited_ = false;
-        glm::vec3 lightPos;
         glm::mat4 lightSpaceMatrix;
 
         void setLightPos(glm::vec3 lightPos);

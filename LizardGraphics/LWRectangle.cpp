@@ -18,7 +18,7 @@ LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
     projection = app->getProjectionMatrix();
 }
 
-glm::vec2 LGraphics::LWRectangle::getScreenCoords() const
+glm::vec4 LGraphics::LWRectangle::getScreenCoords() const
 {
     glm::vec4 coords_ = glm::vec4{
     (((LRectangleBuffer*)buffer)->getBottomLeftCorner().x + ((LRectangleBuffer*)buffer)->getBottomRightCorner().x)/2.0f,

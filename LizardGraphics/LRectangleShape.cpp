@@ -46,7 +46,7 @@ namespace LGraphics
 
     fvect3 LRectangleShape::getCenter() const
     {
-        return ((((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_) + (((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_)) /2;
+        return ((((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_) + (((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_)) / 2.0f;
     }
 
     fvect3 LRectangleShape::getTopLeftCorner() const
