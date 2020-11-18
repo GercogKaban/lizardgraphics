@@ -28,6 +28,7 @@ You need to download and place this static libraries in the "LizardGraphics/libs
 4. Input following command:
 
 cmake -G "Visual Studio 16 2019" -A x64 -S path
+
 cmake -G "Visual Studio 15 2017" -A x64 -S path (killer-nyasha idea)
 
 # Building for Linux
