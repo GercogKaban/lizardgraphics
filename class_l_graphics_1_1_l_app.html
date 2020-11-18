@@ -104,12 +104,12 @@ Public Member Functions</h2></td></tr>
 GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">getWindowHandler</a> ()</td></tr>
 <tr class="memdesc:a66ebf0f08e10ebbe392eca6db846f61e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает дескриптор GLFW окна. <br /></td></tr>
 <tr class="separator:a66ebf0f08e10ebbe392eca6db846f61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa600183f258fcaabf64873359366ff95"><td class="memItemLeft" align="right" valign="top"><a id="aa600183f258fcaabf64873359366ff95"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (std::string text, <a class="el" href="structvect__prototype2.html">fvect2</a> pos, float scale, <a class="el" href="structvect__prototype2.html">fvect3</a> <a class="el" href="structvect__prototype2.html">color</a>)</td></tr>
-<tr class="separator:aa600183f258fcaabf64873359366ff95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f11bc0a297c053d8d177df179b456bb"><td class="memItemLeft" align="right" valign="top"><a id="a3f11bc0a297c053d8d177df179b456bb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>popText</b> ()</td></tr>
-<tr class="separator:a3f11bc0a297c053d8d177df179b456bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48fdd3cbcdd8df5926ac35a4c73edc66"><td class="memItemLeft" align="right" valign="top"><a id="a48fdd3cbcdd8df5926ac35a4c73edc66"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> *text)</td></tr>
+<tr class="separator:a48fdd3cbcdd8df5926ac35a4c73edc66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ea8c30c7611ef307601efeb74bbbe47"><td class="memItemLeft" align="right" valign="top"><a id="a2ea8c30c7611ef307601efeb74bbbe47"></a>
+<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>popText</b> (int refreshingMode)</td></tr>
+<tr class="separator:a2ea8c30c7611ef307601efeb74bbbe47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4044f02682944d0609733c6bb5ef90fa"><td class="memItemLeft" align="right" valign="top"><a id="a4044f02682944d0609733c6bb5ef90fa"></a>
 <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getActiveWidget</b> ()</td></tr>
 <tr class="separator:a4044f02682944d0609733c6bb5ef90fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,9 +152,6 @@ std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget<
 <tr class="memitem:ae6940fc46372109a0bd0129df3cbaa25"><td class="memItemLeft" align="right" valign="top"><a id="ae6940fc46372109a0bd0129df3cbaa25"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getNonInterfaceObjects</b> ()</td></tr>
 <tr class="separator:ae6940fc46372109a0bd0129df3cbaa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f431aed51af3686bd8cf50025d3803b"><td class="memItemLeft" align="right" valign="top"><a id="a9f431aed51af3686bd8cf50025d3803b"></a>
-std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getTextObjects</b> ()</td></tr>
-<tr class="separator:a9f431aed51af3686bd8cf50025d3803b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6eaf4b74369c5f38722abf42aab2ccf1"><td class="memItemLeft" align="right" valign="top"><a id="a6eaf4b74369c5f38722abf42aab2ccf1"></a>
 <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getStandartWorldObjShader</b> () const</td></tr>
 <tr class="separator:a6eaf4b74369c5f38722abf42aab2ccf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,9 +265,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a cla
 <tr class="memitem:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memItemLeft" align="right" valign="top"><a id="a1dde3b366b5bd49db35b97ec6f776a85"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>moveWidgetToMouse</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
 <tr class="separator:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f773932fdecddce76adbd53234b277b"><td class="memItemLeft" align="right" valign="top"><a id="a9f773932fdecddce76adbd53234b277b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>drawStaticText</b> ()</td></tr>
-<tr class="separator:a9f773932fdecddce76adbd53234b277b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a222be0984d4707bf1c5719df4e8a8e33"><td class="memItemLeft" align="right" valign="top"><a id="a222be0984d4707bf1c5719df4e8a8e33"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshCamera</b> ()</td></tr>
 <tr class="separator:a222be0984d4707bf1c5719df4e8a8e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,12 +316,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>lightIsInited_</b> = 
 <tr class="memitem:a587d8c210fe7a8a08bbed3782d935731"><td class="memItemLeft" align="right" valign="top"><a id="a587d8c210fe7a8a08bbed3782d935731"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>lightSpaceMatrix</b></td></tr>
 <tr class="separator:a587d8c210fe7a8a08bbed3782d935731"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a7e0dfa3888df3199bf42bb1083413f"><td class="memItemLeft" align="right" valign="top"><a id="a0a7e0dfa3888df3199bf42bb1083413f"></a>
-<a class="el" href="class_l_graphics_1_1_l_line.html">LLine</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>textRenderer</b></td></tr>
-<tr class="separator:a0a7e0dfa3888df3199bf42bb1083413f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7cd9fc2d081c638732d4048e03034df"><td class="memItemLeft" align="right" valign="top"><a id="ad7cd9fc2d081c638732d4048e03034df"></a>
 GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>window</b></td></tr>
 <tr class="separator:ad7cd9fc2d081c638732d4048e03034df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad682b5f379f5996bf93bf84dc7a830d8"><td class="memItemLeft" align="right" valign="top"><a id="ad682b5f379f5996bf93bf84dc7a830d8"></a>
+<a class="el" href="class_l_graphics_1_1_l_text_render.html">LTextRender</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>textRenderer</b></td></tr>
+<tr class="separator:ad682b5f379f5996bf93bf84dc7a830d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d192d678b0e700e54d69aced0c320a2"><td class="memItemLeft" align="right" valign="top"><a id="a4d192d678b0e700e54d69aced0c320a2"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>viewPoint</b> = glm::vec3(14.0f, 14.0f, 0.0f)</td></tr>
 <tr class="separator:a4d192d678b0e700e54d69aced0c320a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -340,9 +334,9 @@ std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget<
 <tr class="memitem:ab34f59e41dda5b1386e77cc85ab011bf"><td class="memItemLeft" align="right" valign="top"><a id="ab34f59e41dda5b1386e77cc85ab011bf"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nonInterfaceObjects</b></td></tr>
 <tr class="separator:ab34f59e41dda5b1386e77cc85ab011bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1e1330416ea85067929923545ffbda1"><td class="memItemLeft" align="right" valign="top"><a id="af1e1330416ea85067929923545ffbda1"></a>
-std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textObjects</b></td></tr>
-<tr class="separator:af1e1330416ea85067929923545ffbda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f6f630c2a9db45033d0a55cafec38c3"><td class="memItemLeft" align="right" valign="top"><a id="a3f6f630c2a9db45033d0a55cafec38c3"></a>
+std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textObjects</b></td></tr>
+<tr class="separator:a3f6f630c2a9db45033d0a55cafec38c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cf5e76d52631a26c8efede40847ef35"><td class="memItemLeft" align="right" valign="top"><a id="a4cf5e76d52631a26c8efede40847ef35"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>width</b></td></tr>
 <tr class="separator:a4cf5e76d52631a26c8efede40847ef35"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -445,9 +439,6 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>depthMap</b><
 <tr class="memitem:a7e37c458e43bab5144ad625dec81feef"><td class="memItemLeft" align="right" valign="top"><a id="a7e37c458e43bab5144ad625dec81feef"></a>
 <a class="el" href="structvect__prototype2.html">fvect4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>borderColor</b> = <a class="el" href="structvect__prototype2.html">fvect4</a>(1.0, 1.0, 1.0, 1.0)</td></tr>
 <tr class="separator:a7e37c458e43bab5144ad625dec81feef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d59514d851b24a9851f40266e806a87"><td class="memItemLeft" align="right" valign="top"><a id="a0d59514d851b24a9851f40266e806a87"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>refreshStaticText</b> = false</td></tr>
-<tr class="separator:a0d59514d851b24a9851f40266e806a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Класс приложения Lizard Graphics. </p>
