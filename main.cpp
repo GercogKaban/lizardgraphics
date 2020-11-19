@@ -24,8 +24,8 @@ using namespace LGraphics;
 int main()
 {
     LGraphics::LApp app;
-    auto t = new Text("Test", { 500,500 }, 1.0f, { 255,0,0 });
-    app.addText(t);
+    //auto t = new Text("Test", { 500,500 }, 1.0f, { 0,0,0 });
+    //app.addText(t);
     //auto length = LTextRender::getTextLength(t);
 
     //auto textLength = LTextRender::getTextLength(*t);

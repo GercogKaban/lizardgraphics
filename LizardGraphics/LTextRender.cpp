@@ -228,11 +228,13 @@ namespace LGraphics
                     yOnScreenToGlCoord(app->getWindowSize(), t->getPos().y), 0.0f);
 
                 genTexture(i, size);
+                glViewport(0, 0, size.x, size.y);
 
                 glBindFramebuffer(GL_FRAMEBUFFER, stringFBO[i]);
                 display(t->getText(), t->getPos(), t->getScale(), t->getColor());
-                //textRect[i]->setTexture(-1);
+                glViewport(0, 0, app->getWindowSize().x, app->getWindowSize().y);
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                //textRect[i]->setTexture(-1);
                 t->refreshed = true;
             }
             textRect[i]->draw();
