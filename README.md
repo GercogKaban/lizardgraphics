@@ -29,7 +29,7 @@ You need to download and place this static libraries in the "LizardGraphics/libs
 
 cmake -G "Visual Studio 16 2019" -A x64 -S path
 
-cmake -G "Visual Studio 15 2017" -A x64 -S path (killer-nyasha idea)
+cmake -G "Visual Studio 15 2017" -A x64 -S path (killer-nyasha's idea)
 
 # Building for Linux
 Coming soon...
