@@ -23,6 +23,17 @@ namespace LGraphics
     const unsigned int LTextRender::pixelWidth = 0;
     const unsigned int LTextRender::pixelHeight = 48;
     
+    const float vertices[6][4] =
+    {
+        { 0, 1,   0.0f, 0.0f },
+        { 0, 0,   0.0f, 1.0f },
+        { 1, 0,   1.0f, 1.0f },
+
+        { 0, 1,   0.0f, 0.0f },
+        { 1, 0,   1.0f, 1.0f },
+        { 1, 1,   1.0f, 0.0f }
+    };
+
     //bool LTextRender::refreshText[3] = { false,false,false };
 
     LTextRender::LTextRender(LGraphics::LApp* app)
@@ -107,6 +118,9 @@ namespace LGraphics
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
 
+
+
+
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
@@ -162,16 +176,8 @@ namespace LGraphics
             const float h = ch.size.y * scale;
             // update VBO for each character
 
-            const float vertices[6][4] =
-            {
-                { xpos,     ypos + h,   0.0f, 0.0f },
-                { xpos,     ypos,       0.0f, 1.0f },
-                { xpos + w, ypos,       1.0f, 1.0f },
-
-                { xpos,     ypos + h,   0.0f, 0.0f },
-                { xpos + w, ypos,       1.0f, 1.0f },
-                { xpos + w, ypos + h,   1.0f, 0.0f }
-            };
+            glUniform2f(glGetUniformLocation(getShader()->getShaderProgram(), "move_"), xpos, ypos);
+            glUniform2f(glGetUniformLocation(getShader()->getShaderProgram(), "scale_"), w, h);
 
             // render glyph texture over quad
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
