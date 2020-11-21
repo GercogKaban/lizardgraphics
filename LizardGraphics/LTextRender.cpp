@@ -23,16 +23,18 @@ namespace LGraphics
     const unsigned int LTextRender::pixelWidth = 0;
     const unsigned int LTextRender::pixelHeight = 48;
     
+#define half  0.5f
     const float vertices[6][4] =
     {
-        { 0, 1,   0.0f, 0.0f },
-        { 0, 0,   0.0f, 1.0f },
-        { 1, 0,   1.0f, 1.0f },
+        { -half, half,   0.0f, 0.0f },
+        { -half, -half,   0.0f, 1.0f },
+        { half, -half,   1.0f, 1.0f },
 
-        { 0, 1,   0.0f, 0.0f },
-        { 1, 0,   1.0f, 1.0f },
-        { 1, 1,   1.0f, 0.0f }
+        { -half, half,   0.0f, 0.0f },
+        { half, -half,   1.0f, 1.0f },
+        { half, half,   1.0f, 0.0f }
     };
+#undef half
 
     //bool LTextRender::refreshText[3] = { false,false,false };
 
@@ -125,7 +127,7 @@ namespace LGraphics
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, vertices, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -134,7 +136,9 @@ namespace LGraphics
         glGenFramebuffers(texturesPoolSize, stringFBO);
         glGenTextures(texturesPoolSize, stringTexture);
         //for (size_t i = 0; i < texturesPoolSize; ++i)
-        //{
+        {
+        //    genTexture(i, { 1024, 256 });
+        }
         //    glBindFramebuffer(GL_FRAMEBUFFER, stringFBO[i]);
         //    glBindTexture(GL_TEXTURE_2D, stringTexture[i]);
         //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, app->getWindowSize().x, app->getWindowSize().y, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -157,24 +161,45 @@ namespace LGraphics
             delete t;
     }
     
-    void LTextRender::display(const std::string text, fvect2 pos, const float scale, const fvect3 color)
+    void LTextRender::display(const std::string& text, fvect2 pos, float scale, const fvect3 color, const szvect2 screenOrTextureSize)
     {
         //glBindFramebuffer(GL_FRAMEBUFFER, stringFBO);
-        pos.y = app->getWindowSize().y - pos.y;
+        //pos.y = app->getWindowSize().y - pos.y;
+
+        //scale *= 10;
+
         getShader()->use();
         glUniform3f(glGetUniformLocation(getShader()->getShaderProgram(), "textColor"), color.x, color.y, color.z);
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
 
-        for (const unsigned int const c : text)
+        for (const unsigned int c : text)
         {
             const Character ch = characters[c];
-            const float xpos = pos.x + ch.bearing.x * scale;
-            const float ypos = pos.y - (ch.size.y - ch.bearing.y) * scale;
+            float xpos = pos.x + ch.bearing.x * scale;
+            float ypos = pos.y - (ch.size.y - ch.bearing.y) * scale;
 
-            const float w = ch.size.x * scale;
-            const float h = ch.size.y * scale;
+            float w = ch.size.x * scale;
+            float h = ch.size.y * scale;
             // update VBO for each character
+
+            xpos /= screenOrTextureSize.x;
+            ypos /= screenOrTextureSize.y;
+
+            //вообще-то - рендерится ли на экране
+            if (screenOrTextureSize.x > 1000)
+            {
+                xpos -= 0.5f;
+                ypos -= 0.5f;
+                xpos *= 2;
+                ypos *= 2;
+                ypos = -ypos;
+            }
+
+            w /= screenOrTextureSize.x;
+            h /= screenOrTextureSize.y;
+            xpos += w / 2;
+            ypos += h / 2;
 
             glUniform2f(glGetUniformLocation(getShader()->getShaderProgram(), "move_"), xpos, ypos);
             glUniform2f(glGetUniformLocation(getShader()->getShaderProgram(), "scale_"), w, h);
@@ -182,10 +207,10 @@ namespace LGraphics
             // render glyph texture over quad
             glBindTexture(GL_TEXTURE_2D, ch.textureID);
             // update content of VBO memory
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            //glBindBuffer(GL_ARRAY_BUFFER, 0);
             // render quad
+            //glClear(GL_COLOR_BUFFER_BIT);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
             pos.x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
@@ -219,6 +244,8 @@ namespace LGraphics
 
     void LTextRender::displayText()
     {
+        glActiveTexture(GL_TEXTURE0);
+
         for (size_t i = 0; i < app->textObjects.size(); ++i)   
         {
             assert(i < texturesPoolSize && "Textures container is full! PLEASE DO POOL");
@@ -235,14 +262,20 @@ namespace LGraphics
 
                 genTexture(i, size);
                 glViewport(0, 0, size.x, size.y);
-
                 glBindFramebuffer(GL_FRAMEBUFFER, stringFBO[i]);
-                display(t->getText(), t->getPos(), t->getScale(), t->getColor());
-                glViewport(0, 0, app->getWindowSize().x, app->getWindowSize().y);
+
+                //glClear(GL_COLOR_BUFFER_BIT);
+
+                display(t->getText(), fvect2(0), t->getScale(), t->getColor(), size);
+
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                //textRect[i]->setTexture(-1);
+                glViewport(0, 0, app->getWindowSize().x, app->getWindowSize().y);
                 t->refreshed = true;
             }
+
+            textRect[i]->setTexture(stringTexture[i]); //
+
+            //glBindTexture(GL_TEXTURE0, stringTexture[i]);
             textRect[i]->draw();
         }
     }
@@ -270,7 +303,12 @@ namespace LGraphics
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, stringTexture[num], 0);
+
         glReadBuffer(GL_NONE);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         textRect[num]->setTexture(stringTexture[num]);
     }

@@ -48,7 +48,6 @@ namespace LShaders
         //"if ((pow(mouse.x - gl_FragCoord.x,2) + pow(mouse.y - gl_FragCoord.y,2)) <= 1.0) data_SSBO = 1;\n"
         "if (sampleTexture) color = texture(ourTexture, TexCoord)*color_;\n"
         "else color = color_;\n"
-        "if (color.a - 0.1f < 0) discard;\n"
         "}\n\0";
 
     const char symbol_v[] =
@@ -60,7 +59,7 @@ namespace LShaders
         "uniform mat4 projection;\n"
         "void main()\n"
         "{\n"
-        "gl_Position = projection* vec4(vertex.xy * scale_ + move_, 0.0, 1.0);\n"
+        "gl_Position = vec4(vertex.xy * scale_ + move_, 0.0, 1.0);\n"
         "TexCoords = vertex.zw;\n"
         "}\n";
 

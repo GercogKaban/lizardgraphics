@@ -91,7 +91,7 @@ namespace LGraphics
         ~LTextRender();
 
         static LShaders::Shader* getShader() { return symbShader; }
-        static void display(const std::string text, fvect2 pos, const float scale, const fvect3 color);
+        static void display(const std::string& text, fvect2 pos, float scale, const fvect3 color, const szvect2 screenOrTextureSize);
         //static void display(Text& text);
         //static void displayText(const std::vector<Text>& textObjects, int refreshMode);
 

@@ -71,6 +71,7 @@ namespace LGraphics
             glEnable(GL_DEPTH_TEST);
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, depthMap);
+            glActiveTexture(GL_TEXTURE0);
 
             for (auto& o : nonInterfaceObjects)
                 if (!o->isHidden())
@@ -96,7 +97,8 @@ namespace LGraphics
                     o->draw();
 
 
-            LTextRender::display(std::to_string(prevFps), { 50.0f, (float)getWindowSize().y - 50.0f }, 1.5f, { 1.0f,0.0f,0.0f });
+            LTextRender::display(std::to_string(prevFps), { 50.0f, (float)getWindowSize().y - 50.0f }, 1.5f, { 1.0f,0.0f,0.0f }, getWindowSize());
+            
             //for (auto& t : textObjects)
                 //LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
             
