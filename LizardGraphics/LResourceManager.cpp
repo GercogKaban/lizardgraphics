@@ -42,6 +42,7 @@ namespace LGraphics
 
     GLuint LResourceManager::initTexture(unsigned char* bytes, int width, int height)
     {
+#ifdef OPENGL
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -55,5 +56,8 @@ namespace LGraphics
         glBindTexture(GL_TEXTURE_2D, 0);
 
         return texture;
+#endif OPENGL
+
+        return 0;
     }
 }

@@ -14,6 +14,7 @@ namespace LGraphics
 
     void LMultiRectangleBuffer::genBuffers()
     {
+#ifdef OPENGL
         glGenVertexArrays(1, &VAO);
         glGenBuffers(3, VBO);
         glGenBuffers(1, &EBO);
@@ -40,6 +41,7 @@ namespace LGraphics
         glEnableVertexAttribArray(2);
 
         glBindVertexArray(0);
+#endif OPENGL
     }
 
 

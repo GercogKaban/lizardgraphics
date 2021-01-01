@@ -296,3 +296,5 @@ latex/
 Doxyfile/
 *.png
 *.hxx
+*.exe
+*.spv

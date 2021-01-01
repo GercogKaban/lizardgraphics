@@ -107,7 +107,7 @@ namespace LGraphics
 
         auto shader = getShader();
         shader->use();
-
+#ifdef OPENGL
         if (isTextureTurnedOn()) 
             glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
         else 
@@ -123,7 +123,7 @@ namespace LGraphics
         //glBindVertexArray(0);
         //if (label.text.size())
         //    LLine::display(label);
-
+#endif OPENGL
         if (innerWidgets)
             for (auto& i : *innerWidgets)
                 i->draw();

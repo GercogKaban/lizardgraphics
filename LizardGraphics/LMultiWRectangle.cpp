@@ -36,7 +36,9 @@ void LGraphics::LMultiWRectangle::draw()
         return;
 
     this->shader->use();
+#ifdef OPENGL
     auto shader = this->shader->getShaderProgram();
+#endif
     auto lightPos = app->getLightPos();
 
     textures.clear();
@@ -46,6 +48,7 @@ void LGraphics::LMultiWRectangle::draw()
     char buf[16];
     strcpy(buf, "ourTexture_");
 
+#ifdef OPENGL
     for (size_t i = 0; i < rectCount; i++)
     {
         buf[11] = (i + 1) / 10 + '0';
@@ -109,7 +112,7 @@ void LGraphics::LMultiWRectangle::draw()
     //glBindVertexArray(0);
     //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
     //glBindVertexArray(0);
-
+#endif OPENGL
     //for (auto& i : innerWidgets)
     //    i->draw();
 }

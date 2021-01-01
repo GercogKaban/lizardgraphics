@@ -41,7 +41,9 @@ namespace LGraphics
     LTextRender::LTextRender(LGraphics::LApp* app)
     {
         this->app = app;
+#ifdef OPENGL
         symbShader = new LShaders::Shader(LShaders::symbol_v, LShaders::symbol_f);
+#endif
         projection = glm::ortho(0.0f, (float)app->getWindowSize().x, 0.0f, (float)app->getWindowSize().y);
        //textRectShader = new LShaders::Shader(LShaders::interface_vProj, LShaders::interface_f);
 
@@ -63,8 +65,10 @@ namespace LGraphics
             //glUniformMatrix4fv(glGetUniformLocation(textRect[i]->getShader()->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         }
       
+#ifdef OPENGL
         symbShader->use();
         glUniformMatrix4fv(glGetUniformLocation(symbShader->getShaderProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+#endif OPENGL
 
         FT_Library ft;
         if (FT_Init_FreeType(&ft))
@@ -76,6 +80,7 @@ namespace LGraphics
 
         FT_Set_Pixel_Sizes(face, pixelWidth, pixelHeight);
 
+#ifdef OPENGL
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
 
         for (unsigned char c = 0; c < CHAR_MAX + 1; c++)
@@ -87,6 +92,7 @@ namespace LGraphics
             }
             // generate texture
             unsigned int texture;
+
             glGenTextures(1, &texture);
             glBindTexture(GL_TEXTURE_2D, texture);
             glTexImage2D(
@@ -120,9 +126,6 @@ namespace LGraphics
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
 
-
-
-
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
@@ -152,22 +155,27 @@ namespace LGraphics
         //    glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //    textRect[i]->setTexture(stringTexture[i]);
         //}
+#endif OPENGL
     }
 
     LTextRender::~LTextRender()
     {
+#ifdef OPENGL
         delete symbShader;
+#endif
         for (auto& t : textRect)
             delete t;
     }
     
     void LTextRender::display(const std::string& text, fvect2 pos, float scale, const fvect3 color, const szvect2 screenOrTextureSize)
     {
+        //std::cout << text << std::endl;
         //glBindFramebuffer(GL_FRAMEBUFFER, stringFBO);
         //pos.y = app->getWindowSize().y - pos.y;
 
         //scale *= 10;
 
+#ifdef OPENGL
         getShader()->use();
         glUniform3f(glGetUniformLocation(getShader()->getShaderProgram(), "textColor"), color.x, color.y, color.z);
         glActiveTexture(GL_TEXTURE0);
@@ -220,6 +228,7 @@ namespace LGraphics
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //glBindTexture(GL_TEXTURE_2D, 0);
+#endif OPENGL
     }
 
     //void LTextRender::display(Text& text)
@@ -244,6 +253,7 @@ namespace LGraphics
 
     void LTextRender::displayText()
     {
+#ifdef OPENGL
         glActiveTexture(GL_TEXTURE0);
 
         for (size_t i = 0; i < app->textObjects.size(); ++i)   
@@ -278,6 +288,7 @@ namespace LGraphics
             //glBindTexture(GL_TEXTURE0, stringTexture[i]);
             textRect[i]->draw();
         }
+#endif OPENGL
     }
 
     void LTextRender::addText(Text* text)
@@ -296,6 +307,7 @@ namespace LGraphics
 
     void LGraphics::LTextRender::genTexture(int num, fvect2 size)
     {
+#ifdef OPENGL
         glBindFramebuffer(GL_FRAMEBUFFER, stringFBO[num]);
         glBindTexture(GL_TEXTURE_2D, stringTexture[num]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -311,5 +323,6 @@ namespace LGraphics
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         textRect[num]->setTexture(stringTexture[num]);
+#endif OPENGL
     }
 }

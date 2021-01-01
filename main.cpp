@@ -4,19 +4,20 @@
 */
 
 #include "LApp.h"
-#include "LIRectangle.h"
-#include "LIButton.h"
-#include "LTextEdit.h"
-#include "LWRectangle.h"
-#include "LFlag.h"
-#include "LCounter.h"
-#include "LMessageBox.h"
-#include "LColorBar.h"
-#include "LList.h"
+//#include "LIRectangle.h"
+//#include "LIButton.h"
+//#include "LTextEdit.h"
+//#include "LWRectangle.h"
+//#include "LFlag.h"
+//#include "LCounter.h"
+//#include "LMessageBox.h"
+//#include "LColorBar.h"
+//#include "LList.h"
 
 #include "additional.h"
 
 #include "CodeGen.h"
+
 //#include "testFile.hxx"
 
 using namespace LGraphics;
@@ -24,6 +25,7 @@ using namespace LGraphics;
 int main()
 {
     LGraphics::LApp app;
+
     //auto t = new Text("Test", { 500,500 }, 1.0f, { 0,0,0 });
     //app.addText(t);
     //auto length = LTextRender::getTextLength(t);

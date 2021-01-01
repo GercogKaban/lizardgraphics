@@ -14,6 +14,7 @@ namespace LGraphics
 
     void LBuffer::genBuffers()
     {
+#ifdef OPENGL
         glGenVertexArrays(1, &VAO);
         glGenBuffers(2, VBO);
         glGenBuffers(1, &EBO);
@@ -36,13 +37,16 @@ namespace LGraphics
         glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
+#endif OPENGL
     }
 
     LBuffer::~LBuffer()
     {
+#ifdef OPENGL
         glDeleteBuffers(1, &EBO);
         glDeleteBuffers(2, VBO);
         glDeleteVertexArrays(1, &VAO);
+#endif OPENGL
         delete[] vertices;
         delete[] ebo;
         delete[] textures;

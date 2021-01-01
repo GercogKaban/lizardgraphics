@@ -50,11 +50,14 @@ void LGraphics::LWRectangle::draw()
     if (isHidden()) return;
 
     getShader()->use();
+#ifdef OPENGL
     auto shader = getShader()->getShaderProgram();
+#endif
     auto lightPos = app->getLightPos();
 
     model = calculateModelMatrix();
 
+#ifdef OPENGL
     glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
 
@@ -87,7 +90,6 @@ void LGraphics::LWRectangle::draw()
     glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
 
-
     glBindVertexArray(buffer->getVaoNum());
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
 
@@ -101,6 +103,9 @@ void LGraphics::LWRectangle::draw()
     //glBindVertexArray(0);
     //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
     //glBindVertexArray(0);
+#endif OPENGL
+
+
     if (innerWidgets)
     for (auto& i : *innerWidgets)
         i->draw();

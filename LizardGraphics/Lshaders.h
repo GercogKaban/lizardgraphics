@@ -3,7 +3,17 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+
+#ifdef OPENGL
 #include "include/GLEW/glew.h"
+#endif
+
+//#include "LApp.h"
+
+namespace LGraphics
+{
+    class LApp;
+}
 
 namespace LShaders
 {
@@ -227,91 +237,36 @@ namespace LShaders
     */
     class Shader
     {
+#ifdef OPENGL
         GLuint program;
+#endif OPENGL
+
+#ifdef VULKAN
+
+        LGraphics::LApp* app;
+
+        VkPipelineLayout pipelineLayout;
+        VkPipeline graphicsPipeline;
+
+        VkShaderModule genShaderModule(const char* shader, size_t size);
+
     public:
 
-        Shader()
-        {
+        VkPipeline getGraphicsPipeline() const {return graphicsPipeline;}
+        //void destroy();
 
-        }
+        //VkShaderModule& getVertShader() { return vertShader; }
+        //VkShaderModule& getFragShader() { return fragShader; }
 
+#endif
 
-        void loadShaders(const char* vertShader, const char* fragShader)
-        {
-            std::ifstream in;
-            in.open(vertShader);
-            std::string vertShaderSource, fragShaderSource;
-            char temp[512];
-            while (in.getline(temp, 512))
-            {
-                vertShaderSource += temp;
-                vertShaderSource += '\n';
-            }
-            in.close();
-            in.open(fragShader);
-            while (in.getline(temp, 512))
-            {
-                fragShaderSource += temp;
-                fragShaderSource += '\n';
-            }
-            in.close();
+    public:
 
-            initShaders(vertShaderSource.data(), fragShaderSource.data());
-        }
+        ~Shader();
+        Shader() {}
 
-        void initShaders(const GLchar* v_shader, const GLchar* f_shader)
-        {
-            char infoLog[1488];
-            GLuint vertex, fragment;
-            GLint success;
-            vertex = glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(vertex, 1, &v_shader, NULL);
-            glCompileShader(vertex);
-            glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-            if (!success)
-            {
-                throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
-            }
-
-
-            // Fragment Shader
-            fragment = glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderSource(fragment, 1, &f_shader, NULL);
-            glCompileShader(fragment);
-
-            glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-            if (!success)
-            {
-                GLint maxLength = 0;
-                glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
-
-                // The maxLength includes the NULL character
-                std::vector<GLchar> errorLog(maxLength);
-                glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
-                //int a = 0;
-                //glGetProgramInfoLog(fragment, 1488, &a, infoLog);
-                //auto err = glGetError();
-                std::cout << "ERROR::FRAGMENT_SHADER_FAILED\n" << &errorLog[0] << std::endl;
-            }
-
-            // Shader Program
-            this->program = glCreateProgram();
-            glAttachShader(this->program, vertex);
-            glAttachShader(this->program, fragment);
-            glLinkProgram(this->program);
-
-
-            glGetProgramiv(this->program, GL_LINK_STATUS, &success);
-            if (!success)
-            {
-                glGetProgramInfoLog(this->program, 512, NULL, infoLog);
-                std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-            }
-
-
-            glDeleteShader(vertex);
-            glDeleteShader(fragment);
-        }
+        void loadShaders(const char* vertShader, const char* fragShader);
+        void initShaders(const char* v_shader, const char* f_shader, size_t vSize, size_t fSize);
 
         /*!
         @brief Конструктор
@@ -320,47 +275,30 @@ namespace LShaders
         @param v_shader - массив вершинного шейдера
         @param v_shader - массив фрагментного шейдера
         */
-        Shader(const GLchar* v_shader, const GLchar* f_shader, bool sourceCode = true)
-        {
-            if (sourceCode)
-                initShaders(v_shader, f_shader);
-            else
-                loadShaders(v_shader, f_shader);
-        }
-
-        void bindShader(const GLchar* shader, short shaderType)
-        {
-            GLuint sh;
-            GLint success;
-            sh = glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(sh, 1, &shader, NULL);
-            glCompileShader(sh);
-            glGetShaderiv(sh, GL_COMPILE_STATUS, &success);
-            if (!success)
-                throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
-            this->program = glCreateProgram();
-            glAttachShader(this->program, sh);
-            glLinkProgram(this->program);
-            glGetProgramiv(this->program, GL_LINK_STATUS, &success);
-            if (!success)
-                throw std::exception("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
-            glDeleteShader(sh);
-        }
+        Shader(const GLchar* v_shader, const GLchar* f_shader, LGraphics::LApp* app, bool sourceCode = true);
+        void bindShader(const GLchar* shader, short shaderType);
 
         /*!
         @brief Активирует шейдер (перед отрисовкой).
         */
         void use() const
         {
+#ifdef OPENGL
             glUseProgram(program);
+#endif OPENGL
         }
 
         /*!
         @brief Возвращает шейдерную программу.
         */
+#ifdef OPENGL
         GLuint getShaderProgram() const
         {
             return program;
         }
+#endif OPENGL
+
+    protected:
+        const char* loadShader(const char* shader, size_t& shaderSize);
     };
 }

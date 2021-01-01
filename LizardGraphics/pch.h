@@ -20,10 +20,18 @@
 #include <chrono>
 #include <cmath>
 #include <thread>
+#include <optional>
+#include <set>
+#include <array>
 
 #include "vectors.h"
 
 #include "include/GLEW/glew.h"
+
+#ifdef VULKAN
+#include <include/Vulkan/vulkan/vulkan.h>
+#endif //VULKAN
+
 #include "include/GLFW/glfw3.h"
 
 #include "include/SOIL2/SOIL2.h"

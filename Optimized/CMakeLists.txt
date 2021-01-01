@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 3.16)
 project (Optimized)
 set(MY_BCP ${CMAKE_BUILD_TYPE})
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_GENERATOR_PLATFORM x64)
 
 set (SOURCE_FILES optimized.h optimized.cpp)
 set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)

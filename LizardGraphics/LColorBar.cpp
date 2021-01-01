@@ -21,6 +21,7 @@ void LGraphics::LColorBar::draw()
     auto shader = getShader();
     shader->use();
 
+#ifdef OPENGL
     glBindTexture(GL_TEXTURE_2D, getTexture());
     glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
     glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
@@ -34,6 +35,8 @@ void LGraphics::LColorBar::draw()
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     //LTextRender::display(label);
+#endif OPENGL
+
 
     if (innerWidgets)
     for (auto& i : *innerWidgets)
