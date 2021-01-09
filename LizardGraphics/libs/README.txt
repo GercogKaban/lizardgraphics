@@ -6,3 +6,4 @@ glew32  (for linux)
 glfw3
 soil2-debug
 freetype
+vulkan-1

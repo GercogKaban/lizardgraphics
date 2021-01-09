@@ -196,7 +196,7 @@ namespace LGraphics
         VkExtent2D swapChainExtent;
 
         VkRenderPass renderPass;
-        VkPipelineLayout pipelineLayout;
+        VkDescriptorSetLayout descriptorSetLayout;
 
         VkCommandPool commandPool;
 
@@ -204,9 +204,14 @@ namespace LGraphics
 
         VkDeviceMemory vertexBufferMemory, indexBufferMemory;
 
+        std::vector<VkBuffer> uniformBuffers;
+        std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+        VkDescriptorPool descriptorPool;
+        std::vector<VkDescriptorSet> descriptorSets;
+
         std::vector<VkCommandBuffer> commandBuffers;
         std::vector<VkFramebuffer> swapChainFramebuffers;
-
 
         const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -234,11 +239,30 @@ namespace LGraphics
         void createSwapChain();
         void createRenderPass();
         void createGraphicsPipeline();
+        void createDescriptorSetLayout();
         void createFramebuffers();
         void createCommandPool();
         void createCommandBuffers();
         void createSemaphores();
         void createSyncObjects();
+        void createUniformBuffers();
+        void createDescriptorPool();
+        void createDescriptorSets();
+        void createTextureImage();
+        void createImage(uint32_t width, uint32_t height, VkFormat format,
+            VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
+            VkImage& image, VkDeviceMemory& imageMemory);
+
+        void createTextureImageView();
+        void createTextureSampler();
+        VkImageView createImageView(VkImage image, VkFormat format);
+
+        VkCommandBuffer beginSingleTimeCommands();
+        void endSingleTimeCommands(VkCommandBuffer commandBuffer);
+        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+        void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
         template<typename T>
         void createBuffer(T& buffer, VkBuffer& dst, VkDeviceMemory& dstMem, VkBufferUsageFlags usage)
@@ -263,12 +287,12 @@ namespace LGraphics
         }
 
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
         void recreateSwapChain();
         void cleanupSwapChain();
 
         void drawFrame();
+        void updateUniformBuffer(uint32_t currentImage);
 
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
         void setupDebugMessenger();
@@ -319,6 +343,11 @@ namespace LGraphics
         std::vector<VkFence> inFlightFences;
         std::vector<VkFence> imagesInFlight;
 
+        VkImage textureImage;
+        VkDeviceMemory textureImageMemory;
+        VkImageView textureImageView;
+        VkSampler textureSampler;
+
         size_t currentFrame = 0;
         bool framebufferResized = false;
 
@@ -328,9 +357,9 @@ namespace LGraphics
         {
             glm::vec2 pos;
             glm::vec3 color;
+            glm::vec2 texCoord;
 
-            static VkVertexInputBindingDescription getBindingDescription() 
-            {
+            static VkVertexInputBindingDescription getBindingDescription() {
                 VkVertexInputBindingDescription bindingDescription{};
                 bindingDescription.binding = 0;
                 bindingDescription.stride = sizeof(Vertex);
@@ -339,8 +368,8 @@ namespace LGraphics
                 return bindingDescription;
             }
 
-            static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
-                std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+            static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
+                std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
                 attributeDescriptions[0].binding = 0;
                 attributeDescriptions[0].location = 0;
@@ -352,22 +381,33 @@ namespace LGraphics
                 attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
                 attributeDescriptions[1].offset = offsetof(Vertex, color);
 
+                attributeDescriptions[2].binding = 0;
+                attributeDescriptions[2].location = 2;
+                attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+                attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
                 return attributeDescriptions;
             }
         };
 
+        struct UniformBufferObject {
+            glm::mat4 model;
+            glm::mat4 view;
+            glm::mat4 proj;
+        };
 
-        const std::vector<Vertex> vertices = 
-        {
-    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+
+        const std::vector<Vertex> vertices = {
+            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
         };
 
         const std::vector<uint16_t> indices = {
            0, 1, 2, 2, 3, 0
         };
+
 
         //static VkVertexInputBindingDescription getBindingDescription();
 

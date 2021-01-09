@@ -253,6 +253,7 @@ namespace LShaders
     public:
 
         VkPipeline getGraphicsPipeline() const {return graphicsPipeline;}
+        VkPipelineLayout getPipelineLayout() const { return pipelineLayout; }
         //void destroy();
 
         //VkShaderModule& getVertShader() { return vertShader; }
