@@ -23,7 +23,7 @@ namespace LGraphics
     {
         
         LTimer t([&]()
-            {prevFps = fps; fps = 0; }, std::chrono::milliseconds(1000));
+        {prevFps = fps; fps = 0; std::cout << prevFps << std::endl; }, std::chrono::milliseconds(1000));
         t.start();
 
         while (!glfwWindowShouldClose(window))
@@ -111,6 +111,7 @@ namespace LGraphics
                     o->draw();
 
 
+            
             LTextRender::display(std::to_string(prevFps), { 50.0f, (float)getWindowSize().y - 50.0f }, 1.5f, { 1.0f,0.0f,0.0f }, getWindowSize());
             
             //for (auto& t : textObjects)
@@ -482,6 +483,7 @@ namespace LGraphics
         createCommandPool();
         createTextureImage();
         createTextureImageView();
+        createTextureSampler();
         createBuffer(vertices, vertexBuffer, vertexBufferMemory, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
         createBuffer(indices, indexBuffer, indexBufferMemory, VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
         createUniformBuffers();
@@ -1139,7 +1141,8 @@ namespace LGraphics
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
-        for (size_t i = 0; i < swapChainImages.size(); i++) {
+        for (size_t i = 0; i < swapChainImages.size(); i++) 
+        {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffers[i];
             bufferInfo.offset = 0;
@@ -1273,7 +1276,7 @@ namespace LGraphics
 
         VkSamplerCreateInfo samplerInfo{};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerInfo.magFilter = VK_FILTER_LINEAR;
+        samplerInfo.magFilter = VK_FILTER_LINEAR; 
         samplerInfo.minFilter = VK_FILTER_LINEAR;
         samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
@@ -1722,7 +1725,7 @@ namespace LGraphics
             }
         }
 
-        return VK_PRESENT_MODE_FIFO_KHR;
+        return VK_PRESENT_MODE_IMMEDIATE_KHR;
     }
 
     VkExtent2D LApp::chooseSwapExtent(const VkSurfaceCapabilitiesKHR & capabilities)
