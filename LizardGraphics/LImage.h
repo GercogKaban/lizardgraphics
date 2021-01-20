@@ -13,22 +13,31 @@ namespace LGraphics
     public:
         
         const char* getObjectType() override { return "LImage"; }
-        GLuint getTexture() const { return texture; } ///< Возвращает текстуру.
+        auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
+#ifdef OPENGL
         void setTexture(GLuint id) { texture = id; }
+#endif
+#ifdef VULKAN
+        void setTexture(VkImageView view) { texture = view; }
+#endif
         /*!
         @brief Привязывает текстуру.
         @param path - путь к изображению.
         */
         void bindTexture(const char* path);
 
+#ifdef VULKAN
         /*!
         @brief Привязывает текстуру.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
         void bindTexture(const unsigned char* bytes, size_t size);
+#endif
 
+
+#ifdef VULKAN
         /*!
         @brief Выключает текстуру.
         */
@@ -61,7 +70,7 @@ namespace LGraphics
 
         std::string getTexturePath() const { return texturePath; }
         void init();
-
+#endif
         ~LImage();
 
     protected:
@@ -72,6 +81,7 @@ namespace LGraphics
         */
         LImage(const char* path);
 
+#ifdef OPENGL
         /*!
         @brief Конструктор.
         @param bytes - массив байт (rgba).
@@ -80,6 +90,11 @@ namespace LGraphics
         LImage(const unsigned char* bytes, size_t size);
 
         GLuint texture; ///< Дескриптор текстуры.
+#endif
+
+#ifdef VULKAN
+        VkImageView texture = nullptr;
+#endif
 
         bool turnedOn = true; ///< Включена ли текстура.
 

@@ -66,7 +66,7 @@ namespace LGraphics
 
     void LMultiRectangleBuffer::setInds()
     {
-        ebo = new GLuint[indicesCount];
+        ebo = new uint16_t[indicesCount];
 
         for (size_t i = 0; i < rectCount; i++)
         {
@@ -81,6 +81,11 @@ namespace LGraphics
 
     LMultiRectangleBuffer::LMultiRectangleBuffer(size_t rectCount) : rectCount(rectCount)
     {
+#ifdef OPENGL
         init();
+#endif
+#ifdef VULKAN
+        init(app);
+#endif
     }
 }

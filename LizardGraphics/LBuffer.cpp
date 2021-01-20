@@ -3,10 +3,20 @@
 
 namespace LGraphics
 {
+#ifdef OPENGL
     void LBuffer::init()
     {
         setBuffers();
     }
+#endif
+
+#ifdef VULKAN
+    void LBuffer::init(LApp* app)
+    {
+        this->app = app;
+        setBuffers();
+    }
+#endif
 
     LBuffer::LBuffer()
     {
@@ -38,6 +48,11 @@ namespace LGraphics
 
         glBindVertexArray(0);
 #endif OPENGL
+
+#ifdef VULKAN
+        app->createBuffer(vertices, vertexBuffer, vertexBufferMemory, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, getVertSize());
+        app->createBuffer(ebo, indexBuffer, indexBufferMemory, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, getIndSize());
+#endif
     }
 
     LBuffer::~LBuffer()
@@ -47,8 +62,15 @@ namespace LGraphics
         glDeleteBuffers(2, VBO);
         glDeleteVertexArrays(1, &VAO);
 #endif OPENGL
+#ifdef VULKAN
+        vkDestroyBuffer(app->g_Device, vertexBuffer, nullptr);
+        vkFreeMemory(app->g_Device, vertexBufferMemory, nullptr);
+
+        vkDestroyBuffer(app->g_Device, indexBuffer, nullptr);
+        vkFreeMemory(app->g_Device, indexBufferMemory, nullptr);
+#endif
         delete[] vertices;
         delete[] ebo;
-        delete[] textures;
+        //delete[] textures;
     }
 }

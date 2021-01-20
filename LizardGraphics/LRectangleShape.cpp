@@ -11,33 +11,13 @@ namespace LGraphics
         init(app, isInterfaceObj);
     }
 
+#ifdef OPENGL
     LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size, bool isInterfaceObj)
         :LShape(app,bytes,size)
     {
         init(app, isInterfaceObj);
     }
-
-    void LRectangleShape::setLabel(const std::string label)
-    {
-        fvect2 coords = { getBottomLeftCorner().x , getBottomLeftCorner().y};
-        this->label.setPos ({ coords.x + labelTextStartPosition, coords.y});
-        this->label.setText(label);
-        alignLabel();
-    }
-
-    void LRectangleShape::alignLabel()
-    {
-        if (label.getText().empty())
-            return;
-        float widgetLength = calculateWidgetLength();
-        float textLength = LTextRender::getTextLength(label);
-
-        if (textLength > widgetLength)
-            scaleWithoutAlign({ ((getScale().x * textLength)/widgetLength) + 0.05f ,getScale().y,getScale().z });
-        widgetLength = calculateWidgetLength();
-        labelTextStartPosition = widgetLength >= textLength ? (widgetLength - textLength) / 2.0f : 0.0f;
-        updateLabelPos();
-    }
+#endif 
 
     float LRectangleShape::calculateWidgetLength()
     {
@@ -73,14 +53,13 @@ namespace LGraphics
     {
         this->app = app;
         buffer = app->standartRectBuffer;
+#ifdef OPENGL
         shader = app->standartInterfaceshader;
-        app->addObject(this, isInterfaceObj);
-    }
-
-    void LRectangleShape::updateLabelPos()
-    {
-        fvect2 coords = { getBottomLeftCorner().x, getBottomLeftCorner().y };
-        this->label.setPos({ coords.x + labelTextStartPosition/app->getWindowSize().x, coords.y });
+#endif
+#ifdef VULKAN
+        shader = app->baseShader;
+#endif
+        app->addObject(this);
     }
 
     bool LRectangleShape::mouseOnIt()
@@ -100,14 +79,11 @@ namespace LGraphics
 
         return isPointInPolygon((int)buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
     }
-
+#ifdef OPENGL
     void LRectangleShape::draw()
     {
-        if (isHidden()) return;
-
         auto shader = getShader();
         shader->use();
-#ifdef OPENGL
         if (isTextureTurnedOn()) 
             glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
         else 
@@ -123,15 +99,54 @@ namespace LGraphics
         //glBindVertexArray(0);
         //if (label.text.size())
         //    LLine::display(label);
-#endif OPENGL
         if (innerWidgets)
             for (auto& i : *innerWidgets)
                 i->draw();
     }
+#endif OPENGL
 
     //LRectangleShape::LRectangleShape(LApp* app)
     //    :LShape()
     //{
     //    init(app);
     //}
+
+
+    void LRectangleShape::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex, size_t objectNum)
+    {
+#ifdef VULKAN1
+        auto shader = getShader(); 
+        auto model = dynamic_cast<LWRectangle*>(this)->
+        app->updateUniformBuffer(frameIndex, this);
+
+        uint32_t dynamicOffset = objectNum * static_cast<uint32_t>(app->dynamicAlignment);
+
+        LApp::TransformData data{ 
+        {color_.x,color_.y,color_.z, transparency_}
+        ,{move_.x, move_.y, move_.z}
+        , {scale_.x, scale_.y, scale_.z } };
+      
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
+        VkBuffer vertexBuffers[] = { buffer->getVertBuffer() };
+        VkDeviceSize offsets[] = { 0 };
+
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+        vkCmdBindIndexBuffer(commandBuffer, buffer->getIndBuffer(), 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+            getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[objectNum*2 + frameIndex], 1, &dynamicOffset);
+
+        vkCmdPushConstants(commandBuffer, shader->getPipelineLayout(),
+            VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::TransformData), &data);
+        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(buffer->getIndCount()), 1, 0, 0, 0);
+        //if (innerWidgets)
+        //    for (auto& i : *innerWidgets)
+        //        i->draw(commandBuffer, frameIndex);
+#endif
+    }
+    //LRectangleShape::LRectangleShape(LApp* app)
+    //    :LShape()
+    //{
+    //    init(app);
+    //}
 }
+

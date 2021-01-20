@@ -26,7 +26,20 @@ namespace LGraphics
 
         const char* getObjectType() override { return "LWidget"; }
         virtual void tick() {}
+#ifdef VULKAN
+        virtual void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum) = 0; ///< Рисует виджет.
+
+        enum UniformChanges
+        {
+            UNMODIFIED,
+            ONE_BUFFER_TO_CHANGE,
+            TWO_BUFFERS_TO_CHANGE,
+            THREE_BUFFERS_TO_CHANGE,
+        };
+#endif
+#ifdef OPENGL
         virtual void draw() = 0; ///< Рисует виджет.
+#endif
 
         /*!
         @brief Устанавливает цвет виджету.
@@ -100,7 +113,7 @@ namespace LGraphics
         void rotateX(float angleDegree);
         void rotateY(float angleDegree);
         void rotateZ(float angleDegree);
-        void setRotate(const glm::mat4& rotate) { rotate_ = rotate; }
+        void setRotate(const glm::mat4& rotate);
 
         virtual void turnOffColor() = 0;
 
@@ -119,13 +132,12 @@ namespace LGraphics
         virtual fvect3 getMove() const = 0;          ///< Возвращает вектор move виджета.
         virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
         virtual glm::mat4 getRotate() const { return rotate_; }
-        virtual std::string getLabel() const = 0;
-        virtual bool isIsometricView() const { return isometric; }
+
         virtual bool getWidgetMovability() const { return widgetMovability; }
         const std::string& getName() const { return name; }
 
-        virtual void setShader(LShaders::Shader* shader) = 0;  ///< Устанавливает шейдер виджету.
-        //virtual void setIsometricView(bool isometric) { this->isometric = isometric; }
+        virtual void setShader(LShaders::Shader* shader) { this->shader = shader; }  ///< Устанавливает шейдер виджету.
+        LShaders::Shader* getShader() { return shader; }
 
         virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
 
@@ -136,9 +148,6 @@ namespace LGraphics
         bool isInited() const { return isInited_; }
 
         virtual bool isInterfaceObject() const{ return true; }
-
-        virtual void setLabelColor(unsigned char r, unsigned char g, unsigned char b) = 0; ///< Устанавливает цвет метке виджета.
-        virtual void setLabel(const std::string label) = 0;  /// Устанавливает текст метке виджета.
 
         const std::vector<LWidget*>& getInnerWidgets() const { return *innerWidgets; }
         std::vector<LWidget*>* getInnerWidgetsPtr() const { return innerWidgets; }
@@ -164,13 +173,13 @@ namespace LGraphics
 
         std::vector<LWidget*>* innerWidgets = nullptr;
 
-        virtual void alignLabel() = 0;
-        virtual void updateLabelPos() = 0;
-
         bool isInited_ = false;
-        bool isometric = false;
 
         bool widgetMovability = true;
+        LShaders::Shader* shader = nullptr; ///< Шейдер.
+
+        int changed = 3;
+        //VkImageView newTexture = nullptr;
 
         //LIWidget()
         //    :LImage(nullptr){}
@@ -193,9 +202,11 @@ namespace LGraphics
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
+#ifdef OPENGL
         LWidget(LApp* app, const unsigned char* bytes, size_t size);
+#endif
 
-        virtual void init(LApp* app);
+        //virtual void init(LApp* app);
         virtual void init();
     };
 }

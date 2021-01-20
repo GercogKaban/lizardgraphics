@@ -1,7 +1,7 @@
 ﻿#pragma once
 //#include "../LizardScript/LizardScript/metagen_def.h"
-#define VECTOR_PARTIAL_ACCESS 1
-#pragma pack(push, 1)
+//#define VECTOR_PARTIAL_ACCESS 1
+//#pragma pack(push, 1)
 
 template <typename T>
 struct vect2_data

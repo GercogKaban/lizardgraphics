@@ -6,16 +6,19 @@ namespace LGraphics
 {
     void LShape::color(const fvect3 val)
     {
+        changed = app->wd->ImageCount;
         color_ = val;
     }
 
     void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
     {
+        changed = app->wd->ImageCount;
         color_ = { (float)r / (float)UINT8_MAX, (float)g / UINT8_MAX,(float)b / UINT8_MAX };
     }
 
     void LShape::transparency(const float val)
     {
+        changed = app->wd->ImageCount;
         transparency_ = val;
     }
 
@@ -26,12 +29,12 @@ namespace LGraphics
 
     void LShape::scale(const float x, const float y, const float z)
     {
+        changed = app->wd->ImageCount;
         auto scaleDif = fvect3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
         if (innerWidgets)
         for (auto& o : *innerWidgets)
             o->scale(o->getScale() + scaleDif);
-        alignLabel();
     }
 
     void LShape::scaleWithoutAlign(const fvect3 val)
@@ -46,12 +49,12 @@ namespace LGraphics
 
     void LShape::move(const float x, const float y, const float z)
     {
+        changed = app->wd->ImageCount;
         auto moveDif = fvect3(x,y,z) - move_;
         move_ = { x,y,z };
         if (innerWidgets)
         for (auto& o : *innerWidgets)
             o->move(o->getMove() + moveDif);
-        alignLabel();
     }
 
     void LShape::move(const size_t x, const size_t y)
@@ -66,30 +69,20 @@ namespace LGraphics
         LShape::move(coords.x, coords.y, 0.0f);
     }
 
-    void LShape::setShader(LShaders::Shader* shader)
-    {
-        if (!shader) throw std::exception("error, no shader\n");
-        this->shader = shader;
-    }
-
-    //LShape::LShape()
-    //    //:LWidget(path)
-    //{
-    //    //if (!component->getBuffer()) throw std::exception("error, no buffer\n");
-    //    //this->buffer = component->getBuffer();
-    //}
-
     LShape::LShape(LApp* app, const char * path)
         : LWidget(app, path)
     {
         if (path) turnOffColor();
     }
 
+#ifdef OPENGL
     LShape::LShape(LApp* app, const unsigned char* bytes, size_t size)
         : LWidget(app, bytes, size)
     {
+        changed = true;
         turnOffColor();
     }
+#endif
 
     void LShape::setBuffer(LBuffer* buffer)
     {
@@ -102,23 +95,9 @@ namespace LGraphics
         color_ = rgbToFloat(1, 1, 1);
     }
 
-    void LShape::setLabelColor(unsigned char r, unsigned char g, unsigned char b)
-    {
-        label.color = rgbToFloat(r,g,b);
-    }
-
-    void LShape::setLabel(const std::string label)
-    {
-    }
-
     LShape::~LShape()
     {
         //delete buffer;
         //delete shader;
     }
-
-    //void LShape::updateLabelPos()
-    //{
-    //    this->label.pos = { coords.x + labelTextStartPosition, coords.y };
-    //}
 }

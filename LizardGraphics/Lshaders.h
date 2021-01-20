@@ -181,55 +181,6 @@ namespace LShaders
         "else color = result;\n"
         "}\n\0";
 
-    //const char lightningShader_v[] =
-    //    "#version 330 core\n"
-    //    "layout (location = 0) in vec3 position;\n"
-    //    "layout (location = 1) in vec2 texCoord;\n"
-    //    "out vec2 TexCoord;\n"
-    //    "out vec3 eyeCordFs;\n"
-    //    "out vec3 eyeNormalFs;\n"
-    //    "uniform bool isometric;\n"
-    //    "uniform mat4 model;\n"
-    //    "uniform mat4 view;\n"
-    //    "uniform mat4 projection;\n"
-    //    "void main()\n"
-    //    "{\n"
-    //    "mat4 modelView = view*model;\n"
-    //    "vec4 temp = projection * modelView * vec4(position, 1.0f);\n"
-    //    "gl_Position = temp;\n"
-    //    "if (isometric) {\n"
-    //    "gl_Position.x = temp.x - temp.y;\n"
-    //    "gl_Position.y = (temp.x + temp.y)/2.0f;\n"
-    //    "}\n"
-    //    "TexCoord = vec2(texCoord.x, 1.0f - texCoord.y);\n"
-    //    "vec3 normal = vec3(0.0f,0.0f,1.0f);\n"
-    //    "mat4 normalMatrix = transpose(inverse(model*view));\n"
-    //    "eyeCordFs = vec3(model*view * vec4(position, 1.0f));\n"
-    //    "eyeNormalFs = normalize(vec3(normalMatrix * vec4(normal,0.0f)));\n"
-    //    "}\n";
-
-    //const char lightningShader_f[] =
-    //    "#version 330 core\n"
-    //    "in vec2 TexCoord;\n"
-    //    "in vec3 eyeCordFs;\n"
-    //    "in vec3 eyeNormalFs;\n"
-    //    "out vec4 color;\n"
-    //    "uniform sampler2D ourTexture;\n"
-    //    "uniform vec4 color_;\n"
-    //    "uniform bool sampleTexture;\n"
-    //    "uniform vec3 lightPos;\n"
-    //    "void main()\n"
-    //    "{\n"
-    //    "vec3 lightDir = normalize(lightPos - eyeCordFs);\n"
-    //    "float diff = max(dot(eyeNormalFs, lightDir), 0.0);\n"
-    //    "vec3 diffuse = diff * vec3(1.0f,1.0f,1.0f);\n"
-    //    "float ambientStrength = 0.25f;\n"
-    //    "vec3 ambient = ambientStrength * vec3(1.0f,1.0f,1.0f);\n"
-    //    "vec4 result = vec4(ambient + diffuse,1.0f) * color_;\n"
-    //    "if (sampleTexture) color = texture(ourTexture, TexCoord)*result;\n"
-    //    "else color = result;\n"
-    //    "}\n\0";
-
     /*!
     @brief Класс шейдера.
 
@@ -252,12 +203,8 @@ namespace LShaders
 
     public:
 
-        VkPipeline getGraphicsPipeline() const {return graphicsPipeline;}
+        VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
         VkPipelineLayout getPipelineLayout() const { return pipelineLayout; }
-        //void destroy();
-
-        //VkShaderModule& getVertShader() { return vertShader; }
-        //VkShaderModule& getFragShader() { return fragShader; }
 
 #endif
 
@@ -282,12 +229,18 @@ namespace LShaders
         /*!
         @brief Активирует шейдер (перед отрисовкой).
         */
+#ifdef OPENGL
         void use() const
         {
-#ifdef OPENGL
             glUseProgram(program);
+    }
 #endif OPENGL
+#ifdef VULKAN
+        void use(VkCommandBuffer* commandBuffer) const
+        {
+            //vkCmdBindPipeline(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, getGraphicsPipeline());
         }
+#endif 
 
         /*!
         @brief Возвращает шейдерную программу.

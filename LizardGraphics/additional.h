@@ -17,4 +17,6 @@ namespace LGraphics
     std::tuple<fvect2, fvect2> getMoveAndSizeByCoords(fvect2 topLeft, fvect2 topRight, fvect2 bottomRight, fvect2 bottomLeft);
 
     fvect3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b);
+
+    size_t getPowerTwoAlign(size_t size);
 }

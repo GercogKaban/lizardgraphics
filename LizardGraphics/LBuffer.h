@@ -2,6 +2,7 @@
 
 #include "LObject.h"
 #include "include/GLEW/glew.h"
+#include "LApp.h"
 
 namespace LGraphics
 {
@@ -15,6 +16,7 @@ namespace LGraphics
     {
     public:
 
+        
         const char* getObjectType() override { return "LBuffer"; }
         //const GLuint* getVBO() const { return VBO; }
 
@@ -26,22 +28,25 @@ namespace LGraphics
         /*!
         @brief Возвращает массив вершин.
         */
-        const auto getVertices() const { return vertices; }
+        auto getVertices() const { return vertices; }
+
+        auto getIndices() const { return ebo; }
+
 
         /*!
         @brief Возвращает размер массива вершин.
         */
-        size_t getVertSize() const { return verticesCount * coordsCount * sizeof(GLfloat); }
+        size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount) * sizeof(decltype(*vertices)); }
 
-        /*!
-        @brief Возвращает размер массива текстурных координат.
-        */
-        size_t getTextureSize() const { return textureCoordsCount * verticesCount * sizeof(GLfloat); }
+        ///*!
+        //@brief Возвращает размер массива текстурных координат.
+        //*/
+        //size_t getTextureSize() const { return textureCoordsCount * verticesCount * sizeof(GLfloat); }
 
         /*!
         @brief Возвращает размер массива индексов.
         */
-        size_t getIndSize() const { return indicesCount * sizeof(GLuint); }
+        size_t getIndSize() const { return indicesCount * sizeof(decltype(*ebo)); }
 
         /*!
         @brief Возвращает количество индексов.
@@ -53,10 +58,17 @@ namespace LGraphics
         */
         size_t getVerticesCount() const { return verticesCount; }
 
+#ifdef OPENGL
         /*!
         @brief Инициализирует LBuffer.
         */
         void init();
+#endif
+#ifdef VULKAN
+        void init(LApp* app);
+        VkBuffer& getVertBuffer() { return vertexBuffer; }
+        VkBuffer& getIndBuffer() { return indexBuffer; }
+#endif 
 
         /*!
         @brief Деструктор LBuffer.
@@ -88,13 +100,21 @@ namespace LGraphics
         virtual void genBuffers();
 
         GLfloat* textures = nullptr; ///< Массив текстурных координат.
+
+#ifdef VULKAN
+          VkBuffer vertexBuffer, indexBuffer;
+          VkDeviceMemory vertexBufferMemory, indexBufferMemory;
+          LApp* app;
+#endif // VULKAN
+
+//#ifdef OPENGL
         GLfloat* vertices = nullptr; ///< Массив вершин.*/
-        GLuint* ebo = nullptr;       ///< Массив индексов.*/
+        uint16_t* ebo = nullptr;       ///< Массив индексов.*/
+//#endif
         GLuint VBO[4]/*на всякий случай больше, для потомков*/, VAO, EBO;     ///< OpenGL буфферы.*/
 
         const size_t coordsCount = 3;
         size_t verticesCount, indicesCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
-
     };
 }
 

@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+
+//#include "pch.h"
+
 #include <mutex>
 #include <optional>
 
@@ -7,23 +10,27 @@
 #include "include/GLFW/glfw3.h"
 #include "include/glm/glm.hpp"
 #include "Lshaders.h"
-#include "LIRectangle.h"
 #include "ObjectPool.h"
 
-#include "LWRectangle.h"
+#include "LObject.h"
+#include "LRectangleShape.h"
+//#include "LWRectangle.h"
+
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_vulkan.h"
+
 //#include "LMultiWRectangle.h"
 
 namespace LGraphics
 {
-    class LTextRender;
-    class LColorBar;
     namespace
     {
     }
 
     class LNonWidget;
-    class Text;
     class LShaders::Shader;
+    class LWRectangle;
 
     /*!
     @brief Класс приложения Lizard Graphics
@@ -34,15 +41,23 @@ namespace LGraphics
     */
     class LApp : public LObject
     {
+        friend LShape;
         friend LRectangleShape;
-        friend LColorBar;
-        friend LTextRender;
+        friend LWRectangle;
         friend LShaders::Shader;
+        friend LBuffer;
+        friend LResourceManager;
+        friend LWidget;
 
     public:
         
+#ifdef OPENGL
         LApp();
-        ~LApp(){releaseResources();}
+#endif
+#ifdef VULKAN
+        LApp(size_t objectPoolSize);
+#endif
+        ~LApp();
 
         /*!
         @brief Бесконечный цикл
@@ -62,19 +77,12 @@ namespace LGraphics
         @brief Возвращает дескриптор GLFW окна.
 
         */
-        GLFWwindow* getWindowHandler() { return window; }
-
-        void addText(Text* text);
-        //void addText(std::string text, fvect2 pos, float scale, fvect3 color, int refreshingMode);
-        Text* popText(int refreshingMode);
-        LWidget* getActiveWidget();
+        GLFWwindow* getWindowHandler() { return window_; }
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
 
-        void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window, resolutionX, resolutionY); }
-        void setActiveWidget(LWidget* w) { activeWidget = w; }
+        void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
-        void setWidgetsMovability(bool movability) { widgetsMovability = movability; }
 
         void deleteWidget(LWidget* w);
         void removeWidget(LWidget* w);
@@ -85,12 +93,12 @@ namespace LGraphics
         void setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback);
         void setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>callback);
 
-        std::vector<LWidget*>& getInterfaceObjects(){ return interfaceObjects; }
         std::vector<LWidget*>& getNonInterfaceObjects() { return nonInterfaceObjects; }
         //std::vector<LWidget*>& getObjects() { return &objects; }
         //std::vector<Text>* getTextObjects() { return textObjects; }
 
-        LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
+        LShaders::Shader* getStandartWorldObjShader() const { return baseShader; }
+        //LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
         LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
         LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
 
@@ -128,7 +136,6 @@ namespace LGraphics
         fvect2 getMouseCoords() const { return mouseCoords; }
 
         ObjectPool<LWRectangle*> lwRectPool;
-        ObjectPool<LColorBar*> lColorBarPool;
 
         glm::vec3 viewAxonometricVector = glm::vec3(1/sqrt(3));
         bool perspectiveProjection = false;
@@ -136,8 +143,15 @@ namespace LGraphics
         std::vector<LNonWidget*> customObjects;
         glm::vec3 lightPos;
 
+        size_t getObjectsLimit() const { return objectCountLim; }
+
+        void setImgui(std::function<void()> func) { imgui = func; }
+
     protected:
 
+        size_t objectCountLim;
+
+        std::function<void()> imgui = []() {};
         fvect2 mouseCoords = fvect2(0.0f);
 
         bool lightIsInited_ = false;
@@ -148,8 +162,7 @@ namespace LGraphics
 
         void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();
-        void addObject(LWidget* w, bool isInterfaceObj);
-        void moveWidgetToMouse(LWidget* w);
+        void addObject(LWidget* w);
 
         void refreshCamera();
         void refreshProjection();
@@ -158,6 +171,7 @@ namespace LGraphics
         void init();
         void initLEngine();
         void initRenderer();
+        void initImGui();
 
         void initTextures();
 
@@ -175,43 +189,23 @@ namespace LGraphics
 #ifdef VULKAN
 
     public:
-        VkDevice getDevice() const { return device; }
+        VkDevice getDevice() const { return g_Device; }
     protected:
 
-        VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
-        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-
-        VkDevice device;
-
-        VkQueue graphicsQueue;
         VkSurfaceKHR surface;
-        VkQueue presentQueue;
 
         LShaders::Shader* baseShader;
 
-        VkSwapchainKHR swapChain;
-        std::vector<VkImage> swapChainImages;
-        VkFormat swapChainImageFormat;
-        VkExtent2D swapChainExtent;
+        VkDescriptorPool descriptorPool;
 
-        VkRenderPass renderPass;
         VkDescriptorSetLayout descriptorSetLayout;
-
-        VkCommandPool commandPool;
-
-        VkBuffer vertexBuffer, indexBuffer;
-
-        VkDeviceMemory vertexBufferMemory, indexBufferMemory;
+        std::vector<VkDescriptorSet> descriptorSets;
 
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
 
-        VkDescriptorPool descriptorPool;
-        std::vector<VkDescriptorSet> descriptorSets;
-
-        std::vector<VkCommandBuffer> commandBuffers;
-        std::vector<VkFramebuffer> swapChainFramebuffers;
+        VkCommandPool commandPool;
 
         const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -236,28 +230,28 @@ namespace LGraphics
         void pickPhysicalDevice();
         void createLogicalDevice();
         void createSurface();
-        void createSwapChain();
-        void createRenderPass();
         void createGraphicsPipeline();
+
+        void createDescriptorSets();
         void createDescriptorSetLayout();
+
         void createFramebuffers();
         void createCommandPool();
         void createCommandBuffers();
-        void createSemaphores();
-        void createSyncObjects();
         void createUniformBuffers();
         void createDescriptorPool();
-        void createDescriptorSets();
-        void createTextureImage();
+        void createTextureImage(const char* path, VkImage& image, VkDeviceMemory& mem);
+
         void createImage(uint32_t width, uint32_t height, VkFormat format,
             VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
             VkImage& image, VkDeviceMemory& imageMemory);
 
-        void createTextureImageView();
+        //void createTextureImageView();
         void createTextureSampler();
-        VkImageView createImageView(VkImage image, VkFormat format);
+        void createImageView(VkImage image, VkFormat format, VkImageView& view);
 
         VkCommandBuffer beginSingleTimeCommands();
+
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
@@ -265,34 +259,32 @@ namespace LGraphics
         void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
         template<typename T>
-        void createBuffer(T& buffer, VkBuffer& dst, VkDeviceMemory& dstMem, VkBufferUsageFlags usage)
+        void createBuffer(T* buffer, VkBuffer& dst, VkDeviceMemory& dstMem, VkBufferUsageFlags usage, size_t bufSize)
         {
-            VkDeviceSize bufferSize = sizeof(buffer[0]) * buffer.size();
+            VkDeviceSize bufferSize = bufSize;
 
             VkBuffer stagingBuffer;
             VkDeviceMemory stagingBufferMemory;
             createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
             void* data;
-            vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-            memcpy(data, buffer.data(), (size_t)bufferSize);
-            vkUnmapMemory(device, stagingBufferMemory);
+            vkMapMemory(g_Device, stagingBufferMemory, 0, bufferSize, 0, &data);
+            memcpy(data, buffer, (size_t)bufferSize);
+            vkUnmapMemory(g_Device, stagingBufferMemory);
 
             createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, dst, dstMem);
 
             copyBuffer(stagingBuffer, dst, bufferSize);
 
-            vkDestroyBuffer(device, stagingBuffer, nullptr);
-            vkFreeMemory(device, stagingBufferMemory, nullptr);
+            vkDestroyBuffer(g_Device, stagingBuffer, nullptr);
+            vkFreeMemory(g_Device, stagingBufferMemory, nullptr);
         }
 
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
-        void recreateSwapChain();
-        void cleanupSwapChain();
-
-        void drawFrame();
-        void updateUniformBuffer(uint32_t currentImage);
+        void mapUniformData();
+        void updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w);
+        void updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum);
 
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
         void setupDebugMessenger();
@@ -331,21 +323,9 @@ namespace LGraphics
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-        void createImageViews();
-        std::vector<VkImageView> swapChainImageViews;
-
-        VkSemaphore imageAvailableSemaphore;
-        VkSemaphore renderFinishedSemaphore;
-
-
-        std::vector<VkSemaphore> imageAvailableSemaphores;
-        std::vector<VkSemaphore> renderFinishedSemaphores;
-        std::vector<VkFence> inFlightFences;
-        std::vector<VkFence> imagesInFlight;
-
-        VkImage textureImage;
-        VkDeviceMemory textureImageMemory;
-        VkImageView textureImageView;
+        //VkImage textureImage, testIm;
+        //VkDeviceMemory textureImageMemory, testImMemory;
+        //VkImageView textureImageView, testImView;
         VkSampler textureSampler;
 
         size_t currentFrame = 0;
@@ -353,13 +333,14 @@ namespace LGraphics
 
         const int MAX_FRAMES_IN_FLIGHT = 2;
 
+
         struct Vertex 
         {
-            glm::vec2 pos;
-            glm::vec3 color;
+            glm::vec3 pos;
             glm::vec2 texCoord;
 
-            static VkVertexInputBindingDescription getBindingDescription() {
+            static VkVertexInputBindingDescription getBindingDescription()
+            {
                 VkVertexInputBindingDescription bindingDescription{};
                 bindingDescription.binding = 0;
                 bindingDescription.stride = sizeof(Vertex);
@@ -368,72 +349,76 @@ namespace LGraphics
                 return bindingDescription;
             }
 
-            static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
-                std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+            static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
+                std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
 
                 attributeDescriptions[0].binding = 0;
                 attributeDescriptions[0].location = 0;
-                attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+                attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
                 attributeDescriptions[0].offset = offsetof(Vertex, pos);
 
                 attributeDescriptions[1].binding = 0;
                 attributeDescriptions[1].location = 1;
-                attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-                attributeDescriptions[1].offset = offsetof(Vertex, color);
-
-                attributeDescriptions[2].binding = 0;
-                attributeDescriptions[2].location = 2;
-                attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-                attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
-
+                attributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
+                attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
                 return attributeDescriptions;
             }
         };
 
-        struct UniformBufferObject {
-            glm::mat4 model;
-            glm::mat4 view;
-            glm::mat4 proj;
+        struct BaseShaderConstants
+        {
+            alignas(16) glm::mat4 proj;
+            alignas(16) glm::mat4 view;
         };
 
-
-        const std::vector<Vertex> vertices = {
-            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
+        struct BaseVertexUBuffer
+        {
+            alignas(16) glm::mat4 model = glm::mat4(1.0f);
+            alignas(16) glm::vec4 color = glm::vec4(1.0f);
         };
-
-        const std::vector<uint16_t> indices = {
-           0, 1, 2, 2, 3, 0
-        };
-
-
-        //static VkVertexInputBindingDescription getBindingDescription();
 
         uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
+
+        struct UboDataDynamicV 
+        {
+            glm::mat4 *model = nullptr;
+        } testStructV;
+
+        size_t dynamicAlignment;
+
+        void* alignedAlloc(size_t size, size_t alignment)
+        {
+            void *data = nullptr;
+#if defined(_MSC_VER) || defined(__MINGW32__)
+            data = _aligned_malloc(size, alignment);
+#else
+            int res = posix_memalign(&data, alignment, size);
+            if (res != 0)
+                data = nullptr;
+#endif
+            return data;
+        }
+
+        void alignedFree(void* data)
+        {
+#if	defined(_MSC_VER) || defined(__MINGW32__)
+            _aligned_free(data);
+#else
+            free(data);
+#endif
+        }
 #endif
 
-        GLFWwindow* window;
-        LTextRender* textRenderer;
+        GLFWwindow* window_;
 
         glm::vec3 viewPoint = glm::vec3(14.0f, 14.0f, 0.0f);
         float viewRadius = 10.0f;
-        std::vector<LWidget*> interfaceObjects;
         std::vector<LWidget*> nonInterfaceObjects;
-
-        //std::vector<LWidget*> objects;
-        std::vector<Text*> textObjects;
 
         int width, height;
 
         size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX, sleepTime = 0;
-
-        LWidget* activeWidget = nullptr;
-        //LWidget* prevActiveWidget = nullptr;
-        LWidget* widgetToMove = nullptr;
-        bool widgetsMovability = false;
 
         LBuffer* standartRectBuffer;
 
@@ -447,6 +432,8 @@ namespace LGraphics
 
         bool fullscreen = false;
 
+        void* uniformsMem[2] = { nullptr,nullptr };
+
         std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> keyCallback = [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
         std::function<void(GLFWwindow* w, int button, int action, int mods)> mouseCallback = [](GLFWwindow* w, int button, int action, int mods) {};
         std::function<void(GLFWwindow* window, double xoffset, double yoffset)> scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
@@ -459,8 +446,64 @@ namespace LGraphics
         unsigned int depthMapFBO, depthMap;
         fvect4 borderColor = fvect4(1.0, 1.0, 1.0, 1.0);
 
+        VkAllocationCallbacks*   g_Allocator = NULL;
+        VkInstance               g_Instance = VK_NULL_HANDLE;
+        VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
+//        Vk
+        VkDevice                 g_Device = VK_NULL_HANDLE;
+        uint32_t                 g_QueueFamily = (uint32_t)-1;
+        VkQueue                  g_Queue = VK_NULL_HANDLE;
+        VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
+        VkPipelineCache          g_PipelineCache = VK_NULL_HANDLE;
+        VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
 
-        //bool refreshStaticText = false;
+        size_t minUniformBufferOffsetAlignment = 0;
+
+        ImGui_ImplVulkanH_Window* wd;
+
+        ImGui_ImplVulkanH_Window g_MainWindowData;
+        int                      g_MinImageCount = 2;
+        bool                     g_SwapChainRebuild = false;
+
+        const VkFormat requestSurfaceImageFormat[4] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
+        const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+
+        static void check_vk_result(VkResult err)
+        {
+            if (err == 0)
+                return;
+            fprintf(stderr, "[vulkan] Error: VkResult = %d\n", err);
+            if (err < 0)
+                abort();
+        }
+
+#ifdef IMGUI_VULKAN_DEBUG_REPORT
+        VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
+        {
+            (void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
+            fprintf(stderr, "[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
+            return VK_FALSE;
+        }
+#endif // IMGUI_VULKAN_DEBUG_REPORT
+
+        void setupVulkan();
+
+        // All the ImGui_ImplVulkanH_XXX structures/functions are optional helpers used by the demo.
+        // Your real engine/app may not use them.
+        void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height);
+
+        void CleanupVulkanWindow()
+        {
+            ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
+        }
+
+        void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data);
+        void FramePresent(ImGui_ImplVulkanH_Window* wd);
+
+        static void glfw_error_callback(int error, const char* description)
+        {
+            fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+        }
     };
 }
 

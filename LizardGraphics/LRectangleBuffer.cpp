@@ -14,34 +14,41 @@ namespace LGraphics
 
     void LRectangleBuffer::setVerts()
     {
-        vertices = new GLfloat[coordsCount * verticesCount]
+        vertices = new GLfloat[(coordsCount + textureCoordsCount) * verticesCount]
         {
-             0.5f,  0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
         };
 
-        textures = new GLfloat[textureCoordsCount* verticesCount]
-        {
-            1.0f, 1.0f,   //0.0f, 0.0f,
-             1.0f, 0.0f,  //0.0f, 1.0f,
-            0.0f, 0.0f,  //1.0f, 1.0f,
-            0.0f, 1.0f   //1.0f, 0.0f,
-        };
+        //textures = new GLfloat[textureCoordsCount* verticesCount]
+        //{
+        //    1.0f, 1.0f,   //0.0f, 0.0f,
+        //     1.0f, 0.0f,  //0.0f, 1.0f,
+        //    0.0f, 0.0f,  //1.0f, 1.0f,
+        //    0.0f, 1.0f   //1.0f, 0.0f,
+        //};
     }
 
     void LRectangleBuffer::setInds()
     {
-        ebo = new GLuint[indicesCount]
+        ebo = new uint16_t[indicesCount]
         {
             0,1,3,
             1,2,3
         };
     }
-
+#ifdef OPENGL
     LRectangleBuffer::LRectangleBuffer()
     {
         init();
     }
+#endif
+#ifdef VULKAN
+    LRectangleBuffer::LRectangleBuffer(LApp* app)
+    {
+        init(app);
+    }
+#endif
 }

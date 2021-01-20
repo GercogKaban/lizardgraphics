@@ -25,8 +25,8 @@ VkShaderModule LShaders::Shader::genShaderModule(const char* shader, size_t size
 LShaders::Shader::~Shader()
 {
 #ifdef VULKAN
-    vkDestroyPipeline(app->device, graphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(app->device, pipelineLayout, nullptr);
+    vkDestroyPipeline(app->g_Device, graphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(app->g_Device, pipelineLayout, nullptr);
 #endif
 }
 
@@ -137,14 +137,16 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
-    viewport.width = (float)app->swapChainExtent.width;
-    viewport.height = (float)app->swapChainExtent.height;
+    viewport.width = (float)app->wd->Width;
+    viewport.height = (float)app->wd->Height;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
     VkRect2D scissor{};
     scissor.offset = { 0, 0 };
-    scissor.extent = app->swapChainExtent;
+    auto swapChainSupport = app->querySwapChainSupport(app->g_PhysicalDevice);
+    VkExtent2D extent = app->chooseSwapExtent(swapChainSupport.capabilities);
+    scissor.extent = extent;
 
     VkPipelineViewportStateCreateInfo viewportState{};
     viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -159,8 +161,8 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     rasterizer.rasterizerDiscardEnable = VK_FALSE;
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.0f;
-    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    //rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+    //rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
 
     VkPipelineMultisampleStateCreateInfo multisampling{};
@@ -170,7 +172,9 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
 
     VkPipelineColorBlendAttachmentState colorBlendAttachment{};
     colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    colorBlendAttachment.blendEnable = VK_FALSE;
+    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlendAttachment.blendEnable = VK_TRUE;
 
     VkPipelineColorBlendStateCreateInfo colorBlending{};
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -182,14 +186,23 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     colorBlending.blendConstants[1] = 0.0f;
     colorBlending.blendConstants[2] = 0.0f;
     colorBlending.blendConstants[3] = 0.0f;
+    
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
     pipelineLayoutInfo.pSetLayouts = &app->descriptorSetLayout;
 
-    if (vkCreatePipelineLayout(app->device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create pipeline layout!");
+    VkPushConstantRange push_constant;
+    push_constant.offset = 0;
+    push_constant.size = sizeof(LGraphics::LApp::BaseShaderConstants);
+    push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+    pipelineLayoutInfo.pPushConstantRanges = &push_constant;
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+
+    if (vkCreatePipelineLayout(app->g_Device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+       throw std::runtime_error("failed to create pipeline layout!");
     }
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -203,16 +216,16 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     pipelineInfo.pMultisampleState = &multisampling;
     pipelineInfo.pColorBlendState = &colorBlending;
     pipelineInfo.layout = pipelineLayout;
-    pipelineInfo.renderPass = app->renderPass;
+    pipelineInfo.renderPass = app->wd->RenderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-    if (vkCreateGraphicsPipelines(app->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(app->g_Device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline!");
     }
 
-    vkDestroyShaderModule(app->device, vertShader, nullptr);
-    vkDestroyShaderModule(app->device, fragShader, nullptr);
+    vkDestroyShaderModule(app->g_Device, vertShader, nullptr);
+    vkDestroyShaderModule(app->g_Device, fragShader, nullptr);
 #endif // VULKAN
 }
 

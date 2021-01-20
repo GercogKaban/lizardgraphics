@@ -16,17 +16,11 @@ namespace LGraphics
         const char* getObjectType() override { return "LRectanlgeShape"; }
 
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
+#ifdef VULKAN
+        void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum);
+#endif
+#ifdef OPENGL
         void draw() override; ///< Рисует виджет на сцене.
-        //LRectangleShape(LApp* app);
-
-        /*!
-        @brief Конструктор.
-        @param app - указатель на приложение LApp.
-        @param parent - родительский виджет (пока не работает).
-        @param path - путь к текстуре.
-        @param component - указатель на LBaseComponent.
-        */
-        LRectangleShape(LApp* app, const char* path = nullptr, bool isInterfaceObj = true);
 
         /*!
         @brief Конструктор.
@@ -37,9 +31,17 @@ namespace LGraphics
         @param component - указатель на LBaseComponent.
         */
         LRectangleShape(LApp* app, const unsigned char* bytes = nullptr, size_t size = 0, bool isInterfaceObj = true);
+#endif
+        //LRectangleShape(LApp* app);
 
-        void setLabel(const std::string label) override;
-        void alignLabel() override;
+        /*!
+        @brief Конструктор.
+        @param app - указатель на приложение LApp.
+        @param parent - родительский виджет (пока не работает).
+        @param path - путь к текстуре.
+        @param component - указатель на LBaseComponent.
+        */
+        LRectangleShape(LApp* app, const char* path = nullptr, bool isInterfaceObj = true);
 
         float calculateWidgetLength();
 
@@ -53,7 +55,6 @@ namespace LGraphics
     protected:
 
         void init(LApp* app, bool isInterfaceObj);
-        void updateLabelPos() override;
     };
 }
 

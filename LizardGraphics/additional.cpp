@@ -58,4 +58,11 @@ namespace LGraphics
     {
         return{ (float)r / (float)sizeof(unsigned char), (float)g / (float)sizeof(unsigned char), (float)b / (float)sizeof(unsigned char) };
     }
+    size_t getPowerTwoAlign(size_t size)
+    {
+        size_t i = 2;
+        while (size > i)
+            i = i << 2;
+        return i;
+    }
 }

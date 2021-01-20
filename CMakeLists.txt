@@ -10,8 +10,8 @@ IF (${API} MATCHES "OPENGL")
 find_package(OpenGL REQUIRED)
 ENDIF (${API} MATCHES "OPENGL")
 
-set(SOURCE_FILES CodeGen.cpp main.cpp)
-set(HEADER_FILES CodeGen.h)
+set(SOURCE_FILES main.cpp)
+set(HEADER_FILES)
 
 ADD_EXECUTABLE(LS_Example ${SOURCE_FILES} ${HEADER_FILES})
 add_subdirectory (LizardGraphics)

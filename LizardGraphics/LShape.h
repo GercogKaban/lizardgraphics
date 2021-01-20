@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "LWidget.h"
-#include "LTextRender.h"
 
 #include "include/glm/gtc/matrix_transform.hpp"
 
@@ -18,7 +17,8 @@ namespace LGraphics
     public:
 
         const char* getObjectType() override { return "LShape"; }
-        void setShader(LShaders::Shader* shader) override;  ///< Устанавливает шейдер виджету.
+        //void setShader(LShaders::Shader* shader) override;  ///< Устанавливает шейдер виджету.
+        //LShaders::Shader* getShader() { return shader; }
 
         /*!
         @brief Устанавливает цвет виджету.
@@ -89,13 +89,8 @@ namespace LGraphics
         fvect3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         fvect3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
-        //glm::mat4 getRotate() const override { return rotate_; }
-        std::string getLabel() const { return label.text; };
 
         void turnOffColor() override;
-
-        void setLabelColor(unsigned char r, unsigned char g, unsigned char b) override;
-        void setLabel(const std::string label) override;
 
         LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
            
@@ -109,6 +104,7 @@ namespace LGraphics
         */
         LShape(LApp* app, const char* path);
 
+#ifdef OPENGL
         /*!
         @brief
         @param bytes - массив байт (rgba).
@@ -116,6 +112,7 @@ namespace LGraphics
         @param component - указатель на LBaseComponent.
         */
         LShape(LApp* app, const unsigned char* bytes, size_t size);
+#endif
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 
@@ -125,12 +122,8 @@ namespace LGraphics
 
         //glm::mat4 rotate_ = glm::mat4(1.0f);
 
-        Text label;
-        float labelTextStartPosition = 0.0f;
-
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 
-        LShaders::Shader* shader = nullptr;                  ///< Шейдер.
         LBuffer* buffer = nullptr; ///< Координатный буфер (вершини, индексы, текстурные координаты).
     };
 }

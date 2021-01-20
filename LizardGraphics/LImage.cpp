@@ -11,9 +11,10 @@ namespace LGraphics
             //texture = resManager.loadTexture(path);
         texturePath = !path?"":path;
         if (!texturePath.size()) turnOffTexture();
-        //init();
+        init();
     }
 
+#ifdef OPENGL
     LImage::LImage(const unsigned char* bytes, size_t size)
     {
         //if (!lazy)
@@ -26,6 +27,7 @@ namespace LGraphics
             //init();
         }
     }
+#endif
 
     void LImage::bindTexture(const char* path)
     {
@@ -34,11 +36,13 @@ namespace LGraphics
         texture = resManager.loadTexture(path);
     }
 
+#ifdef OPENGL
     void LImage::bindTexture(const unsigned char* bytes, size_t size)
     {
         //turnOnTexture();
         texture = resManager.loadTexture(bytes,size);
     }
+#endif
 
     void LImage::turnOffTexture()
     {
@@ -68,12 +72,16 @@ namespace LGraphics
     {
         if (texturePath.size())
             texture = resManager.loadTexture(texturePath.data());
+#ifdef OPENGL
         else 
             texture = resManager.loadTexture(texturesBytes, texturesBytesSize);
+#endif
     }
 
     LImage::~LImage()
     {
+#ifdef OPENGL
         if (texturesBytes) delete[] texturesBytes;
+#endif
     }
 }

@@ -50,6 +50,7 @@ namespace LGraphics
             widgets.clear();
         }
 
+#ifdef OPENGL
         virtual void draw() override
         {
             for (auto* w : widgets)
@@ -58,6 +59,7 @@ namespace LGraphics
                 w->draw();
             }
         }
+#endif
     };
 
     class LMultiWRectangle : public LWidgetGroup<LWRectangle>

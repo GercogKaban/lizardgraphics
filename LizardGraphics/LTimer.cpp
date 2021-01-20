@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "LTimer.h"
-#include "LTextRender.h"
 
 LTimer::LTimer(std::function<void()> func, std::chrono::milliseconds interval,bool start_)
 {

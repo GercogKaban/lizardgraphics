@@ -45,19 +45,32 @@ void LGraphics::LWRectangle::setMatrices()
     projection = glm::ortho(-1.0f, 1.0f, -1.0f / aspect, 1.0f / aspect, 0.1f, 1000.0f);
 }
 
+#ifdef VULKAN
+void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex, size_t objNum)
+{
+    app->updateUniformBuffer(frameIndex, objNum, this);
+
+    const uint32_t dynamicOffsets[] = 
+    { objNum * static_cast<uint32_t>(app->dynamicAlignment),
+    };
+
+     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+        getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[objNum * 2 + frameIndex], 1, dynamicOffsets);
+
+    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(buffer->getIndCount()), 1, 0, 0, 0);
+}
+#endif
+#ifdef OPENGL
 void LGraphics::LWRectangle::draw()
 {
-    if (isHidden()) return;
+    //if (isHidden()) return;
 
-    getShader()->use();
-#ifdef OPENGL
+    //getShader()->use();
     auto shader = getShader()->getShaderProgram();
-#endif
     auto lightPos = app->getLightPos();
 
     model = calculateModelMatrix();
 
-#ifdef OPENGL
     glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
     glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
 
@@ -103,13 +116,13 @@ void LGraphics::LWRectangle::draw()
     //glBindVertexArray(0);
     //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
     //glBindVertexArray(0);
-#endif OPENGL
 
 
     if (innerWidgets)
     for (auto& i : *innerWidgets)
         i->draw();
 }
+#endif
 
 glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
 {

@@ -28,11 +28,14 @@
 
 #include "include/GLEW/glew.h"
 
-#ifdef VULKAN
+#ifdef VULKAN1
 #include <include/Vulkan/vulkan/vulkan.h>
 #endif //VULKAN
 
-#include "include/GLFW/glfw3.h"
+#ifndef NDEBUG
+#define IMGUI_VULKAN_DEBUG_REPORT
+#endif
+//#include "include/GLFW/glfw3.h"
 
 #include "include/SOIL2/SOIL2.h"
 
@@ -42,8 +45,16 @@
 #include "include/glm/gtc/type_ptr.hpp"
 
 #include <ft2build.h>
-#include "additional.h"
 #include "ObjectPool.h"
 #include "textures.h"
+
+#include <stdio.h>          // printf, fprintf
+#include <stdlib.h>         // abort
+#define GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
+
+#include "additional.h"
 
 #endif //PCH_H

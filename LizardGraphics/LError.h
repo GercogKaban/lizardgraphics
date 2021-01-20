@@ -3,8 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-//#include "LObject.h"
-#include "LMessageBox.h"
+
+#include "LObject.h"
 
 #define LWRITE(...) LError::writeError(__VA_ARGS__)
 #define LPRINT(...) LError::printErrors()
@@ -12,6 +12,7 @@
 
 namespace LGraphics
 {
+    class LApp;
     /*!
     @brief Класс вывода ошибок.
     */
@@ -46,7 +47,7 @@ namespace LGraphics
         static void printToDisplay(const std::string& error)
         {
             lastErrorNum++;
-            auto msg = new LGraphics::LMessageBox(app_,error);
+            //auto msg = new LGraphics::LMessageBox(app_,error);
         }
 
         /*!
