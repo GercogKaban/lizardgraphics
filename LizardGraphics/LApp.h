@@ -97,10 +97,10 @@ namespace LGraphics
         //std::vector<LWidget*>& getObjects() { return &objects; }
         //std::vector<Text>* getTextObjects() { return textObjects; }
 
-        LShaders::Shader* getStandartWorldObjShader() const { return baseShader; }
+        LShaders::Shader* getStandartWorldObjShader() const;
         //LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
-        LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
-        LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
+        //LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
+        //LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
 
         bool isPressed(int key);
 

@@ -1,5 +1,6 @@
 ﻿#include "LApp.h"
 #include "LApp.h"
+#include "LApp.h"
 #include "pch.h"
 
 #include "LApp.h"
@@ -282,6 +283,11 @@ namespace LGraphics
             {
                 obj.erase(obj.begin() + i);
             }
+    }
+
+    LShaders::Shader * LApp::getStandartWorldObjShader() const
+    {
+        return baseShader;
     }
 
     bool LApp::isPressed(int key)
