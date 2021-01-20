@@ -30,7 +30,6 @@ int main()
         w1->move(-0.5f, 0.5f, 0.0f);
         w1->bindTexture("arbiter.png");
         
-        app.setImgui()
     //}
 
     app.loop();
