@@ -1,13 +1,17 @@
 var searchData=
 [
-  ['text_105',['Text',['../struct_l_graphics_1_1_text.html',1,'LGraphics']]],
-  ['texture_106',['texture',['../class_l_graphics_1_1_l_image.html#a4940861be16efca90b3965bd7d565061',1,'LGraphics::LImage']]],
-  ['texturecoordscount_107',['textureCoordsCount',['../class_l_graphics_1_1_l_buffer.html#ab422b9ca8d473664991c575263624056',1,'LGraphics::LBuffer']]],
-  ['textures_108',['textures',['../class_l_graphics_1_1_l_buffer.html#a5ba44a22090c4b3d6b0589eb3dd11246',1,'LGraphics::LBuffer']]],
-  ['todo_20list_109',['Todo List',['../todo.html',1,'']]],
-  ['transparency_110',['transparency',['../class_l_graphics_1_1_l_shape.html#a156985a3eee45f336830bb59eef4a4a0',1,'LGraphics::LShape::transparency()'],['../class_l_graphics_1_1_l_widget.html#a063c86504677b2f7b50f4225b051a3b1',1,'LGraphics::LWidget::transparency()']]],
-  ['transparency_5f_111',['transparency_',['../class_l_graphics_1_1_l_shape.html#ab756d3da3d3bc7807bbb2d036214f284',1,'LGraphics::LShape']]],
-  ['turnedon_112',['turnedOn',['../class_l_graphics_1_1_l_image.html#aa467339f17051537dba386f40b71e8f5',1,'LGraphics::LImage']]],
-  ['turnofftexture_113',['turnOffTexture',['../class_l_graphics_1_1_l_image.html#aefd518aea4f4a0bd10e3fd54c3046977',1,'LGraphics::LImage']]],
-  ['turnontexture_114',['turnOnTexture',['../class_l_graphics_1_1_l_image.html#a52cb3db1caa0ed27a0b3c8f0ef544502',1,'LGraphics::LImage']]]
+  ['objectdestroy_1523',['ObjectDestroy',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_object_destroy.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['objectdestroy_3c_20noparent_2c_20dispatch_20_3e_1524',['ObjectDestroy&lt; NoParent, Dispatch &gt;',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_object_destroy_3_01_no_parent_00_01_dispatch_01_4.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['objectfree_1525',['ObjectFree',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_object_free.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['objectpool_1526',['ObjectPool',['../class_object_pool.html',1,'']]],
+  ['objectpool_3c_20lgraphics_3a_3alwrectangle_20_2a_20_3e_1527',['ObjectPool&lt; LGraphics::LWRectangle * &gt;',['../class_object_pool.html',1,'']]],
+  ['objectrelease_1528',['ObjectRelease',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_object_release.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['offset2d_1529',['Offset2D',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_offset2_d.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['offset3d_1530',['Offset3D',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_offset3_d.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['optional_1531',['Optional',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_optional.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['optional_3c_20const_20vulkan_5fhpp_5fnamespace_3a_3aallocationcallbacks_20_3e_1532',['Optional&lt; const VULKAN_HPP_NAMESPACE::AllocationCallbacks &gt;',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_optional.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['outofdatekhrerror_1533',['OutOfDateKHRError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_out_of_date_k_h_r_error.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['outofdevicememoryerror_1534',['OutOfDeviceMemoryError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_out_of_device_memory_error.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['outofhostmemoryerror_1535',['OutOfHostMemoryError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_out_of_host_memory_error.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['outofpoolmemoryerror_1536',['OutOfPoolMemoryError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_out_of_pool_memory_error.html',1,'VULKAN_HPP_NAMESPACE']]]
 ];

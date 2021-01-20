@@ -122,58 +122,60 @@ $(function() {
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            widgets.clear();</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> draw()<span class="keyword"> override</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span>* w : widgets)</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                w-&gt;setShader(shader);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                w-&gt;draw();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    };</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_multi_w_rectangle.html">   63</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_multi_w_rectangle.html">LMultiWRectangle</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_widget_group.html">LWidgetGroup</a>&lt;LWRectangle&gt;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        std::vector&lt;GLint&gt; textures;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//std::vector&lt;LWRectangle*&gt; rectangles;</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        std::vector&lt;glm::mat4&gt; models;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LMultiWRectangle&quot;</span>; }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_multi_w_rectangle.html">LMultiWRectangle</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* app, <span class="keywordtype">size_t</span> rectCount);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//bool isInterfaceObject() const override { return false; }</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//virtual glm::vec2 getScreenCoords(size_t _i) const { return rectangles[_i].getScreenCoords(); }</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//void setMatrices(size_t _i, LApp* app) { rectangles[_i].setMatrices(app); }</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//void setMatrices(size_t _i) { rectangles[_i].setMatrices(); }</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordtype">size_t</span> rectCount;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#ifdef OPENGL</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> draw()<span class="keyword"> override</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span>* w : widgets)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                w-&gt;setShader(shader);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                w-&gt;draw();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    };</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_multi_w_rectangle.html">   65</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_multi_w_rectangle.html">LMultiWRectangle</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_widget_group.html">LWidgetGroup</a>&lt;LWRectangle&gt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        std::vector&lt;GLint&gt; textures;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//std::vector&lt;LWRectangle*&gt; rectangles;</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        std::vector&lt;glm::mat4&gt; models;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LMultiWRectangle&quot;</span>; }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_multi_w_rectangle.html">LMultiWRectangle</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* app, <span class="keywordtype">size_t</span> rectCount);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//bool isInterfaceObject() const override { return false; }</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//virtual glm::vec2 getScreenCoords(size_t _i) const { return rectangles[_i].getScreenCoords(); }</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//void setMatrices(size_t _i, LApp* app) { rectangles[_i].setMatrices(app); }</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">//void setMatrices(size_t _i) { rectangles[_i].setMatrices(); }</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">//glm::mat4 calculateModelMatrix(size_t _i) const { rectangles[_i].calculateModelMatrix(); }</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="comment">//glm::mat4 getModelMatric(size_t _i) const { return calculateModelMatrix(_i); }</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordtype">size_t</span> rectCount;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//glm::mat4 calculateModelMatrix(size_t _i) const { rectangles[_i].calculateModelMatrix(); }</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">//glm::mat4 getModelMatric(size_t _i) const { return calculateModelMatrix(_i); }</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a>* buffer;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">//LShaders::Shader* shader;</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a>* buffer;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">//glm::mat4 model;</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        glm::mat4 view;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        glm::mat4 projection;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    };</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">//LShaders::Shader* shader;</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//glm::mat4 model;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        glm::mat4 view;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        glm::mat4 projection;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    };</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:36</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_buffer_html"><div class="ttname"><a href="class_l_graphics_1_1_l_buffer.html">LGraphics::LBuffer</a></div><div class="ttdoc">Абстрактный класс буфера вершин.</div><div class="ttdef"><b>Definition:</b> LBuffer.h:15</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_multi_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_multi_w_rectangle.html">LGraphics::LMultiWRectangle</a></div><div class="ttdef"><b>Definition:</b> LMultiWRectangle.h:64</div></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:43</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_buffer_html"><div class="ttname"><a href="class_l_graphics_1_1_l_buffer.html">LGraphics::LBuffer</a></div><div class="ttdoc">Абстрактный класс буфера вершин.</div><div class="ttdef"><b>Definition:</b> LBuffer.h:16</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_multi_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_multi_w_rectangle.html">LGraphics::LMultiWRectangle</a></div><div class="ttdef"><b>Definition:</b> LMultiWRectangle.h:66</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_non_widget_html"><div class="ttname"><a href="class_l_graphics_1_1_l_non_widget.html">LGraphics::LNonWidget</a></div><div class="ttdef"><b>Definition:</b> LMultiWRectangle.h:12</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_widget_group_html"><div class="ttname"><a href="class_l_graphics_1_1_l_widget_group.html">LGraphics::LWidgetGroup</a></div><div class="ttdef"><b>Definition:</b> LMultiWRectangle.h:31</div></div>
-<div class="ttc" id="aclass_l_shaders_1_1_shader_html"><div class="ttname"><a href="class_l_shaders_1_1_shader.html">LShaders::Shader</a></div><div class="ttdoc">Класс шейдера.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:239</div></div>
+<div class="ttc" id="aclass_l_shaders_1_1_shader_html"><div class="ttname"><a href="class_l_shaders_1_1_shader.html">LShaders::Shader</a></div><div class="ttdoc">Класс шейдера.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:190</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

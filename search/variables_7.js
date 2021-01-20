@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['scale_5f_262',['scale_',['../class_l_graphics_1_1_l_shape.html#a8c57f55d38b16c807eb039363b55ebf4',1,'LGraphics::LShape']]],
-  ['shader_263',['shader',['../class_l_graphics_1_1_l_shape.html#a6fb798415e344e66055010768d73f2b3',1,'LGraphics::LShape']]]
+  ['lasterrornum_5662',['lastErrorNum',['../class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25',1,'LGraphics::LError']]]
 ];

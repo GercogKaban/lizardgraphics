@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['transparency_246',['transparency',['../class_l_graphics_1_1_l_shape.html#a156985a3eee45f336830bb59eef4a4a0',1,'LGraphics::LShape::transparency()'],['../class_l_graphics_1_1_l_widget.html#a063c86504677b2f7b50f4225b051a3b1',1,'LGraphics::LWidget::transparency()']]],
-  ['turnofftexture_247',['turnOffTexture',['../class_l_graphics_1_1_l_image.html#aefd518aea4f4a0bd10e3fd54c3046977',1,'LGraphics::LImage']]],
-  ['turnontexture_248',['turnOnTexture',['../class_l_graphics_1_1_l_image.html#a52cb3db1caa0ed27a0b3c8f0ef544502',1,'LGraphics::LImage']]]
+  ['writeerror_5647',['writeError',['../class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11',1,'LGraphics::LError::writeError(T t)'],['../class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb',1,'LGraphics::LError::writeError(T t, Args... args)']]]
 ];

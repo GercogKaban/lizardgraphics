@@ -1,16 +1,16 @@
 var searchData=
 [
-  ['vect2_5fdata_178',['vect2_data',['../structvect2__data.html',1,'']]],
-  ['vect2_5fdata_3c_20float_20_3e_179',['vect2_data&lt; float &gt;',['../structvect2__data.html',1,'']]],
-  ['vect2_5fdata_3c_20int_20_3e_180',['vect2_data&lt; int &gt;',['../structvect2__data.html',1,'']]],
-  ['vect3_5fdata_181',['vect3_data',['../structvect3__data.html',1,'']]],
-  ['vect3_5fdata_3c_20float_20_3e_182',['vect3_data&lt; float &gt;',['../structvect3__data.html',1,'']]],
-  ['vect4_5fdata_183',['vect4_data',['../structvect4__data.html',1,'']]],
-  ['vect4_5fdata_3c_20float_20_3e_184',['vect4_data&lt; float &gt;',['../structvect4__data.html',1,'']]],
-  ['vect_5fcustom_5fdata_185',['vect_custom_data',['../structvect__custom__data.html',1,'']]],
-  ['vect_5fprototype2_186',['vect_prototype2',['../structvect__prototype2.html',1,'']]],
-  ['vect_5fprototype2_3c_20float_2c_202_2c_20vect2_5fdata_3c_20float_20_3e_20_3e_187',['vect_prototype2&lt; float, 2, vect2_data&lt; float &gt; &gt;',['../structvect__prototype2.html',1,'']]],
-  ['vect_5fprototype2_3c_20float_2c_203_2c_20vect3_5fdata_3c_20float_20_3e_20_3e_188',['vect_prototype2&lt; float, 3, vect3_data&lt; float &gt; &gt;',['../structvect__prototype2.html',1,'']]],
-  ['vect_5fprototype2_3c_20float_2c_204_2c_20vect4_5fdata_3c_20float_20_3e_20_3e_189',['vect_prototype2&lt; float, 4, vect4_data&lt; float &gt; &gt;',['../structvect__prototype2.html',1,'']]],
-  ['vect_5fprototype2_3c_20int_2c_202_2c_20vect2_5fdata_3c_20int_20_3e_20_3e_190',['vect_prototype2&lt; int, 2, vect2_data&lt; int &gt; &gt;',['../structvect__prototype2.html',1,'']]]
+  ['generatedcommandsinfonv_3827',['GeneratedCommandsInfoNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_generated_commands_info_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['generatedcommandsmemoryrequirementsinfonv_3828',['GeneratedCommandsMemoryRequirementsInfoNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_generated_commands_memory_requirements_info_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['geometryaabbnv_3829',['GeometryAABBNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_geometry_a_a_b_b_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['geometrydatanv_3830',['GeometryDataNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_geometry_data_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['geometrynv_3831',['GeometryNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_geometry_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['geometrytrianglesnv_3832',['GeometryTrianglesNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_geometry_triangles_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['glfwgamepadstate_3833',['GLFWgamepadstate',['../struct_g_l_f_wgamepadstate.html',1,'']]],
+  ['glfwgammaramp_3834',['GLFWgammaramp',['../struct_g_l_f_wgammaramp.html',1,'']]],
+  ['glfwimage_3835',['GLFWimage',['../struct_g_l_f_wimage.html',1,'']]],
+  ['glfwvidmode_3836',['GLFWvidmode',['../struct_g_l_f_wvidmode.html',1,'']]],
+  ['graphicspipelinecreateinfo_3837',['GraphicsPipelineCreateInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_graphics_pipeline_create_info.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['graphicspipelineshadergroupscreateinfonv_3838',['GraphicsPipelineShaderGroupsCreateInfoNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_graphics_pipeline_shader_groups_create_info_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['graphicsshadergroupcreateinfonv_3839',['GraphicsShaderGroupCreateInfoNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_graphics_shader_group_create_info_n_v.html',1,'VULKAN_HPP_NAMESPACE']]]
 ];

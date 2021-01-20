@@ -70,6 +70,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_l_graphics_1_1_l_app-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -101,33 +102,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:acce33d5422267c292fb5d208198a2640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает размеры окна (в пикселях). <br /></td></tr>
 <tr class="separator:acce33d5422267c292fb5d208198a2640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66ebf0f08e10ebbe392eca6db846f61e"><td class="memItemLeft" align="right" valign="top"><a id="a66ebf0f08e10ebbe392eca6db846f61e"></a>
-GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">getWindowHandler</a> ()</td></tr>
+<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_app.html#a66ebf0f08e10ebbe392eca6db846f61e">getWindowHandler</a> ()</td></tr>
 <tr class="memdesc:a66ebf0f08e10ebbe392eca6db846f61e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает дескриптор GLFW окна. <br /></td></tr>
 <tr class="separator:a66ebf0f08e10ebbe392eca6db846f61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48fdd3cbcdd8df5926ac35a4c73edc66"><td class="memItemLeft" align="right" valign="top"><a id="a48fdd3cbcdd8df5926ac35a4c73edc66"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addText</b> (<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> *text)</td></tr>
-<tr class="separator:a48fdd3cbcdd8df5926ac35a4c73edc66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ea8c30c7611ef307601efeb74bbbe47"><td class="memItemLeft" align="right" valign="top"><a id="a2ea8c30c7611ef307601efeb74bbbe47"></a>
-<a class="el" href="struct_l_graphics_1_1_text.html">Text</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>popText</b> (int refreshingMode)</td></tr>
-<tr class="separator:a2ea8c30c7611ef307601efeb74bbbe47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4044f02682944d0609733c6bb5ef90fa"><td class="memItemLeft" align="right" valign="top"><a id="a4044f02682944d0609733c6bb5ef90fa"></a>
-<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getActiveWidget</b> ()</td></tr>
-<tr class="separator:a4044f02682944d0609733c6bb5ef90fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9b5c6a560bb7e96e4f955ffdb8afd5f"><td class="memItemLeft" align="right" valign="top"><a id="ad9b5c6a560bb7e96e4f955ffdb8afd5f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>lockFps</b> (size_t fps_)</td></tr>
 <tr class="separator:ad9b5c6a560bb7e96e4f955ffdb8afd5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a370f0e57faa7ed1dd4ffcd9ce88e97a8"><td class="memItemLeft" align="right" valign="top"><a id="a370f0e57faa7ed1dd4ffcd9ce88e97a8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setResolution</b> (size_t resolutionX, size_t resolutionY)</td></tr>
 <tr class="separator:a370f0e57faa7ed1dd4ffcd9ce88e97a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50fbf572afc4c3f02124d30839f21e26"><td class="memItemLeft" align="right" valign="top"><a id="a50fbf572afc4c3f02124d30839f21e26"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setActiveWidget</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
-<tr class="separator:a50fbf572afc4c3f02124d30839f21e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51d32404425f92fe18812b2f805b2d86"><td class="memItemLeft" align="right" valign="top"><a id="a51d32404425f92fe18812b2f805b2d86"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> (glm::mat4 view, glm::mat4 projection)</td></tr>
 <tr class="separator:a51d32404425f92fe18812b2f805b2d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72a1f38eb656cd9778c4a0990de2925b"><td class="memItemLeft" align="right" valign="top"><a id="a72a1f38eb656cd9778c4a0990de2925b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setWidgetsMovability</b> (bool movability)</td></tr>
-<tr class="separator:a72a1f38eb656cd9778c4a0990de2925b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36f6506c9554de6b12930f4331b3054c"><td class="memItemLeft" align="right" valign="top"><a id="a36f6506c9554de6b12930f4331b3054c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>deleteWidget</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
 <tr class="separator:a36f6506c9554de6b12930f4331b3054c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,17 +124,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>removeWidget</b> (<a 
 void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshObjectMatrices</b> ()</td></tr>
 <tr class="separator:a676bc94c3a985132055ef91906f52f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5251990bb33792c6a88a68f0b5161323"><td class="memItemLeft" align="right" valign="top"><a id="a5251990bb33792c6a88a68f0b5161323"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setKeyCallback</b> (std::function&lt; void(GLFWwindow *window, int key, int scancode, int action, int mods)&gt; callback)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setKeyCallback</b> (std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, int key, int scancode, int action, int mods)&gt; callback)</td></tr>
 <tr class="separator:a5251990bb33792c6a88a68f0b5161323"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e99e56fd9f50d3303fa351c1bf4774a"><td class="memItemLeft" align="right" valign="top"><a id="a6e99e56fd9f50d3303fa351c1bf4774a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMouseCallback</b> (std::function&lt; void(GLFWwindow *w, int button, int action, int mods)&gt; callback)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMouseCallback</b> (std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *w, int button, int action, int mods)&gt; callback)</td></tr>
 <tr class="separator:a6e99e56fd9f50d3303fa351c1bf4774a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15f3c7de558e00fe9df67a634e4fe4a8"><td class="memItemLeft" align="right" valign="top"><a id="a15f3c7de558e00fe9df67a634e4fe4a8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setScrollCallback</b> (std::function&lt; void(GLFWwindow *window, double xoffset, double yoffset)&gt;callback)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setScrollCallback</b> (std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, double xoffset, double yoffset)&gt;callback)</td></tr>
 <tr class="separator:a15f3c7de558e00fe9df67a634e4fe4a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadb52da3a324e0068e351ec6e4952a56"><td class="memItemLeft" align="right" valign="top"><a id="aadb52da3a324e0068e351ec6e4952a56"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getInterfaceObjects</b> ()</td></tr>
-<tr class="separator:aadb52da3a324e0068e351ec6e4952a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6940fc46372109a0bd0129df3cbaa25"><td class="memItemLeft" align="right" valign="top"><a id="ae6940fc46372109a0bd0129df3cbaa25"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getNonInterfaceObjects</b> ()</td></tr>
 <tr class="separator:ae6940fc46372109a0bd0129df3cbaa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,6 +204,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initLight</b> ()</td>
 <tr class="memitem:adf4339f89c7d42b5935442c8d5750a84"><td class="memItemLeft" align="right" valign="top"><a id="adf4339f89c7d42b5935442c8d5750a84"></a>
 <a class="el" href="structvect__prototype2.html">fvect2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getMouseCoords</b> () const</td></tr>
 <tr class="separator:adf4339f89c7d42b5935442c8d5750a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d16964a29cf3e4785c417af151db448"><td class="memItemLeft" align="right" valign="top"><a id="a1d16964a29cf3e4785c417af151db448"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectsLimit</b> () const</td></tr>
+<tr class="separator:a1d16964a29cf3e4785c417af151db448"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade97d9666fa86758dc5ff33f6fa69463"><td class="memItemLeft" align="right" valign="top"><a id="ade97d9666fa86758dc5ff33f6fa69463"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setImgui</b> (std::function&lt; void()&gt; func)</td></tr>
+<tr class="separator:ade97d9666fa86758dc5ff33f6fa69463"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487bd05904dd7f65278332d0fd4d4cad"><td class="memItemLeft" align="right" valign="top"><a id="a487bd05904dd7f65278332d0fd4d4cad"></a>
 virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> ()</td></tr>
 <tr class="separator:a487bd05904dd7f65278332d0fd4d4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,9 +219,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a57d861865ef64928e4834c9506f5c663"><td class="memItemLeft" align="right" valign="top"><a id="a57d861865ef64928e4834c9506f5c663"></a>
 <a class="el" href="class_object_pool.html">ObjectPool</a>&lt; <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lwRectPool</b></td></tr>
 <tr class="separator:a57d861865ef64928e4834c9506f5c663"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a9073803ef239ca57fa8dbc5ecc706d"><td class="memItemLeft" align="right" valign="top"><a id="a6a9073803ef239ca57fa8dbc5ecc706d"></a>
-<a class="el" href="class_object_pool.html">ObjectPool</a>&lt; <a class="el" href="class_l_graphics_1_1_l_color_bar.html">LColorBar</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lColorBarPool</b></td></tr>
-<tr class="separator:a6a9073803ef239ca57fa8dbc5ecc706d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33e2dcbb067f47a824185dc59f188e92"><td class="memItemLeft" align="right" valign="top"><a id="a33e2dcbb067f47a824185dc59f188e92"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>viewAxonometricVector</b> = glm::vec3(1/sqrt(3))</td></tr>
 <tr class="separator:a33e2dcbb067f47a824185dc59f188e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -259,12 +245,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initTextures</b> (std
 <tr class="memitem:abfe898eb0fa1eecfea9ebf6ee38453ef"><td class="memItemLeft" align="right" valign="top"><a id="abfe898eb0fa1eecfea9ebf6ee38453ef"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> ()</td></tr>
 <tr class="separator:abfe898eb0fa1eecfea9ebf6ee38453ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d789e46003a8db6e390a7757362a7bd"><td class="memItemLeft" align="right" valign="top"><a id="a4d789e46003a8db6e390a7757362a7bd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, bool isInterfaceObj)</td></tr>
-<tr class="separator:a4d789e46003a8db6e390a7757362a7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memItemLeft" align="right" valign="top"><a id="a1dde3b366b5bd49db35b97ec6f776a85"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>moveWidgetToMouse</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
-<tr class="separator:a1dde3b366b5bd49db35b97ec6f776a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb4b5004d5d8ad1be75bee12802514e1"><td class="memItemLeft" align="right" valign="top"><a id="adb4b5004d5d8ad1be75bee12802514e1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
+<tr class="separator:adb4b5004d5d8ad1be75bee12802514e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a222be0984d4707bf1c5719df4e8a8e33"><td class="memItemLeft" align="right" valign="top"><a id="a222be0984d4707bf1c5719df4e8a8e33"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshCamera</b> ()</td></tr>
 <tr class="separator:a222be0984d4707bf1c5719df4e8a8e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -280,6 +263,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initLEngine</b> ()</t
 <tr class="memitem:acfadf87508a3d9fc8816aaa6b5d69b16"><td class="memItemLeft" align="right" valign="top"><a id="acfadf87508a3d9fc8816aaa6b5d69b16"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initRenderer</b> ()</td></tr>
 <tr class="separator:acfadf87508a3d9fc8816aaa6b5d69b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cd2957bdaefb760d9f495f3fa102f41"><td class="memItemLeft" align="right" valign="top"><a id="a8cd2957bdaefb760d9f495f3fa102f41"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initImGui</b> ()</td></tr>
+<tr class="separator:a8cd2957bdaefb760d9f495f3fa102f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53526f197d76a819955995b4963df43e"><td class="memItemLeft" align="right" valign="top"><a id="a53526f197d76a819955995b4963df43e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initTextures</b> ()</td></tr>
 <tr class="separator:a53526f197d76a819955995b4963df43e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,23 +276,53 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>checkEvents</b> ()</t
 void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseResources</b> ()</td></tr>
 <tr class="separator:a8044082c4e19d5e7ab60fa51c10eeefa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acca587f97d73eafb5baf62c0d5792234"><td class="memItemLeft" align="right" valign="top"><a id="acca587f97d73eafb5baf62c0d5792234"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mouse_button_callback</b> (GLFWwindow *window, int button, int action, int mods)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mouse_button_callback</b> (<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, int button, int action, int mods)</td></tr>
 <tr class="separator:acca587f97d73eafb5baf62c0d5792234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af87298ff63905abb1cb575c72120f4c2"><td class="memItemLeft" align="right" valign="top"><a id="af87298ff63905abb1cb575c72120f4c2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>cursor_position_callback</b> (GLFWwindow *window, double xpos, double ypos)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cursor_position_callback</b> (<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, double xpos, double ypos)</td></tr>
 <tr class="separator:af87298ff63905abb1cb575c72120f4c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc6a86ff97147ae53e897c4486e7bd47"><td class="memItemLeft" align="right" valign="top"><a id="adc6a86ff97147ae53e897c4486e7bd47"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>key_callback</b> (GLFWwindow *window, int key, int scancode, int action, int mods)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>key_callback</b> (<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, int key, int scancode, int action, int mods)</td></tr>
 <tr class="separator:adc6a86ff97147ae53e897c4486e7bd47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46392d997a94151675aa75b39b248cbe"><td class="memItemLeft" align="right" valign="top"><a id="a46392d997a94151675aa75b39b248cbe"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>character_callback</b> (GLFWwindow *window, unsigned int codepoint)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>character_callback</b> (<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, unsigned int codepoint)</td></tr>
 <tr class="separator:a46392d997a94151675aa75b39b248cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1759318f18224d21713c6e1bac1a2fd0"><td class="memItemLeft" align="right" valign="top"><a id="a1759318f18224d21713c6e1bac1a2fd0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_callback</b> (GLFWwindow *window, double xoffset, double yoffset)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scroll_callback</b> (<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, double xoffset, double yoffset)</td></tr>
 <tr class="separator:a1759318f18224d21713c6e1bac1a2fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2e452b96c16071ee771dabe3902c1af"><td class="memItemLeft" align="right" valign="top"><a id="aa2e452b96c16071ee771dabe3902c1af"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setupVulkan</b> ()</td></tr>
+<tr class="separator:aa2e452b96c16071ee771dabe3902c1af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaceafef4e63947ab5e940976f67a8e7d"><td class="memItemLeft" align="right" valign="top"><a id="aaceafef4e63947ab5e940976f67a8e7d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetupVulkanWindow</b> (<a class="el" href="struct_im_gui___impl_vulkan_h___window.html">ImGui_ImplVulkanH_Window</a> *wd, VkSurfaceKHR surface, int width, int height)</td></tr>
+<tr class="separator:aaceafef4e63947ab5e940976f67a8e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2788d435f10ff590210591daa990e512"><td class="memItemLeft" align="right" valign="top"><a id="a2788d435f10ff590210591daa990e512"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>CleanupVulkanWindow</b> ()</td></tr>
+<tr class="separator:a2788d435f10ff590210591daa990e512"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17e3fcd269c1430b9404319bc5eeefff"><td class="memItemLeft" align="right" valign="top"><a id="a17e3fcd269c1430b9404319bc5eeefff"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FrameRender</b> (<a class="el" href="struct_im_gui___impl_vulkan_h___window.html">ImGui_ImplVulkanH_Window</a> *wd, <a class="el" href="struct_im_draw_data.html">ImDrawData</a> *draw_data)</td></tr>
+<tr class="separator:a17e3fcd269c1430b9404319bc5eeefff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bc1848af65639398fa40f77805ea177"><td class="memItemLeft" align="right" valign="top"><a id="a5bc1848af65639398fa40f77805ea177"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FramePresent</b> (<a class="el" href="struct_im_gui___impl_vulkan_h___window.html">ImGui_ImplVulkanH_Window</a> *wd)</td></tr>
+<tr class="separator:a5bc1848af65639398fa40f77805ea177"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a2573b2cb21f7f41df21311c22227189a"><td class="memItemLeft" align="right" valign="top"><a id="a2573b2cb21f7f41df21311c22227189a"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>check_vk_result</b> (VkResult err)</td></tr>
+<tr class="separator:a2573b2cb21f7f41df21311c22227189a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a396c731b917143ae2eb1a7fdc7393f51"><td class="memItemLeft" align="right" valign="top"><a id="a396c731b917143ae2eb1a7fdc7393f51"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>glfw_error_callback</b> (int error, const char *description)</td></tr>
+<tr class="separator:a396c731b917143ae2eb1a7fdc7393f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:a19d8c67bd2f8e9248eeef12970b29b3a"><td class="memItemLeft" align="right" valign="top"><a id="a19d8c67bd2f8e9248eeef12970b29b3a"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>objectCountLim</b></td></tr>
+<tr class="separator:a19d8c67bd2f8e9248eeef12970b29b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace477fe544f3916e9ec62a1ce57bef99"><td class="memItemLeft" align="right" valign="top"><a id="ace477fe544f3916e9ec62a1ce57bef99"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>imgui</b> = []() {}</td></tr>
+<tr class="separator:ace477fe544f3916e9ec62a1ce57bef99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af24484059c779f035c7f61886be34897"><td class="memItemLeft" align="right" valign="top"><a id="af24484059c779f035c7f61886be34897"></a>
 <a class="el" href="structvect__prototype2.html">fvect2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mouseCoords</b> = <a class="el" href="structvect__prototype2.html">fvect2</a>(0.0f)</td></tr>
 <tr class="separator:af24484059c779f035c7f61886be34897"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -316,27 +332,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>lightIsInited_</b> = 
 <tr class="memitem:a587d8c210fe7a8a08bbed3782d935731"><td class="memItemLeft" align="right" valign="top"><a id="a587d8c210fe7a8a08bbed3782d935731"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>lightSpaceMatrix</b></td></tr>
 <tr class="separator:a587d8c210fe7a8a08bbed3782d935731"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7cd9fc2d081c638732d4048e03034df"><td class="memItemLeft" align="right" valign="top"><a id="ad7cd9fc2d081c638732d4048e03034df"></a>
-GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>window</b></td></tr>
-<tr class="separator:ad7cd9fc2d081c638732d4048e03034df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad682b5f379f5996bf93bf84dc7a830d8"><td class="memItemLeft" align="right" valign="top"><a id="ad682b5f379f5996bf93bf84dc7a830d8"></a>
-<a class="el" href="class_l_graphics_1_1_l_text_render.html">LTextRender</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>textRenderer</b></td></tr>
-<tr class="separator:ad682b5f379f5996bf93bf84dc7a830d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c4111cf9023bd15c14fc1ab9120ffd8"><td class="memItemLeft" align="right" valign="top"><a id="a4c4111cf9023bd15c14fc1ab9120ffd8"></a>
+<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>window_</b></td></tr>
+<tr class="separator:a4c4111cf9023bd15c14fc1ab9120ffd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d192d678b0e700e54d69aced0c320a2"><td class="memItemLeft" align="right" valign="top"><a id="a4d192d678b0e700e54d69aced0c320a2"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>viewPoint</b> = glm::vec3(14.0f, 14.0f, 0.0f)</td></tr>
 <tr class="separator:a4d192d678b0e700e54d69aced0c320a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9070eb37548c8c3de1cb13e986c37be"><td class="memItemLeft" align="right" valign="top"><a id="ad9070eb37548c8c3de1cb13e986c37be"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>viewRadius</b> = 10.0f</td></tr>
 <tr class="separator:ad9070eb37548c8c3de1cb13e986c37be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa42b7178a120cd31c92ad8958c096086"><td class="memItemLeft" align="right" valign="top"><a id="aa42b7178a120cd31c92ad8958c096086"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>interfaceObjects</b></td></tr>
-<tr class="separator:aa42b7178a120cd31c92ad8958c096086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab34f59e41dda5b1386e77cc85ab011bf"><td class="memItemLeft" align="right" valign="top"><a id="ab34f59e41dda5b1386e77cc85ab011bf"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nonInterfaceObjects</b></td></tr>
 <tr class="separator:ab34f59e41dda5b1386e77cc85ab011bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f6f630c2a9db45033d0a55cafec38c3"><td class="memItemLeft" align="right" valign="top"><a id="a3f6f630c2a9db45033d0a55cafec38c3"></a>
-std::vector&lt; <a class="el" href="struct_l_graphics_1_1_text.html">Text</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textObjects</b></td></tr>
-<tr class="separator:a3f6f630c2a9db45033d0a55cafec38c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cf5e76d52631a26c8efede40847ef35"><td class="memItemLeft" align="right" valign="top"><a id="a4cf5e76d52631a26c8efede40847ef35"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>width</b></td></tr>
 <tr class="separator:a4cf5e76d52631a26c8efede40847ef35"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -355,15 +362,6 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>fpsLock</b> = SIZE_
 <tr class="memitem:ad1f4b97a49d0218d805605c8bf177f78"><td class="memItemLeft" align="right" valign="top"><a id="ad1f4b97a49d0218d805605c8bf177f78"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sleepTime</b> = 0</td></tr>
 <tr class="separator:ad1f4b97a49d0218d805605c8bf177f78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acceef3b39a6fd0159be42a7425605a95"><td class="memItemLeft" align="right" valign="top"><a id="acceef3b39a6fd0159be42a7425605a95"></a>
-<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>activeWidget</b> = nullptr</td></tr>
-<tr class="separator:acceef3b39a6fd0159be42a7425605a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fc1aa7f99b5f09d06706d5782e28aaf"><td class="memItemLeft" align="right" valign="top"><a id="a6fc1aa7f99b5f09d06706d5782e28aaf"></a>
-<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>widgetToMove</b> = nullptr</td></tr>
-<tr class="separator:a6fc1aa7f99b5f09d06706d5782e28aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab660f2a13b7e03c7b4ac9205922add4d"><td class="memItemLeft" align="right" valign="top"><a id="ab660f2a13b7e03c7b4ac9205922add4d"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>widgetsMovability</b> = false</td></tr>
-<tr class="separator:ab660f2a13b7e03c7b4ac9205922add4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01b2e29fd4f8ef6bec378a2d78a5af72"><td class="memItemLeft" align="right" valign="top"><a id="a01b2e29fd4f8ef6bec378a2d78a5af72"></a>
 <a class="el" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>standartRectBuffer</b></td></tr>
 <tr class="separator:a01b2e29fd4f8ef6bec378a2d78a5af72"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -409,14 +407,17 @@ std::map&lt; int, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:af22785ff6706e67e6a87e5674d0782ae"><td class="memItemLeft" align="right" valign="top"><a id="af22785ff6706e67e6a87e5674d0782ae"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>fullscreen</b> = false</td></tr>
 <tr class="separator:af22785ff6706e67e6a87e5674d0782ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada7f2fb8fb03ecb3d4a5141b431a0edf"><td class="memItemLeft" align="right" valign="top"><a id="ada7f2fb8fb03ecb3d4a5141b431a0edf"></a>
+void *&#160;</td><td class="memItemRight" valign="bottom"><b>uniformsMem</b> [2] = { nullptr,nullptr }</td></tr>
+<tr class="separator:ada7f2fb8fb03ecb3d4a5141b431a0edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fab0576a89c84a4bd66232df5820503"><td class="memItemLeft" align="right" valign="top"><a id="a6fab0576a89c84a4bd66232df5820503"></a>
-std::function&lt; void(GLFWwindow *window, int key, int scancode, int action, int mods)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>keyCallback</b> = [](GLFWwindow* window, int key, int scancode, int action, int mods) {}</td></tr>
+std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, int key, int scancode, int action, int mods)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>keyCallback</b> = [](<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, int key, int scancode, int action, int mods) {}</td></tr>
 <tr class="separator:a6fab0576a89c84a4bd66232df5820503"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8e435f817780f54e533a1be71491611"><td class="memItemLeft" align="right" valign="top"><a id="ad8e435f817780f54e533a1be71491611"></a>
-std::function&lt; void(GLFWwindow *w, int button, int action, int mods)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mouseCallback</b> = [](GLFWwindow* w, int button, int action, int mods) {}</td></tr>
+std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *w, int button, int action, int mods)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mouseCallback</b> = [](<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* w, int button, int action, int mods) {}</td></tr>
 <tr class="separator:ad8e435f817780f54e533a1be71491611"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0e099341530a2b9da2e8cbb36276fd8"><td class="memItemLeft" align="right" valign="top"><a id="ad0e099341530a2b9da2e8cbb36276fd8"></a>
-std::function&lt; void(GLFWwindow *window, double xoffset, double yoffset)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>scrollCallback</b> = [](GLFWwindow* window, double xoffset, double yoffset) {}</td></tr>
+std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, double xoffset, double yoffset)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>scrollCallback</b> = [](<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, double xoffset, double yoffset) {}</td></tr>
 <tr class="separator:ad0e099341530a2b9da2e8cbb36276fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bfc64bf05a6e50af1fa1b3806c6bf0f"><td class="memItemLeft" align="right" valign="top"><a id="a5bfc64bf05a6e50af1fa1b3806c6bf0f"></a>
 std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>beforeDrawingFunc</b> = []() {}</td></tr>
@@ -439,6 +440,54 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>depthMap</b><
 <tr class="memitem:a7e37c458e43bab5144ad625dec81feef"><td class="memItemLeft" align="right" valign="top"><a id="a7e37c458e43bab5144ad625dec81feef"></a>
 <a class="el" href="structvect__prototype2.html">fvect4</a>&#160;</td><td class="memItemRight" valign="bottom"><b>borderColor</b> = <a class="el" href="structvect__prototype2.html">fvect4</a>(1.0, 1.0, 1.0, 1.0)</td></tr>
 <tr class="separator:a7e37c458e43bab5144ad625dec81feef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a511af19e89fd4075be8f81be6b5d1e7b"><td class="memItemLeft" align="right" valign="top"><a id="a511af19e89fd4075be8f81be6b5d1e7b"></a>
+<a class="el" href="struct_vk_allocation_callbacks.html">VkAllocationCallbacks</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>g_Allocator</b> = NULL</td></tr>
+<tr class="separator:a511af19e89fd4075be8f81be6b5d1e7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3330f011dfbb66aeb454ba52240aa51f"><td class="memItemLeft" align="right" valign="top"><a id="a3330f011dfbb66aeb454ba52240aa51f"></a>
+VkInstance&#160;</td><td class="memItemRight" valign="bottom"><b>g_Instance</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:a3330f011dfbb66aeb454ba52240aa51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe88c7161060f5300c3e5793c0cab20c"><td class="memItemLeft" align="right" valign="top"><a id="abe88c7161060f5300c3e5793c0cab20c"></a>
+VkPhysicalDevice&#160;</td><td class="memItemRight" valign="bottom"><b>g_PhysicalDevice</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:abe88c7161060f5300c3e5793c0cab20c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf268c97c8e02c90bb23ce7ea6d0f10"><td class="memItemLeft" align="right" valign="top"><a id="aecf268c97c8e02c90bb23ce7ea6d0f10"></a>
+VkDevice&#160;</td><td class="memItemRight" valign="bottom"><b>g_Device</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:aecf268c97c8e02c90bb23ce7ea6d0f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6801fda1402ffe94ec381c6ac2e46e07"><td class="memItemLeft" align="right" valign="top"><a id="a6801fda1402ffe94ec381c6ac2e46e07"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>g_QueueFamily</b> = (uint32_t)-1</td></tr>
+<tr class="separator:a6801fda1402ffe94ec381c6ac2e46e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec368c670490cf598956e01a844ac1fd"><td class="memItemLeft" align="right" valign="top"><a id="aec368c670490cf598956e01a844ac1fd"></a>
+VkQueue&#160;</td><td class="memItemRight" valign="bottom"><b>g_Queue</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:aec368c670490cf598956e01a844ac1fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1dc07ae997999e0404aec0e5ba5aa2c"><td class="memItemLeft" align="right" valign="top"><a id="ad1dc07ae997999e0404aec0e5ba5aa2c"></a>
+VkDebugReportCallbackEXT&#160;</td><td class="memItemRight" valign="bottom"><b>g_DebugReport</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:ad1dc07ae997999e0404aec0e5ba5aa2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8334af04e40d2be21ff5e5e7a7a4765d"><td class="memItemLeft" align="right" valign="top"><a id="a8334af04e40d2be21ff5e5e7a7a4765d"></a>
+VkPipelineCache&#160;</td><td class="memItemRight" valign="bottom"><b>g_PipelineCache</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:a8334af04e40d2be21ff5e5e7a7a4765d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb0bb7b0680835f51a84a1090c00ffe9"><td class="memItemLeft" align="right" valign="top"><a id="aeb0bb7b0680835f51a84a1090c00ffe9"></a>
+VkDescriptorPool&#160;</td><td class="memItemRight" valign="bottom"><b>g_DescriptorPool</b> = VK_NULL_HANDLE</td></tr>
+<tr class="separator:aeb0bb7b0680835f51a84a1090c00ffe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03fabd13d989a8216e41e11cc7c2075f"><td class="memItemLeft" align="right" valign="top"><a id="a03fabd13d989a8216e41e11cc7c2075f"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>minUniformBufferOffsetAlignment</b> = 0</td></tr>
+<tr class="separator:a03fabd13d989a8216e41e11cc7c2075f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb0a4b1afb6825e11d9accb7d443dd99"><td class="memItemLeft" align="right" valign="top"><a id="acb0a4b1afb6825e11d9accb7d443dd99"></a>
+<a class="el" href="struct_im_gui___impl_vulkan_h___window.html">ImGui_ImplVulkanH_Window</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>wd</b></td></tr>
+<tr class="separator:acb0a4b1afb6825e11d9accb7d443dd99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4589ff7bb566ef4138368b9ffa7cc1ba"><td class="memItemLeft" align="right" valign="top"><a id="a4589ff7bb566ef4138368b9ffa7cc1ba"></a>
+<a class="el" href="struct_im_gui___impl_vulkan_h___window.html">ImGui_ImplVulkanH_Window</a>&#160;</td><td class="memItemRight" valign="bottom"><b>g_MainWindowData</b></td></tr>
+<tr class="separator:a4589ff7bb566ef4138368b9ffa7cc1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a607171c13f7406fc81b0772ce9f27413"><td class="memItemLeft" align="right" valign="top"><a id="a607171c13f7406fc81b0772ce9f27413"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>g_MinImageCount</b> = 2</td></tr>
+<tr class="separator:a607171c13f7406fc81b0772ce9f27413"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0690c9e6b05993aebd91ea8b0ed01e7"><td class="memItemLeft" align="right" valign="top"><a id="ad0690c9e6b05993aebd91ea8b0ed01e7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>g_SwapChainRebuild</b> = false</td></tr>
+<tr class="separator:ad0690c9e6b05993aebd91ea8b0ed01e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd1850a07864408e5dcc0eecc8f42855"><td class="memItemLeft" align="right" valign="top"><a id="acd1850a07864408e5dcc0eecc8f42855"></a>
+const VkFormat&#160;</td><td class="memItemRight" valign="bottom"><b>requestSurfaceImageFormat</b> [4] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM }</td></tr>
+<tr class="separator:acd1850a07864408e5dcc0eecc8f42855"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99614e91f734c5a4b8cd503fdeac2c0a"><td class="memItemLeft" align="right" valign="top"><a id="a99614e91f734c5a4b8cd503fdeac2c0a"></a>
+const VkColorSpaceKHR&#160;</td><td class="memItemRight" valign="bottom"><b>requestSurfaceColorSpace</b> = VK_COLORSPACE_SRGB_NONLINEAR_KHR</td></tr>
+<tr class="separator:a99614e91f734c5a4b8cd503fdeac2c0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Класс приложения Lizard Graphics. </p>

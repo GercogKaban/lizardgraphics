@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['use_249',['use',['../class_l_shaders_1_1_shader.html#a5a41a15a33b90a37881b6283dfc89447',1,'LShaders::Shader']]]
+  ['_7elbuffer_5648',['~LBuffer',['../class_l_graphics_1_1_l_buffer.html#a837fa9a5e28ccda5305b91eb5c83c77b',1,'LGraphics::LBuffer']]]
 ];

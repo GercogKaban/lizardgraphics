@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ishidden_5f_258',['isHidden_',['../class_l_graphics_1_1_l_widget.html#a6106763de9a9a59206806ed4a4d7d0d4',1,'LGraphics::LWidget']]]
+  ['green_5658',['green',['../struct_g_l_f_wgammaramp.html#affccc6f5df47820b6562d709da3a5a3a',1,'GLFWgammaramp']]],
+  ['greenbits_5659',['greenBits',['../struct_g_l_f_wvidmode.html#a292fdd281f3485fb3ff102a5bda43faa',1,'GLFWvidmode']]]
 ];
