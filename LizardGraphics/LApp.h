@@ -1,26 +1,26 @@
 ﻿#pragma once
 
-
-//#include "pch.h"
-
 #include <mutex>
 #include <optional>
-
-#include "include/GLEW/glew.h"
-#include "include/GLFW/glfw3.h"
-#include "include/glm/glm.hpp"
-#include "Lshaders.h"
+#include <map>
 #include "ObjectPool.h"
 
-#include "LObject.h"
-#include "LRectangleShape.h"
-//#include "LWRectangle.h"
+#ifdef OPENGL
+#include "include/GLEW/glew.h"
+#include "include/GLFW/glfw3.h"
+#endif
+#include "include/glm/glm.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
 
-//#include "LMultiWRectangle.h"
+#include "LObject.h"
+
+namespace LShaders
+{
+    class Shader;
+}
 
 namespace LGraphics
 {
@@ -29,8 +29,13 @@ namespace LGraphics
     }
 
     class LNonWidget;
-    class LShaders::Shader;
+    //class LShaders::Shader;
+    class LResourceManager;
     class LWRectangle;
+    class LShape;
+    class LRectangleShape;
+    class LBuffer;
+    class LWidget;
 
     /*!
     @brief Класс приложения Lizard Graphics
@@ -94,13 +99,7 @@ namespace LGraphics
         void setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>callback);
 
         std::vector<LWidget*>& getNonInterfaceObjects() { return nonInterfaceObjects; }
-        //std::vector<LWidget*>& getObjects() { return &objects; }
-        //std::vector<Text>* getTextObjects() { return textObjects; }
-
         LShaders::Shader* getStandartWorldObjShader() const;
-        //LShaders::Shader* getStandartWorldObjShader() const { return standartWorldObjShader; }
-        //LShaders::Shader* getStandartInterfaceShader() const { return standartInterfaceshader; }
-        //LShaders::Shader* getStandartCheckMarkShader() const { return checkMarkShader; }
 
         bool isPressed(int key);
 
@@ -167,7 +166,6 @@ namespace LGraphics
         void refreshCamera();
         void refreshProjection();
 
-
         void init();
         void initLEngine();
         void initRenderer();
@@ -206,9 +204,11 @@ namespace LGraphics
         std::vector<VkDeviceMemory> uniformBuffersMemory;
 
         VkCommandPool commandPool;
+        VkImageView dummyTexture;
 
-        const std::vector<const char*> validationLayers = {
-    "VK_LAYER_KHRONOS_validation"
+        std::vector<const char*> validationLayers = {
+    "VK_LAYER_KHRONOS_validation",
+    "VK_LAYER_LUNARG_monitor"
         };
 
         const std::vector<const char*> deviceExtensions = {
@@ -240,7 +240,7 @@ namespace LGraphics
         void createCommandBuffers();
         void createUniformBuffers();
         void createDescriptorPool();
-        void createTextureImage(const char* path, VkImage& image, VkDeviceMemory& mem);
+        //void createTextureImage(const char* path, VkImage& image, VkDeviceMemory& mem);
 
         void createImage(uint32_t width, uint32_t height, VkFormat format,
             VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,

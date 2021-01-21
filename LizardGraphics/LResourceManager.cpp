@@ -1,9 +1,11 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "pch.h"
+
 #include "LApp.h"
 #include "LResourceManager.h"
 #include "LError.h"
 #include "textures.h"
-#include "include/SOIL2/stb_image.h"
 
 namespace LGraphics
 {
@@ -68,24 +70,39 @@ namespace LGraphics
     std::map<std::string, std::tuple<VkImageView, VkImage, VkDeviceMemory>> LResourceManager::textures;
     LApp* LResourceManager::app;
 
-
-    VkImageView LResourceManager::loadTexture(const char* path)
+    VkImageView LResourceManager::loadTexture(const char* path, int desiredChannel)
     {
         if (textures.find(path) != textures.end())
             return std::get<0>(textures[path]);
 
-        VkImage textureImage;
-        VkImageView view;
-        VkDeviceMemory textureImageMemory;
-
         int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-        VkDeviceSize imageSize = texWidth * texHeight * 4;
+        stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, desiredChannel);
 
         if (!pixels) {
             throw std::runtime_error("failed to load texture image!");
         }
 
+        return createImageView(pixels, texWidth, texHeight, texChannels, path);
+    }
+
+    VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
+    {
+        int height, width, imageChannels;
+        if (textures.find(name) != textures.end())
+            return std::get<0>(textures[name]);
+        stbi_uc* pixels = stbi_load_from_memory(bytes, size, &height, &width, &imageChannels, desiredChannel);
+
+        return createImageView(pixels, width, height, imageChannels, name);
+    }
+
+    VkImageView LResourceManager::createImageView(unsigned char* pixels, int texWidth,
+        int texHeight, int texChannels, const char* path)
+    {
+        VkImage textureImage;
+        VkImageView view;
+        VkDeviceMemory textureImageMemory;
+
+        VkDeviceSize imageSize = texWidth * texHeight* texChannels;
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
         app->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -110,6 +127,7 @@ namespace LGraphics
         vkFreeMemory(app->g_Device, stagingBufferMemory, nullptr);
 
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, view);
+
         textures.insert(std::make_pair(path, std::make_tuple(view, textureImage, textureImageMemory)));
         return view;
     }

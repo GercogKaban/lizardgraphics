@@ -3,7 +3,6 @@
 #include <functional>
 #include <vector>
 
-//#define GLM_EXTERNAL_TEMPLATE
 #include "include/glm/glm.hpp"
 
 #include "vectors.h"
@@ -117,15 +116,6 @@ namespace LGraphics
 
         virtual void turnOffColor() = 0;
 
-        void setWidgetMovability(bool movability) { widgetMovability = movability; }
-        void setAnimation(std::function<void()> fun);
-        void doAnimation();
-
-        void setBreakingAnimation(std::function<void()> fun);
-        void breakAnimation();
-
-        void setName(const char* name) { this->name = name; }
-
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
         virtual fvect3 getColor() const = 0;         ///< Возвращает цвет виджета.
         virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
@@ -133,10 +123,6 @@ namespace LGraphics
         virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
         virtual glm::mat4 getRotate() const { return rotate_; }
 
-        virtual bool getWidgetMovability() const { return widgetMovability; }
-        const std::string& getName() const { return name; }
-
-        virtual void setShader(LShaders::Shader* shader) { this->shader = shader; }  ///< Устанавливает шейдер виджету.
         LShaders::Shader* getShader() { return shader; }
 
         virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
@@ -147,35 +133,25 @@ namespace LGraphics
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
         bool isInited() const { return isInited_; }
 
-        virtual bool isInterfaceObject() const{ return true; }
-
-        const std::vector<LWidget*>& getInnerWidgets() const { return *innerWidgets; }
-        std::vector<LWidget*>* getInnerWidgetsPtr() const { return innerWidgets; }
-
-        LWidget* getInnerWidgetByName(const char* name);
-        virtual void addInnerWidget(LWidget* innerWidget);
-
-        virtual ~LWidget();
+        virtual ~LWidget() {};
 
     protected:
 
         glm::mat4 rotate_ = glm::mat4(1.0f);
-        //float rotateX_ = 0.0f, rotateY_ = 0.0f, rotateZ_ = 0.0f;
 
-        std::string name;
         LApp* app = nullptr;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
         std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
         std::function<void()> animation = std::function<void()>([](){});
         std::function<void()> breakingAnimation = std::function<void()>([]() {});
 
-        bool drawOver_ = false;
+        //bool drawOver_ = false;
 
         std::vector<LWidget*>* innerWidgets = nullptr;
 
         bool isInited_ = false;
 
-        bool widgetMovability = true;
+        //bool widgetMovability = true;
         LShaders::Shader* shader = nullptr; ///< Шейдер.
 
         int changed = 3;

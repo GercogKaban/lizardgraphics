@@ -24,9 +24,9 @@ IF (${API} MATCHES "VULKAN")
 ENDIF(${API} MATCHES "VULKAN")
 
 IF (WIN32)
-  target_link_libraries(LS_Example LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/soil2-debug LizardGraphics/libs/glew32s LizardGraphics/libs/freetype)
+  target_link_libraries(LS_Example LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s)
 ELSE()
-  target_link_libraries(LS_Example LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/soil2-debug LizardGraphics/libs/glew32 LizardGraphics/libs/freetype)
+  target_link_libraries(LS_Example LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32)
 ENDIF()
 
 target_compile_features(LS_Example PRIVATE cxx_std_17)

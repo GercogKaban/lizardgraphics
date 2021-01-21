@@ -229,7 +229,7 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
 #endif // VULKAN
 }
 
-LShaders::Shader::Shader(const GLchar* v_shader, const GLchar * f_shader, LGraphics::LApp * app, bool sourceCode)
+LShaders::Shader::Shader(const char* v_shader, const char* f_shader, LGraphics::LApp * app, bool sourceCode)
 {
     this->app = app;
     size_t size_v, size_f;
@@ -239,7 +239,7 @@ LShaders::Shader::Shader(const GLchar* v_shader, const GLchar * f_shader, LGraph
         loadShaders(v_shader, f_shader);
 }
 
-void LShaders::Shader::bindShader(const GLchar * shader, short shaderType)
+void LShaders::Shader::bindShader(const char* shader, short shaderType)
 {
 #ifdef OPENGL
     GLuint sh;

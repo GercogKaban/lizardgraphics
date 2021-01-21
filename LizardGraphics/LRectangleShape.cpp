@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "LRectangleShape.h"
 #include "LRectangleBuffer.h"
+#include "Lshaders.h"
 #include "LApp.h"
 
 namespace LGraphics

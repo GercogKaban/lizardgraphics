@@ -23,38 +23,38 @@
 #include <optional>
 #include <set>
 #include <array>
+#include <map>
+#include <tuple>
 
 #include "vectors.h"
 
+#ifdef OPENGL
 #include "include/GLEW/glew.h"
-
-#ifdef VULKAN1
-#include <include/Vulkan/vulkan/vulkan.h>
-#endif //VULKAN
+#endif
 
 #ifndef NDEBUG
 #define IMGUI_VULKAN_DEBUG_REPORT
 #endif
-//#include "include/GLFW/glfw3.h"
-
-#include "include/SOIL2/SOIL2.h"
 
 //#define GLM_EXTERNAL_TEMPLATE
 #include "include/glm/glm.hpp"
 #include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
 
-#include <ft2build.h>
 #include "ObjectPool.h"
 #include "textures.h"
 
-#include <stdio.h>          // printf, fprintf
-#include <stdlib.h>         // abort
+//#include <stdio.h>          // printf, fprintf
+//#include <stdlib.h>         // abort
+
+#ifdef VULKAN
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
+#endif
 
+#include "imgui_impl_vulkan.h"
 #include "additional.h"
 
 #endif //PCH_H

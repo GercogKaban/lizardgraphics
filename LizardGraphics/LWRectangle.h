@@ -14,7 +14,7 @@ namespace LGraphics
 
         const char* getObjectType() override { return "LRectangleShape"; }
         LWRectangle(LApp* app, const char* path = nullptr);
-        bool isInterfaceObject() const override { return false; }
+        //bool isInterfaceObject() const override { return false; }
 
         virtual glm::vec4 getScreenCoords() const;
 

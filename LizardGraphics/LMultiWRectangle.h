@@ -2,12 +2,13 @@
 
 #include "LWRectangle.h"
 #include "Lshaders.h"
-#include "LApp.h"
+//#include "LApp.h"
 
 #include "include/glm/glm.hpp"
 
 namespace LGraphics
 {
+    class LApp;
     class LNonWidget : public LObject
     {
     public:
@@ -66,7 +67,7 @@ namespace LGraphics
     {
     public:
 
-        std::vector<GLint> textures;
+        std::vector<uint32_t> textures;
         //std::vector<LWRectangle*> rectangles;
         std::vector<glm::mat4> models;
 

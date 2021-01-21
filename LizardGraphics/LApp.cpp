@@ -1,18 +1,14 @@
-﻿#include "LApp.h"
-#include "LApp.h"
-#include "LApp.h"
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "LApp.h"
 #include "LError.h"
 #include "LRectangleBuffer.h"
-#include "LWRectangle.h"
-#include "LTimer.h"
+//#include "LWRectangle.h"
+//#include "LTimer.h"
 #include "LMultiWRectangle.h"
-#include "Lshaders.h"
+//#include "Lshaders.h"
 
-#include "include/SOIL2/stb_image.h"
-#include "imgui_impl_vulkan.h"
+#include "LResourceManager.h"
 
 namespace LGraphics
 {
@@ -82,25 +78,25 @@ namespace LGraphics
             // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
             {
                 imgui();
-                //static float f = 0.0f;
-                //static int counter = 0;
+                static float f = 0.0f;
+                static int counter = 0;
 
-                //ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+                ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-                //ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-                //ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-                //ImGui::Checkbox("Another Window", &show_another_window);
+                ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+                ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+                ImGui::Checkbox("Another Window", &show_another_window);
 
-                //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-                //ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+                ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-                //if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                //    counter++;
-                //ImGui::SameLine();
-                //ImGui::Text("counter = %d", counter);
+                if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                    counter++;
+                ImGui::SameLine();
+                ImGui::Text("counter = %d", counter);
 
-                //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-                //ImGui::End();
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImGui::End();
             }
 
             //// 3. Show another simple window.
@@ -425,9 +421,8 @@ namespace LGraphics
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif // OPENGL
 
-#ifdef VULKAN
-        LResourceManager::setApp(this);
-#endif // VULKAN
+//#ifdef VULKAN
+//#endif // VULKAN
 
     }
 
@@ -776,11 +771,12 @@ namespace LGraphics
             throw std::runtime_error("validation layers requested, but not available!");
         }
 
+
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "Hello Triangle";
+        appInfo.pApplicationName = "Lizard Graphics";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "No Engine";
+        appInfo.pEngineName = "Lizard Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -793,14 +789,28 @@ namespace LGraphics
         createInfo.ppEnabledExtensionNames = extensions.data();
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
-        if (enableValidationLayers) {
+
+        //if (!enableValidationLayers) 
+        //{
+        //    validationLayers.erase(validationLayers.begin());
+        //}
+
+
+        //createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+        //createInfo.ppEnabledLayerNames = validationLayers.data();
+
+        //populateDebugMessengerCreateInfo(debugCreateInfo);
+        //createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
+        if (enableValidationLayers) 
+        {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
 
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
         }
-        else {
+        else 
+        {
             createInfo.enabledLayerCount = 0;
 
             createInfo.pNext = nullptr;
@@ -992,10 +1002,10 @@ namespace LGraphics
         }
     }
 
-    void LApp::createTextureImage(const char * path, VkImage& image, VkDeviceMemory& mem)
+    /*void LApp::createTextureImage(const char * path, VkImage& image, VkDeviceMemory& mem)
     {
         int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        auto pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 
         if (!pixels) {
@@ -1024,7 +1034,7 @@ namespace LGraphics
 
         vkDestroyBuffer(g_Device, stagingBuffer, nullptr);
         vkFreeMemory(g_Device, stagingBufferMemory, nullptr);
-    }
+    }*/
 
     void LApp::createDescriptorSets()
     {
@@ -1050,7 +1060,7 @@ namespace LGraphics
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = VK_NULL_HANDLE;
+            imageInfo.imageView = dummyTexture;
             imageInfo.sampler = textureSampler;
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
@@ -1191,11 +1201,6 @@ namespace LGraphics
             throw std::runtime_error("failed to create texture image view!");
         }
     }
-
-    //void LApp::createTextureImageView()
-    //{
-    //    textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB);
-    //}
 
     void LApp::createTextureSampler()
     {
@@ -1702,6 +1707,9 @@ namespace LGraphics
         createTextureSampler();
         createUniformBuffers();
         mapUniformData();
+
+        LResourceManager::setApp(this);
+        dummyTexture = LResourceManager::loadTexture(notexture, notextureSize, "dummy");
         createDescriptorPool();
         createDescriptorSets();
 

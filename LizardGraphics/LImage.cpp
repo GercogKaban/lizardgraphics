@@ -1,7 +1,8 @@
 ﻿#include "pch.h"
 #include "LImage.h"
-#include "textures.h"
 #include "LError.h"
+
+#include "LResourceManager.h"
 
 namespace LGraphics
 {
@@ -29,20 +30,18 @@ namespace LGraphics
     }
 #endif
 
-    void LImage::bindTexture(const char* path)
+    void LImage::bindTexture(const char* path, int desiredChannel)
     {
         turnOnTexture();
         texturePath = path;
         texture = resManager.loadTexture(path);
     }
 
-#ifdef OPENGL
-    void LImage::bindTexture(const unsigned char* bytes, size_t size)
+    void LImage::bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
     {
-        //turnOnTexture();
-        texture = resManager.loadTexture(bytes,size);
+        turnOnTexture();
+        texture = resManager.loadTexture(bytes,size, name, desiredChannel);
     }
-#endif
 
     void LImage::turnOffTexture()
     {

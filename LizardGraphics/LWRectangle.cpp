@@ -4,10 +4,6 @@
 #include "LApp.h"
 #include "additional.h"
 
-//#include <iostream>
-
-//#define GLM_EXTERNAL_TEMPLATE
-//#include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
@@ -41,6 +37,7 @@ void LGraphics::LWRectangle::setMatrices()
     //        glm::vec3(0.0f, 1.0f, 0.0f));
 
     auto aspect = (float)app->getWindowSize().x / (float)app->getWindowSize().y;
+
     //projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
     projection = glm::ortho(-1.0f, 1.0f, -1.0f / aspect, 1.0f / aspect, 0.1f, 1000.0f);
 }

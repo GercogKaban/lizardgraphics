@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include "LObject.h"
-#include "LResourceManager.h"
 
 namespace LGraphics
 {
+    class LResourceManager;
     /*!
     @brief Класс изображения, привязывается к виджетом в качестве текстуры.
     */
@@ -12,6 +12,7 @@ namespace LGraphics
     {
     public:
         
+       
         const char* getObjectType() override { return "LImage"; }
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
@@ -25,7 +26,7 @@ namespace LGraphics
         @brief Привязывает текстуру.
         @param path - путь к изображению.
         */
-        void bindTexture(const char* path);
+        void bindTexture(const char* path, int desiredChannel = 4);
 
 #ifdef VULKAN
         /*!
@@ -33,7 +34,7 @@ namespace LGraphics
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        void bindTexture(const unsigned char* bytes, size_t size);
+        void bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel = 4);
 #endif
 
 
@@ -81,14 +82,13 @@ namespace LGraphics
         */
         LImage(const char* path);
 
-#ifdef OPENGL
         /*!
         @brief Конструктор.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
         LImage(const unsigned char* bytes, size_t size);
-
+#ifdef OPENGL
         GLuint texture; ///< Дескриптор текстуры.
 #endif
 

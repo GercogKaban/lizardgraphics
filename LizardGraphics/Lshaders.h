@@ -223,8 +223,8 @@ namespace LShaders
         @param v_shader - массив вершинного шейдера
         @param v_shader - массив фрагментного шейдера
         */
-        Shader(const GLchar* v_shader, const GLchar* f_shader, LGraphics::LApp* app, bool sourceCode = true);
-        void bindShader(const GLchar* shader, short shaderType);
+        Shader(const char* v_shader, const char* f_shader, LGraphics::LApp* app, bool sourceCode = true);
+        void bindShader(const char* shader, short shaderType);
 
         /*!
         @brief Активирует шейдер (перед отрисовкой).
