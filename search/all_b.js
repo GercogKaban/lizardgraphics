@@ -6,7 +6,7 @@ var searchData=
   ['layerproperties_1472',['LayerProperties',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_layer_properties.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['lbuffer_1473',['LBuffer',['../class_l_graphics_1_1_l_buffer.html',1,'LGraphics']]],
   ['lerror_1474',['LError',['../class_l_graphics_1_1_l_error.html',1,'LGraphics']]],
-  ['limage_1475',['LImage',['../class_l_graphics_1_1_l_image.html',1,'LGraphics::LImage'],['../class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56',1,'LGraphics::LImage::LImage()']]],
+  ['limage_1475',['LImage',['../class_l_graphics_1_1_l_image.html',1,'LGraphics::LImage'],['../class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56',1,'LGraphics::LImage::LImage(const char *path)'],['../class_l_graphics_1_1_l_image.html#a9649632f05b3b85ea011e2b9a4062805',1,'LGraphics::LImage::LImage(const unsigned char *bytes, size_t size)']]],
   ['lmultirectanglebuffer_1476',['LMultiRectangleBuffer',['../class_l_graphics_1_1_l_multi_rectangle_buffer.html',1,'LGraphics']]],
   ['lmultiwrectangle_1477',['LMultiWRectangle',['../class_l_graphics_1_1_l_multi_w_rectangle.html',1,'LGraphics']]],
   ['lnonwidget_1478',['LNonWidget',['../class_l_graphics_1_1_l_non_widget.html',1,'LGraphics']]],

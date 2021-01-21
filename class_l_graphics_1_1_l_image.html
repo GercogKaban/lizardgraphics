@@ -100,15 +100,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a136b517a2d4fe3a1f19b09ff185eec71"><td class="memItemLeft" align="right" valign="top"><a id="a136b517a2d4fe3a1f19b09ff185eec71"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> () override</td></tr>
 <tr class="separator:a136b517a2d4fe3a1f19b09ff185eec71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaaa2666df7a7e6ec65445cd8e7fc4508"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508">bindTexture</a> (const char *path)</td></tr>
-<tr class="memdesc:aaaa2666df7a7e6ec65445cd8e7fc4508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Привязывает текстуру.  <a href="class_l_graphics_1_1_l_image.html#aaaa2666df7a7e6ec65445cd8e7fc4508">More...</a><br /></td></tr>
-<tr class="separator:aaaa2666df7a7e6ec65445cd8e7fc4508"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f89b646e86a95f73bfbf9257fdec0d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a3f89b646e86a95f73bfbf9257fdec0d2">bindTexture</a> (const char *path, int desiredChannel=4)</td></tr>
+<tr class="memdesc:a3f89b646e86a95f73bfbf9257fdec0d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Привязывает текстуру.  <a href="class_l_graphics_1_1_l_image.html#a3f89b646e86a95f73bfbf9257fdec0d2">More...</a><br /></td></tr>
+<tr class="separator:a3f89b646e86a95f73bfbf9257fdec0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a28ce57b4d9e78f515399ea51258f4f56"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56">LImage</a> (const char *path)</td></tr>
 <tr class="memdesc:a28ce57b4d9e78f515399ea51258f4f56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор.  <a href="class_l_graphics_1_1_l_image.html#a28ce57b4d9e78f515399ea51258f4f56">More...</a><br /></td></tr>
 <tr class="separator:a28ce57b4d9e78f515399ea51258f4f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9649632f05b3b85ea011e2b9a4062805"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_image.html#a9649632f05b3b85ea011e2b9a4062805">LImage</a> (const unsigned char *bytes, size_t size)</td></tr>
+<tr class="memdesc:a9649632f05b3b85ea011e2b9a4062805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор.  <a href="class_l_graphics_1_1_l_image.html#a9649632f05b3b85ea011e2b9a4062805">More...</a><br /></td></tr>
+<tr class="separator:a9649632f05b3b85ea011e2b9a4062805"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -136,7 +139,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 <div class="textblock"><p>Класс изображения, привязывается к виджетом в качестве текстуры. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a28ce57b4d9e78f515399ea51258f4f56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28ce57b4d9e78f515399ea51258f4f56">&#9670;&nbsp;</a></span>LImage()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a28ce57b4d9e78f515399ea51258f4f56">&#9670;&nbsp;</a></span>LImage() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -169,9 +172,54 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 </div>
 </div>
+<a id="a9649632f05b3b85ea011e2b9a4062805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9649632f05b3b85ea011e2b9a4062805">&#9670;&nbsp;</a></span>LImage() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">LGraphics::LImage::LImage </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned char *&#160;</td>
+          <td class="paramname"><em>bytes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Конструктор. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bytes</td><td>- массив байт (rgba). </td></tr>
+    <tr><td class="paramname">size</td><td>- размер массива bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aaaa2666df7a7e6ec65445cd8e7fc4508"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaaa2666df7a7e6ec65445cd8e7fc4508">&#9670;&nbsp;</a></span>bindTexture()</h2>
+<a id="a3f89b646e86a95f73bfbf9257fdec0d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f89b646e86a95f73bfbf9257fdec0d2">&#9670;&nbsp;</a></span>bindTexture()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,8 +228,18 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
           <td class="memname">void LGraphics::LImage::bindTexture </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>desiredChannel</em> = <code>4</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
