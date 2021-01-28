@@ -2,7 +2,7 @@
 
 #include "LWidget.h"
 //#include "include/glm/gtc/matrix_transform.hpp"
-#include "vectors.h"
+//#include "vectors.h"
 
 namespace LGraphics
 {
@@ -81,7 +81,7 @@ namespace LGraphics
         @param val - вектор, где x - пиксель по x, y - пиксель по y.
         @warning x увеличивается вправо, y - вниз.
         */
-        void move(const szvect2 val) override;
+        void move(const glm::vec<2, size_t> val) override;
 
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         glm::vec3 getColor() const override { return color_; } ///< Возвращает цвет виджета.

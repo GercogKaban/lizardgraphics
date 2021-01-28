@@ -63,7 +63,7 @@ namespace LGraphics
         LShape::move(coords.x, coords.y, 0.0f);
     }   
 
-    void LShape::move(const szvect2 v)
+    void LShape::move(const glm::vec<2,size_t> v)
     {
         auto coords = pointOnScreenToGlCoords(glm::vec2(app->getWindowSize()), { (float)v.x, (float)v.y });
         LShape::move(coords.x, coords.y, 0.0f);

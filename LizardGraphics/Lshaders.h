@@ -235,6 +235,7 @@ namespace LShaders
             glUseProgram(program);
     }
 #endif
+
 #ifdef VULKAN
         void use(VkCommandBuffer* commandBuffer) const
         {

@@ -2,7 +2,7 @@
 
 #include <cmath>
 #include "LBuffer.h"
-#include "vectors.h"
+//#include "vectors.h"
 
 namespace LGraphics
 {

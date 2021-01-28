@@ -5,7 +5,7 @@
 
 #include "include/glm/glm.hpp"
 
-#include "vectors.h"
+//#include "vectors.h"
 #include "Lshaders.h"
 #include "LImage.h"
 
@@ -102,7 +102,7 @@ namespace LGraphics
         @param val - вектор, где x - пиксель по x, y - пиксель по y.
         @warning x увеличивается вправо, y - вниз.
         */
-        virtual void move(const szvect2 v) = 0;
+        virtual void move(const glm::vec<2, size_t> v) = 0;
 
         /*!
         @brief устанавливает функцию, которая будет срабатывать при наведении мышки на виджет.
