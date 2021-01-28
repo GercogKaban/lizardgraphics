@@ -152,9 +152,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scaleWithoutAlign</b>
 <tr class="memitem:a720f0c9a20c057913fbc907d57f53cea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#a720f0c9a20c057913fbc907d57f53cea">move</a> (const size_t x, const size_t y) override</td></tr>
 <tr class="memdesc:a720f0c9a20c057913fbc907d57f53cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Перемещает виджет.  <a href="class_l_graphics_1_1_l_shape.html#a720f0c9a20c057913fbc907d57f53cea">More...</a><br /></td></tr>
 <tr class="separator:a720f0c9a20c057913fbc907d57f53cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6df70e77934042020930ff33b07d1f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#aa6df70e77934042020930ff33b07d1f4">move</a> (const <a class="el" href="structvect__prototype2.html">szvect2</a> val) override</td></tr>
-<tr class="memdesc:aa6df70e77934042020930ff33b07d1f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Перемещает виджет.  <a href="class_l_graphics_1_1_l_shape.html#aa6df70e77934042020930ff33b07d1f4">More...</a><br /></td></tr>
-<tr class="separator:aa6df70e77934042020930ff33b07d1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41cb2b8bf287fe4d570b7eed9120ad51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#a41cb2b8bf287fe4d570b7eed9120ad51">move</a> (const glm::vec&lt; 2, size_t &gt; val) override</td></tr>
+<tr class="memdesc:a41cb2b8bf287fe4d570b7eed9120ad51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Перемещает виджет.  <a href="class_l_graphics_1_1_l_shape.html#a41cb2b8bf287fe4d570b7eed9120ad51">More...</a><br /></td></tr>
+<tr class="separator:a41cb2b8bf287fe4d570b7eed9120ad51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add711fd0cef590b29ea7c85613bf6b15"><td class="memItemLeft" align="right" valign="top"><a id="add711fd0cef590b29ea7c85613bf6b15"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#add711fd0cef590b29ea7c85613bf6b15">getTransparency</a> () const override</td></tr>
 <tr class="memdesc:add711fd0cef590b29ea7c85613bf6b15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает прозрачность виджета. <br /></td></tr>
@@ -583,8 +583,45 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 </div>
 </div>
+<a id="a41cb2b8bf287fe4d570b7eed9120ad51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41cb2b8bf287fe4d570b7eed9120ad51">&#9670;&nbsp;</a></span>move() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LGraphics::LShape::move </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec&lt; 2, size_t &gt;&#160;</td>
+          <td class="paramname"><em>val</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Перемещает виджет. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">val</td><td>- вектор, где x - пиксель по x, y - пиксель по y. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>x увеличивается вправо, y - вниз. </dd></dl>
+
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ac4fc2c65d357808ec2358434f99fb693">LGraphics::LWidget</a>.</p>
+
+</div>
+</div>
 <a id="a720f0c9a20c057913fbc907d57f53cea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a720f0c9a20c057913fbc907d57f53cea">&#9670;&nbsp;</a></span>move() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a720f0c9a20c057913fbc907d57f53cea">&#9670;&nbsp;</a></span>move() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -628,43 +665,6 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 <dl class="section warning"><dt>Warning</dt><dd>x увеличивается вправо, y - вниз. </dd></dl>
 
 <p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#accfecea66ad8adb8d2c85b8e18d7a0bb">LGraphics::LWidget</a>.</p>
-
-</div>
-</div>
-<a id="aa6df70e77934042020930ff33b07d1f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6df70e77934042020930ff33b07d1f4">&#9670;&nbsp;</a></span>move() <span class="overload">[4/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LGraphics::LShape::move </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structvect__prototype2.html">szvect2</a>&#160;</td>
-          <td class="paramname"><em>val</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Перемещает виджет. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">val</td><td>- вектор, где x - пиксель по x, y - пиксель по y. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section warning"><dt>Warning</dt><dd>x увеличивается вправо, y - вниз. </dd></dl>
-
-<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#a1c78f2e4c5189e20008007400f10b4ba">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>
