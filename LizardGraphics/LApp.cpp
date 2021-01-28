@@ -183,9 +183,9 @@ namespace LGraphics
 
     }
 
-    szvect2 LApp::getWindowSize() const
+    glm::vec<2, size_t> LApp::getWindowSize() const
     {
-        return szvect2(width, height);
+        return glm::vec<2, size_t>(width, height);
     }
 
     void LApp::setMatrices(glm::mat4 view, glm::mat4 projection)

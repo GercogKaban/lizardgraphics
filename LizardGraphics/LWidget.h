@@ -58,7 +58,7 @@ namespace LGraphics
         @brief Устанавливает цвет виджету.
         @param val - вектор, значения которого находятся в промежутке [0;1].
         */
-        virtual void color(const fvect3 val) = 0;
+        virtual void color(const glm::vec3 val) = 0;
 
         /*!
         @brief Устанавливает размеры виджету.
@@ -72,14 +72,14 @@ namespace LGraphics
         @brief Устанавливает размеры виджету.
         @param val - вектор, значения которого находятся в промежутке [0;1].
         */
-        virtual void scale(const fvect3 val) = 0;
+        virtual void scale(const glm::vec3 val) = 0;
 
 
         /*!
         @brief Перемещает виджет.
         @param val - вектор.
         */
-        virtual void move(const fvect3 val) = 0;
+        virtual void move(const glm::vec3 val) = 0;
 
         /*!
         @brief Перемещает виджет.
@@ -117,10 +117,10 @@ namespace LGraphics
         virtual void turnOffColor() = 0;
 
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
-        virtual fvect3 getColor() const = 0;         ///< Возвращает цвет виджета.
-        virtual fvect3 getScale() const = 0;         ///< Возвращает размеры виджета.
-        virtual fvect3 getMove() const = 0;          ///< Возвращает вектор move виджета.
-        virtual fvect3 getCenter() const = 0;        ///< Возвращает центр виджета.
+        virtual glm::vec3 getColor() const = 0;         ///< Возвращает цвет виджета.
+        virtual glm::vec3 getScale() const = 0;         ///< Возвращает размеры виджета.
+        virtual glm::vec3 getMove() const = 0;          ///< Возвращает вектор move виджета.
+        virtual glm::vec3 getCenter() const = 0;        ///< Возвращает центр виджета.
         virtual glm::mat4 getRotate() const { return rotate_; }
 
         LShaders::Shader* getShader() { return shader; }

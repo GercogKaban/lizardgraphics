@@ -25,7 +25,7 @@
 #include <map>
 #include <tuple>
 
-#include "vectors.h"
+//#include "vectors.h"
 
 #ifdef OPENGL
 #include "include/GLEW/glew.h"

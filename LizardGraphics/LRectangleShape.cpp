@@ -25,27 +25,27 @@ namespace LGraphics
         return xGlCoordToScreenCoord(app->getWindowSize(), getTopRightCorner().x) - xGlCoordToScreenCoord(app->getWindowSize(), getTopLeftCorner().x);
     }
 
-    fvect3 LRectangleShape::getCenter() const
+    glm::vec3 LRectangleShape::getCenter() const
     {
         return ((((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_) + (((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_)) / 2.0f;
     }
 
-    fvect3 LRectangleShape::getTopLeftCorner() const
+    glm::vec3 LRectangleShape::getTopLeftCorner() const
     {
         return ((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_;
     }
 
-    fvect3 LRectangleShape::getTopRightCorner() const
+    glm::vec3 LRectangleShape::getTopRightCorner() const
     {
         return ((LRectangleBuffer*)buffer)->getTopRightCorner() * scale_ + move_;
     }
 
-    fvect3 LRectangleShape::getBottomLeftCorner() const
+    glm::vec3 LRectangleShape::getBottomLeftCorner() const
     {
         return ((LRectangleBuffer*)buffer)->getBottomLeftCorner() * scale_ + move_;
     }
 
-    fvect3 LRectangleShape::getBottomRightCorner() const
+    glm::vec3 LRectangleShape::getBottomRightCorner() const
     {
         return ((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_;
     }
@@ -65,20 +65,21 @@ namespace LGraphics
 
     bool LRectangleShape::mouseOnIt()
     {
-        float x_[4], y_[4];
-        float* vbo = buffer->getVertices();
+        //float x_[4], y_[4];
+        //float* vbo = buffer->getVertices();
 
-        // getting rectangle coordinates 
-        for (size_t i = 0; i < buffer->getVerticesCount(); ++i)
-        {
-            x_[i] = vbo[i * 3] * getScale().x + getMove().x;
-            y_[i] = vbo[i * 3 + 1] * getScale().y + getMove().y;
-        }
+        //// getting rectangle coordinates 
+        //for (size_t i = 0; i < buffer->getVerticesCount(); ++i)
+        //{
+        //    x_[i] = vbo[i * 3] * getScale().x + getMove().x;
+        //    y_[i] = vbo[i * 3 + 1] * getScale().y + getMove().y;
+        //}
 
-        double mouse_x, mouse_y;
-        glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
+        //double mouse_x, mouse_y;
+        //glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
 
-        return isPointInPolygon((int)buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
+        //return isPointInPolygon((int)buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
+        return false;
     }
 #ifdef OPENGL
     void LRectangleShape::draw()

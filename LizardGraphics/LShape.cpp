@@ -4,7 +4,7 @@
 
 namespace LGraphics
 {
-    void LShape::color(const fvect3 val)
+    void LShape::color(const glm::vec3 val)
     {
         changed = app->wd->ImageCount;
         color_ = val;
@@ -22,7 +22,7 @@ namespace LGraphics
         transparency_ = val;
     }
 
-    void LShape::scale(const fvect3 val)
+    void LShape::scale(const glm::vec3 val)
     {
         LShape::scale(val.x, val.y, val.z);
     }
@@ -30,19 +30,19 @@ namespace LGraphics
     void LShape::scale(const float x, const float y, const float z)
     {
         changed = app->wd->ImageCount;
-        auto scaleDif = fvect3(x, y, z) - scale_;
+        auto scaleDif = glm::vec3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
         if (innerWidgets)
         for (auto& o : *innerWidgets)
             o->scale(o->getScale() + scaleDif);
     }
 
-    void LShape::scaleWithoutAlign(const fvect3 val)
+    void LShape::scaleWithoutAlign(const glm::vec3 val)
     {
         scale_ = val;
     }
 
-    void LShape::move(const fvect3 val)
+    void LShape::move(const glm::vec3 val)
     {
         LShape::move(val.x, val.y, val.z);
     }
@@ -50,7 +50,7 @@ namespace LGraphics
     void LShape::move(const float x, const float y, const float z)
     {
         changed = app->wd->ImageCount;
-        auto moveDif = fvect3(x,y,z) - move_;
+        auto moveDif = glm::vec3(x,y,z) - move_;
         move_ = { x,y,z };
         if (innerWidgets)
         for (auto& o : *innerWidgets)
@@ -59,13 +59,13 @@ namespace LGraphics
 
     void LShape::move(const size_t x, const size_t y)
     {
-        auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)x,(float)y });
+        auto coords = pointOnScreenToGlCoords(glm::vec2(app->getWindowSize()), { (float)x,(float)y });
         LShape::move(coords.x, coords.y, 0.0f);
     }   
 
     void LShape::move(const szvect2 v)
     {
-        auto coords = pointOnScreenToGlCoords(fvect2(app->getWindowSize()), { (float)v.x, (float)v.y });
+        auto coords = pointOnScreenToGlCoords(glm::vec2(app->getWindowSize()), { (float)v.x, (float)v.y });
         LShape::move(coords.x, coords.y, 0.0f);
     }
 

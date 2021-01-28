@@ -3,7 +3,8 @@
 #include "../LizardGraphics/include/glm/glm.hpp"
 #include "../LizardGraphics/include/glm/gtc/matrix_transform.hpp"
 
-glm::mat4 _calculateModelMatrix(const fvect3& move_, const glm::mat4& rotate_, const fvect3& scale_)
+glm::mat4 _calculateModelMatrix(const glm::vec3& move_, 
+	const glm::mat4& rotate_, const glm::vec3& scale_)
 {
 	glm::mat4 model_ = glm::mat4(1.0f);
 	model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));

@@ -1,22 +1,24 @@
 ﻿#pragma once
 
 #include <tuple>
-#include "vectors.h"
+#include "include/glm/glm.hpp"
+//#include "vectors.h"
 
 namespace LGraphics
 {
-    bool isPointInPolygon(int npol, float* xp, float* yp, fvect2 p);
-    fvect2 pointOnScreenToGlCoords(fvect2 screenSize, fvect2 point);
-    fvect2 glCoordsToScreenCoords(fvect2 screenSize, fvect2 val);
+    bool isPointInPolygon(int npol, float* xp, float* yp, glm::vec2 p);
+    glm::vec2 pointOnScreenToGlCoords(glm::vec2 screenSize, glm::vec2 point);
+    glm::vec2 glCoordsToScreenCoords(glm::vec2 screenSize, glm::vec2 val);
 
-    float xOnScreenToGlCoord(fvect2 screenSize, float x);
-    float yOnScreenToGlCoord(fvect2 screenSize, float y);
+    float xOnScreenToGlCoord(glm::vec2 screenSize, float x);
+    float yOnScreenToGlCoord(glm::vec2 screenSize, float y);
 
-    float xGlCoordToScreenCoord(fvect2 screenSize, float x);
-    float yGlCoordToScreenCoord(fvect2 screenSize, float y);
-    std::tuple<fvect2, fvect2> getMoveAndSizeByCoords(fvect2 topLeft, fvect2 topRight, fvect2 bottomRight, fvect2 bottomLeft);
+    float xGlCoordToScreenCoord(glm::vec2 screenSize, float x);
+    float yGlCoordToScreenCoord(glm::vec2 screenSize, float y);
+    /*std::tuple<glm::vec2, glm::vec2> getMoveAndSizeByCoords(glm::vec2 topLeft, 
+        glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft);*/
 
-    fvect3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b);
+    glm::vec3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b);
 
     size_t getPowerTwoAlign(size_t size);
 }

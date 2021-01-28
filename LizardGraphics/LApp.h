@@ -11,7 +11,7 @@
 #endif
 #include "include/glm/glm.hpp"
 
-#include "vectors.h"
+//#include "vectors.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -78,7 +78,7 @@ namespace LGraphics
         @brief Возвращает размеры окна (в пикселях).
 
         */
-        szvect2 getWindowSize() const;
+        glm::vec<2,size_t> getWindowSize() const;
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
@@ -134,7 +134,7 @@ namespace LGraphics
         bool lightIsInited() const { return lightIsInited_; }
         void initLight() { lightIsInited_ = true; }
 
-        fvect2 getMouseCoords() const { return mouseCoords; }
+        glm::vec2 getMouseCoords() const { return mouseCoords; }
 
         ObjectPool<LWRectangle*> lwRectPool;
 
@@ -153,7 +153,7 @@ namespace LGraphics
         size_t objectCountLim;
 
         std::function<void()> imgui = []() {};
-        fvect2 mouseCoords = fvect2(0.0f);
+        glm::vec2 mouseCoords = glm::vec2(0.0f);
 
         bool lightIsInited_ = false;
         glm::mat4 lightSpaceMatrix;
@@ -423,7 +423,7 @@ namespace LGraphics
         unsigned int shadowWidth = 1024, shadowHeight = 1024;
 
         unsigned int depthMapFBO, depthMap;
-        fvect4 borderColor = fvect4(1.0, 1.0, 1.0, 1.0);
+        glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
         VkAllocationCallbacks*   g_Allocator = NULL;
         VkInstance               g_Instance = VK_NULL_HANDLE;

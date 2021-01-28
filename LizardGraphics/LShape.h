@@ -22,7 +22,7 @@ namespace LGraphics
         @brief Устанавливает цвет виджету.
         @param val - вектор, значения которого находятся в промежутке [0;1].
         */
-        void color(const fvect3 val) override;
+        void color(const glm::vec3 val) override;
 
         /*!
         @brief Устанавливает цвет виджету.
@@ -42,7 +42,7 @@ namespace LGraphics
         @brief Устанавливает размеры виджету.
         @param val - вектор, значения которого находятся в промежутке [0;1].
         */
-        void scale(const fvect3 val) override;
+        void scale(const glm::vec3 val) override;
 
         /*!
         @brief Устанавливает размеры виджету.
@@ -52,13 +52,13 @@ namespace LGraphics
         */
         void scale(const float x, const float y, const float z) override;
 
-        void scaleWithoutAlign(const fvect3 val);
+        void scaleWithoutAlign(const glm::vec3 val);
 
         /*!
         @brief Перемещает виджет.
         @param val - вектор.
         */
-        void move(const fvect3 val) override;
+        void move(const glm::vec3 val) override;
 
         /*!
         @brief Перемещает виджет.
@@ -84,9 +84,9 @@ namespace LGraphics
         void move(const szvect2 val) override;
 
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
-        fvect3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
-        fvect3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
-        fvect3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
+        glm::vec3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
+        glm::vec3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
+        glm::vec3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
 
         void turnOffColor() override;
 
@@ -114,9 +114,9 @@ namespace LGraphics
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 
-        fvect3 scale_ = fvect3(0.5f, 0.5f, 1.0f);  ///< Вектор размеров виджета.
-        fvect3 move_ = fvect3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
-        fvect3 color_ = fvect3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
+        glm::vec3 scale_ = glm::vec3(0.5f, 0.5f, 1.0f);  ///< Вектор размеров виджета.
+        glm::vec3 move_ = glm::vec3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
+        glm::vec3 color_ = glm::vec3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
 
         //glm::mat4 rotate_ = glm::mat4(1.0f);
 

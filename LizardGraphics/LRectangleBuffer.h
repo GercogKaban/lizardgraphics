@@ -28,10 +28,10 @@ namespace LGraphics
 #ifdef VULKAN
         LRectangleBuffer(LApp* app);
 #endif
-        fvect3 getTopLeftCorner() { return {vertices[9],vertices[10],vertices[11] };}
-        fvect3 getTopRightCorner() { return { vertices[0],vertices[1],vertices[2] }; }
-        fvect3 getBottomLeftCorner() { return { vertices[6],vertices[7],vertices[8] };}
-        fvect3 getBottomRightCorner() { return { vertices[3],vertices[4],vertices[5] };}
+        glm::vec3 getTopLeftCorner() { return {vertices[9],vertices[10],vertices[11] };}
+        glm::vec3 getTopRightCorner() { return { vertices[0],vertices[1],vertices[2] }; }
+        glm::vec3 getBottomLeftCorner() { return { vertices[6],vertices[7],vertices[8] };}
+        glm::vec3 getBottomRightCorner() { return { vertices[3],vertices[4],vertices[5] };}
     };
 }
 
