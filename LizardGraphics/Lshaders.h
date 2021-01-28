@@ -190,7 +190,7 @@ namespace LShaders
     {
 #ifdef OPENGL
         GLuint program;
-#endif OPENGL
+#endif
 
 #ifdef VULKAN
 
@@ -234,7 +234,7 @@ namespace LShaders
         {
             glUseProgram(program);
     }
-#endif OPENGL
+#endif
 #ifdef VULKAN
         void use(VkCommandBuffer* commandBuffer) const
         {
@@ -250,7 +250,7 @@ namespace LShaders
         {
             return program;
         }
-#endif OPENGL
+#endif
 
     protected:
         const char* loadShader(const char* shader, size_t& shaderSize);
