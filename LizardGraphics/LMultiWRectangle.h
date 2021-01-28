@@ -2,7 +2,7 @@
 
 #include "LWRectangle.h"
 #include "Lshaders.h"
-//#include "LApp.h"
+#include "LApp.h"
 
 #include "include/glm/glm.hpp"
 

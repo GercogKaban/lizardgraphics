@@ -2,7 +2,7 @@
 
 #include "LMultiWRectangle.h"
 #include "LMultiRectangleBuffer.h"
-#include "LApp.h"
+//#include "LApp.h"
 #include "additional.h"
 
 //#include <iostream>
