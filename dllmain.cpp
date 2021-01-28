@@ -48,7 +48,7 @@ int main()
 
 void test1()
 {
-	        std::cout << "test1() func began";
+	    std::cout << "test1() func began";
         LGraphics::LApp app(10);
 
         //app.setSleepTime(5);

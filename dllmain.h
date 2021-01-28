@@ -2,5 +2,8 @@
 
 extern "C"
 {
-    __declspec(dllexport) void test1();
+#ifdef _MSC_VER 
+    __declspec(dllexport) 
+#endif
+      void test1();
 }
