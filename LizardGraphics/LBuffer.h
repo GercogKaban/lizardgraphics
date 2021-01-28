@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "LObject.h"
+#ifdef OPENGL
 #include "include/GLEW/glew.h"
+#endif
 #include "LApp.h"
 
 namespace LGraphics
