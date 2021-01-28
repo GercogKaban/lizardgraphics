@@ -4,6 +4,7 @@
 
 namespace LGraphics
 {
+    class LApp;
     class LResourceManager;
     /*!
     @brief Класс изображения, привязывается к виджетом в качестве текстуры.
@@ -12,7 +13,7 @@ namespace LGraphics
     {
     public:
         
-       
+        friend LApp;
         const char* getObjectType() override { return "LImage"; }
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 

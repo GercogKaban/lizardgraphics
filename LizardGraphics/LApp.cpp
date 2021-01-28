@@ -400,7 +400,9 @@ namespace LGraphics
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
 #endif // OPENGL
 #ifdef VULKAN
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -486,14 +488,14 @@ namespace LGraphics
 #endif
 #endif
         if (!glfwInit())
-            throw std::exception("can't init glfw!");
+            throw std::runtime_error("can't init glfw!");
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         window_ = glfwCreateWindow(1920, 1080, "Dear ImGui GLFW+Vulkan example", NULL, NULL);
 
         // Setup Vulkan
         if (!glfwVulkanSupported())
-            throw std::exception("GLFW: Vulkan Not Supported\n");
+            throw std::runtime_error("GLFW: Vulkan Not Supported\n");
 
         setupVulkan();
 
