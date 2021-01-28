@@ -32,9 +32,6 @@ target_compile_features(LS_Example PRIVATE cxx_std_17)
 
 project (TestDLL C CXX)
 
-SET(CMAKE_C_COMPILER gcc)
-SET(CMAKE_CXX_COMPILER g++)
-
 set(SOURCE_FILES1 dllmain.cpp)
 set(HEADER_FILES1 dllmain.h)
 
