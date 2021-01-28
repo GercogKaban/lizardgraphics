@@ -73,26 +73,27 @@ $(function() {
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;vectors.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keywordtype">bool</span> isPointInPolygon(<span class="keywordtype">int</span> npol, <span class="keywordtype">float</span>* xp, <span class="keywordtype">float</span>* yp, <a class="code" href="structvect__prototype2.html">fvect2</a> p);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <a class="code" href="structvect__prototype2.html">fvect2</a> pointOnScreenToGlCoords(<a class="code" href="structvect__prototype2.html">fvect2</a> screenSize, <a class="code" href="structvect__prototype2.html">fvect2</a> point);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <a class="code" href="structvect__prototype2.html">fvect2</a> glCoordsToScreenCoords(<a class="code" href="structvect__prototype2.html">fvect2</a> screenSize, <a class="code" href="structvect__prototype2.html">fvect2</a> val);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordtype">float</span> xOnScreenToGlCoord(<a class="code" href="structvect__prototype2.html">fvect2</a> screenSize, <span class="keywordtype">float</span> x);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">float</span> yOnScreenToGlCoord(<a class="code" href="structvect__prototype2.html">fvect2</a> screenSize, <span class="keywordtype">float</span> y);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">float</span> xGlCoordToScreenCoord(<a class="code" href="structvect__prototype2.html">fvect2</a> screenSize, <span class="keywordtype">float</span> x);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">float</span> yGlCoordToScreenCoord(<a class="code" href="structvect__prototype2.html">fvect2</a> screenSize, <span class="keywordtype">float</span> y);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    std::tuple&lt;fvect2, fvect2&gt; getMoveAndSizeByCoords(<a class="code" href="structvect__prototype2.html">fvect2</a> topLeft, <a class="code" href="structvect__prototype2.html">fvect2</a> topRight, <a class="code" href="structvect__prototype2.html">fvect2</a> bottomRight, <a class="code" href="structvect__prototype2.html">fvect2</a> bottomLeft);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="structvect__prototype2.html">fvect3</a> rgbToFloat(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> r, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> g, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> b);</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;include/glm/glm.hpp&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">//#include &quot;vectors.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordtype">bool</span> isPointInPolygon(<span class="keywordtype">int</span> npol, <span class="keywordtype">float</span>* xp, <span class="keywordtype">float</span>* yp, glm::vec2 p);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    glm::vec2 pointOnScreenToGlCoords(glm::vec2 screenSize, glm::vec2 point);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    glm::vec2 glCoordsToScreenCoords(glm::vec2 screenSize, glm::vec2 val);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">float</span> xOnScreenToGlCoord(glm::vec2 screenSize, <span class="keywordtype">float</span> x);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">float</span> yOnScreenToGlCoord(glm::vec2 screenSize, <span class="keywordtype">float</span> y);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">float</span> xGlCoordToScreenCoord(glm::vec2 screenSize, <span class="keywordtype">float</span> x);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">float</span> yGlCoordToScreenCoord(glm::vec2 screenSize, <span class="keywordtype">float</span> y);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="comment">/*std::tuple&lt;glm::vec2, glm::vec2&gt; getMoveAndSizeByCoords(glm::vec2 topLeft, </span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">        glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft);*/</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">size_t</span> getPowerTwoAlign(<span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
-<div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2&lt; float, 2, vect2_data&lt; float &gt; &gt;</a></div></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    glm::vec3 rgbToFloat(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> r, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> g, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> b);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">size_t</span> getPowerTwoAlign(<span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
