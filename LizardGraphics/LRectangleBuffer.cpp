@@ -14,7 +14,7 @@ namespace LGraphics
 
     void LRectangleBuffer::setVerts()
     {
-        vertices = new GLfloat[(coordsCount + textureCoordsCount) * verticesCount]
+        vertices = new float[(coordsCount + textureCoordsCount) * verticesCount]
         {
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f,

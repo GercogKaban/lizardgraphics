@@ -400,10 +400,8 @@ namespace LGraphics
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
-
-#endif // OPENGL
-
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+#endif // OPENGL
 #ifdef VULKAN
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 #endif
@@ -475,7 +473,9 @@ namespace LGraphics
 
         int width_, height_;
         glfwGetFramebufferSize(window_, &width_, &height_);
+#ifdef OPENGL
         glViewport(0, 0, width_, height_);
+#endif
     }
 
     void LApp::initImGui()

@@ -47,7 +47,7 @@ namespace LGraphics
 
     void LMultiRectangleBuffer::setVerts()
     {
-        vertices = new GLfloat[coordsCount * verticesCount]
+        vertices = new float[coordsCount * verticesCount]
         {
              0.5f,  0.5f, 0.0f,
              0.5f, -0.5f, 0.0f,
@@ -55,7 +55,7 @@ namespace LGraphics
             -0.5f,  0.5f, 0.0f,
         };
 
-        textures = new GLfloat[textureCoordsCount* verticesCount]
+        textures = new float[textureCoordsCount* verticesCount]
         {
             1.0f, 1.0f,
             1.0f, 0.0f,

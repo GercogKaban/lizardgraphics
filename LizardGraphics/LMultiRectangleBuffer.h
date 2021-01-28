@@ -18,7 +18,7 @@ namespace LGraphics
         void setInds() override; ///< Инициализирует массив индексов.
 
         size_t rectCount;
-        GLuint* objIndex = nullptr;
+        uint32_t* objIndex = nullptr;
 
     public:
 

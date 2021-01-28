@@ -22,11 +22,6 @@ namespace LGraphics
         //const GLuint* getVBO() const { return VBO; }
 
         /*!
-        @brief Возвращает объект вершинного массива.
-        */
-        const GLuint getVaoNum() const { return VAO; }
-
-        /*!
         @brief Возвращает массив вершин.
         */
         auto getVertices() const { return vertices; }
@@ -64,6 +59,11 @@ namespace LGraphics
         @brief Инициализирует LBuffer.
         */
         void init();
+
+        /*!
+@brief Возвращает объект вершинного массива.
+*/
+        const GLuint getVaoNum() const { return VAO; }
 #endif
 #ifdef VULKAN
         void init(LApp* app);
@@ -100,7 +100,7 @@ namespace LGraphics
         */
         virtual void genBuffers();
 
-        GLfloat* textures = nullptr; ///< Массив текстурных координат.
+        float* textures = nullptr; ///< Массив текстурных координат.
 
 #ifdef VULKAN
           VkBuffer vertexBuffer, indexBuffer;
@@ -109,10 +109,10 @@ namespace LGraphics
 #endif // VULKAN
 
 //#ifdef OPENGL
-        GLfloat* vertices = nullptr; ///< Массив вершин.*/
+        float* vertices = nullptr; ///< Массив вершин.*/
         uint16_t* ebo = nullptr;       ///< Массив индексов.*/
 //#endif
-        GLuint VBO[4]/*на всякий случай больше, для потомков*/, VAO, EBO;     ///< OpenGL буфферы.*/
+        uint32_t VBO[4]/*на всякий случай больше, для потомков*/, VAO, EBO;     ///< OpenGL буфферы.*/
 
         const size_t coordsCount = 3;
         size_t verticesCount, indicesCount, normalsCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
