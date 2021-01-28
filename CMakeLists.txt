@@ -18,8 +18,10 @@ add_subdirectory (LizardGraphics)
 target_precompile_headers(LS_Example PRIVATE pch.h)
 
 IF (${API} MATCHES "VULKAN")
-   target_link_libraries(LS_Example LizardGraphics LizardGraphics/libs/vulkan-1) 
+   target_link_libraries(LS_Example LizardGraphics LizardGraphics/libs/vulkan-1)
+IF(WIN32)
    add_custom_command(TARGET LS_Example PRE_BUILD COMMAND python build_shaders.py)
+ENDIF(WIN32)
 ENDIF(${API} MATCHES "VULKAN")
 
 IF (WIN32)
