@@ -15,8 +15,7 @@ namespace LGraphics
     class LBuffer : public LObject
     {
     public:
-
-        
+      
         const char* getObjectType() override { return "LBuffer"; }
         //const GLuint* getVBO() const { return VBO; }
 
@@ -114,7 +113,7 @@ namespace LGraphics
         GLuint VBO[4]/*на всякий случай больше, для потомков*/, VAO, EBO;     ///< OpenGL буфферы.*/
 
         const size_t coordsCount = 3;
-        size_t verticesCount, indicesCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
+        size_t verticesCount, indicesCount, normalsCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
     };
 }
 

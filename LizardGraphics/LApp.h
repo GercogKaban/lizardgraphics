@@ -11,6 +11,8 @@
 #endif
 #include "include/glm/glm.hpp"
 
+#include "vectors.h"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
@@ -76,7 +78,7 @@ namespace LGraphics
         @brief Возвращает размеры окна (в пикселях).
 
         */
-        szvect2 getWindowSize() const { return szvect2(width, height); }
+        szvect2 getWindowSize() const;
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
@@ -86,7 +88,7 @@ namespace LGraphics
 
         void lockFps(size_t fps_) { fpsLock = fps_; }
 
-        void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
+        //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
 
         void deleteWidget(LWidget* w);
@@ -240,13 +242,11 @@ namespace LGraphics
         void createCommandBuffers();
         void createUniformBuffers();
         void createDescriptorPool();
-        //void createTextureImage(const char* path, VkImage& image, VkDeviceMemory& mem);
 
         void createImage(uint32_t width, uint32_t height, VkFormat format,
             VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
             VkImage& image, VkDeviceMemory& imageMemory);
 
-        //void createTextureImageView();
         void createTextureSampler();
         void createImageView(VkImage image, VkFormat format, VkImageView& view);
 
@@ -290,12 +290,7 @@ namespace LGraphics
         void setupDebugMessenger();
         std::vector<const char*> getRequiredExtensions();
         static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-            VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) 
-        {
-            std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
-
-            return VK_FALSE;
-        }
+            VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
 
         bool isDeviceSuitable(VkPhysicalDevice device);
         bool checkDeviceExtensionSupport(VkPhysicalDevice device);
@@ -323,9 +318,6 @@ namespace LGraphics
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-        //VkImage textureImage, testIm;
-        //VkDeviceMemory textureImageMemory, testImMemory;
-        //VkImageView textureImageView, testImView;
         VkSampler textureSampler;
 
         size_t currentFrame = 0;
@@ -349,20 +341,7 @@ namespace LGraphics
                 return bindingDescription;
             }
 
-            static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
-                std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
-
-                attributeDescriptions[0].binding = 0;
-                attributeDescriptions[0].location = 0;
-                attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-                attributeDescriptions[0].offset = offsetof(Vertex, pos);
-
-                attributeDescriptions[1].binding = 0;
-                attributeDescriptions[1].location = 1;
-                attributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
-                attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
-                return attributeDescriptions;
-            }
+            static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions();
         };
 
         struct BaseShaderConstants

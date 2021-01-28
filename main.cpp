@@ -23,14 +23,14 @@ int main()
         w->move(0.0f, 0.0f, 0.0f);
         w->bindTexture("arbiter.png");
     }
-
-        //auto w1 = new LWRectangle(&app);
-        //w1->color(255, 255, 255);
-        //w1->scale(0.3f, 0.6f, 1.0f);
-        //w1->move(-0.5f, 0.5f, 0.0f);
-        //w1->bindTexture("arbiter.png");
         
-
+    app.setImgui([&]()
+    {
+        ImGui::Text("Hello, world %d", 123);
+        ImGui::Text("Hello, worgld %d", 123);
+    ImGui::GetWindowDrawList()->AddText(ImGui::GetFont(),
+        ImGui::GetFontSize(), ImVec2(0.5f, 0.5f), ImColor(0, 0, 0, 255), "test", 0, 0.0f, 0);
+    });
     app.loop();
     return 0;
 }

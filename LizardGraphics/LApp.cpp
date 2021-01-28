@@ -3,10 +3,7 @@
 #include "LApp.h"
 #include "LError.h"
 #include "LRectangleBuffer.h"
-//#include "LWRectangle.h"
-//#include "LTimer.h"
 #include "LMultiWRectangle.h"
-//#include "Lshaders.h"
 
 #include "LResourceManager.h"
 
@@ -71,43 +68,7 @@ namespace LGraphics
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            //// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-            //if (show_demo_window)
-            //    ImGui::ShowDemoWindow(&show_demo_window);
-
-            // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-            {
-                imgui();
-                static float f = 0.0f;
-                static int counter = 0;
-
-                ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-                ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-                ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-                ImGui::Checkbox("Another Window", &show_another_window);
-
-                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-                ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-                if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                    counter++;
-                ImGui::SameLine();
-                ImGui::Text("counter = %d", counter);
-
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-                ImGui::End();
-            }
-
-            //// 3. Show another simple window.
-            //if (show_another_window)
-            //{
-            //    ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            //    ImGui::Text("Hello from another window!");
-            //    if (ImGui::Button("Close Me"))
-            //        show_another_window = false;
-            //    ImGui::End();
-            //}
+            imgui();
 
             // Rendering
             ImGui::Render();
@@ -188,12 +149,6 @@ namespace LGraphics
             glDisable(GL_DEPTH_TEST);
 #endif // OPENGL
 
-#ifdef VULKAN
-
-            //recordCommandBuffers();
-            //drawFrame();
-
-#endif // VULKAN
             //LDISPLAY();
             //for (auto& o : interfaceObjects)
             //    if (!o->isHidden())
@@ -226,6 +181,11 @@ namespace LGraphics
         //vkDeviceWaitIdle(g_Device);
         //t.stop();
 
+    }
+
+    szvect2 LApp::getWindowSize() const
+    {
+        return szvect2(width, height);
     }
 
     void LApp::setMatrices(glm::mat4 view, glm::mat4 projection)
@@ -1524,6 +1484,13 @@ namespace LGraphics
         return extensions;
     }
 
+    VKAPI_ATTR VkBool32 VKAPI_CALL LApp::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT * pCallbackData, void * pUserData)
+    {
+        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+
+        return VK_FALSE;
+    }
+
     bool LApp::isDeviceSuitable(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices = findQueueFamilies(device);
@@ -1906,6 +1873,22 @@ namespace LGraphics
     void LApp::initTextures()
     {
         initTextures(nonInterfaceObjects);
+    }
+
+    std::array<VkVertexInputAttributeDescription, 2> LApp::Vertex::getAttributeDescriptions()
+    {
+        std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+
+        attributeDescriptions[0].binding = 0;
+        attributeDescriptions[0].location = 0;
+        attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+        attributeDescriptions[1].binding = 0;
+        attributeDescriptions[1].location = 1;
+        attributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
+        return attributeDescriptions;
     }
 
 }
