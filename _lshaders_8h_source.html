@@ -261,7 +261,7 @@ $(function() {
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor">#ifdef VULKAN</span></div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a>* app;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        LGraphics::LApp* app;</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        VkPipelineLayout pipelineLayout;</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        VkPipeline graphicsPipeline;</div>
@@ -283,7 +283,7 @@ $(function() {
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordtype">void</span> loadShaders(<span class="keyword">const</span> <span class="keywordtype">char</span>* vertShader, <span class="keyword">const</span> <span class="keywordtype">char</span>* fragShader);</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        <span class="keywordtype">void</span> initShaders(<span class="keyword">const</span> <span class="keywordtype">char</span>* v_shader, <span class="keyword">const</span> <span class="keywordtype">char</span>* f_shader, <span class="keywordtype">size_t</span> vSize, <span class="keywordtype">size_t</span> fSize);</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html">Shader</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* v_shader, <span class="keyword">const</span> <span class="keywordtype">char</span>* f_shader, <a class="code" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a>* app, <span class="keywordtype">bool</span> sourceCode = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <a class="code" href="class_l_shaders_1_1_shader.html">Shader</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* v_shader, <span class="keyword">const</span> <span class="keywordtype">char</span>* f_shader, LGraphics::LApp* app, <span class="keywordtype">bool</span> sourceCode = <span class="keyword">true</span>);</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        <span class="keywordtype">void</span> bindShader(<span class="keyword">const</span> <span class="keywordtype">char</span>* shader, <span class="keywordtype">short</span> shaderType);</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="preprocessor">#ifdef OPENGL</span></div>
@@ -311,7 +311,6 @@ $(function() {
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="class_l_shaders_1_1_shader.html#a75c8c18d923d3abc544cc4a3b2a38af5">loadShader</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* shader, <span class="keywordtype">size_t</span>&amp; shaderSize);</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    };</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;}</div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:50</div></div>
 <div class="ttc" id="aclass_l_shaders_1_1_shader_html"><div class="ttname"><a href="class_l_shaders_1_1_shader.html">LShaders::Shader</a></div><div class="ttdoc">Класс шейдера.</div><div class="ttdef"><b>Definition:</b> Lshaders.h:190</div></div>
 <div class="ttc" id="aclass_l_shaders_1_1_shader_html_a75c8c18d923d3abc544cc4a3b2a38af5"><div class="ttname"><a href="class_l_shaders_1_1_shader.html#a75c8c18d923d3abc544cc4a3b2a38af5">LShaders::Shader::loadShader</a></div><div class="ttdeci">const char * loadShader(const char *shader, size_t &amp;shaderSize)</div><div class="ttdoc">Активирует шейдер (перед отрисовкой).</div><div class="ttdef"><b>Definition:</b> Lshaders.cpp:263</div></div>
 </div><!-- fragment --></div><!-- contents -->
