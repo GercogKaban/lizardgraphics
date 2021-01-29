@@ -3,6 +3,31 @@
 #include <mutex>
 #include <optional>
 #include <map>
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+#include <android/log.h>
+#include <android_native_app_glue.h>
+
+static const char* tag_ = "Lizard_Graphics";
+#define LOGI(...) \
+  ((void)__android_log_print(ANDROID_LOG_INFO, tag_, __VA_ARGS__))
+#define LOGW(...) \
+  ((void)__android_log_print(ANDROID_LOG_WARN, tag_, __VA_ARGS__))
+#define LOGE(...) \
+  ((void)__android_log_print(ANDROID_LOG_ERROR, tag_, __VA_ARGS__))
+
+bool initialized_ = false;
+bool initialize(android_app* app);
+
+// Functions interacting with Android native activity
+void android_main(struct android_app* state);
+void terminate(void);
+void handle_cmd(android_app* app, int32_t cmd);
+
+// typical Android NativeActivity entry function
+void android_main(struct android_app* app);
+#endif
+
 #include "ObjectPool.h"
 
 #ifdef OPENGL
@@ -11,8 +36,9 @@
 #endif
 #include "include/glm/glm.hpp"
 
-//#include "vectors.h"
-
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+#include "vulkan_wrapper.h"
+#endif
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
@@ -31,7 +57,6 @@ namespace LGraphics
     }
 
     class LNonWidget;
-    //class LShaders::Shader;
     class LResourceManager;
     class LWRectangle;
     class LShape;
@@ -168,10 +193,9 @@ namespace LGraphics
         void refreshCamera();
         void refreshProjection();
 
-        void init();
+        void setupLG();
         void initLEngine();
         void initRenderer();
-        void initImGui();
 
         void initTextures();
 
@@ -209,13 +233,11 @@ namespace LGraphics
         VkImageView dummyTexture;
 
         std::vector<const char*> validationLayers = {
-    "VK_LAYER_KHRONOS_validation",
-    "VK_LAYER_LUNARG_monitor"
+    "VK_LAYER_KHRONOS_validation"
         };
 
-        const std::vector<const char*> deviceExtensions = {
-    VK_KHR_SWAPCHAIN_EXTENSION_NAME
-};
+        const std::vector<const char*> deviceExtensions = 
+        { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 #ifdef NDEBUG
         const bool enableValidationLayers = false;
@@ -225,6 +247,7 @@ namespace LGraphics
 
         VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
             const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+
         void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
         bool checkValidationLayerSupport();
 
@@ -425,6 +448,7 @@ namespace LGraphics
         unsigned int depthMapFBO, depthMap;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
+#ifdef VULKAN
         VkAllocationCallbacks*   g_Allocator = NULL;
         VkInstance               g_Instance = VK_NULL_HANDLE;
         VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
@@ -484,5 +508,6 @@ namespace LGraphics
             fprintf(stderr, "Glfw Error %d: %s\n", error, description);
         }
     };
+#endif
 }
 

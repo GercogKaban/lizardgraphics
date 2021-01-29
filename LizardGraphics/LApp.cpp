@@ -20,7 +20,10 @@ namespace LGraphics
     LApp::LApp(size_t objectPoolSize)
     {
         objectCountLim = objectPoolSize;
-        init();
+
+#ifndef VK_USE_PLATFORM_ANDROID_KHR
+        setupLG();
+#endif 
     }
 #endif
 
@@ -317,10 +320,9 @@ namespace LGraphics
         else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 100.0f);
     }
 
-    void LApp::init()
+    void LApp::setupLG()
     {
-        //initRenderer();
-        initImGui();
+        initRenderer();
         initLEngine();
     }
 
@@ -386,15 +388,14 @@ namespace LGraphics
 
     }
 
+#ifdef OPENGL
     void LApp::initRenderer()
     {
         glfwInit();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Window creation                                              //
-
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-#ifdef OPENGL
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -402,12 +403,6 @@ namespace LGraphics
         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-
-#endif // OPENGL
-#ifdef VULKAN
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-#endif
-
 #ifndef NDEBUG
         window_ = glfwCreateWindow(mode->width - 1, mode->height, "Lizard Graphics", NULL, NULL);
         width = mode->width - 1;
@@ -415,14 +410,13 @@ namespace LGraphics
 #else
         width = mode->width;
         height = mode->height;
-#ifdef OPENGL
+
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 #endif
         window_ = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
-#endif
 
         glfwMakeContextCurrent(window_);
 
@@ -463,24 +457,22 @@ namespace LGraphics
         glfwSetScrollCallback(window_, scrollCallback);
         glfwGetFramebufferSize(window_, &width, &height);
 
-#ifdef OPENGL
-
         glewExperimental = GL_TRUE;
         glewInit();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //glfwSwapInterval(0);
-#endif // OPENGL
+
 
         int width_, height_;
         glfwGetFramebufferSize(window_, &width_, &height_);
-#ifdef OPENGL
         glViewport(0, 0, width_, height_);
-#endif
     }
+#endif
 
-    void LApp::initImGui()
+#ifdef VULKAN
+    void LApp::initRenderer()
     {
 #ifndef NDEBUG
 #ifndef VULKAN
@@ -491,7 +483,7 @@ namespace LGraphics
             throw std::runtime_error("can't init glfw!");
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        window_ = glfwCreateWindow(1920, 1080, "Dear ImGui GLFW+Vulkan example", NULL, NULL);
+        window_ = glfwCreateWindow(1920, 1080, "Lizard Graphics", NULL, NULL);
 
         // Setup Vulkan
         if (!glfwVulkanSupported())
@@ -575,6 +567,7 @@ namespace LGraphics
         // Our statel
         IMGUI_CHECKVERSION();
     }
+#endif
 
     void LApp::checkEvents()
     {
@@ -683,7 +676,9 @@ namespace LGraphics
         scrollCallback(window, xoffset, yoffset);
     }
 
+
 #ifdef VULKAN
+    
     VkResult LApp::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT * pCreateInfo, const VkAllocationCallbacks * pAllocator, VkDebugUtilsMessengerEXT * pDebugMessenger)
     {
         auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
@@ -733,7 +728,6 @@ namespace LGraphics
             throw std::runtime_error("validation layers requested, but not available!");
         }
 
-
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
         appInfo.pApplicationName = "Lizard Graphics";
@@ -747,22 +741,14 @@ namespace LGraphics
         createInfo.pApplicationInfo = &appInfo;
 
         auto extensions = getRequiredExtensions();
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+        extensions.push_back("VK_KHR_android_surface");
+#endif
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
 
-        //if (!enableValidationLayers) 
-        //{
-        //    validationLayers.erase(validationLayers.begin());
-        //}
-
-
-        //createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-        //createInfo.ppEnabledLayerNames = validationLayers.data();
-
-        //populateDebugMessengerCreateInfo(debugCreateInfo);
-        //createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
         if (enableValidationLayers) 
         {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -774,7 +760,6 @@ namespace LGraphics
         else 
         {
             createInfo.enabledLayerCount = 0;
-
             createInfo.pNext = nullptr;
         }
 
@@ -860,8 +845,18 @@ namespace LGraphics
 
     void LApp::createSurface()
     {
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+        VkAndroidSurfaceCreateInfoKHR createInfo{
+      .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
+      .pNext = nullptr,
+      .flags = 0,
+      .window = window };
+        if (vkCreateAndroidSurfaceKHR(g_Instance, &createInfo, nullptr,
+            &surface))
+#else
         if (glfwCreateWindowSurface(g_Instance, window_, nullptr, &surface) != VK_SUCCESS)
             throw std::runtime_error("failed to create window surface!");
+#endif
     }
 
     void LApp::createGraphicsPipeline()
@@ -1894,3 +1889,50 @@ namespace LGraphics
     }
 
 }
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+bool initialize(android_app* app)
+{
+    if (!InitVulkan()) {
+        LOGE("Vulkan is unavailable, install vulkan and re-start");
+        return false;
+    }
+}
+
+void android_main(android_app* state)
+{
+    app->onAppCmd = handle_cmd;
+
+    int events;
+    android_poll_source* source;
+    do {
+        if (ALooper_pollAll(initialized_ ? 1 : 0, nullptr, &events,
+            (void**)&source) >= 0) {
+            if (source != NULL) source->process(app, source);
+        }
+    } while (app->destroyRequested == 0);
+}
+
+void terminate(void)
+{
+    initialized_ = false;
+}
+
+void handle_cmd(android_app* app, int32_t cmd)
+{
+    switch (cmd) 
+    {
+    case APP_CMD_INIT_WINDOW:
+        // The window is being shown, get it ready.
+        initialize(app);
+        break;
+    case APP_CMD_TERM_WINDOW:
+        // The window is being hidden or closed, clean it up.
+        terminate();
+        break;
+    default:
+        LOGI("event not handled: %d", cmd);
+    }
+}
+
+#endif

@@ -1,43 +1,53 @@
 cmake_minimum_required (VERSION 3.16)
      
-project (LS_Example C CXX)
-
 set(API "OPENGL" CACHE STRING "RENDERING API")
+set(PLATFORM "DESKTOP" CACHE STRING "PLATFORM YOU TARGETING")
 add_compile_definitions(${API})
 
 IF (${API} MATCHES "OPENGL")
 find_package(OpenGL REQUIRED)
 ENDIF (${API} MATCHES "OPENGL")
 
+IF (${PLATFORM} MATCHES "DESKTOP")
+project (DesktopExample C CXX)
 set(SOURCE_FILES main.cpp)
 set(HEADER_FILES)
 
-ADD_EXECUTABLE(LS_Example ${SOURCE_FILES} ${HEADER_FILES})
+ADD_EXECUTABLE(DesktopExample ${SOURCE_FILES} ${HEADER_FILES})
 add_subdirectory (LizardGraphics)
 
-target_precompile_headers(LS_Example PRIVATE pch.h)
+target_precompile_headers(DesktopExample PRIVATE pch.h)
 
 IF (${API} MATCHES "VULKAN")
-   target_link_libraries(LS_Example LizardGraphics LizardGraphics/libs/vulkan-1)
+   #target_link_libraries(DesktopExample LizardGraphics LizardGraphics/libs/vulkan-1)
 IF(WIN32)
-   add_custom_command(TARGET LS_Example PRE_BUILD COMMAND python build_shaders.py)
+   #add_custom_command(TARGET DesktopExample PRE_BUILD COMMAND python build_shaders.py)
 ENDIF(WIN32)
 ENDIF(${API} MATCHES "VULKAN")
 
 IF (WIN32)
-  target_link_libraries(LS_Example LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s)
+  #target_link_libraries(DesktopExample LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s)
 ELSE()
-  target_link_libraries(LS_Example LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32)
+  #target_link_libraries(DesktopExample LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32)
 ENDIF()
 
-target_compile_features(LS_Example PRIVATE cxx_std_17)
+target_compile_features(DesktopExample PRIVATE cxx_std_17)
+ENDIF (${PLATFORM} MATCHES "DESKTOP")
 
-project (TestDLL C CXX)
+IF(${PLATFORM} MATCHES "MOBILE")
+project (AndroidSharedLib C CXX)
 
-set(SOURCE_FILES1 dllmain.cpp)
-set(HEADER_FILES1 dllmain.h)
+set(APP_GLUE_DIR ${ANDROID_NDK}/sources/android/native_app_glue)
+include_directories(${APP_GLUE_DIR})
+add_library(app-glue STATIC ${APP_GLUE_DIR}/android_native_app_glue.c)
 
-add_library(TestDLL STATIC dllmain.h dllmain.cpp)
-target_link_libraries(TestDLL LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s)
-target_link_libraries(TestDLL LizardGraphics LizardGraphics/libs/vulkan-1) 
-target_compile_features(TestDLL PRIVATE cxx_std_17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -std=c++11 \
+                     -DVK_USE_PLATFORM_ANDROID_KHR")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
+
+add_library(AndroidSharedLib SHARED dllmain.h dllmain.cpp vulkan_wrapper.cpp)
+target_link_libraries(AndroidSharedLib LizardGraphics opengl32 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s)
+target_link_libraries(AndroidSharedLib LizardGraphics LizardGraphics/libs/vulkan-1 app-glue log android) 
+target_compile_features(AndroidSharedLib PRIVATE cxx_std_17)
+
+ENDIF(${PLATFORM} MATCHES "MOBILE")

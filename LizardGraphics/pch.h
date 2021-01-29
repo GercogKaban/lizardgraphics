@@ -25,10 +25,9 @@
 #include <map>
 #include <tuple>
 
-//#include "vectors.h"
-
 #ifdef OPENGL
 #include "include/GLEW/glew.h"
+#include <GLFW/glfw3.h>
 #endif
 
 #ifndef NDEBUG
@@ -43,14 +42,14 @@
 #include "ObjectPool.h"
 #include "textures.h"
 
-//#include <stdio.h>          // printf, fprintf
-//#include <stdlib.h>         // abort
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+#include "vulkan_wrapper.h"
+#endif
 
 #ifdef VULKAN
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#include <vulkan/vulkan.h>
 #endif
 
 #include "imgui_impl_vulkan.h"
