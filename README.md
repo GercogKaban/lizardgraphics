@@ -24,6 +24,7 @@ On Windows you need to place this static libraries in the "LizardGraphics/libs" 
 4. Input following command:
 
 cmake -G "Visual Studio 16 2019" -A x64 -S path -DAPI=VULKAN         (for VS 19).
+
 cmake -G "Visual Studio 15 2017" -A x64 -S path -DAPI=VULKAN         (for VS 17).
 
 also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
