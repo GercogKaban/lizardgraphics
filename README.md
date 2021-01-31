@@ -36,6 +36,7 @@ also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
 4. Input following commands:
 
 cmake . -A x64 -DAPI=VULKAN
+
 make
 
 # TODO
