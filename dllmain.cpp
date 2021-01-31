@@ -10,31 +10,34 @@ using namespace LGraphics;
 
 extern "C"
 {
-    void test1()
+    void onCreate()
     {
-        std::cout << "test1() func began";
-        LGraphics::LApp app(10);
+        println("onCreate() func began");
+        app = new LApp(10);
 
-        const size_t objCount = app.getObjectsLimit();
+        const size_t objCount = app->getObjectsLimit();
 
         float offsetX = 0.0f;
         for (size_t i = 0; i < objCount; ++i)
         {
-            auto w = new LWRectangle(&app);
+            auto w = new LWRectangle(app);
             w->color(255, 255, 255);
             w->move(0.0f, 0.0f, 0.0f);
             w->bindTexture("arbiter.png");
         }
 
-        app.setImgui([&]()
+        app->setImgui([&]()
             {
                 ImGui::Text("Hello, world %d", 123);
                 ImGui::Text("Hello, worgld %d", 123);
                 ImGui::GetWindowDrawList()->AddText(ImGui::GetFont(),
                     ImGui::GetFontSize(), ImVec2(0.5f, 0.5f), ImColor(0, 0, 0, 255), "test", 0, 0.0f, 0);
             });
-        app.loop();
-        std::cout << "test1() func ended\n";
+        println("onCreate() func ended");
     }
 
+    void loop()
+    {
+        app->loop();
+    }
 }

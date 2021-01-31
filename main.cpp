@@ -9,7 +9,7 @@ using namespace LGraphics;
 
 int main()
 {
-    LGraphics::LApp app(10);
+    LApp app(10);
 
     //app.setSleepTime(5);
     const size_t objCount = app.getObjectsLimit();

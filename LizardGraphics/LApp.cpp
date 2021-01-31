@@ -191,6 +191,15 @@ namespace LGraphics
         return glm::vec<2, size_t>(width, height);
     }
 
+    void println(const char* text)
+    {
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+        LOGI(tag_, text);
+#else
+        std::cout << text << std::endl;
+#endif
+    }
+
     void LApp::setMatrices(glm::mat4 view, glm::mat4 projection)
     {
         this->view = view;

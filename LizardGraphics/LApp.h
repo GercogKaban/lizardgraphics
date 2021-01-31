@@ -24,9 +24,9 @@ void android_main(struct android_app* state);
 void terminate(void);
 void handle_cmd(android_app* app, int32_t cmd);
 
-// typical Android NativeActivity entry function
-void android_main(struct android_app* app);
 #endif
+
+static void println(const char* text);
 
 #include "ObjectPool.h"
 
