@@ -38,7 +38,7 @@ also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
 cmake . -A x64 -DAPI=VULKAN
 make
 
-#TODO
+# TODO
 
 1. Model loader.
 2. Supporting Android platform.
