@@ -35,7 +35,7 @@ also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
 3. Go to the repository directory (cd path)
 4. Input following commands:
 
-cmake . -A x64 -DAPI=VULKAN
+cmake . -DAPI=VULKAN
 
 make
 
@@ -43,6 +43,7 @@ make
 
 1. Model loader.
 2. Supporting Android platform.
+3. Runtime API changing.
 
 # Documentation
 Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
