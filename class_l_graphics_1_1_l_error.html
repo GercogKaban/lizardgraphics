@@ -98,10 +98,22 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a81734fd1df13f5a68c7ecd77b06b233f"><td class="memItemLeft" align="right" valign="top"><a id="a81734fd1df13f5a68c7ecd77b06b233f"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#a81734fd1df13f5a68c7ecd77b06b233f">init</a> (LApp *app)</td></tr>
-<tr class="memdesc:a81734fd1df13f5a68c7ecd77b06b233f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует класс <a class="el" href="class_l_graphics_1_1_l_error.html" title="Класс вывода ошибок.">LError</a>. <br /></td></tr>
-<tr class="separator:a81734fd1df13f5a68c7ecd77b06b233f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c6760986243163b97a0f3b583f6db65"><td class="memItemLeft" align="right" valign="top"><a id="a0c6760986243163b97a0f3b583f6db65"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#a0c6760986243163b97a0f3b583f6db65">initErrors</a> (LApp *app)</td></tr>
+<tr class="memdesc:a0c6760986243163b97a0f3b583f6db65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует класс <a class="el" href="class_l_graphics_1_1_l_error.html" title="Класс вывода ошибок.">LError</a>. <br /></td></tr>
+<tr class="separator:a0c6760986243163b97a0f3b583f6db65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4b8a12dc0baaf160aa5be1a384dc783"><td class="memItemLeft" align="right" valign="top"><a id="af4b8a12dc0baaf160aa5be1a384dc783"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">releaseResources</a> ()</td></tr>
+<tr class="memdesc:af4b8a12dc0baaf160aa5be1a384dc783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Освобождает ресурсы. <br /></td></tr>
+<tr class="separator:af4b8a12dc0baaf160aa5be1a384dc783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add2f1e368bb70bf773910b1f4450bae7"><td class="memTemplParams" colspan="2"><a id="add2f1e368bb70bf773910b1f4450bae7"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:add2f1e368bb70bf773910b1f4450bae7"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>print</b> (T text)</td></tr>
+<tr class="separator:add2f1e368bb70bf773910b1f4450bae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b812fe70ac0aeca9faec8d9373fe620"><td class="memTemplParams" colspan="2"><a id="a4b812fe70ac0aeca9faec8d9373fe620"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a4b812fe70ac0aeca9faec8d9373fe620"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>println</b> (T text)</td></tr>
+<tr class="separator:a4b812fe70ac0aeca9faec8d9373fe620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c5d91a42ef37c9619342245b65c657a"><td class="memItemLeft" align="right" valign="top"><a id="a0c5d91a42ef37c9619342245b65c657a"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">printToConsole</a> (const std::string &amp;error)</td></tr>
 <tr class="memdesc:a0c5d91a42ef37c9619342245b65c657a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Выводит в консоль ошибку. <br /></td></tr>
@@ -113,6 +125,22 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memitem:ad69d303936e4336cdc96a269becd5a11"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">writeError</a> (T t)</td></tr>
 <tr class="memdesc:ad69d303936e4336cdc96a269becd5a11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает ошибку в массив ошибок.  <a href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">More...</a><br /></td></tr>
 <tr class="separator:ad69d303936e4336cdc96a269becd5a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55fd2ac8092eee45adb1de8d7373bd27"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
+<tr class="memitem:a55fd2ac8092eee45adb1de8d7373bd27"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">printMsg</a> (T t, Args... args)</td></tr>
+<tr class="memdesc:a55fd2ac8092eee45adb1de8d7373bd27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает ошибку в массив ошибок.  <a href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">More...</a><br /></td></tr>
+<tr class="separator:a55fd2ac8092eee45adb1de8d7373bd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c282aed73e8212b94a3e560de00dd1c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a5c282aed73e8212b94a3e560de00dd1c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#a5c282aed73e8212b94a3e560de00dd1c">printMsg</a> (T t)</td></tr>
+<tr class="memdesc:a5c282aed73e8212b94a3e560de00dd1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает ошибку в массив ошибок.  <a href="class_l_graphics_1_1_l_error.html#a5c282aed73e8212b94a3e560de00dd1c">More...</a><br /></td></tr>
+<tr class="separator:a5c282aed73e8212b94a3e560de00dd1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa4d2cb3b91db9d91e2fa81d339bf534"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
+<tr class="memitem:aaa4d2cb3b91db9d91e2fa81d339bf534"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#aaa4d2cb3b91db9d91e2fa81d339bf534">printMsgLn</a> (T t, Args... args)</td></tr>
+<tr class="memdesc:aaa4d2cb3b91db9d91e2fa81d339bf534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает ошибку в массив ошибок.  <a href="class_l_graphics_1_1_l_error.html#aaa4d2cb3b91db9d91e2fa81d339bf534">More...</a><br /></td></tr>
+<tr class="separator:aaa4d2cb3b91db9d91e2fa81d339bf534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae4448ba70aa18a2666b6622a4236f99"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aae4448ba70aa18a2666b6622a4236f99"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#aae4448ba70aa18a2666b6622a4236f99">printMsgLn</a> (T t)</td></tr>
+<tr class="memdesc:aae4448ba70aa18a2666b6622a4236f99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает ошибку в массив ошибок.  <a href="class_l_graphics_1_1_l_error.html#aae4448ba70aa18a2666b6622a4236f99">More...</a><br /></td></tr>
+<tr class="separator:aae4448ba70aa18a2666b6622a4236f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8af1f7ccf2f0734d0b71704f25adf8eb"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Args&gt; </td></tr>
 <tr class="memitem:a8af1f7ccf2f0734d0b71704f25adf8eb"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">writeError</a> (T t, Args... args)</td></tr>
 <tr class="memdesc:a8af1f7ccf2f0734d0b71704f25adf8eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Записывает ошибку в массив ошибок.  <a href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">More...</a><br /></td></tr>
@@ -124,10 +152,6 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memitem:a481c1cca779aa4261770da2e07dc4d4d"><td class="memItemLeft" align="right" valign="top"><a id="a481c1cca779aa4261770da2e07dc4d4d"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>displayErrors</b> ()</td></tr>
 <tr class="separator:a481c1cca779aa4261770da2e07dc4d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4b8a12dc0baaf160aa5be1a384dc783"><td class="memItemLeft" align="right" valign="top"><a id="af4b8a12dc0baaf160aa5be1a384dc783"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">releaseResources</a> ()</td></tr>
-<tr class="memdesc:af4b8a12dc0baaf160aa5be1a384dc783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Освобождает ресурсы. <br /></td></tr>
-<tr class="separator:af4b8a12dc0baaf160aa5be1a384dc783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
@@ -146,6 +170,172 @@ static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Класс вывода ошибок. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5c282aed73e8212b94a3e560de00dd1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c282aed73e8212b94a3e560de00dd1c">&#9670;&nbsp;</a></span>printMsg() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LGraphics::LError::printMsg </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Записывает ошибку в массив ошибок. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>- строка (const char* или std::string) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a55fd2ac8092eee45adb1de8d7373bd27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55fd2ac8092eee45adb1de8d7373bd27">&#9670;&nbsp;</a></span>printMsg() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LGraphics::LError::printMsg </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Записывает ошибку в массив ошибок. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>- строка (const char* или std::string) </td></tr>
+    <tr><td class="paramname">args</td><td>- переменное кол-во строк (const char* или std::string) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aae4448ba70aa18a2666b6622a4236f99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae4448ba70aa18a2666b6622a4236f99">&#9670;&nbsp;</a></span>printMsgLn() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LGraphics::LError::printMsgLn </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Записывает ошибку в массив ошибок. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>- строка (const char* или std::string) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaa4d2cb3b91db9d91e2fa81d339bf534"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa4d2cb3b91db9d91e2fa81d339bf534">&#9670;&nbsp;</a></span>printMsgLn() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LGraphics::LError::printMsgLn </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Записывает ошибку в массив ошибок. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>- строка (const char* или std::string) </td></tr>
+    <tr><td class="paramname">args</td><td>- переменное кол-во строк (const char* или std::string) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a598e5af71074c5070941a213213423cb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a598e5af71074c5070941a213213423cb">&#9670;&nbsp;</a></span>printToDisplay()</h2>
 

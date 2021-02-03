@@ -81,41 +81,40 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    {</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        glm::mat4 projection_ = glm::mat4(1.0f);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LRectanlgeShape&quot;</span>; }</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#aee4a0580bc281a7552225999284c8468">mouseOnIt</a>() <span class="keyword">override</span>; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifdef VULKAN</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordtype">void</span> draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, <span class="keywordtype">size_t</span> objectNum);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifdef OPENGL</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#ac6654122b2e69d1eb2876e3bdf027eb2">LRectangleShape</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes = <span class="keyword">nullptr</span>, <span class="keywordtype">size_t</span> size = 0, <span class="keywordtype">bool</span> isInterfaceObj = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="comment">//LRectangleShape(LApp* app);</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#ac6654122b2e69d1eb2876e3bdf027eb2">LRectangleShape</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <span class="keywordtype">bool</span> isInterfaceObj = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">float</span> calculateWidgetLength();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        glm::vec3 <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#a8ace9ca9eeb1e7ef02bc270739e80289">getCenter</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        glm::vec3 getTopLeftCorner() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        glm::vec3 getTopRightCorner() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        glm::vec3 getBottomLeftCorner() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        glm::vec3 getBottomRightCorner() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_widget.html#a6e116c48dd9471e6a2a1536f8430b9ee">init</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keywordtype">bool</span> isInterfaceObj);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    };</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LRectanlgeShape&quot;</span>; }</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#aee4a0580bc281a7552225999284c8468">mouseOnIt</a>() <span class="keyword">override</span>; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#ifdef VULKAN</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">void</span> draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, <span class="keywordtype">size_t</span> objectNum);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifdef OPENGL</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#ac6654122b2e69d1eb2876e3bdf027eb2">LRectangleShape</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bytes = <span class="keyword">nullptr</span>, <span class="keywordtype">size_t</span> size = 0, <span class="keywordtype">bool</span> isInterfaceObj = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="comment">//LRectangleShape(LApp* app);</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#ac6654122b2e69d1eb2876e3bdf027eb2">LRectangleShape</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>, <span class="keywordtype">bool</span> isInterfaceObj = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">float</span> calculateWidgetLength();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        glm::vec3 <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html#a8ace9ca9eeb1e7ef02bc270739e80289">getCenter</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        glm::vec3 getTopLeftCorner() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        glm::vec3 getTopRightCorner() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        glm::vec3 getBottomLeftCorner() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        glm::vec3 getBottomRightCorner() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_widget.html#a6e116c48dd9471e6a2a1536f8430b9ee">init</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keywordtype">bool</span> isInterfaceObj);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    };</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html_a8ace9ca9eeb1e7ef02bc270739e80289"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html#a8ace9ca9eeb1e7ef02bc270739e80289">LGraphics::LRectangleShape::getCenter</a></div><div class="ttdeci">glm::vec3 getCenter() const override</div><div class="ttdoc">Возвращает центр виджета.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.cpp:28</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html_ac6654122b2e69d1eb2876e3bdf027eb2"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html#ac6654122b2e69d1eb2876e3bdf027eb2">LGraphics::LRectangleShape::LRectangleShape</a></div><div class="ttdeci">LRectangleShape(LApp *app, const char *path=nullptr, bool isInterfaceObj=true)</div><div class="ttdoc">Конструктор.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.cpp:9</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html_aee4a0580bc281a7552225999284c8468"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html#aee4a0580bc281a7552225999284c8468">LGraphics::LRectangleShape::mouseOnIt</a></div><div class="ttdeci">bool mouseOnIt() override</div><div class="ttdoc">Возвращает находится ли мышка на виджете.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.cpp:66</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html_aee4a0580bc281a7552225999284c8468"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html#aee4a0580bc281a7552225999284c8468">LGraphics::LRectangleShape::mouseOnIt</a></div><div class="ttdeci">bool mouseOnIt() override</div><div class="ttdoc">Возвращает находится ли мышка на виджете.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.cpp:65</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_shape.html">LGraphics::LShape</a></div><div class="ttdoc">Переопределяет абстрактный класс LWidgetI.</div><div class="ttdef"><b>Definition:</b> LShape.h:14</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_a6e116c48dd9471e6a2a1536f8430b9ee"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#a6e116c48dd9471e6a2a1536f8430b9ee">LGraphics::LWidget::init</a></div><div class="ttdeci">virtual void init()</div><div class="ttdoc">Конструктор.</div><div class="ttdef"><b>Definition:</b> LWidget.cpp:46</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:142</div></div>

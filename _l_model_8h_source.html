@@ -71,21 +71,55 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;LRectangleShape.h&quot;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;LShape.h&quot;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_model.html">    6</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_model.html">LModel</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html">LRectangleShape</a></div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_model.html">    6</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_model.html">LModel</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_shape.html">LShape</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_model.html">LModel</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordtype">void</span> loadModel(<span class="keyword">const</span> <span class="keywordtype">char</span>* path);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    };</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <span class="keyword">enum</span> TextureType</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;            BASE_TEXTURE,</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;            NORMALS,</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        };</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_resource_manager.html">LResourceManager</a>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LModel&quot;</span>; }</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_model.html">LModel</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* modelPath, <span class="keyword">const</span> <span class="keywordtype">char</span>* texturePath = <span class="keyword">nullptr</span>, </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">char</span>* normalsPath = <span class="keyword">nullptr</span>, <span class="keywordtype">bool</span> debugInfo = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        ~<a class="code" href="class_l_graphics_1_1_l_model.html">LModel</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> loadTexture(<span class="keyword">const</span> <span class="keywordtype">char</span>* path, TextureType type);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">void</span> setMeshDrawing(<span class="keywordtype">size_t</span> num, <span class="keywordtype">bool</span> draw);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">bool</span> getMeshDrawing(<span class="keywordtype">size_t</span> num)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> meshesToDraw[num]; }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">size_t</span> getMeshesCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> meshesCount; }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#ifdef VULKAN</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">void</span> draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, <span class="keywordtype">size_t</span> objectNum) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">void</span> loadModel(<span class="keyword">const</span> <span class="keywordtype">char</span>* modelPath, <span class="keywordtype">bool</span> debugInfo);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_model.html#ae8fb063115ef57987c1e4c8115fa60ca">   36</a></span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="class_l_graphics_1_1_l_model.html#ae8fb063115ef57987c1e4c8115fa60ca">mouseOnIt</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_model.html#acc141c2739a34b2f1e74697dc48f2441">   37</a></span>&#160;        glm::vec3 <a class="code" href="class_l_graphics_1_1_l_model.html#acc141c2739a34b2f1e74697dc48f2441">getCenter</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> glm::vec3(); }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* modelPath;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        VkImageView* textures;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">bool</span>* meshesToDraw = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">size_t</span> meshesCount = 0;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    };</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_model_html"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html">LGraphics::LModel</a></div><div class="ttdef"><b>Definition:</b> LModel.h:7</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_model_html_acc141c2739a34b2f1e74697dc48f2441"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html#acc141c2739a34b2f1e74697dc48f2441">LGraphics::LModel::getCenter</a></div><div class="ttdeci">glm::vec3 getCenter() const override</div><div class="ttdoc">Возвращает центр виджета.</div><div class="ttdef"><b>Definition:</b> LModel.h:37</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_model_html_ae8fb063115ef57987c1e4c8115fa60ca"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html#ae8fb063115ef57987c1e4c8115fa60ca">LGraphics::LModel::mouseOnIt</a></div><div class="ttdeci">bool mouseOnIt() override</div><div class="ttdoc">Возвращает находится ли мышка на виджете.</div><div class="ttdef"><b>Definition:</b> LModel.h:36</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_resource_manager_html"><div class="ttname"><a href="class_l_graphics_1_1_l_resource_manager.html">LGraphics::LResourceManager</a></div><div class="ttdef"><b>Definition:</b> LResourceManager.h:19</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_shape.html">LGraphics::LShape</a></div><div class="ttdoc">Переопределяет абстрактный класс LWidgetI.</div><div class="ttdef"><b>Definition:</b> LShape.h:14</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:142</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

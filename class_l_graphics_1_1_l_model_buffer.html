@@ -68,11 +68,11 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_l_graphics_1_1_l_model_buffer-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">LGraphics::LModelBuffer Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">LGraphics::LModelBuffer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
@@ -92,9 +92,31 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_model_buffer.html#a091e236280233fb0a76769d66844958d">setBuffers</a> () override</td></tr>
 <tr class="memdesc:a091e236280233fb0a76769d66844958d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует все буфферы (вершины, индексы). <br /></td></tr>
 <tr class="separator:a091e236280233fb0a76769d66844958d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac618e5fb8124a709404a01bc0d2f648"><td class="memItemLeft" align="right" valign="top"><a id="aac618e5fb8124a709404a01bc0d2f648"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>LModelBuffer</b> (LApp *app, float *<a class="el" href="class_l_graphics_1_1_l_buffer.html#ab57c872179aa060993fa561102a92040">vertices</a>, uint16_t *indices, size_t verticesCount, size_t indicesCount, size_t normalsCount)</td></tr>
-<tr class="separator:aac618e5fb8124a709404a01bc0d2f648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a1d25668518e687901f6012bb965528"><td class="memItemLeft" align="right" valign="top"><a id="a8a1d25668518e687901f6012bb965528"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_model_buffer.html#a8a1d25668518e687901f6012bb965528">setVerts</a> () override</td></tr>
+<tr class="memdesc:a8a1d25668518e687901f6012bb965528"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует массив вершин. <br /></td></tr>
+<tr class="separator:a8a1d25668518e687901f6012bb965528"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2be44435de0c4d37cfb1990b2c4cb05"><td class="memItemLeft" align="right" valign="top"><a id="aa2be44435de0c4d37cfb1990b2c4cb05"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_model_buffer.html#aa2be44435de0c4d37cfb1990b2c4cb05">setInds</a> () override</td></tr>
+<tr class="memdesc:aa2be44435de0c4d37cfb1990b2c4cb05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует массив индексов. <br /></td></tr>
+<tr class="separator:aa2be44435de0c4d37cfb1990b2c4cb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b426fbb97f749ecdcc2dced9ec07705"><td class="memItemLeft" align="right" valign="top"><a id="a4b426fbb97f749ecdcc2dced9ec07705"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_model_buffer.html#a4b426fbb97f749ecdcc2dced9ec07705">genBuffers</a> () override</td></tr>
+<tr class="memdesc:a4b426fbb97f749ecdcc2dced9ec07705"><td class="mdescLeft">&#160;</td><td class="mdescRight">Создаёт VAO и привязывает к нему VBO,EBO. <br /></td></tr>
+<tr class="separator:a4b426fbb97f749ecdcc2dced9ec07705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2821f7106a84c739729cdf3efb6c476c"><td class="memItemLeft" align="right" valign="top"><a id="a2821f7106a84c739729cdf3efb6c476c"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_model_buffer.html#a2821f7106a84c739729cdf3efb6c476c">getVertSize</a> () const override</td></tr>
+<tr class="memdesc:a2821f7106a84c739729cdf3efb6c476c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает размер массива вершин. <br /></td></tr>
+<tr class="separator:a2821f7106a84c739729cdf3efb6c476c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a860499021e9cec7b684a6c96771a8464"><td class="memItemLeft" align="right" valign="top"><a id="a860499021e9cec7b684a6c96771a8464"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getMeshSize</b> (size_t num) const</td></tr>
+<tr class="separator:a860499021e9cec7b684a6c96771a8464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0d1fe409c2fea88dd92e122a34a0faf"><td class="memItemLeft" align="right" valign="top"><a id="ab0d1fe409c2fea88dd92e122a34a0faf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LModelBuffer</b> (LApp *app, std::vector&lt; float &gt; vertexBuf, std::vector&lt; std::vector&lt; uint32_t &gt;&gt;)</td></tr>
+<tr class="separator:ab0d1fe409c2fea88dd92e122a34a0faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9b5b88087d1a470c8926e80e0d2188c"><td class="memItemLeft" align="right" valign="top"><a id="af9b5b88087d1a470c8926e80e0d2188c"></a>
+std::vector&lt; VkBuffer &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getIndBuffer</b> ()</td></tr>
+<tr class="separator:af9b5b88087d1a470c8926e80e0d2188c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a883ec1232029f3a7b414bebc8a444ac8"><td class="memItemLeft" align="right" valign="top"><a id="a883ec1232029f3a7b414bebc8a444ac8"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> () override</td></tr>
 <tr class="separator:a883ec1232029f3a7b414bebc8a444ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,13 +127,9 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a1e2db240c7b9000d99e9077cb8d1428f"><td class="memItemLeft" align="right" valign="top"><a id="a1e2db240c7b9000d99e9077cb8d1428f"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>getIndices</b> () const</td></tr>
 <tr class="separator:a1e2db240c7b9000d99e9077cb8d1428f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33153d8b6f9a649132d30f060279dc41"><td class="memItemLeft" align="right" valign="top"><a id="a33153d8b6f9a649132d30f060279dc41"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a33153d8b6f9a649132d30f060279dc41">getVertSize</a> () const</td></tr>
-<tr class="memdesc:a33153d8b6f9a649132d30f060279dc41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает размер массива вершин. <br /></td></tr>
-<tr class="separator:a33153d8b6f9a649132d30f060279dc41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15881f6303fe1c6a88a25961f7134513"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a15881f6303fe1c6a88a25961f7134513">getIndSize</a> () const</td></tr>
-<tr class="memdesc:a15881f6303fe1c6a88a25961f7134513"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает размер массива текстурных координат. &zwj;/ size_t getTextureSize() const { return textureCoordsCount * verticesCount * sizeof(GLfloat); }.  <a href="class_l_graphics_1_1_l_buffer.html#a15881f6303fe1c6a88a25961f7134513">More...</a><br /></td></tr>
-<tr class="separator:a15881f6303fe1c6a88a25961f7134513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb9ca36a79a842854927ae24337d372"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#affb9ca36a79a842854927ae24337d372">getIndSize</a> () const</td></tr>
+<tr class="memdesc:affb9ca36a79a842854927ae24337d372"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает размер массива текстурных координат. &zwj;/ size_t getTextureSize() const { return textureCoordsCount * verticesCount * sizeof(GLfloat); }.  <a href="class_l_graphics_1_1_l_buffer.html#affb9ca36a79a842854927ae24337d372">More...</a><br /></td></tr>
+<tr class="separator:affb9ca36a79a842854927ae24337d372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac45dc1115cc6f2642fadb3680056001a"><td class="memItemLeft" align="right" valign="top"><a id="ac45dc1115cc6f2642fadb3680056001a"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#ac45dc1115cc6f2642fadb3680056001a">getIndCount</a> () const</td></tr>
 <tr class="memdesc:ac45dc1115cc6f2642fadb3680056001a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает количество индексов. <br /></td></tr>
@@ -121,20 +139,11 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memdesc:adcdcdbc9c5ea7a5bf027185425e5831d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает количество вершин. <br /></td></tr>
 <tr class="separator:adcdcdbc9c5ea7a5bf027185425e5831d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3000ed51fa57f1fd87b55b6f1f5ad9be"><td class="memItemLeft" align="right" valign="top"><a id="a3000ed51fa57f1fd87b55b6f1f5ad9be"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a3000ed51fa57f1fd87b55b6f1f5ad9be">setVerts</a> ()=0</td></tr>
-<tr class="memdesc:a3000ed51fa57f1fd87b55b6f1f5ad9be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует массив вершин. <br /></td></tr>
-<tr class="separator:a3000ed51fa57f1fd87b55b6f1f5ad9be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a908246a77793783e3ff3806fe779b934"><td class="memItemLeft" align="right" valign="top"><a id="a908246a77793783e3ff3806fe779b934"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a908246a77793783e3ff3806fe779b934">setInds</a> ()=0</td></tr>
-<tr class="memdesc:a908246a77793783e3ff3806fe779b934"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует массив индексов. <br /></td></tr>
-<tr class="separator:a908246a77793783e3ff3806fe779b934"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9147209c1c2746bd541594d696079853"><td class="memItemLeft" align="right" valign="top"><a id="a9147209c1c2746bd541594d696079853"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a9147209c1c2746bd541594d696079853">genBuffers</a> ()</td></tr>
-<tr class="memdesc:a9147209c1c2746bd541594d696079853"><td class="mdescLeft">&#160;</td><td class="mdescRight">Создаёт VAO и привязывает к нему VBO,EBO. <br /></td></tr>
-<tr class="separator:a9147209c1c2746bd541594d696079853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ad79dcefd3680bc6d362fe6a512d48ee6"><td class="memItemLeft" align="right" valign="top"><a id="ad79dcefd3680bc6d362fe6a512d48ee6"></a>
+friend&#160;</td><td class="memItemRight" valign="bottom"><b>LModel</b></td></tr>
+<tr class="separator:ad79dcefd3680bc6d362fe6a512d48ee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -142,10 +151,6 @@ Protected Attributes</h2></td></tr>
 float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a9f27b93190282b3f0b35599ded77fdc8">textures</a> = nullptr</td></tr>
 <tr class="memdesc:a9f27b93190282b3f0b35599ded77fdc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Массив текстурных координат. <br /></td></tr>
 <tr class="separator:a9f27b93190282b3f0b35599ded77fdc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab57c872179aa060993fa561102a92040"><td class="memItemLeft" align="right" valign="top"><a id="ab57c872179aa060993fa561102a92040"></a>
-float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#ab57c872179aa060993fa561102a92040">vertices</a> = nullptr</td></tr>
-<tr class="memdesc:ab57c872179aa060993fa561102a92040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Массив вершин.*&zwj;/. <br /></td></tr>
-<tr class="separator:ab57c872179aa060993fa561102a92040"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94caeff72a43cac8033aa5796cf970d0"><td class="memItemLeft" align="right" valign="top"><a id="a94caeff72a43cac8033aa5796cf970d0"></a>
 uint16_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a94caeff72a43cac8033aa5796cf970d0">ebo</a> = nullptr</td></tr>
 <tr class="memdesc:a94caeff72a43cac8033aa5796cf970d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Массив индексов.*&zwj;/. <br /></td></tr>
@@ -178,8 +183,8 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="separator:ab422b9ca8d473664991c575263624056"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a15881f6303fe1c6a88a25961f7134513"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15881f6303fe1c6a88a25961f7134513">&#9670;&nbsp;</a></span>getIndSize()</h2>
+<a id="affb9ca36a79a842854927ae24337d372"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb9ca36a79a842854927ae24337d372">&#9670;&nbsp;</a></span>getIndSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,7 +193,7 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t LGraphics::LBuffer::getIndSize </td>
+          <td class="memname">virtual size_t LGraphics::LBuffer::getIndSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -196,7 +201,7 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

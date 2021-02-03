@@ -78,83 +78,136 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;LObject.h&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define LWRITE(...) LError::writeError(__VA_ARGS__)</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define LPRINT(...) LError::printErrors()</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define LDISPLAY() LError::displayErrors()</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">class </span>LApp;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html">   19</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_error.html">LError</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_object.html">LObject</a></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LError&quot;</span>; }</div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a81734fd1df13f5a68c7ecd77b06b233f">   27</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a81734fd1df13f5a68c7ecd77b06b233f">init</a>(LApp* app)</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            app_ = app;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.push_back(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        }</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">   36</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">printToConsole</a>(<span class="keyword">const</span> std::string&amp; error)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>++;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            std::cout &lt;&lt; error.data() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">   47</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">printToDisplay</a>(<span class="keyword">const</span> std::string&amp; error)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>++;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="comment">//auto msg = new LGraphics::LMessageBox(app_,error);</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">//#define LWRITE(...) LError::writeError(__VA_ARGS__)</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define PRINT(...) LError::printMsg(__VA_ARGS__)</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define PRINTLN(...) LError::printMsgLn(__VA_ARGS__)</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//#define LDISPLAY() LError::displayErrors()</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">class </span>LApp;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html">   20</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_error.html">LError</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_object.html">LObject</a></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LError&quot;</span>; }</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a0c6760986243163b97a0f3b583f6db65">   28</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a0c6760986243163b97a0f3b583f6db65">initErrors</a>(LApp* app)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            app_ = app;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.push_back(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">   37</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">releaseResources</a>()</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.clear();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a> = 0;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> print(T text)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#ifdef VK_USE_PLATFORM_ANDROID_KHR</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            LOGI(tag_, text);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            std::cout &lt;&lt; text;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">   58</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">writeError</a>(T t)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.back() += t;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.push_back(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> println(T text)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#ifdef VK_USE_PLATFORM_ANDROID_KHR</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            LOGI(tag_, text);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            std::cout &lt;&lt; text &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">   70</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">writeError</a>(T t, Args... args)</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.back() += t;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">writeError</a>(args...);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#aa4a33d960a0ddee4a44b4b8fa4c09b1f">   79</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#aa4a33d960a0ddee4a44b4b8fa4c09b1f">printErrors</a>()</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            std::for_each(<a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.begin() + <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>, <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.end() - 1, <a class="code" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">printToConsole</a>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">   67</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">printToConsole</a>(<span class="keyword">const</span> std::string&amp; error)</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>++;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            print(error.data());</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">   78</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">printToDisplay</a>(<span class="keyword">const</span> std::string&amp; error)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>++;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="comment">//auto msg = new LGraphics::LMessageBox(app_,error);</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> displayErrors()</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            std::for_each(<a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.begin() + <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>, <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.end() - 1, <a class="code" href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">printToDisplay</a>);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">   92</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">releaseResources</a>()</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.clear();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a> = 0;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">static</span> LApp* app_;</div>
-<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">  101</a></span>&#160;        <span class="keyword">static</span> std::vector&lt;std::string&gt; <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>; </div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">  102</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>;             </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    };</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html">LGraphics::LError</a></div><div class="ttdoc">Класс вывода ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:20</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a0c5d91a42ef37c9619342245b65c657a"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">LGraphics::LError::printToConsole</a></div><div class="ttdeci">static void printToConsole(const std::string &amp;error)</div><div class="ttdoc">Выводит в консоль ошибку.</div><div class="ttdef"><b>Definition:</b> LError.h:36</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a41b70809dd83bab765d7b82b036a3f25"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">LGraphics::LError::lastErrorNum</a></div><div class="ttdeci">static size_t lastErrorNum</div><div class="ttdoc">Индекс последней выведенной ошибки.</div><div class="ttdef"><b>Definition:</b> LError.h:102</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a598e5af71074c5070941a213213423cb"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">LGraphics::LError::printToDisplay</a></div><div class="ttdeci">static void printToDisplay(const std::string &amp;error)</div><div class="ttdoc">Выводит на экран еще не выведенные ошибки.</div><div class="ttdef"><b>Definition:</b> LError.h:47</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a81734fd1df13f5a68c7ecd77b06b233f"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a81734fd1df13f5a68c7ecd77b06b233f">LGraphics::LError::init</a></div><div class="ttdeci">static void init(LApp *app)</div><div class="ttdoc">Инициализирует класс LError.</div><div class="ttdef"><b>Definition:</b> LError.h:27</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a8af1f7ccf2f0734d0b71704f25adf8eb"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">LGraphics::LError::writeError</a></div><div class="ttdeci">static void writeError(T t, Args... args)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:70</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_aa4a33d960a0ddee4a44b4b8fa4c09b1f"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#aa4a33d960a0ddee4a44b4b8fa4c09b1f">LGraphics::LError::printErrors</a></div><div class="ttdeci">static void printErrors()</div><div class="ttdoc">Выводит в консоль все не выведенные ошибки.</div><div class="ttdef"><b>Definition:</b> LError.h:79</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_ad69d303936e4336cdc96a269becd5a11"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">LGraphics::LError::writeError</a></div><div class="ttdeci">static void writeError(T t)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:58</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_af4b8a12dc0baaf160aa5be1a384dc783"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">LGraphics::LError::releaseResources</a></div><div class="ttdeci">static void releaseResources()</div><div class="ttdoc">Освобождает ресурсы.</div><div class="ttdef"><b>Definition:</b> LError.h:92</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_afbc4f22c4b88952aca0d3e1d22a19e25"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">LGraphics::LError::errors</a></div><div class="ttdeci">static std::vector&lt; std::string &gt; errors</div><div class="ttdoc">Коллекция ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:101</div></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">   89</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">writeError</a>(T t)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.back() += t;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.push_back(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">  101</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">printMsg</a>(T t, Args... args)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">printMsg</a>(t);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">printMsg</a>(args...);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a5c282aed73e8212b94a3e560de00dd1c">  112</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a5c282aed73e8212b94a3e560de00dd1c">printMsg</a>(T t)</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            print(t);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#aaa4d2cb3b91db9d91e2fa81d339bf534">  124</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#aaa4d2cb3b91db9d91e2fa81d339bf534">printMsgLn</a>(T t, Args... args)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">printMsg</a>(t);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#aaa4d2cb3b91db9d91e2fa81d339bf534">printMsgLn</a>(args...);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#aae4448ba70aa18a2666b6622a4236f99">  135</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#aae4448ba70aa18a2666b6622a4236f99">printMsgLn</a>(T t)</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        {</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            println(t);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">  146</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">writeError</a>(T t, Args... args)</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.back() += t;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <a class="code" href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">writeError</a>(args...);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        }</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#aa4a33d960a0ddee4a44b4b8fa4c09b1f">  156</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_error.html#aa4a33d960a0ddee4a44b4b8fa4c09b1f">printErrors</a>()</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        {</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            std::for_each(<a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.begin() + <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>, <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.end() - 1, <a class="code" href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">printToConsole</a>);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> displayErrors()</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        {</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            std::for_each(<a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.begin() + <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>, <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>.end() - 1, <a class="code" href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">printToDisplay</a>);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keyword">static</span> LApp* app_;</div>
+<div class="line"><a name="l00168"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">  168</a></span>&#160;        <span class="keyword">static</span> std::vector&lt;std::string&gt; <a class="code" href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">errors</a>; </div>
+<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">  169</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">lastErrorNum</a>;             </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    };</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;}</div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html">LGraphics::LError</a></div><div class="ttdoc">Класс вывода ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:21</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a0c5d91a42ef37c9619342245b65c657a"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a0c5d91a42ef37c9619342245b65c657a">LGraphics::LError::printToConsole</a></div><div class="ttdeci">static void printToConsole(const std::string &amp;error)</div><div class="ttdoc">Выводит в консоль ошибку.</div><div class="ttdef"><b>Definition:</b> LError.h:67</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a0c6760986243163b97a0f3b583f6db65"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a0c6760986243163b97a0f3b583f6db65">LGraphics::LError::initErrors</a></div><div class="ttdeci">static void initErrors(LApp *app)</div><div class="ttdoc">Инициализирует класс LError.</div><div class="ttdef"><b>Definition:</b> LError.h:28</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a41b70809dd83bab765d7b82b036a3f25"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25">LGraphics::LError::lastErrorNum</a></div><div class="ttdeci">static size_t lastErrorNum</div><div class="ttdoc">Индекс последней выведенной ошибки.</div><div class="ttdef"><b>Definition:</b> LError.h:169</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a55fd2ac8092eee45adb1de8d7373bd27"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a55fd2ac8092eee45adb1de8d7373bd27">LGraphics::LError::printMsg</a></div><div class="ttdeci">static void printMsg(T t, Args... args)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:101</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a598e5af71074c5070941a213213423cb"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a598e5af71074c5070941a213213423cb">LGraphics::LError::printToDisplay</a></div><div class="ttdeci">static void printToDisplay(const std::string &amp;error)</div><div class="ttdoc">Выводит на экран еще не выведенные ошибки.</div><div class="ttdef"><b>Definition:</b> LError.h:78</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a5c282aed73e8212b94a3e560de00dd1c"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a5c282aed73e8212b94a3e560de00dd1c">LGraphics::LError::printMsg</a></div><div class="ttdeci">static void printMsg(T t)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:112</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_a8af1f7ccf2f0734d0b71704f25adf8eb"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#a8af1f7ccf2f0734d0b71704f25adf8eb">LGraphics::LError::writeError</a></div><div class="ttdeci">static void writeError(T t, Args... args)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:146</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_aa4a33d960a0ddee4a44b4b8fa4c09b1f"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#aa4a33d960a0ddee4a44b4b8fa4c09b1f">LGraphics::LError::printErrors</a></div><div class="ttdeci">static void printErrors()</div><div class="ttdoc">Выводит в консоль все не выведенные ошибки.</div><div class="ttdef"><b>Definition:</b> LError.h:156</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_aaa4d2cb3b91db9d91e2fa81d339bf534"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#aaa4d2cb3b91db9d91e2fa81d339bf534">LGraphics::LError::printMsgLn</a></div><div class="ttdeci">static void printMsgLn(T t, Args... args)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:124</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_aae4448ba70aa18a2666b6622a4236f99"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#aae4448ba70aa18a2666b6622a4236f99">LGraphics::LError::printMsgLn</a></div><div class="ttdeci">static void printMsgLn(T t)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:135</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_ad69d303936e4336cdc96a269becd5a11"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#ad69d303936e4336cdc96a269becd5a11">LGraphics::LError::writeError</a></div><div class="ttdeci">static void writeError(T t)</div><div class="ttdoc">Записывает ошибку в массив ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:89</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_af4b8a12dc0baaf160aa5be1a384dc783"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#af4b8a12dc0baaf160aa5be1a384dc783">LGraphics::LError::releaseResources</a></div><div class="ttdeci">static void releaseResources()</div><div class="ttdoc">Освобождает ресурсы.</div><div class="ttdef"><b>Definition:</b> LError.h:37</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_error_html_afbc4f22c4b88952aca0d3e1d22a19e25"><div class="ttname"><a href="class_l_graphics_1_1_l_error.html#afbc4f22c4b88952aca0d3e1d22a19e25">LGraphics::LError::errors</a></div><div class="ttdeci">static std::vector&lt; std::string &gt; errors</div><div class="ttdoc">Коллекция ошибок.</div><div class="ttdef"><b>Definition:</b> LError.h:168</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
