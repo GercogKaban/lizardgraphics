@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
 
 #include "LApp.h"
-#include "LError.h"
 #include "LRectangleBuffer.h"
 #include "LMultiWRectangle.h"
+#include "LModel.h"
 
 #include "LResourceManager.h"
 
@@ -17,13 +17,10 @@ namespace LGraphics
 #endif
 
 #ifdef VULKAN
-    LApp::LApp(size_t objectPoolSize)
+    LApp::LApp(const LAppCreateInfo& info)
     {
-        objectCountLim = objectPoolSize;
-
-#ifndef VK_USE_PLATFORM_ANDROID_KHR
+        this->info = info;
         setupLG();
-#endif 
     }
 #endif
 
@@ -34,23 +31,15 @@ namespace LGraphics
 
     void LApp::loop()
     {
-        
-        //LTimer t([&]()
-        //{prevFps = fps; fps = 0; std::cout << prevFps << std::endl; }, std::chrono::milliseconds(1000));
-        //t.start();
-
         bool show_demo_window = true;
         bool show_another_window = false;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         while (!glfwWindowShouldClose(window_))
         {
-            // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+            refreshCamera();
             glfwPollEvents();
+
 
             // Resize swap chain?
             if (g_SwapChainRebuild)
@@ -83,7 +72,7 @@ namespace LGraphics
                 FrameRender(wd, draw_data);
                 FramePresent(wd);
             }
-            //beforeDrawingFunc();
+            beforeDrawingFunc();
 
 #if LG_MULTITHREAD
             openGlDrawing.lock();
@@ -174,6 +163,7 @@ namespace LGraphics
             afterDrawingFunc();
             textRenderer->displayText();*/
             //fps++;
+            afterDrawingFunc();
             glfwSwapBuffers(window_);
 
 #if LG_MULTITHREAD
@@ -188,16 +178,7 @@ namespace LGraphics
 
     glm::vec<2, size_t> LApp::getWindowSize() const
     {
-        return glm::vec<2, size_t>(width, height);
-    }
-
-    void println(const char* text)
-    {
-#ifdef VK_USE_PLATFORM_ANDROID_KHR
-        LOGI(tag_, text);
-#else
-        std::cout << text << std::endl;
-#endif
+        return glm::vec<2, size_t>(info.wndWidth, info.wndHeight);
     }
 
     void LApp::setMatrices(glm::mat4 view, glm::mat4 projection)
@@ -208,49 +189,9 @@ namespace LGraphics
 
     void LApp::refreshObjectMatrices()
     {
-        for (auto& obj : nonInterfaceObjects)
-            if (dynamic_cast<LWRectangle*>(obj))
-                dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
-    }
-
-    void LApp::setKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback)
-    {
-        keyCallback = callback;
-    }
-
-    void LApp::setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback)
-    {
-        mouseCallback = callback;
-    }
-
-    void LApp::setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)> callback)
-    {
-        scrollCallback = callback;
-    }
-
-    void LApp::deleteWidget(LWidget* w)
-    {
-        std::vector<LWidget*>& obj = nonInterfaceObjects;
-        for (size_t i = 0; i < obj.size(); ++i)
-            if (obj[i] == w)
-            {
-                if (w->innerWidgets)
-                for (size_t j = 0; j < w->innerWidgets->size(); ++j)
-                    deleteWidget(w->innerWidgets->operator[](j));
-                obj.erase(obj.begin() + i);
-                break;
-            }
-        delete w;
-    }
-
-    void LApp::removeWidget(LWidget * w)
-    {
-        std::vector<LWidget*>& obj = nonInterfaceObjects;
-        for (size_t i = 0; i < obj.size(); ++i)
-            if (obj.operator[](i) == w)
-            {
-                obj.erase(obj.begin() + i);
-            }
+        //for (auto& obj : nonInterfaceObjects)
+        //    if (dynamic_cast<LWRectangle*>(obj))
+        //        dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
     }
 
     LShaders::Shader * LApp::getStandartWorldObjShader() const
@@ -263,18 +204,29 @@ namespace LGraphics
         return pressedKeys[key];
     }
 
-    void LApp::switchScreenMode()
+    void LApp::setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func)
     {
-        if (!fullscreen)
-        {
-            glfwSetWindowMonitor(window_, glfwGetPrimaryMonitor(), 0, 0, width, height, 10000);
-            fullscreen = true;
-        }
-        else
-        {
-            glfwSetWindowMonitor(window_, NULL, 0, 0, width, height, 10000);
-            fullscreen = false;
-        }
+        userMouseButtonCallback = func;
+    }
+
+    void LApp::setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func)
+    {
+        userCursorCallback = func;
+    }
+
+    void LApp::setUserKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> func)
+    {
+        userKeyCallback = func;
+    }
+
+    void LApp::setUserCharacterCallback(std::function<void(GLFWwindow* window, unsigned int codepoint)> func)
+    {
+        userCharacterCallback = func;
+    }
+
+    void LApp::setUserScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)> func)
+    {
+        userScrollCallback = func;
     }
 
     void LApp::setLightPos(glm::vec3 lightPos)
@@ -308,23 +260,27 @@ namespace LGraphics
         refreshProjection();
     }
 
-    void LApp::addObject(LWidget* w)
-    {
-        nonInterfaceObjects.push_back(w);
-    }
-
     void LApp::refreshCamera()
     {
         //float t = sqrt(3);
-        view = glm::lookAt(viewPoint + viewRadius * viewAxonometricVector,
-            glm::vec3(viewPoint),
-            glm::vec3(0.0f, 0.0f, 1.0f));
+        if (info.projection == L_PERSPECTIVE)
+        {
+            view = glm::lookAt(
+                cameraPos,
+                cameraPos + cameraFront,
+                cameraUp);
+        }
+        else
+            view = glm::lookAt(
+                cameraPos + viewRadius * viewAxonometricVector,
+                cameraPos + cameraFront,
+                cameraUp);
     }
 
     void LApp::refreshProjection()
     {
         auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
-        if (perspectiveProjection)
+        if (info.projection == L_PERSPECTIVE)
             projection = glm::perspective(45.0f, aspect, 0.01f, 100.0f);
         else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 100.0f);
     }
@@ -337,7 +293,7 @@ namespace LGraphics
 
     void LApp::initLEngine()
     {
-        LError::init(this);
+        LError::initErrors(this);
         standartRectBuffer = new LRectangleBuffer(this);
 #ifdef OPENGL
         standartRectBuffer = new LRectangleBuffer();
@@ -356,7 +312,7 @@ namespace LGraphics
         lwRectPool.setCreationCallback([&]()
         {
             auto lwRect = new LWRectangle(this);
-            removeWidget(lwRect);
+            removeWidget(lwRect, rectangles);
             //getNonInterfaceObjects().pop_back();
             return lwRect;
         });
@@ -432,6 +388,25 @@ namespace LGraphics
  //                                             Window creation                                              //
  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        setWindowCallbacks();
+        glfwGetFramebufferSize(window_, &width, &height);
+
+        glewExperimental = GL_TRUE;
+        glewInit();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glfwSwapInterval(0);
+
+
+        int width_, height_;
+        glfwGetFramebufferSize(window_, &width_, &height_);
+        glViewport(0, 0, width_, height_);
+    }
+#endif
+
+    void LApp::setWindowCallbacks()
+    {
         glfwSetWindowUserPointer(window_, this);
 
         auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
@@ -464,21 +439,7 @@ namespace LGraphics
         glfwSetKeyCallback(window_, key);
         glfwSetCharCallback(window_, charCallback);
         glfwSetScrollCallback(window_, scrollCallback);
-        glfwGetFramebufferSize(window_, &width, &height);
-
-        glewExperimental = GL_TRUE;
-        glewInit();
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glfwSwapInterval(0);
-
-
-        int width_, height_;
-        glfwGetFramebufferSize(window_, &width_, &height_);
-        glViewport(0, 0, width_, height_);
     }
-#endif
 
 #ifdef VULKAN
     void LApp::initRenderer()
@@ -492,8 +453,28 @@ namespace LGraphics
             throw std::runtime_error("can't init glfw!");
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        window_ = glfwCreateWindow(1920, 1080, "Lizard Graphics", NULL, NULL);
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        if (!info.wndHeight)
+        {
+            info.wndWidth = mode->width;
+            info.wndHeight = mode->height;
+        }
 
+#ifdef NDEBUG
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+        window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", glfwGetPrimaryMonitor(), NULL);
+        fullscreen = true;
+#else
+        window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", nullptr, NULL);
+#endif
+
+
+        //glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        setWindowCallbacks();
         // Setup Vulkan
         if (!glfwVulkanSupported())
             throw std::runtime_error("GLFW: Vulkan Not Supported\n");
@@ -615,18 +596,27 @@ namespace LGraphics
         vkDestroySampler(g_Device, textureSampler, nullptr);
 
         auto resourseManager = LImage::resManager;
-        for (auto& text : resourseManager.textures)
+        
+        for (auto& it = resourseManager.textures.begin(); it != resourseManager.textures.end(); it++)
+        //for (auto& text : resourseManager.textures)
         {
-            vkDestroyImageView(g_Device, std::get<0>(text.second), nullptr);
-            vkDestroyImage(g_Device, std::get<1>(text.second), nullptr);
-            vkFreeMemory(g_Device, std::get<2>(text.second), nullptr);
+            vkDestroyImageView(g_Device, std::get<0>(*(it->second)), nullptr);
+            vkDestroyImage(g_Device, std::get<1>(*(it->second)), nullptr);
+            vkFreeMemory(g_Device, std::get<2>(*(it->second)), nullptr);
+
+            delete it->second;
         }
+
+
 
         //vkDestroyImageView(g_Device, textureImageView, nullptr);
         //vkDestroyImage(g_Device, textureImage, nullptr);
         //vkFreeMemory(g_Device, textureImageMemory, nullptr);
 
         vkDestroyDescriptorSetLayout(g_Device, descriptorSetLayout, nullptr);
+
+        for (auto& it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
+            delete it->second;
 
         delete standartRectBuffer;
 
@@ -646,9 +636,13 @@ namespace LGraphics
         //    deleteWidget(x);
         //for (auto& x : nonInterfaceObjects)
             //deleteWidget(x);
-        for (auto& w : nonInterfaceObjects)
+        for (auto& w : rectangles)
             delete w;
-        nonInterfaceObjects.clear();
+        rectangles.clear();
+
+        for (auto& m : models)
+            delete m;
+        models.clear();
         //delete standartRectBuffer;
 #ifdef OPENGL
         delete standartInterfaceshader;
@@ -660,29 +654,52 @@ namespace LGraphics
 
     void LApp::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
-        mouseCallback(window, button, action, mods);
+        userMouseButtonCallback(window, button, action, mods);
     }
 
     void LApp::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        float xoffset = xpos - mouseCoords.x;
+        float yoffset = ypos - mouseCoords.y;
+
+        const float sensitivity = 0.08f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        yaw += xoffset;
+        pitch += yoffset;
+
+        if (pitch > 89.0f)
+            pitch = 89.0f;
+        if (pitch < -89.0f)
+            pitch = -89.0f;
+
+        glm::vec3 front;
+        front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+        front.y = sin(glm::radians(pitch));
+        front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+        cameraFront = glm::normalize(front);
+
+        userCursorCallback(window, xpos, ypos);
         mouseCoords = { (float)xpos,(float)ypos };
     }
 
     void LApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         pressedKeys[key] = action != GLFW_RELEASE;
-        keyCallback(window, key, scancode, action, mods);
-        if (pressedKeys[GLFW_KEY_LEFT_ALT] && pressedKeys[GLFW_KEY_ENTER])
-            switchScreenMode();
+        userKeyCallback(window, key, scancode, action, mods);
+        /*if (pressedKeys[GLFW_KEY_LEFT_ALT] && pressedKeys[GLFW_KEY_ENTER])
+            switchScreenMode();*/
     }
 
     void LApp::character_callback(GLFWwindow* window, unsigned int codepoint)
     {
+        userCharacterCallback(window, codepoint);
     }
 
     void LApp::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
-        scrollCallback(window, xoffset, yoffset);
+        userScrollCallback(window, xoffset, yoffset);
     }
 
 
@@ -800,7 +817,7 @@ namespace LGraphics
 
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(g_PhysicalDevice, &deviceProperties);
-        std::cout << deviceProperties.deviceName << std::endl;
+        PRINTLN(deviceProperties.deviceName);
     }
 
     void LApp::createLogicalDevice()
@@ -821,7 +838,8 @@ namespace LGraphics
         }
 
         VkPhysicalDeviceFeatures deviceFeatures{};
-        deviceFeatures.samplerAnisotropy = VK_TRUE;
+        if (info.anisotropy)
+            deviceFeatures.samplerAnisotropy = VK_TRUE;
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -848,8 +866,6 @@ namespace LGraphics
 
         g_QueueFamily = indices.presentFamily.value();
         vkGetDeviceQueue(g_Device, g_QueueFamily, 0, &g_Queue);
-        //vkGetDeviceQueue(g_Device, indices.graphicsFamily.value(), 0, &graphicsQueue);
-        //vkGetDeviceQueue(g_Device, indices.presentFamily.value(), 0, &presentQueue);
     }
 
     void LApp::createSurface()
@@ -912,23 +928,6 @@ namespace LGraphics
         }
     }
 
-    void LApp::createCommandBuffers()
-    {
-        //commandBuffers.resize(swapChainFramebuffers.size());
-
-        //VkCommandBufferAllocateInfo allocInfo{};
-        //allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        //allocInfo.commandPool = commandPool;
-        //allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        //allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
-
-        //if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
-        //    throw std::runtime_error("failed to allocate command buffers!");
-        //}
-
-        //recordCommandBuffers();
-    }
-
     void LApp::createUniformBuffers()
     {
         uniformBuffers.resize(wd->ImageCount);
@@ -939,7 +938,7 @@ namespace LGraphics
 
         assert(dynamicAlignment > minUboAlignment && dynamicAlignment <= 256 && "error wrong alignment size");
 
-        size_t bufferSize = objectCountLim * dynamicAlignment;
+        size_t bufferSize = info.poolSize * dynamicAlignment;
         testStructV.model = (glm::mat4*)alignedAlloc(bufferSize, dynamicAlignment);
 
         for (size_t i = 0; i < wd->ImageCount; i++)
@@ -951,72 +950,38 @@ namespace LGraphics
     {
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(objectCountLim* wd->ImageCount);
-        //poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-        //poolSizes[1].descriptorCount = static_cast<uint32_t>(objectCountLim*wd->ImageCount);
+        poolSizes[0].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(objectCountLim*wd->ImageCount);
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize *wd->ImageCount);
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(objectCountLim* wd->ImageCount);
+        poolInfo.maxSets = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
 
         if (vkCreateDescriptorPool(g_Device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
 
-    /*void LApp::createTextureImage(const char * path, VkImage& image, VkDeviceMemory& mem)
-    {
-        int texWidth, texHeight, texChannels;
-        auto pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-        VkDeviceSize imageSize = texWidth * texHeight * 4;
-
-        if (!pixels) {
-            throw std::runtime_error("failed to load texture image!");
-        }
-
-        VkBuffer stagingBuffer;
-        VkDeviceMemory stagingBufferMemory;
-        createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-        void* data;
-        vkMapMemory(g_Device, stagingBufferMemory, 0, imageSize, 0, &data);
-        memcpy(data, pixels, static_cast<size_t>(imageSize));
-        vkUnmapMemory(g_Device, stagingBufferMemory);
-
-        stbi_image_free(pixels);
-
-        createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB,
-            VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-            image, mem);
-
-        transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        copyBufferToImage(stagingBuffer, image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-        transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-        vkDestroyBuffer(g_Device, stagingBuffer, nullptr);
-        vkFreeMemory(g_Device, stagingBufferMemory, nullptr);
-    }*/
-
     void LApp::createDescriptorSets()
     {
-        std::vector<VkDescriptorSetLayout> layouts(objectCountLim* wd->ImageCount, descriptorSetLayout);
+        std::vector<VkDescriptorSetLayout> layouts(info.poolSize * wd->ImageCount, descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(objectCountLim* wd->ImageCount);
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
         allocInfo.pSetLayouts = layouts.data();
 
-        descriptorSets.resize(wd->ImageCount * objectCountLim);
+        descriptorSets.resize(wd->ImageCount * info.poolSize);
         if (vkAllocateDescriptorSets(g_Device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
-     for (size_t i = 0; i < objectCountLim; ++i)
+
+     // Rectangles descriptor sets
+     for (size_t i = 0; i < info.poolSize; ++i)
         for (size_t j = 0; j < wd->ImageCount; j++)
         {
             VkDescriptorBufferInfo bufferInfo{};
@@ -1049,6 +1014,9 @@ namespace LGraphics
 
             vkUpdateDescriptorSets(g_Device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
+
+
+     // Model descriptor sets
     }
 
     void LApp::createDescriptorSetLayout()
@@ -1182,8 +1150,12 @@ namespace LGraphics
         samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerInfo.anisotropyEnable = VK_TRUE;
-        samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
+        samplerInfo.anisotropyEnable = info.anisotropy == L_TRUE;
+
+        while (info.anisotropy > properties.limits.maxSamplerAnisotropy)
+            info.anisotropy >>= 1;
+
+        samplerInfo.maxAnisotropy = info.anisotropy;
         samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
         samplerInfo.unnormalizedCoordinates = VK_FALSE;
         samplerInfo.compareEnable = VK_FALSE;
@@ -1394,7 +1366,7 @@ namespace LGraphics
     void LApp::mapUniformData()
     {
         for (size_t i = 0; i < wd->ImageCount; ++i)
-            vkMapMemory(g_Device, uniformBuffersMemory[i], 0, objectCountLim* dynamicAlignment, 0, &uniformsMem[i]);
+            vkMapMemory(g_Device, uniformBuffersMemory[i], 0, info.poolSize * dynamicAlignment, 0, &uniformsMem[i]);
     }
 
     void LApp::updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w)
@@ -1603,12 +1575,15 @@ namespace LGraphics
 
     VkPresentModeKHR LApp::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
     {
+        if (info.vsync == L_FALSE)
+            return VK_PRESENT_MODE_IMMEDIATE_KHR;
         for (const auto& availablePresentMode : availablePresentModes) {
             if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
                 return availablePresentMode;
             }
         }
-
+        
+        PRINTLN("vsync is not supported!");
         return VK_PRESENT_MODE_IMMEDIATE_KHR;
     }
 
@@ -1662,8 +1637,8 @@ namespace LGraphics
         pickPhysicalDevice();
         createLogicalDevice();
 
-        glfwGetFramebufferSize(window_, &width, &height);
-        SetupVulkanWindow(wd, surface, width, height);
+        glfwGetFramebufferSize(window_, (int*)(&info.wndWidth), (int*)(&info.wndHeight));
+        SetupVulkanWindow(wd, surface, info.wndWidth, info.wndHeight);
 
         createDescriptorSetLayout();
         createGraphicsPipeline();
@@ -1802,9 +1777,9 @@ namespace LGraphics
             vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
         }
 
-        if (nonInterfaceObjects.size())
+        if (rectangles.size())
         {
-            auto obj = nonInterfaceObjects[0];
+            auto obj = rectangles[0];
             auto shader = obj->getShader();
 
             LApp::BaseShaderConstants data
@@ -1824,8 +1799,27 @@ namespace LGraphics
             vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(), 
                 VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &data);
 
-            for (size_t i = 0; i < nonInterfaceObjects.size(); ++i)
-                nonInterfaceObjects[i]->draw(fd->CommandBuffer, wd->FrameIndex, i);
+            for (size_t i = 0; i < rectangles.size(); ++i)
+                rectangles[i]->draw(fd->CommandBuffer, wd->FrameIndex, i);
+        }
+
+        if (models.size())
+        {
+            auto obj = models[0];
+            auto shader = obj->getShader();
+
+            LApp::BaseShaderConstants data
+            {
+                getProjectionMatrix(),
+                getViewMatrix()
+            };
+
+            vkCmdBindPipeline(fd->CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
+            vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &data);
+
+            for (size_t i = 0; i < models.size(); ++i)
+                models[i]->draw(fd->CommandBuffer, wd->FrameIndex, i + rectangles.size());
         }
 
 
@@ -1878,7 +1872,7 @@ namespace LGraphics
 
     void LApp::initTextures()
     {
-        initTextures(nonInterfaceObjects);
+        //initTextures(rectangles);
     }
 
     std::array<VkVertexInputAttributeDescription, 2> LApp::Vertex::getAttributeDescriptions()
@@ -1896,7 +1890,6 @@ namespace LGraphics
         attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
         return attributeDescriptions;
     }
-
 }
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR

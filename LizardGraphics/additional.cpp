@@ -67,7 +67,7 @@ namespace LGraphics
     {
         size_t i = 2;
         while (size > i)
-            i = i << 2;
+            i <<= 2;
         return i;
     }
 }

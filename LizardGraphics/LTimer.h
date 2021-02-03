@@ -10,7 +10,7 @@ class LTimer
 {
 public:
 
-    LTimer(std::function<void()> func, std::chrono::milliseconds interval = std::chrono::milliseconds(1000), bool start = false);
+    LTimer(std::function<void()> func, size_t intervalMilliSec = 1000, bool start = false);
     ~LTimer();
 
     void start();

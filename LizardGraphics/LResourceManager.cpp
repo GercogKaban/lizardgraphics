@@ -1,9 +1,12 @@
 #define STB_IMAGE_IMPLEMENTATION
+#define TINYOBJLOADER_IMPLEMENTATION
 
 #include "pch.h"
 
 #include "LApp.h"
 #include "LResourceManager.h"
+#include "LModel.h"
+#include "LModelBuffer.h"
 #include "LError.h"
 #include "textures.h"
 
@@ -67,13 +70,14 @@ namespace LGraphics
 
 #ifdef VULKAN
 
-    std::map<std::string, std::tuple<VkImageView, VkImage, VkDeviceMemory>> LResourceManager::textures;
+    std::unordered_map<std::string, std::tuple<VkImageView, VkImage, VkDeviceMemory>*> LResourceManager::textures;
+    std::unordered_map<std::string, LResourceManager::ModelData*> LResourceManager::models;
     LApp* LResourceManager::app;
 
     VkImageView LResourceManager::loadTexture(const char* path, int desiredChannel)
     {
         if (textures.find(path) != textures.end())
-            return std::get<0>(textures[path]);
+            return std::get<0>(*textures[path]);
 
         int texWidth, texHeight, texChannels;
         stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, desiredChannel);
@@ -82,17 +86,99 @@ namespace LGraphics
             throw std::runtime_error("failed to load texture image!");
         }
 
-        return createImageView(pixels, texWidth, texHeight, texChannels, path);
+        return createImageView(pixels, texWidth, texHeight, desiredChannel, path);
     }
 
     VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
     {
         int height, width, imageChannels;
         if (textures.find(name) != textures.end())
-            return std::get<0>(textures[name]);
+            return std::get<0>(*textures[name]);
         stbi_uc* pixels = stbi_load_from_memory(bytes, size, &height, &width, &imageChannels, desiredChannel);
 
         return createImageView(pixels, width, height, imageChannels, name);
+    }
+
+    void LResourceManager::loadModel(LModel* model, const char* modelPath, bool debugInfo)
+    {
+        if (!models[modelPath])
+        {
+            tinyobj::attrib_t attrib;
+            std::vector<tinyobj::shape_t> shapes;
+            std::vector<tinyobj::material_t> materials;
+            std::string warn, err;
+
+            std::vector<std::vector<uint32_t>> vertIndices;
+            std::vector<float> vertices;
+
+            if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath))
+                throw std::runtime_error(warn + err);
+
+            if (debugInfo)
+            {
+                PRINTLN("\nmodel path = ", modelPath, '\n');
+                PRINTLN("model vertices count = ", attrib.vertices.size(), '\n');
+            }
+
+            model->meshesCount = shapes.size();
+            auto meshesCount = model->meshesCount;
+            vertIndices.resize(meshesCount);
+
+            for (size_t i = 0; i < meshesCount; ++i)
+            {
+                if (debugInfo)
+                {
+                    PRINTLN("mesh #", i, " - ", shapes[i].name.data());
+                    PRINTLN("    indices count = ", shapes[i].mesh.indices.size(), '\n');
+                }
+
+                for (const auto& index : shapes[i].mesh.indices)
+                {
+                    // vertex data
+                    vertices.push_back(attrib.vertices[3 * index.vertex_index]);
+                    vertices.push_back(attrib.vertices[3 * index.vertex_index + 1]);
+                    vertices.push_back(attrib.vertices[3 * index.vertex_index + 2]);
+
+                    // textures data
+                    if (index.texcoord_index != -1)
+                    {
+                        vertices.push_back(attrib.texcoords[2* index.texcoord_index]);
+                        vertices.push_back(1.0f - attrib.texcoords[2* index.texcoord_index + 1]);
+                    }
+
+                    else
+                    {
+                        vertices.push_back(-1);
+                        vertices.push_back(-1);
+                    }
+
+                    // normals data
+                    //...
+
+                    vertIndices[i].push_back(vertIndices[i].size());
+                }
+            }
+
+            auto buffer = new LModelBuffer(app, vertices, vertIndices);
+            auto modelData = new ModelData
+            {   buffer,
+                new VkImageView[2],
+            };
+
+            model->meshesToDraw = new bool[meshesCount];
+            model->buffer = buffer;
+
+            models.insert(std::make_pair(std::string(modelPath), modelData));
+            models[modelPath] = modelData;
+            std::fill(model->meshesToDraw, model->meshesToDraw + meshesCount, true);
+        }
+
+        else
+        {
+            auto model_ = models[modelPath];
+            model->buffer = model_->buffer;
+            model->textures = model_->textures;
+        }
     }
 
     VkImageView LResourceManager::createImageView(unsigned char* pixels, int texWidth,
@@ -128,7 +214,8 @@ namespace LGraphics
 
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, view);
 
-        textures.insert(std::make_pair(path, std::make_tuple(view, textureImage, textureImageMemory)));
+        textures.insert(std::make_pair(path, 
+            new std::tuple<VkImageView, VkImage, VkDeviceMemory>(view, textureImage, textureImageMemory)));
         return view;
     }
 

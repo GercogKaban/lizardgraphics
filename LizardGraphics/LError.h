@@ -6,9 +6,10 @@
 
 #include "LObject.h"
 
-#define LWRITE(...) LError::writeError(__VA_ARGS__)
-#define LPRINT(...) LError::printErrors()
-#define LDISPLAY() LError::displayErrors()
+//#define LWRITE(...) LError::writeError(__VA_ARGS__)
+#define PRINT(...) LError::printMsg(__VA_ARGS__)
+#define PRINTLN(...) LError::printMsgLn(__VA_ARGS__)
+//#define LDISPLAY() LError::displayErrors()
 
 namespace LGraphics
 {
@@ -24,11 +25,41 @@ namespace LGraphics
         /*!
         @brief Инициализирует класс LError.
         */
-        static void init(LApp* app)
+        static void initErrors(LApp* app)
         {
             app_ = app;
             errors.push_back("");
         }
+
+        /*!
+        @brief Освобождает ресурсы.
+        */
+        static void releaseResources()
+        {
+            errors.clear();
+            lastErrorNum = 0;
+        }
+
+        template<typename T>
+        static void print(T text)
+        {
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+            LOGI(tag_, text);
+#else
+            std::cout << text;
+#endif
+        }
+
+        template<typename T>
+        static void println(T text)
+        {
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+            LOGI(tag_, text);
+#else
+            std::cout << text << std::endl;
+#endif
+        }
+
 
         /*!
         @brief Выводит в консоль ошибку.
@@ -36,7 +67,7 @@ namespace LGraphics
         static void printToConsole(const std::string& error)
         {
             lastErrorNum++;
-            std::cout << error.data() << std::endl;
+            print(error.data());
         }
 
         /*!
@@ -67,11 +98,57 @@ namespace LGraphics
         @param args - переменное кол-во строк (const char* или std::string)
         */
         template<typename T, typename... Args>
+        static void printMsg(T t, Args... args)
+        {
+            printMsg(t);
+            printMsg(args...);
+        }
+
+        /*!
+@brief Записывает ошибку в массив ошибок.
+@param t - строка (const char* или std::string)
+*/
+        template <typename T>
+        static void printMsg(T t)
+        {
+            print(t);
+        }
+
+
+        /*!
+@brief Записывает ошибку в массив ошибок.
+@param t - строка (const char* или std::string)
+@param args - переменное кол-во строк (const char* или std::string)
+*/
+        template<typename T, typename... Args>
+        static void printMsgLn(T t, Args... args)
+        {
+            printMsg(t);
+            printMsgLn(args...);
+        }
+
+        /*!
+@brief Записывает ошибку в массив ошибок.
+@param t - строка (const char* или std::string)
+*/
+        template <typename T>
+        static void printMsgLn(T t)
+        {
+            println(t);
+        }
+
+        /*!
+        @brief Записывает ошибку в массив ошибок.
+        @param t - строка (const char* или std::string)
+        @param args - переменное кол-во строк (const char* или std::string)
+        */
+        template<typename T, typename... Args>
         static void writeError(T t, Args... args)
         {
             errors.back() += t;
             writeError(args...);
         }
+
 
         /*!
         @brief Выводит в консоль все не выведенные ошибки.
@@ -86,17 +163,7 @@ namespace LGraphics
             std::for_each(errors.begin() + lastErrorNum, errors.end() - 1, printToDisplay);
         }
 
-        /*!
-        @brief Освобождает ресурсы.
-        */
-        static void releaseResources()
-        {
-            errors.clear();
-            lastErrorNum = 0;
-        }
-
-    protected:
-
+protected:
         static LApp* app_;
         static std::vector<std::string> errors; ///< Коллекция ошибок.
         static size_t lastErrorNum;             ///< Индекс последней выведенной ошибки.

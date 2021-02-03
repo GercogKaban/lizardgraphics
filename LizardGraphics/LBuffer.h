@@ -32,7 +32,7 @@ namespace LGraphics
         /*!
         @brief Возвращает размер массива вершин.
         */
-        size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount) * sizeof(decltype(*vertices)); }
+        virtual size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount) * sizeof(decltype(*vertices)); }
 
         ///*!
         //@brief Возвращает размер массива текстурных координат.
@@ -42,7 +42,7 @@ namespace LGraphics
         /*!
         @brief Возвращает размер массива индексов.
         */
-        size_t getIndSize() const { return indicesCount * sizeof(decltype(*ebo)); }
+        virtual size_t getIndSize() const { return indicesCount * sizeof(decltype(*ebo)); }
 
         /*!
         @brief Возвращает количество индексов.

@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "LTimer.h"
 
-LTimer::LTimer(std::function<void()> func, std::chrono::milliseconds interval,bool start_)
+LTimer::LTimer(std::function<void()> func, size_t interval,bool start_)
 {
     this->func = func;
-    this->interval = interval;
+    this->interval = std::chrono::milliseconds(interval);
     if (start_) start();
 }
 

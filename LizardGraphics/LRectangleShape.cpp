@@ -60,7 +60,6 @@ namespace LGraphics
 #ifdef VULKAN
         shader = app->baseShader;
 #endif
-        app->addObject(this);
     }
 
     bool LRectangleShape::mouseOnIt()

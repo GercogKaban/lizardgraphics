@@ -26,8 +26,6 @@ void handle_cmd(android_app* app, int32_t cmd);
 
 #endif
 
-static void println(const char* text);
-
 #include "ObjectPool.h"
 
 #ifdef OPENGL
@@ -44,6 +42,7 @@ static void println(const char* text);
 #include "imgui_impl_vulkan.h"
 
 #include "LObject.h"
+#include "LError.h"
 
 namespace LShaders
 {
@@ -62,7 +61,28 @@ namespace LGraphics
     class LShape;
     class LRectangleShape;
     class LBuffer;
+    class LModelBuffer;
     class LWidget;
+    class LModel;
+
+    enum LStates
+    {
+        L_FALSE,
+        L_TRUE,
+        L_PERSPECTIVE,
+        L_ORTHOGRAPHIC,
+    };
+
+    struct LAppCreateInfo
+    {
+        size_t wndWidth = 0, wndHeight = 0;
+        size_t poolSize = 100;
+        //size_t modelPoolSize = 10;
+        size_t sleepThread = 0;
+        uint32_t vsync = L_FALSE;
+        uint32_t anisotropy = 16;
+        uint32_t projection = L_ORTHOGRAPHIC;
+    };
 
     /*!
     @brief Класс приложения Lizard Graphics
@@ -78,8 +98,10 @@ namespace LGraphics
         friend LWRectangle;
         friend LShaders::Shader;
         friend LBuffer;
+        friend LModelBuffer;
         friend LResourceManager;
         friend LWidget;
+        friend LModel;
 
     public:
         
@@ -87,7 +109,7 @@ namespace LGraphics
         LApp();
 #endif
 #ifdef VULKAN
-        LApp(size_t objectPoolSize);
+        LApp(const LAppCreateInfo& info);
 #endif
         ~LApp();
 
@@ -97,7 +119,7 @@ namespace LGraphics
         Открывает окно, при этом запуская бесконечный цикл, в котором
         рисуются все объекты сцены. Выход из цикла осуществляется при закрытии окна.
         */
-        void loop();
+        virtual void loop();
 
         /*!
         @brief Возвращает размеры окна (в пикселях).
@@ -111,21 +133,40 @@ namespace LGraphics
         */
         GLFWwindow* getWindowHandler() { return window_; }
 
-        void lockFps(size_t fps_) { fpsLock = fps_; }
+        //void lockFps(size_t fps_) { fpsLock = fps_; }
 
         //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
 
-        void deleteWidget(LWidget* w);
-        void removeWidget(LWidget* w);
+        template <typename C>
+        LWidget* removeWidget(LWidget* w, C& collection)
+        {
+            for (size_t i = 0; i < collection.size(); ++i)
+                if (collection[i] == w)
+                {
+                    collection.erase(collection.begin() + i);
+                    break;
+                }
+            return w;
+        }
 
+        template <typename C>
+        void deleteWidget(LWidget* w, C& collection)
+        {
+            delete removeWidget(w, collection);
+        }
+
+        template <typename C>
+        void addObject(LWidget* w, std::vector<C*>& collection)
+        {
+            collection.push_back((C*)w);
+        }
+        
         void refreshObjectMatrices();
 
-        void setKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback);
-        void setMouseCallback(std::function<void(GLFWwindow* w, int button, int action, int mods)> callback);
-        void setScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>callback);
+        std::vector<LWRectangle*>& getRectangles() { return rectangles; }
+        std::vector<LModel*>& getModels() { return models; }
 
-        std::vector<LWidget*>& getNonInterfaceObjects() { return nonInterfaceObjects; }
         LShaders::Shader* getStandartWorldObjShader() const;
 
         bool isPressed(int key);
@@ -138,15 +179,20 @@ namespace LGraphics
         void setSleepTime(size_t milliseconds) { sleepTime = milliseconds;}
         size_t getSleepTime() const { return sleepTime; }
 
-        void switchScreenMode();
+
+        glm::vec3 viewAxonometricVector = glm::vec3(1 / sqrt(3));
 
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
-        void setViewPoint(glm::vec3 view) { viewPoint = view; /*refreshCamera();*/ };
+        void setCameraPos(glm::vec3 pos) { cameraPos = pos; /*refreshCamera();*/ }
+        void setCameraFront(glm::vec3 cameraFront) { this->cameraFront = cameraFront; }
+        void setCameraUp(glm::vec3 cameraUp) { this->cameraUp = cameraUp; }
         void setViewRadius(float radius) { viewRadius = radius; /*refreshCamera(); refreshProjection();*/ }
 
-        glm::vec3 getViewPoint() const { return viewPoint; }
+        glm::vec3 getCameraFront() const { return cameraFront; }
+        glm::vec3 getCameraPos() const { return cameraPos; }
+        glm::vec3 getCameraUp() const { return cameraUp; }
         float getViewRadius() const { return viewRadius; }
 
         LShaders::Shader* getLightningShader() { return experimentalLightShader; }
@@ -163,22 +209,28 @@ namespace LGraphics
 
         ObjectPool<LWRectangle*> lwRectPool;
 
-        glm::vec3 viewAxonometricVector = glm::vec3(1/sqrt(3));
-        bool perspectiveProjection = false;
-
         std::vector<LNonWidget*> customObjects;
         glm::vec3 lightPos;
 
-        size_t getObjectsLimit() const { return objectCountLim; }
-
+        size_t getPoolSize() const { return info.poolSize; }
+            
         void setImgui(std::function<void()> func) { imgui = func; }
+
+
+        void setUserMouseButtonCallback (std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
+        void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
+        void setUserKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> func);
+        void setUserCharacterCallback(std::function<void(GLFWwindow* window, unsigned int codepoint)> func);
+        void setUserScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>func);
 
     protected:
 
-        size_t objectCountLim;
+        LAppCreateInfo info;
 
         std::function<void()> imgui = []() {};
         glm::vec2 mouseCoords = glm::vec2(0.0f);
+        float yaw = -90.0f;
+        float pitch = 0.0f;
 
         bool lightIsInited_ = false;
         glm::mat4 lightSpaceMatrix;
@@ -188,7 +240,6 @@ namespace LGraphics
 
         void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();
-        void addObject(LWidget* w);
 
         void refreshCamera();
         void refreshProjection();
@@ -196,6 +247,7 @@ namespace LGraphics
         void setupLG();
         void initLEngine();
         void initRenderer();
+        void setWindowCallbacks();
 
         void initTextures();
 
@@ -209,6 +261,16 @@ namespace LGraphics
         void character_callback(GLFWwindow* window, unsigned int codepoint);
         void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+        std::function<void(GLFWwindow* window, int button, int action, int mods)> userMouseButtonCallback = 
+            [](GLFWwindow* window, int button, int action, int mods){};
+        std::function<void(GLFWwindow* window, double xpos, double ypos)> userCursorCallback =
+            [](GLFWwindow* window, double xpos, double ypos) {};
+        std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> userKeyCallback = 
+            [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
+        std::function<void(GLFWwindow* window, unsigned int codepoint)> userCharacterCallback = 
+            [](GLFWwindow* window, unsigned int codepoint) {};
+        std::function<void(GLFWwindow* window, double xoffset, double yoffset)> 
+            userScrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
 
 #ifdef VULKAN
 
@@ -218,6 +280,8 @@ namespace LGraphics
 
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
+
+        //LResourceManager* manager;
 
         LShaders::Shader* baseShader;
 
@@ -262,7 +326,7 @@ namespace LGraphics
 
         void createFramebuffers();
         void createCommandPool();
-        void createCommandBuffers();
+        //void createCommandBuffers();
         void createUniformBuffers();
         void createDescriptorPool();
 
@@ -414,31 +478,33 @@ namespace LGraphics
 
         GLFWwindow* window_;
 
-        glm::vec3 viewPoint = glm::vec3(14.0f, 14.0f, 0.0f);
+        //glm::vec3 viewPoint = glm::vec3(14.0f, 14.0f, 0.0f);
+        glm::mat4 view, projection;
+
+        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
         float viewRadius = 10.0f;
-        std::vector<LWidget*> nonInterfaceObjects;
+
+        std::vector<LWRectangle*> rectangles;
+        std::vector<LModel*> models;
 
         int width, height;
 
-        size_t fps = 0, prevFps = 0, fpsLock = SIZE_MAX, sleepTime = 0;
+        size_t sleepTime = 0;
 
         LBuffer* standartRectBuffer;
 
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader,
             *shadowMap,*defaultShader, *multi_shadowMap, *multi_defaultShader;
 
-        glm::mat4 view, projection;
 
         std::mutex drawingMutex;
-        std::map<int, bool> pressedKeys;
+        std::unordered_map<uint32_t, bool> pressedKeys;
 
         bool fullscreen = false;
 
         void* uniformsMem[2] = { nullptr,nullptr };
-
-        std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> keyCallback = [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
-        std::function<void(GLFWwindow* w, int button, int action, int mods)> mouseCallback = [](GLFWwindow* w, int button, int action, int mods) {};
-        std::function<void(GLFWwindow* window, double xoffset, double yoffset)> scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
 
         std::function<void()> beforeDrawingFunc = []() {};
         std::function<void()> afterDrawingFunc = []() {};

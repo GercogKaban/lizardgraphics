@@ -10,8 +10,8 @@ LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
     :LRectangleShape(app, path, false)
 {
     shader = app->getStandartWorldObjShader();
-    //view = app->getViewMatrix();
     projection = app->getProjectionMatrix();
+    app->addObject(this, app->getRectangles());
 }
 
 glm::vec4 LGraphics::LWRectangle::getScreenCoords() const

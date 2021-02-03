@@ -12,7 +12,6 @@ namespace LGraphics
     {
     public:
 
-        glm::mat4 projection_ = glm::mat4(1.0f);
         const char* getObjectType() override { return "LRectanlgeShape"; }
 
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.

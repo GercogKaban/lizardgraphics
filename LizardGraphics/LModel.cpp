@@ -1,24 +1,72 @@
 #include "LModel.h"
 #include "LModelBuffer.h"
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "include/tinyobjloader/tiny_obj_loader.h"
+#include "LResourceManager.h"
 
-LGraphics::LModel::LModel(LApp* app, const char * path)
-    :LRectangleShape(app)
+LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath, 
+    const char* normalsPath, bool debugInfo)
+    :LShape(app,nullptr), modelPath(path)
 {
-    loadModel(path);
+    // Base texture and normal map 
+    //textures.resize(2);
+
+    loadModel(path, debugInfo);
+
+    if (texturePath)
+        loadTexture(texturePath, BASE_TEXTURE);
+    if (normalsPath)
+        loadTexture(normalsPath, NORMALS);
+
+    app->addObject(this, app->getModels());
+#ifdef VULKAN
+    shader = app->baseShader;
+#endif
 }
 
-void LGraphics::LModel::loadModel(const char * path)
+LGraphics::LModel::~LModel()
 {
-    //tinyobj::attrib_t attrib;
-    //std::vector<tinyobj::shape_t> shapes;
-    //std::vector<tinyobj::material_t> materials;
-    //std::string warn, err;
+    delete buffer;
+    if (meshesToDraw)
+        delete[] meshesToDraw;
+}
 
-    //if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path)) {
-    //    throw std::runtime_error(warn + err);
-    //}
+void LGraphics::LModel::loadTexture(const char* path, TextureType type)
+{
+    auto texture = LResourceManager::loadTexture(path);
+    auto m = LResourceManager::models[modelPath]->textures[type] = texture;
+    this->texture = texture;
+    //textures = LResourceManager::models[modelPath]->textures;
+}
 
-    //buffer = new LModelBuffer()
+void LGraphics::LModel::setMeshDrawing(size_t num, bool draw)
+{
+    meshesToDraw[num] = draw;
+}
+
+void LGraphics::LModel::loadModel(const char* modelPath, bool debugInfo)
+{
+    LResourceManager::loadModel(this, modelPath, debugInfo);
+}
+
+void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex, size_t objNum)
+{
+    VkBuffer vertexBuffers[] = { buffer->getVertBuffer() };
+    VkDeviceSize offsets[] = { 0 };
+
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    app->updateUniformBuffer(frameIndex, objNum, this);
+
+    const uint32_t dynamicOffsets[] =
+    { objNum * static_cast<uint32_t>(app->dynamicAlignment),
+    };
+
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+        getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[objNum * 2 + frameIndex], 1, dynamicOffsets);
+
+    for (size_t mesh = 0; mesh < ((LModelBuffer*)buffer)->getIndBuffer().size(); ++mesh)
+    {
+        if (!meshesToDraw[mesh])
+            continue;
+        vkCmdBindIndexBuffer(commandBuffer, ((LModelBuffer*)buffer)->getIndBuffer()[mesh], 0, VK_INDEX_TYPE_UINT32);
+        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(((LModelBuffer*)buffer)->indices[mesh].size()), 1, 0, 0, 0);
+    }
 }

@@ -118,6 +118,8 @@ namespace LGraphics
         glm::vec3 move_ = glm::vec3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
         glm::vec3 color_ = glm::vec3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
 
+//      glm::mat4 projection_ = glm::mat4(1.0f);
+
         //glm::mat4 rotate_ = glm::mat4(1.0f);
 
         float transparency_ = 1.0f;                ///< Прозрачность виджета.

@@ -69,8 +69,8 @@ namespace LGraphics
         vkDestroyBuffer(app->g_Device, indexBuffer, nullptr);
         vkFreeMemory(app->g_Device, indexBufferMemory, nullptr);
 #endif
-        delete[] vertices;
-        delete[] ebo;
+        if (vertices) delete[] vertices;
+        if (ebo) delete[] ebo;
         //delete[] textures;
     }
 }
