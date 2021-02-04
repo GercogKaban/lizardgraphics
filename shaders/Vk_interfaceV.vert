@@ -21,8 +21,8 @@ layout(location = 1) out vec4 Color;
 
 void main()
 {
-	gl_Position = buf_.model* vec4(position,1.0);
-	//gl_Position = cnst.proj* cnst.view* buf_.model* vec4(position,1.0);
+	//gl_Position = buf_.model* vec4(position,1.0);
+	gl_Position = cnst.proj* cnst.view* buf_.model* vec4(position,1.0);
 	TexCoord = texCoord;
-	Color = buf_.color;
+	Color = vec4(1.0,1.0,1.0,1.0);
 }
