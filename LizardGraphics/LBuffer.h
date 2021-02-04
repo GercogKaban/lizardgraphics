@@ -103,9 +103,11 @@ namespace LGraphics
         float* textures = nullptr; ///< Массив текстурных координат.
 
 #ifdef VULKAN
-          VkBuffer vertexBuffer, indexBuffer;
-          VkDeviceMemory vertexBufferMemory, indexBufferMemory;
-          LApp* app;
+        VkBuffer vertexBuffer = VK_NULL_HANDLE;
+        VkBuffer indexBuffer = VK_NULL_HANDLE;
+        VkDeviceMemory vertexBufferMemory = VK_NULL_HANDLE;
+        VkDeviceMemory indexBufferMemory = VK_NULL_HANDLE;
+        LApp* app;
 #endif // VULKAN
 
 //#ifdef OPENGL

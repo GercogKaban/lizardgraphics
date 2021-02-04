@@ -23,6 +23,7 @@ namespace LGraphics
 
         LModelBuffer(LApp* app, std::vector<float> vertexBuf, 
             std::vector<std::vector<uint32_t>>);
+        ~LModelBuffer();
 
         std::vector<VkBuffer>& getIndBuffer() { return indexBuffer; }
 

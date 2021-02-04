@@ -190,6 +190,9 @@ namespace LGraphics
         void setCameraUp(glm::vec3 cameraUp) { this->cameraUp = cameraUp; }
         void setViewRadius(float radius) { viewRadius = radius; /*refreshCamera(); refreshProjection();*/ }
 
+        void setCursorEnabling(bool cursorEnable);
+        bool isCursorEnabled() const { return cursorEnabled; }
+
         glm::vec3 getCameraFront() const { return cameraFront; }
         glm::vec3 getCameraPos() const { return cameraPos; }
         glm::vec3 getCameraUp() const { return cameraUp; }
@@ -216,7 +219,6 @@ namespace LGraphics
             
         void setImgui(std::function<void()> func) { imgui = func; }
 
-
         void setUserMouseButtonCallback (std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
         void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
         void setUserKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> func);
@@ -231,6 +233,8 @@ namespace LGraphics
         glm::vec2 mouseCoords = glm::vec2(0.0f);
         float yaw = -90.0f;
         float pitch = 0.0f;
+
+        bool cursorEnabled = true;
 
         bool lightIsInited_ = false;
         glm::mat4 lightSpaceMatrix;
@@ -296,6 +300,14 @@ namespace LGraphics
         VkCommandPool commandPool;
         VkImageView dummyTexture;
 
+        VkImage depthImage;
+        VkDeviceMemory depthImageMemory;
+        VkImageView depthImageView;
+        VkFormat depthFormat;
+
+        VkRenderPass renderPass;
+        std::vector<VkFramebuffer> swapChainFramebuffers;
+
         std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
         };
@@ -329,13 +341,21 @@ namespace LGraphics
         //void createCommandBuffers();
         void createUniformBuffers();
         void createDescriptorPool();
+        void createImageViews();
+
+        void createRenderPass();
+
+        void createDepthResources();
+        VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+        VkFormat findDepthFormat();
+        bool hasStencilComponent(VkFormat format);
 
         void createImage(uint32_t width, uint32_t height, VkFormat format,
             VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
             VkImage& image, VkDeviceMemory& imageMemory);
 
         void createTextureSampler();
-        void createImageView(VkImage image, VkFormat format, VkImageView& view);
+        void createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view);
 
         VkCommandBuffer beginSingleTimeCommands();
 
@@ -406,6 +426,9 @@ namespace LGraphics
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
         VkSampler textureSampler;
+
+        std::vector <VkImage> swapChainImages;
+        std::vector<VkImageView> swapChainImageViews;
 
         size_t currentFrame = 0;
         bool framebufferResized = false;

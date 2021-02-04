@@ -80,13 +80,17 @@ namespace LGraphics
             return std::get<0>(*textures[path]);
 
         int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, desiredChannel);
-
+        stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        if (texChannels == STBI_rgb)
+        {
+            PRINTLN("\n!!!!!!!!!WARNING!!!!!!!!! ", path, " in RGB format, this may cause drawing errors!");
+            PRINTLN("Please, use textures in RGBA format!");
+        }
         if (!pixels) {
             throw std::runtime_error("failed to load texture image!");
         }
 
-        return createImageView(pixels, texWidth, texHeight, desiredChannel, path);
+        return createImageView(pixels, texWidth, texHeight, STBI_rgb_alpha, path);
     }
 
     VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
@@ -212,7 +216,7 @@ namespace LGraphics
         vkDestroyBuffer(app->g_Device, stagingBuffer, nullptr);
         vkFreeMemory(app->g_Device, stagingBufferMemory, nullptr);
 
-        app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, view);
+        app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view);
 
         textures.insert(std::make_pair(path, 
             new std::tuple<VkImageView, VkImage, VkDeviceMemory>(view, textureImage, textureImageMemory)));

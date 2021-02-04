@@ -54,10 +54,13 @@ int main()
     m1->rotateX(90.0f);
     m1->rotateZ(180.0f);
     m1->move(0.0f, 10.0f, 0.0f);
-    app.setBeforeDrawingFunc ([&]() 
-        {
+    //app.setBeforeDrawingFunc ([&]() 
+    //    {
+    //    });
 
-            const float cameraSpeed = 0.05f;
+    app.setAfterDrawingFunc([&]()
+        {
+            const float cameraSpeed = 0.03f;
 
             glm::vec3 cameraPos = app.getCameraPos();
             const auto cameraFront = app.getCameraFront();
@@ -73,6 +76,12 @@ int main()
                 cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
             app.setCameraPos(cameraPos);
+        });
+
+    app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)
+        {
+            if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
+                app.setCursorEnabling(!app.isCursorEnabled());
         });
     //m1->rotateZ(180);
     //m1->rotateY(45.0f);

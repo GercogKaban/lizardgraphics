@@ -60,3 +60,19 @@ LGraphics::LModelBuffer::LModelBuffer(LApp* app, std::vector<float> vertexBuf,
     vertices.clear();
     indices.clear();
 }
+
+LGraphics::LModelBuffer::~LModelBuffer()
+{
+#ifdef VULKAN
+    vkDestroyBuffer(app->g_Device, vertexBuffer, nullptr);
+    vkFreeMemory(app->g_Device, vertexBufferMemory, nullptr);
+    vertexBuffer = VK_NULL_HANDLE;
+
+    for (size_t i = 0; i < indexBuffer.size(); ++i)
+    {
+        vkDestroyBuffer(app->g_Device, indexBuffer[i], nullptr);
+        indexBuffer[i] = VK_NULL_HANDLE;
+        vkFreeMemory(app->g_Device, indexBufferMemory[i] , nullptr);
+    }
+#endif
+}

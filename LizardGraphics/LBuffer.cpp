@@ -63,11 +63,17 @@ namespace LGraphics
         glDeleteVertexArrays(1, &VAO);
 #endif OPENGL
 #ifdef VULKAN
-        vkDestroyBuffer(app->g_Device, vertexBuffer, nullptr);
-        vkFreeMemory(app->g_Device, vertexBufferMemory, nullptr);
+        if (vertexBuffer)
+        {
+            vkDestroyBuffer(app->g_Device, vertexBuffer, nullptr);
+            vkFreeMemory(app->g_Device, vertexBufferMemory, nullptr);
+        }
 
-        vkDestroyBuffer(app->g_Device, indexBuffer, nullptr);
-        vkFreeMemory(app->g_Device, indexBufferMemory, nullptr);
+        if (indexBuffer)
+        {
+            vkDestroyBuffer(app->g_Device, indexBuffer, nullptr);
+            vkFreeMemory(app->g_Device, indexBufferMemory, nullptr);
+        }
 #endif
         if (vertices) delete[] vertices;
         if (ebo) delete[] ebo;

@@ -24,7 +24,8 @@ LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath,
 
 LGraphics::LModel::~LModel()
 {
-    delete buffer;
+    if (buffer)
+        delete buffer;
     if (meshesToDraw)
         delete[] meshesToDraw;
 }
