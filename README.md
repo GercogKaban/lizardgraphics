@@ -1,5 +1,6 @@
 ﻿# lizardgraphics
 C++ Graphic library written on OpenGL and Vulkan API.
+As GUI Lizard Graphics offering Dear ImGui lib.
 
 Reasons to use:
 
@@ -41,9 +42,12 @@ make
 
 # TODO
 
-1. Model loader.
-2. Supporting Android platform.
-3. Runtime API changing.
+1. Antialiasing
+2. Shadows.
+3. Reflections.
+4. Omtimization.
+5. Supporting Android platform.
+6. Runtime API changing.
 
 # Documentation
 Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
