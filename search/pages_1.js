@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['lizardgraphics_5708',['lizardgraphics',['../md__r_e_a_d_m_e.html',1,'']]]
+  ['choosing_20memory_20type_5874',['Choosing memory type',['../choosing_memory_type.html',1,'index']]],
+  ['configuration_5875',['Configuration',['../configuration.html',1,'index']]],
+  ['custom_20memory_20pools_5876',['Custom memory pools',['../custom_memory_pools.html',1,'index']]]
 ];

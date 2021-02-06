@@ -105,9 +105,9 @@ $(function() {
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        std::vector&lt;float&gt; vertices;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        std::vector &lt;VkBuffer&gt; indexBuffer;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        std::vector &lt;VkDeviceMemory&gt; indexBufferMemory;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        std::vector &lt;VmaAllocation&gt; indexBufferMemory;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        VkBuffer texCoordsBuffer;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        VkDeviceMemory texCoordsMemory;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="struct_vma_allocation.html">VmaAllocation</a> texCoordsMemory;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    };</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_buffer_html"><div class="ttname"><a href="class_l_graphics_1_1_l_buffer.html">LGraphics::LBuffer</a></div><div class="ttdoc">Абстрактный класс буфера вершин.</div><div class="ttdef"><b>Definition:</b> LBuffer.h:18</div></div>
@@ -118,6 +118,7 @@ $(function() {
 <div class="ttc" id="aclass_l_graphics_1_1_l_model_buffer_html_a8a1d25668518e687901f6012bb965528"><div class="ttname"><a href="class_l_graphics_1_1_l_model_buffer.html#a8a1d25668518e687901f6012bb965528">LGraphics::LModelBuffer::setVerts</a></div><div class="ttdeci">void setVerts() override</div><div class="ttdoc">Инициализирует массив вершин.</div><div class="ttdef"><b>Definition:</b> LModelBuffer.cpp:10</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_model_buffer_html_aa2be44435de0c4d37cfb1990b2c4cb05"><div class="ttname"><a href="class_l_graphics_1_1_l_model_buffer.html#aa2be44435de0c4d37cfb1990b2c4cb05">LGraphics::LModelBuffer::setInds</a></div><div class="ttdeci">void setInds() override</div><div class="ttdoc">Инициализирует массив индексов.</div><div class="ttdef"><b>Definition:</b> LModelBuffer.cpp:16</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_model_html"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html">LGraphics::LModel</a></div><div class="ttdef"><b>Definition:</b> LModel.h:7</div></div>
+<div class="ttc" id="astruct_vma_allocation_html"><div class="ttname"><a href="struct_vma_allocation.html">VmaAllocation</a></div><div class="ttdoc">Represents single memory allocation.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

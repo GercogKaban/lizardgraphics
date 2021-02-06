@@ -134,8 +134,8 @@ $(function() {
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#ifdef VULKAN</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        VkBuffer vertexBuffer = VK_NULL_HANDLE;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        VkBuffer indexBuffer = VK_NULL_HANDLE;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        VkDeviceMemory vertexBufferMemory = VK_NULL_HANDLE;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        VkDeviceMemory indexBufferMemory = VK_NULL_HANDLE;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <a class="code" href="struct_vma_allocation.html">VmaAllocation</a> vertexBufferMemory = VK_NULL_HANDLE;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="code" href="struct_vma_allocation.html">VmaAllocation</a> indexBufferMemory = VK_NULL_HANDLE;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        LApp* app;</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// VULKAN</span></div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
@@ -167,6 +167,7 @@ $(function() {
 <div class="ttc" id="aclass_l_graphics_1_1_l_buffer_html_af392743c7194973e7bbb2f846913f856"><div class="ttname"><a href="class_l_graphics_1_1_l_buffer.html#af392743c7194973e7bbb2f846913f856">LGraphics::LBuffer::getVertices</a></div><div class="ttdeci">auto getVertices() const</div><div class="ttdoc">Возвращает массив вершин.</div><div class="ttdef"><b>Definition:</b> LBuffer.h:27</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_buffer_html_affb9ca36a79a842854927ae24337d372"><div class="ttname"><a href="class_l_graphics_1_1_l_buffer.html#affb9ca36a79a842854927ae24337d372">LGraphics::LBuffer::getIndSize</a></div><div class="ttdeci">virtual size_t getIndSize() const</div><div class="ttdoc">Возвращает размер массива текстурных координат. ‍/ size_t getTextureSize() const { return textureCoor...</div><div class="ttdef"><b>Definition:</b> LBuffer.h:45</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_object_html"><div class="ttname"><a href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a></div><div class="ttdef"><b>Definition:</b> LObject.h:5</div></div>
+<div class="ttc" id="astruct_vma_allocation_html"><div class="ttname"><a href="struct_vma_allocation.html">VmaAllocation</a></div><div class="ttdoc">Represents single memory allocation.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

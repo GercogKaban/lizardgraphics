@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pixels_5649',['pixels',['../struct_g_l_f_wimage.html#a0c532a5c2bb715555279b7817daba0fb',1,'GLFWimage']]]
+  ['lasterrornum_5777',['lastErrorNum',['../class_l_graphics_1_1_l_error.html#a41b70809dd83bab765d7b82b036a3f25',1,'LGraphics::LError']]]
 ];
