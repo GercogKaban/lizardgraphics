@@ -64,19 +64,12 @@ namespace LGraphics
 #endif OPENGL
 #ifdef VULKAN
         if (vertexBuffer)
-        {
-            vkDestroyBuffer(app->g_Device, vertexBuffer, nullptr);
-            vkFreeMemory(app->g_Device, vertexBufferMemory, nullptr);
-        }
+            vmaDestroyBuffer(app->allocator, vertexBuffer, vertexBufferMemory);
 
         if (indexBuffer)
-        {
-            vkDestroyBuffer(app->g_Device, indexBuffer, nullptr);
-            vkFreeMemory(app->g_Device, indexBufferMemory, nullptr);
-        }
+            vmaDestroyBuffer(app->allocator, indexBuffer, indexBufferMemory);
 #endif
         if (vertices) delete[] vertices;
         if (ebo) delete[] ebo;
-        //delete[] textures;
     }
 }

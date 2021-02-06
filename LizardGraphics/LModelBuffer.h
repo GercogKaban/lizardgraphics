@@ -33,8 +33,8 @@ namespace LGraphics
         std::vector<float> vertices;
 
         std::vector <VkBuffer> indexBuffer;
-        std::vector <VkDeviceMemory> indexBufferMemory;
+        std::vector <VmaAllocation> indexBufferMemory;
         VkBuffer texCoordsBuffer;
-        VkDeviceMemory texCoordsMemory;
+        VmaAllocation texCoordsMemory;
     };
 }

@@ -105,8 +105,8 @@ namespace LGraphics
 #ifdef VULKAN
         VkBuffer vertexBuffer = VK_NULL_HANDLE;
         VkBuffer indexBuffer = VK_NULL_HANDLE;
-        VkDeviceMemory vertexBufferMemory = VK_NULL_HANDLE;
-        VkDeviceMemory indexBufferMemory = VK_NULL_HANDLE;
+        VmaAllocation vertexBufferMemory = VK_NULL_HANDLE;
+        VmaAllocation indexBufferMemory = VK_NULL_HANDLE;
         LApp* app;
 #endif // VULKAN
 

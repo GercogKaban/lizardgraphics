@@ -4,6 +4,7 @@
 
 #include "include/stb/stb_image.h"
 #include "include/tinyobjloader/tiny_obj_loader.h"
+#include "vk_mem_alloc.h"
 
 #ifdef OPENGL
 #include "include/GLEW/glew.h"
@@ -55,7 +56,7 @@ namespace LGraphics
         static VkImageView createImageView(unsigned char* pixels, int texWidth, int texHeight, int texChannels, const char* byteTexture);
         
         static LApp* app;
-        static std::unordered_map<std::string, std::tuple<VkImageView,VkImage,VkDeviceMemory>*> textures;
+        static std::unordered_map<std::string, std::tuple<VkImageView,VkImage, VmaAllocation>*> textures;
         static std::unordered_map<std::string, ModelData*> models;
 #endif
 

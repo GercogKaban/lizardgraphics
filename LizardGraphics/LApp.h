@@ -39,7 +39,11 @@ void handle_cmd(android_app* app, int32_t cmd);
 #endif
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
+
+#ifdef VULKAN
 #include "imgui_impl_vulkan.h"
+#include "vk_mem_alloc.h"
+#endif
 
 #include "LObject.h"
 #include "LError.h"
@@ -182,6 +186,8 @@ namespace LGraphics
 
         glm::vec3 viewAxonometricVector = glm::vec3(1 / sqrt(3));
 
+        void setClearColor(glm::vec4 clearColor);
+
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
@@ -234,6 +240,8 @@ namespace LGraphics
         float yaw = -90.0f;
         float pitch = 0.0f;
 
+        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
         bool cursorEnabled = true;
 
         bool lightIsInited_ = false;
@@ -285,8 +293,6 @@ namespace LGraphics
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
 
-        //LResourceManager* manager;
-
         LShaders::Shader* baseShader;
 
         VkDescriptorPool descriptorPool;
@@ -295,15 +301,17 @@ namespace LGraphics
         std::vector<VkDescriptorSet> descriptorSets;
 
         std::vector<VkBuffer> uniformBuffers;
-        std::vector<VkDeviceMemory> uniformBuffersMemory;
+        std::vector<VmaAllocation> uniformBuffersMemory;
 
         VkCommandPool commandPool;
         VkImageView dummyTexture;
 
         VkImage depthImage;
-        VkDeviceMemory depthImageMemory;
+        VmaAllocation depthImageMemory;
         VkImageView depthImageView;
         VkFormat depthFormat;
+
+        VmaAllocator allocator;
 
         VkRenderPass renderPass;
         std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -332,13 +340,13 @@ namespace LGraphics
         void createLogicalDevice();
         void createSurface();
         void createGraphicsPipeline();
+        void createAllocator();
 
         void createDescriptorSets();
         void createDescriptorSetLayout();
 
         void createFramebuffers();
         void createCommandPool();
-        //void createCommandBuffers();
         void createUniformBuffers();
         void createDescriptorPool();
         void createImageViews();
@@ -352,7 +360,7 @@ namespace LGraphics
 
         void createImage(uint32_t width, uint32_t height, VkFormat format,
             VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
-            VkImage& image, VkDeviceMemory& imageMemory);
+            VkImage& image, VmaAllocation& imageMemory);
 
         void createTextureSampler();
         void createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view);
@@ -366,28 +374,30 @@ namespace LGraphics
         void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
         template<typename T>
-        void createBuffer(T* buffer, VkBuffer& dst, VkDeviceMemory& dstMem, VkBufferUsageFlags usage, size_t bufSize)
+        void createBuffer(T* buffer, VkBuffer& dst, VmaAllocation& allocation, VkBufferUsageFlags usage, size_t bufSize)
         {
             VkDeviceSize bufferSize = bufSize;
-
+            VmaAllocation stagingAllocation;
             VkBuffer stagingBuffer;
-            VkDeviceMemory stagingBufferMemory;
-            createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+            createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+                stagingBuffer, stagingAllocation);
 
             void* data;
-            vkMapMemory(g_Device, stagingBufferMemory, 0, bufferSize, 0, &data);
-            memcpy(data, buffer, (size_t)bufferSize);
-            vkUnmapMemory(g_Device, stagingBufferMemory);
+            vmaMapMemory(allocator, stagingAllocation, &data);
+            memcpy(data, buffer, bufferSize);
+            vmaUnmapMemory(allocator, stagingAllocation);
 
-            createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, dst, dstMem);
+            createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage, 
+                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, dst, allocation);
 
             copyBuffer(stagingBuffer, dst, bufferSize);
 
-            vkDestroyBuffer(g_Device, stagingBuffer, nullptr);
-            vkFreeMemory(g_Device, stagingBufferMemory, nullptr);
+            vmaDestroyBuffer(allocator, stagingBuffer, stagingAllocation);
         }
 
-        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, 
+            VkBuffer& buffer, VmaAllocation& allocation);
 
         void mapUniformData();
         void updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w);
@@ -456,8 +466,7 @@ namespace LGraphics
 
         struct BaseShaderConstants
         {
-            alignas(16) glm::mat4 proj;
-            alignas(16) glm::mat4 view;
+            alignas(16) glm::mat4 projView;
         };
 
         struct BaseVertexUBuffer

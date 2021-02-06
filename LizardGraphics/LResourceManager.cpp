@@ -70,7 +70,7 @@ namespace LGraphics
 
 #ifdef VULKAN
 
-    std::unordered_map<std::string, std::tuple<VkImageView, VkImage, VkDeviceMemory>*> LResourceManager::textures;
+    std::unordered_map<std::string, std::tuple<VkImageView, VkImage, VmaAllocation>*> LResourceManager::textures;
     std::unordered_map<std::string, LResourceManager::ModelData*> LResourceManager::models;
     LApp* LResourceManager::app;
 
@@ -190,18 +190,22 @@ namespace LGraphics
     {
         VkImage textureImage;
         VkImageView view;
-        VkDeviceMemory textureImageMemory;
+        VmaAllocation textureImageMemory;
 
         VkDeviceSize imageSize = texWidth * texHeight* texChannels;
         VkBuffer stagingBuffer;
-        VkDeviceMemory stagingBufferMemory;
+        VmaAllocation stagingBufferMemory;
+
         app->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
         void* data;
-        vkMapMemory(app->g_Device, stagingBufferMemory, 0, imageSize, 0, &data);
+        vmaMapMemory(app->allocator, stagingBufferMemory, &data);
         memcpy(data, pixels, static_cast<size_t>(imageSize));
-        vkUnmapMemory(app->g_Device, stagingBufferMemory);
+        vmaUnmapMemory(app->allocator, stagingBufferMemory);
+        //vkMapMemory(app->g_Device, stagingBufferMemory, 0, imageSize, 0, &data);
+        //memcpy(data, pixels, static_cast<size_t>(imageSize));
+        //vkUnmapMemory(app->g_Device, stagingBufferMemory);
 
         stbi_image_free(pixels);
 
@@ -213,13 +217,14 @@ namespace LGraphics
         app->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
         app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-        vkDestroyBuffer(app->g_Device, stagingBuffer, nullptr);
-        vkFreeMemory(app->g_Device, stagingBufferMemory, nullptr);
+        vmaDestroyBuffer(app->allocator, stagingBuffer, stagingBufferMemory);
+        //vkDestroyBuffer(app->g_Device, stagingBuffer, nullptr);
+        //vkFreeMemory(app->g_Device, stagingBufferMemory, nullptr);
 
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view);
 
         textures.insert(std::make_pair(path, 
-            new std::tuple<VkImageView, VkImage, VkDeviceMemory>(view, textureImage, textureImageMemory)));
+            new std::tuple<VkImageView, VkImage, VmaAllocation>(view, textureImage, textureImageMemory)));
         return view;
     }
 

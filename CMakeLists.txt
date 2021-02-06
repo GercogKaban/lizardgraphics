@@ -11,6 +11,7 @@ set(SOURCE_FILES main.cpp)
 set(HEADER_FILES)
 
 ADD_EXECUTABLE(DesktopExample ${SOURCE_FILES} ${HEADER_FILES})
+
 add_subdirectory (LizardGraphics)
 
 target_precompile_headers(DesktopExample PRIVATE pch.h)

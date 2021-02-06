@@ -38,27 +38,29 @@ int main()
 
 
     auto m1 = new LModel(&app, 
-    "models/dog/13463_Australian_Cattle_Dog_v3.obj",      // model path
-    "models/dog/Australian_Cattle_Dog_dif.jpg");     // texture path
+    "models/POW/AllModels.obj",      // model path
+    "models/POW/Diffuse.jpg");     // texture path
 
-    //auto test = new LWRectangle(&app);
-
-    //auto m1 = new LModel(&app, 
-    //    "models/Handgun/Handgun.obj",                  // model path
-    //    "models/Handgun/handgun_C.jpg");     // texture path
-     
-    //m1->setMeshDrawing(5, false);
-    //m1->setMeshDrawing(6, false);
-    //m1->setMeshDrawing(2, false);
-    //m1->setMeshDrawing(0, false);
     m1->rotateX(90.0f);
     m1->rotateZ(180.0f);
     m1->move(0.0f, 10.0f, 0.0f);
-    //app.setBeforeDrawingFunc ([&]() 
-    //    {
-    //    });
 
-    app.setAfterDrawingFunc([&]()
+    //auto test = new LWRectangle(&app);
+
+    //auto m2 = new LModel(&app, 
+    //    "models/Handgun/Handgun.obj",                  // model path
+    //    "models/Handgun/handgun_C.jpg");     // texture path
+    // 
+    //m2->rotateX(90.0f);
+    //m2->rotateZ(180.0f);
+    ////m2->setMeshDrawing(5, false);
+    ////m2->setMeshDrawing(6, false);
+    ////m2->setMeshDrawing(2, false);
+    ////m2->setMeshDrawing(0, false);
+
+    //m2->move(20.0f, 0.0f, 0.0f);
+
+    app.setBeforeDrawingFunc([&]()
         {
             const float cameraSpeed = 0.03f;
 

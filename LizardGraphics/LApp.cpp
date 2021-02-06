@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 
+//#define VMA_DEBUG_ALIGNMENT 128
+#define VMA_IMPLEMENTATION
 #include "LApp.h"
 #include "LRectangleBuffer.h"
 #include "LMultiWRectangle.h"
@@ -33,7 +35,6 @@ namespace LGraphics
     {
         bool show_demo_window = true;
         bool show_another_window = false;
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         while (!glfwWindowShouldClose(window_))
         {
@@ -266,6 +267,14 @@ namespace LGraphics
     {
         refreshCamera();
         refreshProjection();
+    }
+
+    void LApp::setClearColor(glm::vec4 clearColor)
+    {
+        clear_color.x = clearColor.x;
+        clear_color.y = clearColor.y;
+        clear_color.z = clearColor.z;
+        clear_color.w = clearColor.w;
     }
 
     void LApp::refreshCamera()
@@ -587,15 +596,12 @@ namespace LGraphics
         alignedFree(testStructV.model);
 
         for (size_t i = 0; i < imCount; ++i)
-            vkUnmapMemory(g_Device, uniformBuffersMemory[i]);
+            vmaUnmapMemory(allocator, uniformBuffersMemory[i]);
 
         delete baseShader;
 
         for (size_t i = 0; i < imCount; i++)
-        {
-            vkDestroyBuffer(g_Device, uniformBuffers[i], nullptr);
-            vkFreeMemory(g_Device, uniformBuffersMemory[i], nullptr);
-        }
+            vmaDestroyBuffer(allocator, uniformBuffers[i], uniformBuffersMemory[i]);
 
         vkDestroyDescriptorPool(g_Device, descriptorPool, nullptr);
         vkDestroyDescriptorPool(g_Device, g_DescriptorPool, g_Allocator);
@@ -608,8 +614,7 @@ namespace LGraphics
         //for (auto& text : resourseManager.textures)
         {
             vkDestroyImageView(g_Device, std::get<0>(*(it->second)), nullptr);
-            vkDestroyImage(g_Device, std::get<1>(*(it->second)), nullptr);
-            vkFreeMemory(g_Device, std::get<2>(*(it->second)), nullptr);
+            vmaDestroyImage(allocator, std::get<1>(*(it->second)), std::get<2>(*(it->second)));
 
             delete it->second;
         }
@@ -618,31 +623,18 @@ namespace LGraphics
             //for (auto& text : resourseManager.textures)
         {
             vkDestroyImageView(g_Device, swapChainImageViews[i], nullptr);
-           // vkDestroyImage(g_Device, swapChainImages[i], nullptr);
-            //vkFreeMemory(g_Device, swapChainIma, nullptr);
         }
 
         vkDestroyImageView(g_Device, depthImageView, nullptr);
-        vkDestroyImage(g_Device, depthImage, nullptr);
-        vkFreeMemory(g_Device, depthImageMemory, nullptr);
+        vmaDestroyImage(allocator, depthImage, depthImageMemory);
 
         vkDestroyRenderPass(g_Device, renderPass, nullptr);
-        //vkDestroyImageView(g_Device, textureImageView, nullptr);
-        //vkDestroyImage(g_Device, textureImage, nullptr);
-        //vkFreeMemory(g_Device, textureImageMemory, nullptr);
 
         for (auto framebuffer : swapChainFramebuffers) {
             vkDestroyFramebuffer(g_Device, framebuffer, nullptr);
         }
 
         vkDestroyDescriptorSetLayout(g_Device, descriptorSetLayout, nullptr);
-
-        for (auto& it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
-        {
-            //delete it->second->buffer;
-            //delete it->second->textures;
-            delete it->second;
-        }
 
         delete standartRectBuffer;
 
@@ -654,7 +646,11 @@ namespace LGraphics
             delete m;
         models.clear();
 
+        for (auto& it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
+            delete it->second;
+
         vkDestroyCommandPool(g_Device, commandPool, nullptr);
+        vmaDestroyAllocator(allocator);
         vkDestroyDevice(g_Device, nullptr);
 
         if (enableValidationLayers) 
@@ -800,7 +796,14 @@ namespace LGraphics
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
+        //VkValidationFeatureEnableEXT enables[] = { VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT };
+        //VkValidationFeaturesEXT features = {};
+        //features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+        //features.enabledValidationFeatureCount = 1;
+        //features.pEnabledValidationFeatures = enables;
+
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
+        //debugCreateInfo.pNext = &features;
 
         if (enableValidationLayers) 
         {
@@ -808,7 +811,7 @@ namespace LGraphics
             createInfo.ppEnabledLayerNames = validationLayers.data();
 
             populateDebugMessengerCreateInfo(debugCreateInfo);
-            createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
+            //createInfo.pNext = &features;
         }
         else 
         {
@@ -914,6 +917,16 @@ namespace LGraphics
     void LApp::createGraphicsPipeline()
     {
         baseShader = new LShaders::Shader("shaders//Vk_interfaceV.spv", "shaders//Vk_interfaceF.spv", this, false);
+    }
+
+    void LApp::createAllocator()
+    {
+        VmaAllocatorCreateInfo allocatorInfo = {};
+        allocatorInfo.vulkanApiVersion = VK_API_VERSION_1_0;
+        allocatorInfo.physicalDevice = g_PhysicalDevice;
+        allocatorInfo.device = g_Device;
+        allocatorInfo.instance = g_Instance;
+        vmaCreateAllocator(&allocatorInfo, &allocator);
     }
 
 
@@ -1029,6 +1042,7 @@ namespace LGraphics
         size_t bufferSize = info.poolSize * dynamicAlignment;
         testStructV.model = (glm::mat4*)alignedAlloc(bufferSize, dynamicAlignment);
 
+        VmaAllocation allocation;
         for (size_t i = 0; i < wd->ImageCount; i++)
             createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
@@ -1182,7 +1196,7 @@ namespace LGraphics
     }
 
     void LApp::createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, 
-        VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VkDeviceMemory & imageMemory)
+        VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VmaAllocation& imageMemory)
     {
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -1206,16 +1220,28 @@ namespace LGraphics
         VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(g_Device, image, &memRequirements);
 
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+        VmaAllocationCreateInfo allocInfo = {};
+        allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+        allocInfo.requiredFlags = properties;
+        allocInfo.preferredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+        //allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 
-        if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate image memory!");
-        }
+        //uint32_t memoryTypeIndex;
+        //vmaFindMemoryTypeIndex(allocator, allocInfo.memoryTypeBits, &allocInfo, &memoryTypeIndex);
 
-        vkBindImageMemory(g_Device, image, imageMemory, 0);
+        //VkMemoryAllocateInfo allocInfo{};
+        //allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        //allocInfo.allocationSize = memRequirements.size;
+        //allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+        vmaAllocateMemory(allocator, &memRequirements, &allocInfo, &imageMemory, nullptr);
+        //if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
+        //    throw std::runtime_error("failed to allocate image memory!");
+        //}
+
+        vmaBindImageMemory(allocator, imageMemory, image);
+        //vkBindImageMemory(g_Device, image, imageMemory->GetMemory(), 0);
     }
 
     void LApp::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view)
@@ -1303,32 +1329,48 @@ namespace LGraphics
         vkFreeCommandBuffers(g_Device, commandPool, 1, &commandBuffer);
     }
 
-    void LApp::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory)
+    void LApp::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer,
+        VmaAllocation& allocation)
     {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
         bufferInfo.usage = usage;
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+       // bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-        if (vkCreateBuffer(g_Device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create buffer!");
-        }
+        //VkMemoryRequirements memRequirements;
+        //vkGetBufferMemoryRequirements(g_Device, buffer, &memRequirements);
+        VmaAllocationCreateInfo allocInfo = {};
+        allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+        allocInfo.requiredFlags = properties;
+        allocInfo.preferredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+        //allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        
+        uint32_t memoryTypeIndex;
+        vmaFindMemoryTypeIndex(allocator, allocInfo.memoryTypeBits, &allocInfo, &memoryTypeIndex);
 
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(g_Device, buffer, &memRequirements);
+        //VmaAllocation allocation;
+        vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
+        //bufferMemory = allocation->GetMemory();
 
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+        /*if (vkCreateBuffer(g_Device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
+            throw std::runtime_error("failed to create buffer!");*/
 
-        if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate buffer memory!");
-        }
 
-        if (vkBindBufferMemory(g_Device, buffer, bufferMemory, 0) != VK_SUCCESS)
-            throw std::runtime_error("failed to bind buffer memory!");
+        //allocInfo
+
+        //VkMemoryAllocateInfo allocInfo{};
+        //allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        //allocInfo.allocationSize = memRequirements.size;
+        //allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+        //if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+        //    throw std::runtime_error("failed to allocate buffer memory!");
+        //}
+
+        //if (vkBindBufferMemory(g_Device, buffer, bufferMemory, 0) != VK_SUCCESS)
+        //    throw std::runtime_error("failed to bind buffer memory!");
     }
 
     void LApp::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
@@ -1474,7 +1516,9 @@ namespace LGraphics
     void LApp::mapUniformData()
     {
         for (size_t i = 0; i < wd->ImageCount; ++i)
-            vkMapMemory(g_Device, uniformBuffersMemory[i], 0, info.poolSize * dynamicAlignment, 0, &uniformsMem[i]);
+            //vmaMap
+            vmaMapMemory(allocator, uniformBuffersMemory[i], &uniformsMem[i]);
+            //vkMapMemory(g_Device, uniformBuffersMemory[i], 0, info.poolSize * dynamicAlignment, 0, &uniformsMem[i]);
     }
 
     void LApp::updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w)
@@ -1744,6 +1788,7 @@ namespace LGraphics
         createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
+        createAllocator();
 
         glfwGetFramebufferSize(window_, (int*)(&info.wndWidth), (int*)(&info.wndHeight));
         SetupVulkanWindow(wd, surface, info.wndWidth, info.wndHeight);
@@ -1883,7 +1928,7 @@ namespace LGraphics
             info.renderArea.extent.height = wd->Height;
 
             std::array<VkClearValue, 2> clearValues{};
-            clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
+            clearValues[0].color = wd->ClearValue.color;
             clearValues[1].depthStencil = { 1.0f, 0 };
             info.clearValueCount = static_cast<uint32_t>(clearValues.size());
             info.pClearValues = clearValues.data();
@@ -1891,6 +1936,7 @@ namespace LGraphics
             vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
         }
 
+        //vkCmdExecuteCommands();
         if (rectangles.size())
         {
             auto obj = rectangles[0];
@@ -1898,8 +1944,7 @@ namespace LGraphics
 
             LApp::BaseShaderConstants data
             {
-                getProjectionMatrix(),
-                getViewMatrix()
+                getProjectionMatrix()* getViewMatrix(),
             };
 
             VkBuffer vertexBuffers[] = { ((LWRectangle*)obj)->buffer->getVertBuffer() };
@@ -1924,8 +1969,7 @@ namespace LGraphics
 
             LApp::BaseShaderConstants data
             {
-                getProjectionMatrix(),
-                getViewMatrix()
+                getProjectionMatrix() * getViewMatrix(),
             };
 
             vkCmdBindPipeline(fd->CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());

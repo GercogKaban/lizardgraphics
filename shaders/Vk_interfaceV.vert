@@ -9,8 +9,7 @@ layout(binding = 0) uniform VertexUBuffer
 
 layout( push_constant ) uniform TransformData 
 {	
-    mat4 proj;
-    mat4 view;
+	mat4 projView;
 } cnst;
 
 layout(location = 0) in vec3 position;
@@ -21,8 +20,7 @@ layout(location = 1) out vec4 Color;
 
 void main()
 {
-	//gl_Position = buf_.model* vec4(position,1.0);
-	gl_Position = cnst.proj* cnst.view* buf_.model* vec4(position,1.0);
+	gl_Position = cnst.projView* buf_.model* vec4(position,1.0);
 	TexCoord = texCoord;
 	Color = vec4(1.0,1.0,1.0,1.0);
 }
