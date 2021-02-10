@@ -733,34 +733,6 @@ namespace LGraphics
         if (isCursorEnabled())
             return;
 
-        float xoffset = xpos - mouseCoords.x;
-        float yoffset = ypos - mouseCoords.y;
-
-        if (cursorModeSwitched)
-        {
-            xoffset = 0;
-            yoffset = 0;
-            cursorModeSwitched = false;
-        }
-
-        const float sensitivity = 0.08f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        yaw += xoffset;
-        pitch += yoffset;
-
-        if (pitch > 89.0f)
-            pitch = 89.0f;
-        if (pitch < -89.0f)
-            pitch = -89.0f;
-
-        glm::vec3 front;
-        front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-        front.y = sin(glm::radians(pitch));
-        front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-        cameraFront = glm::normalize(front);
-
         userCursorCallback(window, xpos, ypos);
         mouseCoords = { (float)xpos,(float)ypos };
     }

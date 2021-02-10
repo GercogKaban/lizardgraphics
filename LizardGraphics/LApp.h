@@ -254,6 +254,12 @@ namespace LGraphics
 
         bool cursorModeSwitched = false;
 
+        void setYaw(float yaw) { this->yaw = yaw; };
+        float getYaw() const { return yaw; }
+
+        void setPitch(float pitch) { this->pitch = pitch; };
+        float getPitch() const { return pitch; }
+
     protected:
         LAppCreateInfo info;
 

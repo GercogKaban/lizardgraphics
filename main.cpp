@@ -12,6 +12,7 @@ int main()
     LAppCreateInfo info;
 
     const size_t poolSize = 100;
+
     info.anisotropy = 16;
     info.projection = L_PERSPECTIVE;
     info.saveObjects = L_TRUE;
@@ -34,9 +35,7 @@ int main()
         m1->rotateZ(180.0f);
         m1->move(0.0f, 10.0f, 0.0f);
     }
-
-    //auto r = new LWRectangle(&app,"");
-   
+ 
     app.setBeforeDrawingFunc([&]()
         {
             if (app.isCursorEnabled())
@@ -67,6 +66,40 @@ int main()
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
         });
+
+    app.setUserCursorCallback([&](GLFWwindow* window, double xpos, double ypos)
+    {
+            float xoffset = xpos - app.getMouseCoords().x;
+            float yoffset = ypos - app.getMouseCoords().y;
+
+            if (app.cursorModeSwitched)
+            {
+                xoffset = 0;
+                yoffset = 0;
+                app.cursorModeSwitched = false;
+            }
+
+            const float sensitivity = 0.08f;
+            xoffset *= sensitivity;
+            yoffset *= sensitivity;
+
+            app.setYaw(app.getYaw() + xoffset);
+            app.setPitch(app.getPitch() + yoffset);
+
+            auto pitch = app.getPitch();
+            auto yaw = app.getYaw();
+
+            if (pitch > 89.0f)
+                pitch = 89.0f;
+            if (pitch < -89.0f)
+                pitch = -89.0f;
+
+            glm::vec3 front;
+            front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+            front.y = sin(glm::radians(pitch));
+            front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+            app.setCameraFront(glm::normalize(front));
+    });
 
     //app.drawUI(false);
     app.loop();
