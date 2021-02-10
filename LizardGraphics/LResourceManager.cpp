@@ -76,6 +76,8 @@ namespace LGraphics
 
     VkImageView LResourceManager::loadTexture(const char* path, int desiredChannel)
     {
+        if (!path || !strlen(path))
+            return std::get<0>(*textures["dummy"]);
         if (textures.find(path) != textures.end())
             return std::get<0>(*textures[path]);
 
@@ -167,6 +169,7 @@ namespace LGraphics
             auto modelData = new ModelData
             {   buffer,
                 new VkImageView[2],
+                meshesCount,
             };
 
             model->meshesToDraw = new bool[meshesCount];
@@ -182,6 +185,7 @@ namespace LGraphics
             auto model_ = models[modelPath];
             model->buffer = model_->buffer;
             model->textures = model_->textures;
+            model->meshesToDraw = new bool[model_->meshesToDraw];
         }
     }
 

@@ -12,7 +12,7 @@ namespace LGraphics
     {
     public:
 
-        const char* getObjectType() override { return "LRectanlgeShape"; }
+        const char* getObjectType() const override { return "LRectanlgeShape"; }
 
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
 #ifdef VULKAN

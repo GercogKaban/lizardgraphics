@@ -7,6 +7,7 @@ namespace LGraphics
     {
     public:
 
+        friend LApp;
         enum TextureType
         {
             BASE_TEXTURE,
@@ -14,9 +15,10 @@ namespace LGraphics
         };
         friend LResourceManager;
 
-        const char* getObjectType() override { return "LModel"; }
+        const char* getObjectType() const override { return "LModel"; }
 
-        LModel(LApp* app, const char* modelPath, const char* texturePath = nullptr, 
+
+        LModel(LApp* app, const char* modelPath, const char* texturePath = nullptr,
             const char* normalsPath = nullptr, bool debugInfo = false);
         ~LModel();
         
@@ -25,9 +27,10 @@ namespace LGraphics
         void setMeshDrawing(size_t num, bool draw);
         bool getMeshDrawing(size_t num) const { return meshesToDraw[num]; }
         size_t getMeshesCount() const { return meshesCount; }
+        const char* getModelPath() const { return modelPath; }
 
 #ifdef VULKAN
-        void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum) override;
+        void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) override;
 #endif
     protected:
 

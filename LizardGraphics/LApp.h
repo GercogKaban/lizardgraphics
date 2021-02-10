@@ -3,6 +3,8 @@
 #include <mutex>
 #include <optional>
 #include <map>
+#include <stack>
+#include <deque>
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 #include <android/log.h>
@@ -68,6 +70,7 @@ namespace LGraphics
     class LModelBuffer;
     class LWidget;
     class LModel;
+    class ImGuiInterface;
 
     enum LStates
     {
@@ -77,15 +80,24 @@ namespace LGraphics
         L_ORTHOGRAPHIC,
     };
 
+    enum LTypes : uint8_t
+    {
+        L_RECTANGLE,
+        L_MODEL,
+    };
+
     struct LAppCreateInfo
     {
         size_t wndWidth = 0, wndHeight = 0;
         size_t poolSize = 100;
         //size_t modelPoolSize = 10;
         size_t sleepThread = 0;
-        uint32_t vsync = L_FALSE;
+        uint8_t vsync = L_FALSE;
+        uint8_t saveObjects = L_FALSE;
+        uint8_t loadObjects = L_FALSE;
         uint32_t anisotropy = 16;
         uint32_t projection = L_ORTHOGRAPHIC;
+        
     };
 
     /*!
@@ -106,8 +118,10 @@ namespace LGraphics
         friend LResourceManager;
         friend LWidget;
         friend LModel;
+        friend ImGuiInterface;
 
     public:
+
         
 #ifdef OPENGL
         LApp();
@@ -137,8 +151,6 @@ namespace LGraphics
         */
         GLFWwindow* getWindowHandler() { return window_; }
 
-        //void lockFps(size_t fps_) { fpsLock = fps_; }
-
         //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
 
@@ -163,7 +175,8 @@ namespace LGraphics
         template <typename C>
         void addObject(LWidget* w, std::vector<C*>& collection)
         {
-            collection.push_back((C*)w);
+            assert(collection.size() + 1 <= getPoolSize() && "error, pool overflowed!\n");
+            collection.push_back(((C*)w));
         }
         
         void refreshObjectMatrices();
@@ -184,6 +197,10 @@ namespace LGraphics
         size_t getSleepTime() const { return sleepTime; }
 
 
+        void lockFrontViewCamera() { cameraFrontViewLock = true; }
+        void unlockFrontViewCamera() { cameraFrontViewLock = false; }
+        bool isCameraFrontLocked() const { return cameraFrontViewLock; }
+
         glm::vec3 viewAxonometricVector = glm::vec3(1 / sqrt(3));
 
         void setClearColor(glm::vec4 clearColor);
@@ -191,10 +208,12 @@ namespace LGraphics
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
-        void setCameraPos(glm::vec3 pos) { cameraPos = pos; /*refreshCamera();*/ }
+        void setCameraPos(glm::vec3 pos) { cameraPos = pos; }
         void setCameraFront(glm::vec3 cameraFront) { this->cameraFront = cameraFront; }
         void setCameraUp(glm::vec3 cameraUp) { this->cameraUp = cameraUp; }
         void setViewRadius(float radius) { viewRadius = radius; /*refreshCamera(); refreshProjection();*/ }
+
+        void drawUI(bool draw) { drawUI_ = draw; }
 
         void setCursorEnabling(bool cursorEnable);
         bool isCursorEnabled() const { return cursorEnabled; }
@@ -224,6 +243,8 @@ namespace LGraphics
         size_t getPoolSize() const { return info.poolSize; }
             
         void setImgui(std::function<void()> func) { imgui = func; }
+        void addObjectToDelete(LWidget* w, LTypes type) { toDelete.push(std::make_pair(w, type)); }
+        void addObjectToCreate(LWidget* w, LTypes type) {toCreate.push(std::make_pair(w, type));}
 
         void setUserMouseButtonCallback (std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
         void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
@@ -231,20 +252,30 @@ namespace LGraphics
         void setUserCharacterCallback(std::function<void(GLFWwindow* window, unsigned int codepoint)> func);
         void setUserScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>func);
 
-    protected:
+        bool cursorModeSwitched = false;
 
+    protected:
         LAppCreateInfo info;
+
+        bool drawUI_ = true;
+
+        std::stack<std::pair<LWidget*,LTypes>> toDelete;
+        std::stack<std::pair<LWidget*,LTypes>> toCreate;
 
         std::function<void()> imgui = []() {};
         glm::vec2 mouseCoords = glm::vec2(0.0f);
-        float yaw = -90.0f;
-        float pitch = 0.0f;
+        glm::vec2 prevCoords = glm::vec2(0.0f);
+        float yaw = -20.0f;
+        float pitch = 10.0f;
 
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         bool cursorEnabled = true;
-
+        bool cameraFrontViewLock = false;
         bool lightIsInited_ = false;
+
+        bool prevCameraFrontDefined = false;
+        glm::vec3 prevCameraFront = glm::vec3(0.0f);
         glm::mat4 lightSpaceMatrix;
 
         void setLightPos(glm::vec3 lightPos);
@@ -289,6 +320,8 @@ namespace LGraphics
     public:
         VkDevice getDevice() const { return g_Device; }
     protected:
+
+        std::deque<size_t> indexGaps;
 
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
@@ -440,12 +473,6 @@ namespace LGraphics
         std::vector <VkImage> swapChainImages;
         std::vector<VkImageView> swapChainImageViews;
 
-        size_t currentFrame = 0;
-        bool framebufferResized = false;
-
-        const int MAX_FRAMES_IN_FLIGHT = 2;
-
-
         struct Vertex 
         {
             glm::vec3 pos;
@@ -510,7 +537,6 @@ namespace LGraphics
 
         GLFWwindow* window_;
 
-        //glm::vec3 viewPoint = glm::vec3(14.0f, 14.0f, 0.0f);
         glm::mat4 view, projection;
 
         glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -529,7 +555,6 @@ namespace LGraphics
 
         LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader,
             *shadowMap,*defaultShader, *multi_shadowMap, *multi_defaultShader;
-
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;

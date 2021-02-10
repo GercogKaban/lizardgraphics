@@ -14,7 +14,7 @@ namespace LGraphics
     public:
         
         friend LApp;
-        const char* getObjectType() override { return "LImage"; }
+        const char* getObjectType() const override { return "LImage"; }
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
 #ifdef OPENGL

@@ -20,7 +20,7 @@ namespace LGraphics
 
     public:
 
-        const char* getObjectType() override { return "LRectangleBuffer"; }
+        const char* getObjectType() const override { return "LRectangleBuffer"; }
 #ifdef OPENGL
         LRectangleBuffer();
 #endif

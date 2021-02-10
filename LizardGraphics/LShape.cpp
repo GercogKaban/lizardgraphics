@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#include "LShape.h"
+#include "pch.h"
 #include "LShape.h"
 #include "LApp.h"
 
@@ -87,6 +88,12 @@ namespace LGraphics
     void LShape::setBuffer(LBuffer* buffer)
     {
         this->buffer = buffer;
+    }
+
+    glm::vec3& LShape::getMove()
+    {
+        changed = app->wd->ImageCount;
+        return move_; 
     }
 
     // нужно проверить эту функцию

@@ -71,7 +71,7 @@ namespace LGraphics
         //std::vector<LWRectangle*> rectangles;
         std::vector<glm::mat4> models;
 
-        const char* getObjectType() override { return "LMultiWRectangle"; }
+        const char* getObjectType() const override { return "LMultiWRectangle"; }
         LMultiWRectangle(LApp* app, size_t rectCount);
         //bool isInterfaceObject() const override { return false; }
 

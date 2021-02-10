@@ -39,6 +39,7 @@ namespace LGraphics
         {
             LModelBuffer* buffer;
             VkImageView* textures;
+            size_t meshesToDraw = 0;
         };
 
         friend LApp;

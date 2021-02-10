@@ -14,7 +14,7 @@ namespace LGraphics
     {
     public:
 
-        const char* getObjectType() override { return "LShape"; }
+        const char* getObjectType() const override { return "LShape"; }
         //void setShader(LShaders::Shader* shader) override;  ///< Устанавливает шейдер виджету.
         //LShaders::Shader* getShader() { return shader; }
 
@@ -85,8 +85,8 @@ namespace LGraphics
 
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         glm::vec3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
-        glm::vec3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
-        glm::vec3 getMove() const override { return move_; }   ///< Возвращает расположение виджета.
+        glm::vec3& getScale() override { return scale_; } ///< Возвращает размеры виджета.
+        glm::vec3& getMove() override;   ///< Возвращает расположение виджета.
 
         void turnOffColor() override;
 

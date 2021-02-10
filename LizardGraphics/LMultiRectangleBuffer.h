@@ -22,7 +22,7 @@ namespace LGraphics
 
     public:
 
-        const char* getObjectType() override { return "LMultiRectangleBuffer"; }
+        const char* getObjectType() const override { return "LMultiRectangleBuffer"; }
         LMultiRectangleBuffer(size_t rectCount);
 
         virtual void genBuffers() override;

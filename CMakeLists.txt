@@ -8,7 +8,7 @@ IF (${PLATFORM} MATCHES "DESKTOP")
 project (DesktopExample C CXX)
 
 set(SOURCE_FILES main.cpp)
-set(HEADER_FILES)
+set(HEADER_FILES interfaces.h)
 
 ADD_EXECUTABLE(DesktopExample ${SOURCE_FILES} ${HEADER_FILES})
 

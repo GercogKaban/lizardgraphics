@@ -4,7 +4,7 @@ namespace LGraphics
     class LObject
     {
     public:
-        virtual const char* getObjectType() { return "LObject"; }
+        virtual const char* getObjectType() const { return "LObject"; }
     protected:
         LObject() {}
     };

@@ -23,10 +23,10 @@ namespace LGraphics
         friend LApp;
         /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 
-        const char* getObjectType() override { return "LWidget"; }
+        const char* getObjectType() const override { return "LWidget"; }
         virtual void tick() {}
 #ifdef VULKAN
-        virtual void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum) = 0; ///< Рисует виджет.
+        virtual void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) = 0; ///< Рисует виджет.
 
         enum UniformChanges
         {
@@ -109,17 +109,22 @@ namespace LGraphics
         */
         void setMouseOnItEventFunction(std::function<void()> fun) { mouseOnItFunction = fun; }
 
+        void setName(std::string name) { this->name = name; }
+        std::string getName() const { return name; }
+
         void rotateX(float angleDegree);
         void rotateY(float angleDegree);
         void rotateZ(float angleDegree);
+
+        glm::vec3 getRotateDegrees() const { return rotateDegrees; }
         void setRotate(const glm::mat4& rotate);
 
         virtual void turnOffColor() = 0;
 
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
         virtual glm::vec3 getColor() const = 0;         ///< Возвращает цвет виджета.
-        virtual glm::vec3 getScale() const = 0;         ///< Возвращает размеры виджета.
-        virtual glm::vec3 getMove() const = 0;          ///< Возвращает вектор move виджета.
+        virtual glm::vec3& getScale() = 0;         ///< Возвращает размеры виджета.
+        virtual glm::vec3& getMove() = 0;          ///< Возвращает вектор move виджета.
         virtual glm::vec3 getCenter() const = 0;        ///< Возвращает центр виджета.
         virtual glm::mat4 getRotate() const { return rotate_; }
 
@@ -138,6 +143,7 @@ namespace LGraphics
     protected:
 
         glm::mat4 rotate_ = glm::mat4(1.0f);
+        glm::vec3 rotateDegrees = glm::vec3(0.0f);
 
         LApp* app = nullptr;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
@@ -155,6 +161,11 @@ namespace LGraphics
         LShaders::Shader* shader = nullptr; ///< Шейдер.
 
         int changed = 3;
+        std::string name;
+
+#ifdef VULKAN
+        size_t arrayIndex = 0;
+#endif
         //VkImageView newTexture = nullptr;
 
         //LIWidget()

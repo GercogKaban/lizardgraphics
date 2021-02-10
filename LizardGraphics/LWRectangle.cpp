@@ -11,7 +11,7 @@ LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
 {
     shader = app->getStandartWorldObjShader();
     projection = app->getProjectionMatrix();
-    app->addObject(this, app->getRectangles());
+    app->addObjectToCreate(this, L_RECTANGLE);
 }
 
 glm::vec4 LGraphics::LWRectangle::getScreenCoords() const
@@ -43,16 +43,16 @@ void LGraphics::LWRectangle::setMatrices()
 }
 
 #ifdef VULKAN
-void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex, size_t objNum)
+void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
-    app->updateUniformBuffer(frameIndex, objNum, this);
+    app->updateUniformBuffer(frameIndex, arrayIndex, this);
 
     const uint32_t dynamicOffsets[] = 
-    { objNum * static_cast<uint32_t>(app->dynamicAlignment),
+    { arrayIndex * static_cast<uint32_t>(app->dynamicAlignment),
     };
 
      vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-        getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[objNum * 2 + frameIndex], 1, dynamicOffsets);
+        getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[arrayIndex * 2 + frameIndex], 1, dynamicOffsets);
 
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(buffer->getIndCount()), 1, 0, 0, 0);
 }

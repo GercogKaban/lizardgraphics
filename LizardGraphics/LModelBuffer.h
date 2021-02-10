@@ -5,12 +5,14 @@
 namespace LGraphics
 {
     class LModel;
+    class LApp;
 
     class LModelBuffer : public LBuffer
     {
     public:
 
         friend LModel;
+        friend LApp;
 
         void setBuffers() override;
         void setVerts() override;

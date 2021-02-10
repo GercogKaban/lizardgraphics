@@ -12,8 +12,8 @@ namespace LGraphics
 
         friend LApp;
 
-        const char* getObjectType() override { return "LRectangleShape"; }
         LWRectangle(LApp* app, const char* path = nullptr);
+        const char* getObjectType() const override { return "LWRectangle"; }
         //bool isInterfaceObject() const override { return false; }
 
         virtual glm::vec4 getScreenCoords() const;
@@ -22,7 +22,7 @@ namespace LGraphics
         void setMatrices();
 
 #ifdef VULKAN
-        void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex, size_t objNum) override;
+        void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override;
 #endif
 
 #ifdef OPENGL
@@ -32,8 +32,8 @@ namespace LGraphics
 
         int effectIndex = 0;
 
-    private:
-
+    protected:
+ 
         glm::mat4 calculateModelMatrix() const;
         glm::mat4 model;
         glm::mat4 projection;

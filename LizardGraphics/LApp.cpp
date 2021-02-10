@@ -6,6 +6,9 @@
 #include "LRectangleBuffer.h"
 #include "LMultiWRectangle.h"
 #include "LModel.h"
+#include "LModelBuffer.h"
+#include "CodeGen.h"
+#include "../codegen.h"
 
 #include "LResourceManager.h"
 
@@ -41,6 +44,34 @@ namespace LGraphics
             refreshCamera();
             glfwPollEvents();
 
+            while(toDelete.size())
+            {
+                auto obj = toDelete.top();
+                if (obj.first->arrayIndex != getModels().size() + getRectangles().size() - 1);
+                    indexGaps.push_back(obj.first->arrayIndex);
+                if (obj.second == L_MODEL)
+                    deleteWidget(obj.first, models);
+                else
+                    deleteWidget(obj.first, rectangles);
+                toDelete.pop();
+            }
+
+            while (toCreate.size())
+            {
+                auto obj = toCreate.top();
+                if (obj.second == L_MODEL)
+                    addObject(obj.first, models);
+                else if (obj.second == L_RECTANGLE)
+                    addObject(obj.first, rectangles);
+                if (indexGaps.size())
+                {            
+                    obj.first->arrayIndex = indexGaps.front();
+                    indexGaps.pop_front();
+                }
+                else
+                    obj.first->arrayIndex = getModels().size() + getRectangles().size() + 1;
+                toCreate.pop();
+            }
             // Resize swap chain?
             if (g_SwapChainRebuild)
             {
@@ -171,6 +202,9 @@ namespace LGraphics
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
 #endif
         }
+
+        if (info.saveObjects == L_TRUE)
+            CodeGen::generateCode("codegen.h", this, "app");
         //vkDeviceWaitIdle(g_Device);
         //t.stop();
 
@@ -208,9 +242,15 @@ namespace LGraphics
     {
         cursorEnabled = enableCursor;
         if (cursorEnabled)
+        {
+            prevCoords = getMouseCoords();
             glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
         else
+        {
+            cursorModeSwitched = true;
             glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
     }
 
     void LApp::setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func)
@@ -279,14 +319,11 @@ namespace LGraphics
 
     void LApp::refreshCamera()
     {
-        //float t = sqrt(3);
         if (info.projection == L_PERSPECTIVE)
-        {
             view = glm::lookAt(
                 cameraPos,
                 cameraPos + cameraFront,
                 cameraUp);
-        }
         else
             view = glm::lookAt(
                 cameraPos + viewRadius * viewAxonometricVector,
@@ -296,7 +333,7 @@ namespace LGraphics
 
     void LApp::refreshProjection()
     {
-        auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
+        const auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
         if (info.projection == L_PERSPECTIVE)
             projection = glm::perspective(45.0f, aspect, 0.01f, 1000.0f);
         else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 1000.0f);
@@ -341,6 +378,9 @@ namespace LGraphics
         });
 
         setMatrices();
+
+        if (info.loadObjects)
+            genWidgets(this);
 
 #ifdef OPENGL
         //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
@@ -643,11 +683,19 @@ namespace LGraphics
         rectangles.clear();
 
         for (auto& m : models)
+        {
+            LModelBuffer* b = (LModelBuffer*)m->buffer;
+            vmaDestroyBuffer(allocator, b->vertexBuffer, b->vertexBufferMemory);
+            for (size_t i = 0; i < b->indexBuffer.size();++i)
+                vmaDestroyBuffer(allocator, b->indexBuffer[i], b->indexBufferMemory[i]);
             delete m;
+        }
         models.clear();
 
         for (auto& it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
+        {
             delete it->second;
+        }
 
         vkDestroyCommandPool(g_Device, commandPool, nullptr);
         vmaDestroyAllocator(allocator);
@@ -682,8 +730,18 @@ namespace LGraphics
 
     void LApp::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        if (isCursorEnabled())
+            return;
+
         float xoffset = xpos - mouseCoords.x;
         float yoffset = ypos - mouseCoords.y;
+
+        if (cursorModeSwitched)
+        {
+            xoffset = 0;
+            yoffset = 0;
+            cursorModeSwitched = false;
+        }
 
         const float sensitivity = 0.08f;
         xoffset *= sensitivity;
@@ -1129,7 +1187,6 @@ namespace LGraphics
         }
 
 
-     // Rectangles descriptor sets
      for (size_t i = 0; i < info.poolSize; ++i)
         for (size_t j = 0; j < wd->ImageCount; j++)
         {
@@ -1146,7 +1203,7 @@ namespace LGraphics
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = descriptorSets[i*2 + j];
+            descriptorWrites[0].dstSet = descriptorSets[i* wd->ImageCount + j];
             descriptorWrites[0].dstBinding = 0;
             descriptorWrites[0].dstArrayElement = 0;
             descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
@@ -1154,7 +1211,7 @@ namespace LGraphics
             descriptorWrites[0].pBufferInfo = &bufferInfo;
 
             descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[1].dstSet = descriptorSets[i * 2 + j];
+            descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
             descriptorWrites[1].dstBinding = 1;
             descriptorWrites[1].dstArrayElement = 0;
             descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -1163,9 +1220,6 @@ namespace LGraphics
 
             vkUpdateDescriptorSets(g_Device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
-
-
-     // Model descriptor sets
     }
 
     void LApp::createDescriptorSetLayout()
@@ -1542,7 +1596,7 @@ namespace LGraphics
         *color = { col.x, col.y, col.z, w->getTransparency() };
 
         uint64_t offset = objectNum * dynamicAlignment;
-        memcpy(((uint64_t*) uniformsMem[currentImage]) + offset/8, modelMat, sizeof(BaseVertexUBuffer));
+        memcpy(((char*) uniformsMem[currentImage]) + offset, modelMat, sizeof(BaseVertexUBuffer));
     }
 
     void LApp::updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum)
@@ -1560,7 +1614,7 @@ namespace LGraphics
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
         descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = descriptorSets[objectNum * 2 + currentImage];
+        descriptorWrites[0].dstSet = descriptorSets[objectNum * wd->ImageCount + currentImage];
         descriptorWrites[0].dstBinding = 0;
         descriptorWrites[0].dstArrayElement = 0;
         descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
@@ -1568,7 +1622,7 @@ namespace LGraphics
         descriptorWrites[0].pBufferInfo = &bufferInfo;
 
         descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[1].dstSet = descriptorSets[objectNum * 2 + currentImage];
+        descriptorWrites[1].dstSet = descriptorSets[objectNum * wd->ImageCount + currentImage];
         descriptorWrites[1].dstBinding = 1;
         descriptorWrites[1].dstArrayElement = 0;
         descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -1959,7 +2013,7 @@ namespace LGraphics
                 VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &data);
 
             for (size_t i = 0; i < rectangles.size(); ++i)
-                rectangles[i]->draw(fd->CommandBuffer, wd->FrameIndex, i);
+                rectangles[i]->draw(fd->CommandBuffer, wd->FrameIndex);
         }
 
         if (models.size())
@@ -1977,12 +2031,12 @@ namespace LGraphics
                 VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &data);
 
             for (size_t i = 0; i < models.size(); ++i)
-                models[i]->draw(fd->CommandBuffer, wd->FrameIndex, i + rectangles.size());
+                models[i]->draw(fd->CommandBuffer, wd->FrameIndex);
         }
 
-
         // Record dear imgui primitives into command buffer
-        ImGui_ImplVulkan_RenderDrawData(draw_data, fd->CommandBuffer);
+        if (drawUI_)
+            ImGui_ImplVulkan_RenderDrawData(draw_data, fd->CommandBuffer);
 
         // Submit command buffer
         vkCmdEndRenderPass(fd->CommandBuffer);

@@ -12,7 +12,8 @@ add_compile_definitions(${API})
 set (SOURCE_FILES textures.cpp LShape.cpp LRectangleShape.cpp LImage.cpp 
 LRectangleBuffer.cpp LError.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
 LTimer.cpp additional.cpp LMultiRectangleBuffer.cpp LMultiWRectangle.cpp 
-LWRectangle.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp LModelBuffer.cpp)
+LWRectangle.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp LModelBuffer.cpp
+CodeGen.cpp FileSystemDialog.cpp)
 
 set (IMGUI_SOURCE_FILES imgui_impl_glfw.cpp imgui_impl_vulkan.cpp imgui.cpp imgui_demo.cpp 
 imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp)
@@ -23,7 +24,8 @@ LImage.h LError.h LBuffer.h
 LApp.h LWidget.h LTimer.h additional.h LMultiRectangleBuffer.h 
 LMultiWRectangle.h LWRectangle.h LResourceManager.h ObjectPool.h
 imgui.h imconfig.h imgui_impl_glfw.h imgui_impl_vulkan.h imgui_internal.h
-imstb_rectpack.h imstb_textedit.h imstb_truetype.h LModel.h LModelBuffer.h)
+imstb_rectpack.h imstb_textedit.h imstb_truetype.h LModel.h LModelBuffer.h
+CodeGen.h FileSystemDialog.h)
 
 set (IMGUI_HEADER_FILES imgui.h imconfig.h imgui_impl_glfw.h imgui_impl_vulkan.h imgui_internal.h
 imstb_rectpack.h imstb_textedit.h imstb_truetype.h)
