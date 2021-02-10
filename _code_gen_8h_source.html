@@ -66,39 +66,50 @@ $(function() {
 <div class="title">CodeGen.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;LApp.h&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;LizardGraphics/LApp.h&quot;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;LizardGraphics/LModel.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;LizardGraphics/LWRectangle.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_code_gen.html">    6</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_code_gen.html">CodeGen</a></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <a class="code" href="class_code_gen.html">CodeGen</a>(){}</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordtype">void</span> generateCode(<span class="keyword">const</span> <span class="keywordtype">char</span>* outPath, LGraphics::LApp* app, <span class="keyword">const</span> <span class="keywordtype">char</span>* appName);</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordtype">void</span> notGenerateData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> writeToFile(<span class="keyword">const</span> <span class="keywordtype">char</span>* outPath, std::string&amp; code);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::string getMoveData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    std::string getScaleData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string getColorData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::string getTextureData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string getHiddenData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::string getIsometricData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    std::string getTransparencyData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::string getRotateData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::string getLabelData(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::string getWidgetMovability(<a class="code" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>* w);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    std::vector&lt;LGraphics::LWidget*&gt; notGenerateList;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;};</div>
-<div class="ttc" id="aclass_code_gen_html"><div class="ttname"><a href="class_code_gen.html">CodeGen</a></div><div class="ttdef"><b>Definition:</b> CodeGen.h:7</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a></div><div class="ttdoc">Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LWidget.h:20</div></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>LGraphics{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">void</span> genWidgets(LGraphics::LApp* app)</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">auto</span> model1 = <span class="keyword">new</span> LModel(app,<span class="stringliteral">&quot;E:/GAMES/lizardgraphics/models/dog/13463_Australian_Cattle_Dog_v3.obj&quot;</span>,<span class="stringliteral">&quot;E:/GAMES/lizardgraphics/models/dog/Australian_Cattle_Dog_dif.jpg&quot;</span>);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;model1-&gt;move(0.000000, 0.000000, 0.000000);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;model1-&gt;scale(0.500000, 0.500000, 1.000000);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;model1-&gt;color(glm::vec3(0.000000, 0.000000, 0.000000));</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;model1-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;model1-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">auto</span> rect1 = <span class="keyword">new</span> LWRectangle(app,<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;rect1-&gt;move(0.000000, 0.000000, -0.100000);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;rect1-&gt;scale(0.490000, 0.500000, 1.000000);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;rect1-&gt;color(glm::vec3(1.000000, 1.000000, 1.000000));</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;rect1-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;rect1-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">auto</span> rect2 = <span class="keyword">new</span> LWRectangle(app,<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;rect2-&gt;move(0.000000, 0.000000, 0.040000);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;rect2-&gt;scale(0.500000, 0.500000, 1.000000);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;rect2-&gt;color(glm::vec3(1.000000, 1.000000, 1.000000));</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;rect2-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;rect2-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">auto</span> rect3 = <span class="keyword">new</span> LWRectangle(app,<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;rect3-&gt;move(0.000000, 0.000000, 0.000000);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;rect3-&gt;scale(0.500000, 0.500000, 1.000000);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;rect3-&gt;color(glm::vec3(1.000000, 1.000000, 1.000000));</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;rect3-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;rect3-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">auto</span> rect4 = <span class="keyword">new</span> LWRectangle(app,<span class="stringliteral">&quot;E:/GAMES/lizardgraphics/textures/arbiter.png&quot;</span>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;rect4-&gt;move(0.000000, 0.000000, 0.090000);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;rect4-&gt;scale(0.500000, 0.500000, 1.000000);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;rect4-&gt;color(glm::vec3(1.000000, 1.000000, 1.000000));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;rect4-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;rect4-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
