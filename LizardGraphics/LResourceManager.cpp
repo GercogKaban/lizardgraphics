@@ -70,11 +70,11 @@ namespace LGraphics
 
 #ifdef VULKAN
 
-    std::unordered_map<std::string, std::tuple<VkImageView, VkImage, VmaAllocation>*> LResourceManager::textures;
+    std::unordered_map<std::string, std::tuple<VkImageView, VkImage, VmaAllocation, size_t>*> LResourceManager::textures;
     std::unordered_map<std::string, LResourceManager::ModelData*> LResourceManager::models;
     LApp* LResourceManager::app;
 
-    VkImageView LResourceManager::loadTexture(const char* path, int desiredChannel)
+    VkImageView LResourceManager::loadTexture(const char* path, size_t& mipLevels, int desiredChannel)
     {
         if (!path || !strlen(path))
             return std::get<0>(*textures["dummy"]);
@@ -92,17 +92,17 @@ namespace LGraphics
             throw std::runtime_error("failed to load texture image!");
         }
 
-        return createImageView(pixels, texWidth, texHeight, STBI_rgb_alpha, path);
+        return createImageView(pixels, texWidth, texHeight, STBI_rgb_alpha, path, mipLevels);
     }
 
-    VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
+    VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel)
     {
         int height, width, imageChannels;
         if (textures.find(name) != textures.end())
             return std::get<0>(*textures[name]);
         stbi_uc* pixels = stbi_load_from_memory(bytes, size, &height, &width, &imageChannels, desiredChannel);
 
-        return createImageView(pixels, width, height, imageChannels, name);
+        return createImageView(pixels, width, height, imageChannels, name, mipLevels);
     }
 
     void LResourceManager::loadModel(LModel* model, const char* modelPath, bool debugInfo)
@@ -190,7 +190,7 @@ namespace LGraphics
     }
 
     VkImageView LResourceManager::createImageView(unsigned char* pixels, int texWidth,
-        int texHeight, int texChannels, const char* path)
+        int texHeight, int texChannels, const char* path, size_t& miplevels)
     {
         VkImage textureImage;
         VkImageView view;
@@ -198,37 +198,33 @@ namespace LGraphics
 
         VkDeviceSize imageSize = texWidth * texHeight* texChannels;
 
+        miplevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
         app->createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB,
-            VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-            textureImage, textureImageMemory);
+            VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+            textureImage, textureImageMemory, miplevels);
 
         {
             VkBuffer stagingBuffer;
             VmaAllocation stagingBufferMemory;
 
             app->createBuffer(pixels, stagingBuffer, stagingBufferMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, imageSize);
-            //void* data;
-
-            //app->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            //    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory);
-
-            //vmaMapMemory(app->allocator, stagingBufferMemory, &data);
-            //memcpy(data, pixels, static_cast<size_t>(imageSize));
-            //vmaUnmapMemory(app->allocator, stagingBufferMemory);
-
-            app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+            app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, 
+                VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, miplevels);
             app->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-            app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
+            //app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, 
+                //VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
             vmaDestroyBuffer(app->allocator, stagingBuffer, stagingBufferMemory);
+
+            app->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, miplevels);
         }
 
         stbi_image_free(pixels);
 
-        app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view);
+        app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view, miplevels);
 
         textures.insert(std::make_pair(path, 
-            new std::tuple<VkImageView, VkImage, VmaAllocation>(view, textureImage, textureImageMemory)));
+            new std::tuple<VkImageView, VkImage, VmaAllocation,size_t>(view, textureImage, textureImageMemory, miplevels)));
         return view;
     }
 

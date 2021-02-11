@@ -651,7 +651,8 @@ namespace LGraphics
         vkDestroyDescriptorPool(g_Device, descriptorPool, nullptr);
         vkDestroyDescriptorPool(g_Device, g_DescriptorPool, g_Allocator);
 
-        vkDestroySampler(g_Device, textureSampler, nullptr);
+        for (size_t i = 0; i < possibleMipLevels; ++i)
+            vkDestroySampler(g_Device, textureSamplers[i], nullptr);
 
         auto resourseManager = LImage::resManager;
         
@@ -1109,14 +1110,14 @@ namespace LGraphics
         swapChainImageViews.resize(wd->ImageCount);
 
         for (uint32_t i = 0; i < wd->ImageCount; i++)
-             createImageView(wd->Frames[i].Backbuffer, wd->SurfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, swapChainImageViews[i]);
+             createImageView(wd->Frames[i].Backbuffer, wd->SurfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT, swapChainImageViews[i],1);
     }
 
     void LApp::createDepthResources()
     {
         depthFormat = findDepthFormat();
-        createImage(wd->Width, wd->Height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-        createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageView);
+        createImage(wd->Width, wd->Height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory,1);
+        createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageView,1);
     }
 
     VkFormat LApp::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -1177,7 +1178,7 @@ namespace LGraphics
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             imageInfo.imageView = dummyTexture;
-            imageInfo.sampler = textureSampler;
+            imageInfo.sampler = textureSamplers[0];
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -1229,7 +1230,7 @@ namespace LGraphics
     }
 
     void LApp::createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, 
-        VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VmaAllocation& imageMemory)
+        VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VmaAllocation& imageMemory, uint32_t miplevels)
     {
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -1237,7 +1238,7 @@ namespace LGraphics
         imageInfo.extent.width = width;
         imageInfo.extent.height = height;
         imageInfo.extent.depth = 1;
-        imageInfo.mipLevels = 1;
+        imageInfo.mipLevels = miplevels;
         imageInfo.arrayLayers = 1;
         imageInfo.format = format;
         imageInfo.tiling = tiling;
@@ -1249,38 +1250,28 @@ namespace LGraphics
         if (vkCreateImage(g_Device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
             throw std::runtime_error("failed to create image!");
         }
-
+        
         VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(g_Device, image, &memRequirements);
 
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
         allocInfo.requiredFlags = properties;
-        allocInfo.preferredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+        allocInfo.preferredFlags =  1;
         //allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
         allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 
-        //uint32_t memoryTypeIndex;
-        //vmaFindMemoryTypeIndex(allocator, allocInfo.memoryTypeBits, &allocInfo, &memoryTypeIndex);
+        uint32_t memoryTypeIndex;
+        vmaFindMemoryTypeIndex(allocator, allocInfo.memoryTypeBits, &allocInfo, &memoryTypeIndex);
 
-        //VkMemoryAllocateInfo allocInfo{};
-        //allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        //allocInfo.allocationSize = memRequirements.size;
-        //allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+        VmaAllocationInfo info;
 
-        //assert(stats.total.unusedBytes >=)
-
-
-        vmaAllocateMemory(allocator, &memRequirements, &allocInfo, &imageMemory, nullptr);
-        //if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-        //    throw std::runtime_error("failed to allocate image memory!");
-        //}
-
+        vmaAllocateMemoryForImage(allocator, image, &allocInfo, &imageMemory,&info);
         vmaBindImageMemory(allocator, imageMemory, image);
         //vkBindImageMemory(g_Device, image, imageMemory->GetMemory(), 0);
     }
 
-    void LApp::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view)
+    void LApp::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view, uint32_t miplevels)
     {
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -1289,7 +1280,7 @@ namespace LGraphics
         viewInfo.subresourceRange.aspectMask = aspectFlags;
         viewInfo.format = format;
         viewInfo.subresourceRange.baseMipLevel = 0;
-        viewInfo.subresourceRange.levelCount = 1;
+        viewInfo.subresourceRange.levelCount = miplevels;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount = 1;
 
@@ -1299,7 +1290,7 @@ namespace LGraphics
         }
     }
 
-    void LApp::createTextureSampler()
+    void LApp::createTextureSampler(VkSampler& sampler, size_t mipLevels)
     {
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(g_PhysicalDevice, &properties);
@@ -1324,10 +1315,100 @@ namespace LGraphics
         samplerInfo.compareEnable = VK_FALSE;
         samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        samplerInfo.minLod = 0.0f;
+        samplerInfo.maxLod = static_cast<float>(mipLevels);
+        samplerInfo.mipLodBias = 0.0f;
 
-        if (vkCreateSampler(g_Device, &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) {
+        if (vkCreateSampler(g_Device, &samplerInfo, nullptr, &sampler) != VK_SUCCESS) {
             throw std::runtime_error("failed to create texture sampler!");
         }
+    }
+
+    void LApp::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
+    {
+        VkFormatProperties formatProperties;
+        vkGetPhysicalDeviceFormatProperties(g_PhysicalDevice, imageFormat, &formatProperties);
+
+        if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
+            throw std::runtime_error("texture image format does not support linear blitting!");
+        }
+
+        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+
+        VkImageMemoryBarrier barrier{};
+        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        barrier.image = image;
+        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        barrier.subresourceRange.baseArrayLayer = 0;
+        barrier.subresourceRange.layerCount = 1;
+        barrier.subresourceRange.levelCount = 1;
+
+        int32_t mipWidth = texWidth;
+        int32_t mipHeight = texHeight;
+
+        for (uint32_t i = 1; i < mipLevels; i++) {
+            barrier.subresourceRange.baseMipLevel = i - 1;
+            barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+            vkCmdPipelineBarrier(commandBuffer,
+                VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+                0, nullptr,
+                0, nullptr,
+                1, &barrier);
+
+            VkImageBlit blit{};
+            blit.srcOffsets[0] = { 0, 0, 0 };
+            blit.srcOffsets[1] = { mipWidth, mipHeight, 1 };
+            blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            blit.srcSubresource.mipLevel = i - 1;
+            blit.srcSubresource.baseArrayLayer = 0;
+            blit.srcSubresource.layerCount = 1;
+            blit.dstOffsets[0] = { 0, 0, 0 };
+            blit.dstOffsets[1] = { mipWidth > 1 ? mipWidth / 2 : 1, mipHeight > 1 ? mipHeight / 2 : 1, 1 };
+            blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            blit.dstSubresource.mipLevel = i;
+            blit.dstSubresource.baseArrayLayer = 0;
+            blit.dstSubresource.layerCount = 1;
+
+            vkCmdBlitImage(commandBuffer,
+                image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1, &blit,
+                VK_FILTER_LINEAR);
+
+            barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+            vkCmdPipelineBarrier(commandBuffer,
+                VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+                0, nullptr,
+                0, nullptr,
+                1, &barrier);
+
+            if (mipWidth > 1) mipWidth /= 2;
+            if (mipHeight > 1) mipHeight /= 2;
+        }
+
+        barrier.subresourceRange.baseMipLevel = mipLevels - 1;
+        barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+        vkCmdPipelineBarrier(commandBuffer,
+            VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+            0, nullptr,
+            0, nullptr,
+            1, &barrier);
+
+        endSingleTimeCommands(commandBuffer);
     }
 
     VkCommandBuffer LApp::beginSingleTimeCommands()
@@ -1394,7 +1475,7 @@ namespace LGraphics
         endSingleTimeCommands(commandBuffer);
     }
 
-    void LApp::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
+    void LApp::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t miplevels)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -1407,7 +1488,7 @@ namespace LGraphics
         barrier.image = image;
         barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         barrier.subresourceRange.baseMipLevel = 0;
-        barrier.subresourceRange.levelCount = 1;
+        barrier.subresourceRange.levelCount = miplevels;
         barrier.subresourceRange.baseArrayLayer = 0;
         barrier.subresourceRange.layerCount = 1;
 
@@ -1536,7 +1617,7 @@ namespace LGraphics
     {
         if (w->texture)
         {
-            updateTexture(w->texture, currentImage, objectNum);
+            updateTexture(w->texture, currentImage, objectNum,w->getMipLevels());
             if (w->changed <= LWidget::ONE_BUFFER_TO_CHANGE)
                 w->texture = nullptr;
         }
@@ -1556,7 +1637,7 @@ namespace LGraphics
         memcpy(((char*) uniformsMem[currentImage]) + offset, modelMat, sizeof(BaseVertexUBuffer));
     }
 
-    void LApp::updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum)
+    void LApp::updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum, size_t mipLevels)
     {
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = uniformBuffers[currentImage];
@@ -1566,7 +1647,7 @@ namespace LGraphics
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         imageInfo.imageView = view;
-        imageInfo.sampler = textureSampler;
+        imageInfo.sampler = textureSamplers[mipLevels-1];
 
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -1821,9 +1902,11 @@ namespace LGraphics
         createFramebuffers();
 
         LResourceManager::setApp(this);
-        dummyTexture = LResourceManager::loadTexture(notexture, notextureSize, "dummy");
+        size_t dummy;
+        dummyTexture = LResourceManager::loadTexture(notexture, notextureSize, "dummy", dummy);
 
-        createTextureSampler();
+        for (size_t i = 1; i < possibleMipLevels+1; ++i)
+            createTextureSampler(textureSamplers[i-1], i);
         createUniformBuffers();
         mapUniformData();
 

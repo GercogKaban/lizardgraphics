@@ -402,17 +402,23 @@ namespace LGraphics
 
         void createImage(uint32_t width, uint32_t height, VkFormat format,
             VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
-            VkImage& image, VmaAllocation& imageMemory);
+            VkImage& image, VmaAllocation& imageMemory, uint32_t mipLevels);
 
-        void createTextureSampler();
-        void createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view);
+        void createTextureSampler(VkSampler& sampler, size_t mipLevels);
+        void createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view, uint32_t miplevels);
+
+
+        static const size_t possibleMipLevels = 15;
+        VkSampler textureSamplers[possibleMipLevels];
+
+        void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
         VkCommandBuffer beginSingleTimeCommands();
 
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize offset);
 
-        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t miplevels);
         void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
         template<typename T>
@@ -428,7 +434,12 @@ namespace LGraphics
             createBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, dst, allocation);
             
-            const auto unusedBytes = stats.memoryType[VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT].unusedBytes;
+            auto unusedBytes = stats.memoryType[VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT].unusedBytes;
+
+            if (!unusedBytes)
+                // 256 mb
+                unusedBytes = 268435456;
+
             const auto batches = bufSize / unusedBytes;
 
             auto stageBufTransfer = [&](VkDeviceSize offset)
@@ -467,7 +478,7 @@ namespace LGraphics
 
         void mapUniformData();
         void updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w);
-        void updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum);
+        void updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum, size_t mipLevels);
 
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
         void setupDebugMessenger();
@@ -501,8 +512,7 @@ namespace LGraphics
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-        VkSampler textureSampler;
-
+      
         std::vector <VkImage> swapChainImages;
         std::vector<VkImageView> swapChainImageViews;
 

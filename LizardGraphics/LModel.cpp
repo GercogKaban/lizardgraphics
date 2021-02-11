@@ -32,7 +32,7 @@ LGraphics::LModel::~LModel()
 
 void LGraphics::LModel::loadTexture(const char* path, TextureType type)
 {
-    auto texture = LResourceManager::loadTexture(path);
+    auto texture = LResourceManager::loadTexture(path,mipLevels);
     auto m = LResourceManager::models[modelPath]->textures[type] = texture;
     this->texture = texture;
 }

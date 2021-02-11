@@ -45,8 +45,8 @@ namespace LGraphics
         friend LApp;
         friend LModel;
 
-        static VkImageView loadTexture(const char* path, int desiredChannel = 4);
-        static VkImageView loadTexture(unsigned char * bytes, size_t size, const char* name, int desiredChannel = 4);
+        static VkImageView loadTexture(const char* path, size_t& mipLevels, int desiredChannel = 4);
+        static VkImageView loadTexture(unsigned char * bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel = 4);
 
         static void loadModel(LModel* model, const char* modelPath, bool debugInfo = false);
 
@@ -54,10 +54,11 @@ namespace LGraphics
 
     private:
 
-        static VkImageView createImageView(unsigned char* pixels, int texWidth, int texHeight, int texChannels, const char* byteTexture);
+        static VkImageView createImageView(unsigned char* pixels, int texWidth, int texHeight, int texChannels, const char* byteTexture
+            , size_t& miplevels);
         
         static LApp* app;
-        static std::unordered_map<std::string, std::tuple<VkImageView,VkImage, VmaAllocation>*> textures;
+        static std::unordered_map<std::string, std::tuple<VkImageView,VkImage, VmaAllocation, size_t>*> textures;
         static std::unordered_map<std::string, ModelData*> models;
 #endif
 

@@ -34,13 +34,13 @@ namespace LGraphics
     {
         turnOnTexture();
         texturePath = path;
-        texture = resManager.loadTexture(path);
+        texture = resManager.loadTexture(path,mipLevels);
     }
 
     void LImage::bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
     {
         turnOnTexture();
-        texture = resManager.loadTexture(bytes,size, name, desiredChannel);
+        texture = resManager.loadTexture(bytes,size, name, mipLevels, desiredChannel);
     }
 
     void LImage::turnOffTexture()
@@ -70,7 +70,7 @@ namespace LGraphics
     void LImage::init()
     {
         if (texturePath.size())
-            texture = resManager.loadTexture(texturePath.data());
+            texture = resManager.loadTexture(texturePath.data(),mipLevels);
 #ifdef OPENGL
         else 
             texture = resManager.loadTexture(texturesBytes, texturesBytesSize);

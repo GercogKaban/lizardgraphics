@@ -36,6 +36,7 @@ namespace LGraphics
         @param size - размер массива bytes.
         */
         void bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel = 4);
+        size_t getMipLevels() const { return mipLevels; }
 #endif
 
 
@@ -95,6 +96,7 @@ namespace LGraphics
 
 #ifdef VULKAN
         VkImageView texture = nullptr;
+        size_t mipLevels = 1;
 #endif
 
         bool turnedOn = true; ///< Включена ли текстура.
