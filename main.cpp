@@ -40,7 +40,7 @@ int main()
         {
             if (app.isCursorEnabled())
                 return;
-            const float cameraSpeed = 0.005f;
+            const float cameraSpeed = 0.002f;
 
             glm::vec3 cameraPos = app.getCameraPos();
             const auto cameraFront = app.getCameraFront();

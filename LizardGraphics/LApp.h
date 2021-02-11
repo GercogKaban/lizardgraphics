@@ -265,6 +265,7 @@ namespace LGraphics
 
         bool drawUI_ = true;
 
+        //VmaBudget budget;
         std::stack<std::pair<LWidget*,LTypes>> toDelete;
         std::stack<std::pair<LWidget*,LTypes>> toCreate;
 
@@ -356,11 +357,13 @@ namespace LGraphics
         std::vector<VkFramebuffer> swapChainFramebuffers;
 
         std::vector<const char*> validationLayers = {
-    "VK_LAYER_KHRONOS_validation"
+    "VK_LAYER_KHRONOS_validation",
         };
 
         const std::vector<const char*> deviceExtensions = 
-        { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+        { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+          VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
+        };
 
 #ifdef NDEBUG
         const bool enableValidationLayers = false;
@@ -407,7 +410,7 @@ namespace LGraphics
         VkCommandBuffer beginSingleTimeCommands();
 
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
-        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize offset);
 
         void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
         void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
@@ -415,28 +418,52 @@ namespace LGraphics
         template<typename T>
         void createBuffer(T* buffer, VkBuffer& dst, VmaAllocation& allocation, VkBufferUsageFlags usage, size_t bufSize)
         {
-            VkDeviceSize bufferSize = bufSize;
+            VkDeviceSize bufferSize;
             VmaAllocation stagingAllocation;
             VkBuffer stagingBuffer;
-            createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
-                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
-                stagingBuffer, stagingAllocation);
+            
+            VmaStats stats;
+            vmaCalculateStats(allocator, &stats);
 
-            void* data;
-            vmaMapMemory(allocator, stagingAllocation, &data);
-            memcpy(data, buffer, bufferSize);
-            vmaUnmapMemory(allocator, stagingAllocation);
-
-            createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage, 
+            createBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, dst, allocation);
+            
+            const auto unusedBytes = stats.memoryType[VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT].unusedBytes;
+            const auto batches = bufSize / unusedBytes;
 
-            copyBuffer(stagingBuffer, dst, bufferSize);
+            auto stageBufTransfer = [&](VkDeviceSize offset)
+            {
+                createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                    stagingBuffer, stagingAllocation);
 
-            vmaDestroyBuffer(allocator, stagingBuffer, stagingAllocation);
+                void* data;
+                vmaMapMemory(allocator, stagingAllocation, &data);
+                memcpy(data, buffer + (size_t)offset, bufferSize);
+                vmaUnmapMemory(allocator, stagingAllocation);
+
+                copyBuffer(stagingBuffer, dst, bufferSize, offset);
+
+                vmaDestroyBuffer(allocator, stagingBuffer, stagingAllocation);
+            };
+
+            for (size_t i = 0; i < batches; ++i)
+            {
+                bufferSize = unusedBytes;
+                bufSize -= bufferSize;
+                stageBufTransfer(i* unusedBytes);
+            }
+            if (bufSize)
+            {
+                bufferSize = bufSize;
+                stageBufTransfer(batches * unusedBytes);
+            }
         }
 
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, 
             VkBuffer& buffer, VmaAllocation& allocation);
+        //void createBufferWithData(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer,
+           // VmaAllocation& allocation, void* data);
 
         void mapUniformData();
         void updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w);

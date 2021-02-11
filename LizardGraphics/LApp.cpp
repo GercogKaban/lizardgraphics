@@ -41,6 +41,8 @@ namespace LGraphics
 
         while (!glfwWindowShouldClose(window_))
         {
+#ifdef VULKAN
+#endif
             refreshCamera();
             glfwPollEvents();
 
@@ -90,6 +92,9 @@ namespace LGraphics
             ImGui_ImplVulkan_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
+
+            //vmaSetCurrentFrameIndex(allocator, wd->FrameIndex);
+            //vmaGetBudget(allocator, &budget);
 
             imgui();
 
@@ -848,8 +853,9 @@ namespace LGraphics
             createInfo.enabledLayerCount = 0;
             createInfo.pNext = nullptr;
         }
-
-        if (vkCreateInstance(&createInfo, nullptr, &g_Instance) != VK_SUCCESS) {
+        
+        VkResult res = vkCreateInstance(&createInfo, nullptr, &g_Instance);
+        if (res != VK_SUCCESS) {
             throw std::runtime_error("failed to create instance!");
         }
     }
@@ -956,6 +962,7 @@ namespace LGraphics
         allocatorInfo.physicalDevice = g_PhysicalDevice;
         allocatorInfo.device = g_Device;
         allocatorInfo.instance = g_Instance;
+        allocatorInfo.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
         vmaCreateAllocator(&allocatorInfo, &allocator);
     }
 
@@ -1261,6 +1268,9 @@ namespace LGraphics
         //allocInfo.allocationSize = memRequirements.size;
         //allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
+        //assert(stats.total.unusedBytes >=)
+
+
         vmaAllocateMemory(allocator, &memRequirements, &allocInfo, &imageMemory, nullptr);
         //if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
         //    throw std::runtime_error("failed to allocate image memory!");
@@ -1360,51 +1370,25 @@ namespace LGraphics
     {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+
         bufferInfo.size = size;
         bufferInfo.usage = usage;
-       // bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-        //VkMemoryRequirements memRequirements;
-        //vkGetBufferMemoryRequirements(g_Device, buffer, &memRequirements);
-        VmaAllocationCreateInfo allocInfo = {};
-        allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
-        allocInfo.requiredFlags = properties;
-        allocInfo.preferredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-        //allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
-        allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        VmaAllocationCreateInfo allocCreateInfo = {};
+        allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+        allocCreateInfo.requiredFlags = properties;
+        allocCreateInfo.preferredFlags = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+        allocCreateInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         
-        uint32_t memoryTypeIndex;
-        vmaFindMemoryTypeIndex(allocator, allocInfo.memoryTypeBits, &allocInfo, &memoryTypeIndex);
-
-        //VmaAllocation allocation;
-        vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
-        //bufferMemory = allocation->GetMemory();
-
-        /*if (vkCreateBuffer(g_Device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
-            throw std::runtime_error("failed to create buffer!");*/
-
-
-        //allocInfo
-
-        //VkMemoryAllocateInfo allocInfo{};
-        //allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        //allocInfo.allocationSize = memRequirements.size;
-        //allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
-
-        //if (vkAllocateMemory(g_Device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-        //    throw std::runtime_error("failed to allocate buffer memory!");
-        //}
-
-        //if (vkBindBufferMemory(g_Device, buffer, bufferMemory, 0) != VK_SUCCESS)
-        //    throw std::runtime_error("failed to bind buffer memory!");
+        vmaCreateBuffer(allocator, &bufferInfo, &allocCreateInfo, &buffer, &allocation, nullptr);
     }
 
-    void LApp::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+    void LApp::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize offset)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferCopy copyRegion{};
         copyRegion.size = size;
+        copyRegion.dstOffset = offset;
         vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
         endSingleTimeCommands(commandBuffer);
@@ -1472,6 +1456,7 @@ namespace LGraphics
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferImageCopy region{};
+
         region.bufferOffset = 0;
         region.bufferRowLength = 0;
         region.bufferImageHeight = 0;
@@ -1632,8 +1617,9 @@ namespace LGraphics
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-
-        if (enableValidationLayers) {
+        extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME); 
+        if (enableValidationLayers) 
+        {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
@@ -1674,7 +1660,6 @@ namespace LGraphics
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
         std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
-
         for (const auto& extension : availableExtensions) {
             requiredExtensions.erase(extension.extensionName);
         }
@@ -1815,6 +1800,13 @@ namespace LGraphics
         pickPhysicalDevice();
         createLogicalDevice();
         createAllocator();
+
+        //size_t size = 268435456;
+        //VkBuffer buffer;
+        //VmaAllocation alloc;
+        //createBuffer(size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        //    VK_MEMORY_PROPERTY_HOST_CACHED_BIT, buffer, alloc);
+
 
         glfwGetFramebufferSize(window_, (int*)(&info.wndWidth), (int*)(&info.wndHeight));
         SetupVulkanWindow(wd, surface, info.wndWidth, info.wndHeight);

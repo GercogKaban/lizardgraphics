@@ -197,33 +197,33 @@ namespace LGraphics
         VmaAllocation textureImageMemory;
 
         VkDeviceSize imageSize = texWidth * texHeight* texChannels;
-        VkBuffer stagingBuffer;
-        VmaAllocation stagingBufferMemory;
-
-        app->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-        void* data;
-        vmaMapMemory(app->allocator, stagingBufferMemory, &data);
-        memcpy(data, pixels, static_cast<size_t>(imageSize));
-        vmaUnmapMemory(app->allocator, stagingBufferMemory);
-        //vkMapMemory(app->g_Device, stagingBufferMemory, 0, imageSize, 0, &data);
-        //memcpy(data, pixels, static_cast<size_t>(imageSize));
-        //vkUnmapMemory(app->g_Device, stagingBufferMemory);
-
-        stbi_image_free(pixels);
 
         app->createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB,
             VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
             textureImage, textureImageMemory);
 
-        app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        app->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-        app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        {
+            VkBuffer stagingBuffer;
+            VmaAllocation stagingBufferMemory;
 
-        vmaDestroyBuffer(app->allocator, stagingBuffer, stagingBufferMemory);
-        //vkDestroyBuffer(app->g_Device, stagingBuffer, nullptr);
-        //vkFreeMemory(app->g_Device, stagingBufferMemory, nullptr);
+            app->createBuffer(pixels, stagingBuffer, stagingBufferMemory, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, imageSize);
+            //void* data;
+
+            //app->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            //    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory);
+
+            //vmaMapMemory(app->allocator, stagingBufferMemory, &data);
+            //memcpy(data, pixels, static_cast<size_t>(imageSize));
+            //vmaUnmapMemory(app->allocator, stagingBufferMemory);
+
+            app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+            app->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+            app->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+            vmaDestroyBuffer(app->allocator, stagingBuffer, stagingBufferMemory);
+        }
+
+        stbi_image_free(pixels);
 
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view);
 
