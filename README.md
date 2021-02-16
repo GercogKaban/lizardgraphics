@@ -45,10 +45,11 @@ make
 1. Antialiasing
 2. Shadows.
 3. Reflections.
-4. Omtimization.
+4. Optimization.
 5. Supporting Android platform.
 6. Runtime API changing.
 7. Skeletal animation.
+8. Logger.
 
 # Documentation
 Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
