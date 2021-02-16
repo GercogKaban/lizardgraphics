@@ -9,7 +9,10 @@
 LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
     :LRectangleShape(app, path, false)
 {
-    shader = app->getStandartWorldObjShader();
+    if (app->info.lighting)
+        shader = app->getLightningShader();
+    else
+        shader = app->getStandartWorldObjShader();
     projection = app->getProjectionMatrix();
     app->addObjectToCreate(this, L_RECTANGLE);
 }

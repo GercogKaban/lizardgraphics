@@ -83,10 +83,15 @@ namespace LGraphics
         */
         void move(const glm::vec<2, size_t> val) override;
 
+        float& getTransparencyRef() override;
+        glm::vec3& getColorRef() override; ///< Возвращает цвет виджета.
+        glm::vec3& getScaleRef() override; ///< Возвращает размеры виджета.
+        glm::vec3& getMoveRef() override;   ///< Возвращает расположение виджета.
+
         float getTransparency() const override { return transparency_; } ///< Возвращает прозрачность виджета.
         glm::vec3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
-        glm::vec3& getScale() override { return scale_; } ///< Возвращает размеры виджета.
-        glm::vec3& getMove() override;   ///< Возвращает расположение виджета.
+        glm::vec3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
+        glm::vec3 getMove() const override;   ///< Возвращает расположение виджета.
 
         void turnOffColor() override;
 

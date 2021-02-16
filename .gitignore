@@ -299,3 +299,6 @@ Doxyfile/
 *.exe
 *.jpg
 *.zip
+*.spv
+*.spv
+log.txt

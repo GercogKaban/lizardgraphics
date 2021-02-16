@@ -2,6 +2,7 @@
 #include "LWRectangle.h"
 #include "LModel.h"
 #include "LTimer.h"
+#include "LLogger.h"
 
 #include <iostream>
 #include "FileSystemDialog.h"
@@ -321,8 +322,8 @@ public:
 
                     std::array<std::pair<glm::vec3*, VectorTypes>, SliderRanges::vectorTypes> vectors_
                     {
-                        std::make_pair(&obj->getMove(),MOVE),
-                        std::make_pair(&obj->getScale(),SCALE),
+                        std::make_pair(&obj->getMoveRef(),MOVE),
+                        std::make_pair(&obj->getScaleRef(),SCALE),
                     };
 
                     doLogick(vectors_);

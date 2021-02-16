@@ -17,7 +17,9 @@ int main()
     info.projection = L_PERSPECTIVE;
     info.saveObjects = L_TRUE;
     info.loadObjects = L_TRUE;
+    info.lighting = L_TRUE;
     info.poolSize = poolSize;
+    info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
 
     LApp app(info);
 
@@ -59,6 +61,7 @@ int main()
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
+            //app.setLightPos(cameraPos);
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)
@@ -101,6 +104,7 @@ int main()
             app.setCameraFront(glm::normalize(front));
     });
 
+    app.setLightPos(glm::vec3(-12.5f, 0.0f, 0.0f));
     //app.drawUI(false);
     app.loop();
     return 0;

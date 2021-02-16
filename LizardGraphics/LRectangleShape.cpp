@@ -25,11 +25,6 @@ namespace LGraphics
         return xGlCoordToScreenCoord(app->getWindowSize(), getTopRightCorner().x) - xGlCoordToScreenCoord(app->getWindowSize(), getTopLeftCorner().x);
     }
 
-    glm::vec3 LRectangleShape::getCenter() const
-    {
-        return ((((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_) + (((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_)) / 2.0f;
-    }
-
     glm::vec3 LRectangleShape::getTopLeftCorner() const
     {
         return ((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_;

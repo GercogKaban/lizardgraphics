@@ -195,7 +195,6 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     colorBlending.blendConstants[2] = 0.0f;
     colorBlending.blendConstants[3] = 0.0f;
     
-
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
@@ -203,7 +202,10 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
 
     VkPushConstantRange push_constant;
     push_constant.offset = 0;
-    push_constant.size = sizeof(LGraphics::LApp::BaseShaderConstants);
+    if (app->info.lighting)
+        push_constant.size = sizeof(LGraphics::LApp::LightShaderConstants);
+    else
+        push_constant.size = sizeof(LGraphics::LApp::BaseShaderConstants);
     push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     pipelineLayoutInfo.pPushConstantRanges = &push_constant;

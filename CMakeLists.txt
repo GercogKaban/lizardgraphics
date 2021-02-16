@@ -7,10 +7,13 @@ add_compile_definitions(${API})
 IF (${PLATFORM} MATCHES "DESKTOP")
 project (DesktopExample C CXX)
 
-set(SOURCE_FILES main.cpp)
+file(GLOB_RECURSE shaders *.VERT *.FRAG)
+
+set(SOURCE_FILES main.cpp ${shaders})
 set(HEADER_FILES interfaces.h)
 
 ADD_EXECUTABLE(DesktopExample ${SOURCE_FILES} ${HEADER_FILES})
+source_group("shaders" FILES ${shaders})
 
 add_subdirectory (LizardGraphics)
 

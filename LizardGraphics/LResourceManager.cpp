@@ -7,7 +7,7 @@
 #include "LResourceManager.h"
 #include "LModel.h"
 #include "LModelBuffer.h"
-#include "LError.h"
+#include "LLogger.h"
 #include "textures.h"
 
 namespace LGraphics
@@ -74,6 +74,18 @@ namespace LGraphics
     std::unordered_map<std::string, LResourceManager::ModelData*> LResourceManager::models;
     LApp* LResourceManager::app;
 
+    VkImageView LResourceManager::loadTexture(const char* path, int desiredChannel)
+    {
+        size_t dummy;
+        return loadTexture(path, dummy, desiredChannel);
+    }
+
+    VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
+    {
+        size_t dummy;
+        return loadTexture(bytes, size, name, dummy, desiredChannel);
+    }
+
     VkImageView LResourceManager::loadTexture(const char* path, size_t& mipLevels, int desiredChannel)
     {
         if (!path || !strlen(path))
@@ -85,8 +97,8 @@ namespace LGraphics
         stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         if (texChannels == STBI_rgb)
         {
-            PRINTLN("\n!!!!!!!!!WARNING!!!!!!!!! ", path, " in RGB format, this may cause drawing errors!");
-            PRINTLN("Please, use textures in RGBA format!");
+            PRINTLN(LOG_HEADER,"!!!!!!!!!WARNING!!!!!!!!! ", path, " in RGB format, this may cause drawing errors!");
+            PRINTLN(LOG_HEADER, "Please, use textures in RGBA format!");
         }
         if (!pixels) {
             throw std::runtime_error("failed to load texture image!");
@@ -161,6 +173,8 @@ namespace LGraphics
                     // normals data
                     //...
 
+
+                    //indices data
                     vertIndices[i].push_back(vertIndices[i].size());
                 }
             }

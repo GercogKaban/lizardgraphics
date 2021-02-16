@@ -44,8 +44,6 @@ namespace LGraphics
 
         float calculateWidgetLength();
 
-        glm::vec3 getCenter() const override;
-
         glm::vec3 getTopLeftCorner() const;
         glm::vec3 getTopRightCorner() const;
         glm::vec3 getBottomLeftCorner() const;

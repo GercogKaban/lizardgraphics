@@ -15,6 +15,7 @@ namespace LGraphics
     class LApp;
     class LModel;
     class LModelBuffer;
+    class LImage;
 
     class LResourceManager   
     {
@@ -44,15 +45,19 @@ namespace LGraphics
 
         friend LApp;
         friend LModel;
+        friend LImage;
 
-        static VkImageView loadTexture(const char* path, size_t& mipLevels, int desiredChannel = 4);
-        static VkImageView loadTexture(unsigned char * bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel = 4);
+
+        static VkImageView loadTexture(const char* path, int desiredChannel = 4);
+        static VkImageView loadTexture(unsigned char * bytes, size_t size, const char* name, int desiredChannel = 4);
 
         static void loadModel(LModel* model, const char* modelPath, bool debugInfo = false);
 
         static void setApp(LApp* app) { LResourceManager::app = app; }
 
     private:
+        static VkImageView loadTexture(const char* path, size_t& mipLevels, int desiredChannel = 4);
+        static VkImageView loadTexture(unsigned char* bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel = 4);
 
         static VkImageView createImageView(unsigned char* pixels, int texWidth, int texHeight, int texChannels, const char* byteTexture
             , size_t& miplevels);

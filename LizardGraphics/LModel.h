@@ -37,8 +37,6 @@ namespace LGraphics
         void loadModel(const char* modelPath, bool debugInfo);
 
         bool mouseOnIt() override { return false; }
-        glm::vec3 getCenter() const override { return glm::vec3(); }
-
 
         const char* modelPath;
         VkImageView* textures;

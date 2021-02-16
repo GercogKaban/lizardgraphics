@@ -32,7 +32,7 @@ namespace LGraphics
         /*!
         @brief Возвращает размер массива вершин.
         */
-        virtual size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount) * sizeof(decltype(*vertices)); }
+        virtual size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount + normalsCount) * sizeof(decltype(*vertices)); }
 
         ///*!
         //@brief Возвращает размер массива текстурных координат.

@@ -5,7 +5,7 @@ namespace LGraphics
 {
     void LRectangleBuffer::setBuffers()
     {
-        verticesCount = 4; indicesCount = 6, textureCoordsCount = 2;
+        verticesCount = 4; indicesCount = 6, textureCoordsCount = 2, normalsCount = 3;
 
         setVerts();
         setInds();
@@ -14,21 +14,13 @@ namespace LGraphics
 
     void LRectangleBuffer::setVerts()
     {
-        vertices = new float[(coordsCount + textureCoordsCount) * verticesCount]
+        vertices = new float[(coordsCount + textureCoordsCount + normalsCount) * verticesCount]
         {
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         };
-
-        //textures = new GLfloat[textureCoordsCount* verticesCount]
-        //{
-        //    1.0f, 1.0f,   //0.0f, 0.0f,
-        //     1.0f, 0.0f,  //0.0f, 1.0f,
-        //    0.0f, 0.0f,  //1.0f, 1.0f,
-        //    0.0f, 1.0f   //1.0f, 0.0f,
-        //};
     }
 
     void LRectangleBuffer::setInds()

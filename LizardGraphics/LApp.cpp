@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 
-//#define VMA_DEBUG_ALIGNMENT 128
 #define VMA_IMPLEMENTATION
 #include "LApp.h"
 #include "LRectangleBuffer.h"
@@ -9,11 +8,13 @@
 #include "LModelBuffer.h"
 #include "CodeGen.h"
 #include "../codegen.h"
+#include "LLogger.h"
 
 #include "LResourceManager.h"
 
 namespace LGraphics
 {
+    LAppCreateInfo LApp::info;
 #ifdef OPENGL
     LApp::LApp()
     {
@@ -25,6 +26,8 @@ namespace LGraphics
     LApp::LApp(const LAppCreateInfo& info)
     {
         this->info = info;
+        if (!info.logFlags)
+            this->info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
         setupLG();
     }
 #endif
@@ -36,8 +39,6 @@ namespace LGraphics
 
     void LApp::loop()
     {
-        bool show_demo_window = true;
-        bool show_another_window = false;
 
         while (!glfwWindowShouldClose(window_))
         {
@@ -45,6 +46,9 @@ namespace LGraphics
 #endif
             refreshCamera();
             glfwPollEvents();
+
+            if (info.logFlags & SYNC_LOG)
+                LSyncLogger::tick();
 
             while(toDelete.size())
             {
@@ -74,6 +78,7 @@ namespace LGraphics
                     obj.first->arrayIndex = getModels().size() + getRectangles().size() + 1;
                 toCreate.pop();
             }
+
             // Resize swap chain?
             if (g_SwapChainRebuild)
             {
@@ -93,9 +98,6 @@ namespace LGraphics
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            //vmaSetCurrentFrameIndex(allocator, wd->FrameIndex);
-            //vmaGetBudget(allocator, &budget);
-
             imgui();
 
             // Rendering
@@ -113,18 +115,6 @@ namespace LGraphics
 #if LG_MULTITHREAD
             openGlDrawing.lock();
 #endif
-            //setMatrices();
-
-            /*if (!lightIsInited())
-            {
-                setLightPos(glm::vec3(4.0f, 2.0f, 3.0f));
-                setLightSpaceMatrix();
-                initLight();
-            }
-
-            fps++;
-            initTextures();
-            glfwPollEvents();*/
 
 #ifdef OPENGL
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -137,18 +127,6 @@ namespace LGraphics
 
             glEnable(GL_DEPTH_TEST);
 #endif
-           /* for (auto& o : nonInterfaceObjects)
-                if (!o->isHidden())
-                {
-                    o->setShader(shadowMap);
-                    o->draw();
-                }
-            for (auto& o : customObjects)
-                if (!o->isInterface)
-            {
-                o->shader = shadowMap;
-                o->draw();
-            }*/
 
 #ifdef OPENGL           
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -161,44 +139,10 @@ namespace LGraphics
             glBindTexture(GL_TEXTURE_2D, depthMap);
             glActiveTexture(GL_TEXTURE0);
 #endif // OPENGL
-            /*for (auto& o : nonInterfaceObjects)
-                if (!o->isHidden())
-                {
-                    o->setShader(defaultShader);
-                    o->draw();
-                }
-            for (auto& o : customObjects)
-                if (!o->isInterface)
-            {
-                o->shader = defaultShader;
-                o->draw();
-            }*/
+
 #ifdef OPENGL 
             glDisable(GL_DEPTH_TEST);
-#endif // OPENGL
-
-            //LDISPLAY();
-            //for (auto& o : interfaceObjects)
-            //    if (!o->isHidden())
-            //        o->draw();
-
-            //for (auto& o : customObjects)
-            //    if (o->isInterface)
-            //        o->draw();
-
-            //LTextRender::display(std::to_string(prevFps), { 50.0f, (float)getWindowSize().y - 50.0f }, 1.5f, { 1.0f,0.0f,0.0f }, getWindowSize());
-            
-            //for (auto& t : textObjects)
-                //LLine::display(t.text, t.pos.x, t.pos.y, t.scale, t.color);
-            
-            /*for (auto& o : interfaceObjects)
-                o->tick();
-            for (auto& o : nonInterfaceObjects)
-                o->tick();
-
-            afterDrawingFunc();
-            textRenderer->displayText();*/
-            //fps++;
+#endif
             afterDrawingFunc();
             glfwSwapBuffers(window_);
 
@@ -301,11 +245,7 @@ namespace LGraphics
     {
         for (auto& w : objects)
             if (!w->isInited())
-            {
                 w->init();
-                if (w->innerWidgets)
-                    initTextures(*w->innerWidgets);
-            }
     }
 
     void LApp::setMatrices()
@@ -352,7 +292,10 @@ namespace LGraphics
 
     void LApp::initLEngine()
     {
-        LError::initErrors(this);
+        LLogger::initErrors(this);
+        if (info.logFlags & ASYNC_LOG)
+            LAsyncLogger::start();
+            
         standartRectBuffer = new LRectangleBuffer(this);
 #ifdef OPENGL
         standartRectBuffer = new LRectangleBuffer();
@@ -716,17 +659,15 @@ namespace LGraphics
         glfwDestroyWindow(window_);
         glfwTerminate();
 
-        //for (auto& x : interfaceObjects)
-        //    deleteWidget(x);
-        //for (auto& x : nonInterfaceObjects)
-            //deleteWidget(x);
-        //delete standartRectBuffer;
 #ifdef OPENGL
         delete standartInterfaceshader;
         delete standartWorldObjShader;
         delete checkMarkShader;
         LError::releaseResources();
 #endif OPENGL
+
+        if (info.logFlags & ASYNC_LOG)
+            LAsyncLogger::stop();
     }
 
     void LApp::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
@@ -884,7 +825,7 @@ namespace LGraphics
 
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(g_PhysicalDevice, &deviceProperties);
-        PRINTLN(deviceProperties.deviceName);
+        PRINTLN(LOG_HEADER,deviceProperties.deviceName);
     }
 
     void LApp::createLogicalDevice()
@@ -953,7 +894,8 @@ namespace LGraphics
 
     void LApp::createGraphicsPipeline()
     {
-        baseShader = new LShaders::Shader("shaders//Vk_interfaceV.spv", "shaders//Vk_interfaceF.spv", this, false);
+        baseShader = new LShaders::Shader("shaders//Vk_objV.spv", "shaders//Vk_objF.spv", this, false);
+        lightShader = new LShaders::Shader("shaders//Vk_litobjV.spv", "shaders//Vk_litobjF.spv", this, false);
     }
 
     void LApp::createAllocator()
@@ -1257,8 +1199,8 @@ namespace LGraphics
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
         allocInfo.requiredFlags = properties;
-        allocInfo.preferredFlags =  1;
-        //allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        allocInfo.preferredFlags =  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
         allocInfo.memoryTypeBits = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 
         uint32_t memoryTypeIndex;
@@ -2037,7 +1979,23 @@ namespace LGraphics
             vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
         }
 
-        //vkCmdExecuteCommands();
+        auto viewProj = getProjectionMatrix() * getViewMatrix();
+        LApp::BaseShaderConstants baseShaderCnst
+        {
+            viewProj
+        };
+
+        LApp::LightShaderConstants lightShaderCnst
+        {
+            viewProj,
+            lightPos,
+            cameraPos,
+            //temporary
+            {1.0f,1.0f,1.0f},
+            0.1f,
+            1.0f,
+        };
+
         if (rectangles.size())
         {
             auto obj = rectangles[0];
@@ -2056,8 +2014,14 @@ namespace LGraphics
             vkCmdBindVertexBuffers(fd->CommandBuffer, 0, 1, vertexBuffers, offsets);
             vkCmdBindIndexBuffer(fd->CommandBuffer, ((LWRectangle*)obj)->buffer->getIndBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
-            vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(), 
-                VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &data);
+            if (info.lighting)
+            {
+                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::LightShaderConstants), &lightShaderCnst);
+            }
+            else
+                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &baseShaderCnst);
 
             for (size_t i = 0; i < rectangles.size(); ++i)
                 rectangles[i]->draw(fd->CommandBuffer, wd->FrameIndex);
@@ -2068,14 +2032,16 @@ namespace LGraphics
             auto obj = models[0];
             auto shader = obj->getShader();
 
-            LApp::BaseShaderConstants data
-            {
-                getProjectionMatrix() * getViewMatrix(),
-            };
-
             vkCmdBindPipeline(fd->CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
-            vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
-                VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &data);
+
+            if (info.lighting)
+            {
+                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::LightShaderConstants), &lightShaderCnst);
+            }
+            else
+                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &baseShaderCnst);
 
             for (size_t i = 0; i < models.size(); ++i)
                 models[i]->draw(fd->CommandBuffer, wd->FrameIndex);
@@ -2134,9 +2100,9 @@ namespace LGraphics
         //initTextures(rectangles);
     }
 
-    std::array<VkVertexInputAttributeDescription, 2> LApp::Vertex::getAttributeDescriptions()
+    std::array<VkVertexInputAttributeDescription, 3> LApp::Vertex::getAttributeDescriptions()
     {
-        std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+        std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -2147,6 +2113,15 @@ namespace LGraphics
         attributeDescriptions[1].location = 1;
         attributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
         attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
+
+        if (info.lighting == L_TRUE)
+        {
+            attributeDescriptions[2].binding = 0;
+            attributeDescriptions[2].location = 2;
+            attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+            attributeDescriptions[2].offset = offsetof(Vertex, normals);
+        }
+
         return attributeDescriptions;
     }
 }

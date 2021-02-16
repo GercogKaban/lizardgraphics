@@ -10,7 +10,7 @@ set(API "OPENGL" CACHE STRING "RENDERING API")
 add_compile_definitions(${API})
 
 set (SOURCE_FILES textures.cpp LShape.cpp LRectangleShape.cpp LImage.cpp 
-LRectangleBuffer.cpp LError.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
+LRectangleBuffer.cpp LLogger.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
 LTimer.cpp additional.cpp LMultiRectangleBuffer.cpp LMultiWRectangle.cpp 
 LWRectangle.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp LModelBuffer.cpp
 CodeGen.cpp FileSystemDialog.cpp)
@@ -20,7 +20,7 @@ imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp)
 
 set (HEADER_FILES pch.h textures.h Lshaders.h vectors.h
 LShape.h LRectangleShape.h LRectangleBuffer.h 
-LImage.h LError.h LBuffer.h 
+LImage.h LLogger.h LBuffer.h 
 LApp.h LWidget.h LTimer.h additional.h LMultiRectangleBuffer.h 
 LMultiWRectangle.h LWRectangle.h LResourceManager.h ObjectPool.h
 imgui.h imconfig.h imgui_impl_glfw.h imgui_impl_vulkan.h imgui_internal.h

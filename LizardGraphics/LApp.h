@@ -48,7 +48,6 @@ void handle_cmd(android_app* app, int32_t cmd);
 #endif
 
 #include "LObject.h"
-#include "LError.h"
 
 namespace LShaders
 {
@@ -71,11 +70,16 @@ namespace LGraphics
     class LWidget;
     class LModel;
     class ImGuiInterface;
+    class LLogger;
 
-    enum LStates
+    enum LStates : uint8_t
     {
         L_FALSE,
         L_TRUE,
+    };
+
+    enum LProjections : uint8_t
+    {
         L_PERSPECTIVE,
         L_ORTHOGRAPHIC,
     };
@@ -92,12 +96,13 @@ namespace LGraphics
         size_t poolSize = 100;
         //size_t modelPoolSize = 10;
         size_t sleepThread = 0;
-        uint8_t vsync = L_FALSE;
-        uint8_t saveObjects = L_FALSE;
-        uint8_t loadObjects = L_FALSE;
+        LStates vsync = L_FALSE;
+        LStates saveObjects = L_FALSE;
+        LStates loadObjects = L_FALSE;
+        LStates lighting = L_FALSE;
         uint32_t anisotropy = 16;
-        uint32_t projection = L_ORTHOGRAPHIC;
-        
+        LProjections projection = L_ORTHOGRAPHIC;
+        uint8_t logFlags = 0;
     };
 
     /*!
@@ -119,6 +124,7 @@ namespace LGraphics
         friend LWidget;
         friend LModel;
         friend ImGuiInterface;
+        friend LLogger;
 
     public:
 
@@ -223,10 +229,15 @@ namespace LGraphics
         glm::vec3 getCameraUp() const { return cameraUp; }
         float getViewRadius() const { return viewRadius; }
 
-        LShaders::Shader* getLightningShader() { return experimentalLightShader; }
+        LShaders::Shader* getLightningShader() { return lightShader; }
+        //LShaders::Shader* getLightningShader() { return experimentalLightShader; }
 
         unsigned int getDepthMap() const { return depthMap; }
          
+        //void setLightDir(glm::vec3 lightDir) { this->lightDir = lightDir; };
+        //glm::vec3 getLightDir() const { return lightDir; }
+
+        void setLightPos(glm::vec3 lightPos);
         glm::vec3 getLightPos() const { return lightPos; }
         glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
 
@@ -238,7 +249,7 @@ namespace LGraphics
         ObjectPool<LWRectangle*> lwRectPool;
 
         std::vector<LNonWidget*> customObjects;
-        glm::vec3 lightPos;
+        glm::vec3 lightPos; //lightDir;
 
         size_t getPoolSize() const { return info.poolSize; }
             
@@ -252,6 +263,7 @@ namespace LGraphics
         void setUserCharacterCallback(std::function<void(GLFWwindow* window, unsigned int codepoint)> func);
         void setUserScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)>func);
 
+        uint8_t getLogFlags() const { return info.logFlags; }
         bool cursorModeSwitched = false;
 
         void setYaw(float yaw) { this->yaw = yaw; };
@@ -261,7 +273,7 @@ namespace LGraphics
         float getPitch() const { return pitch; }
 
     protected:
-        LAppCreateInfo info;
+        static LAppCreateInfo info;
 
         bool drawUI_ = true;
 
@@ -285,7 +297,6 @@ namespace LGraphics
         glm::vec3 prevCameraFront = glm::vec3(0.0f);
         glm::mat4 lightSpaceMatrix;
 
-        void setLightPos(glm::vec3 lightPos);
         void setLightSpaceMatrix();
 
         void initTextures(std::vector<LWidget*>& objects);
@@ -333,7 +344,7 @@ namespace LGraphics
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
 
-        LShaders::Shader* baseShader;
+        LShaders::Shader* baseShader, *lightShader;
 
         VkDescriptorPool descriptorPool;
 
@@ -520,6 +531,7 @@ namespace LGraphics
         {
             glm::vec3 pos;
             glm::vec2 texCoord;
+            glm::vec3 normals;
 
             static VkVertexInputBindingDescription getBindingDescription()
             {
@@ -531,12 +543,22 @@ namespace LGraphics
                 return bindingDescription;
             }
 
-            static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions();
+            static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
         };
 
         struct BaseShaderConstants
         {
             alignas(16) glm::mat4 projView;
+        };
+
+        struct LightShaderConstants
+        {
+            alignas(16) glm::mat4 projView;
+            alignas(16) glm::vec3 lightPos;
+            alignas(16) glm::vec3 viewPos;
+            alignas(16) glm::vec3 lightColor;
+            alignas(4) float ambient;
+            alignas(4) float specular;
         };
 
         struct BaseVertexUBuffer

@@ -33,9 +33,6 @@ namespace LGraphics
         changed = app->wd->ImageCount;
         auto scaleDif = glm::vec3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
-        if (innerWidgets)
-        for (auto& o : *innerWidgets)
-            o->scale(o->getScale() + scaleDif);
     }
 
     void LShape::scaleWithoutAlign(const glm::vec3 val)
@@ -52,10 +49,7 @@ namespace LGraphics
     {
         changed = app->wd->ImageCount;
         auto moveDif = glm::vec3(x,y,z) - move_;
-        move_ = { x,y,z };
-        if (innerWidgets)
-        for (auto& o : *innerWidgets)
-            o->move(o->getMove() + moveDif);
+        move_ = { x,y,z };;
     }
 
     void LShape::move(const size_t x, const size_t y)
@@ -68,6 +62,30 @@ namespace LGraphics
     {
         auto coords = pointOnScreenToGlCoords(glm::vec2(app->getWindowSize()), { (float)v.x, (float)v.y });
         LShape::move(coords.x, coords.y, 0.0f);
+    }
+
+    float& LShape::getTransparencyRef()
+    {
+        changed = app->wd->ImageCount;
+        return transparency_;
+    }
+
+    glm::vec3& LShape::getColorRef()
+    {
+        changed = app->wd->ImageCount;
+        return color_;
+    }
+
+    glm::vec3& LShape::getScaleRef()
+    {
+        changed = app->wd->ImageCount;
+        return scale_;
+    }
+
+    glm::vec3& LShape::getMoveRef()
+    {
+        changed = app->wd->ImageCount;
+        return move_;
     }
 
     LShape::LShape(LApp* app, const char * path)
@@ -90,10 +108,9 @@ namespace LGraphics
         this->buffer = buffer;
     }
 
-    glm::vec3& LShape::getMove()
+    glm::vec3 LShape::getMove() const
     {
-        changed = app->wd->ImageCount;
-        return move_; 
+        return move_;
     }
 
     // нужно проверить эту функцию

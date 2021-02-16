@@ -123,10 +123,15 @@ namespace LGraphics
 
         virtual float getTransparency() const = 0;   ///< Возвращает прозрачность виджета.
         virtual glm::vec3 getColor() const = 0;         ///< Возвращает цвет виджета.
-        virtual glm::vec3& getScale() = 0;         ///< Возвращает размеры виджета.
-        virtual glm::vec3& getMove() = 0;          ///< Возвращает вектор move виджета.
-        virtual glm::vec3 getCenter() const = 0;        ///< Возвращает центр виджета.
+        virtual glm::vec3 getScale() const = 0;         ///< Возвращает размеры виджета.
+        virtual glm::vec3 getMove() const  = 0;          ///< Возвращает вектор move виджета.
         virtual glm::mat4 getRotate() const { return rotate_; }
+
+        virtual float& getTransparencyRef() = 0;   ///< Возвращает прозрачность виджета.
+        virtual glm::vec3& getColorRef() = 0;         ///< Возвращает цвет виджета.
+        virtual glm::vec3& getScaleRef() = 0;         ///< Возвращает размеры виджета.
+        virtual glm::vec3& getMoveRef() = 0;          ///< Возвращает вектор move виджета.
+        virtual glm::mat4& getRotateRef() { return rotate_; }
 
         LShaders::Shader* getShader() { return shader; }
 
@@ -151,13 +156,7 @@ namespace LGraphics
         std::function<void()> animation = std::function<void()>([](){});
         std::function<void()> breakingAnimation = std::function<void()>([]() {});
 
-        //bool drawOver_ = false;
-
-        std::vector<LWidget*>* innerWidgets = nullptr;
-
         bool isInited_ = false;
-
-        //bool widgetMovability = true;
         LShaders::Shader* shader = nullptr; ///< Шейдер.
 
         int changed = 3;
@@ -166,17 +165,6 @@ namespace LGraphics
 #ifdef VULKAN
         size_t arrayIndex = 0;
 #endif
-        //VkImageView newTexture = nullptr;
-
-        //LIWidget()
-        //    :LImage(nullptr){}
-
-        //*!
-        //@brief Конструктор.
-        //@param image - Копия LImage.
-        //*/
-        //LIWidget(const LImage& image)
-        //    :LImage(image){}
 
         /*!
         @brief Конструктор.
@@ -193,7 +181,6 @@ namespace LGraphics
         LWidget(LApp* app, const unsigned char* bytes, size_t size);
 #endif
 
-        //virtual void init(LApp* app);
         virtual void init();
     };
 }

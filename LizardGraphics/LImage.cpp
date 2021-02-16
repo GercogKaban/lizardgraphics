@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "LImage.h"
-#include "LError.h"
+#include "LLogger.h"
 
 #include "LResourceManager.h"
 
