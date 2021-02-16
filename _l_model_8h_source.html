@@ -109,21 +109,18 @@ $(function() {
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">void</span> loadModel(<span class="keyword">const</span> <span class="keywordtype">char</span>* modelPath, <span class="keywordtype">bool</span> debugInfo);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
 <div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_model.html#ae8fb063115ef57987c1e4c8115fa60ca">   39</a></span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="class_l_graphics_1_1_l_model.html#ae8fb063115ef57987c1e4c8115fa60ca">mouseOnIt</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_model.html#acc141c2739a34b2f1e74697dc48f2441">   40</a></span>&#160;        glm::vec3 <a class="code" href="class_l_graphics_1_1_l_model.html#acc141c2739a34b2f1e74697dc48f2441">getCenter</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> glm::vec3(); }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* modelPath;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        VkImageView* textures;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">bool</span>* meshesToDraw = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">size_t</span> meshesCount = 0;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    };</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* modelPath;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        VkImageView* textures;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">bool</span>* meshesToDraw = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">size_t</span> meshesCount = 0;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    };</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_model_html"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html">LGraphics::LModel</a></div><div class="ttdef"><b>Definition:</b> LModel.h:7</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_model_html_acc141c2739a34b2f1e74697dc48f2441"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html#acc141c2739a34b2f1e74697dc48f2441">LGraphics::LModel::getCenter</a></div><div class="ttdeci">glm::vec3 getCenter() const override</div><div class="ttdoc">Возвращает центр виджета.</div><div class="ttdef"><b>Definition:</b> LModel.h:40</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_model_html_ae8fb063115ef57987c1e4c8115fa60ca"><div class="ttname"><a href="class_l_graphics_1_1_l_model.html#ae8fb063115ef57987c1e4c8115fa60ca">LGraphics::LModel::mouseOnIt</a></div><div class="ttdeci">bool mouseOnIt() override</div><div class="ttdoc">Возвращает находится ли мышка на виджете.</div><div class="ttdef"><b>Definition:</b> LModel.h:39</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_resource_manager_html"><div class="ttname"><a href="class_l_graphics_1_1_l_resource_manager.html">LGraphics::LResourceManager</a></div><div class="ttdef"><b>Definition:</b> LResourceManager.h:20</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_resource_manager_html"><div class="ttname"><a href="class_l_graphics_1_1_l_resource_manager.html">LGraphics::LResourceManager</a></div><div class="ttdef"><b>Definition:</b> LResourceManager.h:21</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_shape.html">LGraphics::LShape</a></div><div class="ttdoc">Переопределяет абстрактный класс LWidgetI.</div><div class="ttdef"><b>Definition:</b> LShape.h:14</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:148</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:153</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
