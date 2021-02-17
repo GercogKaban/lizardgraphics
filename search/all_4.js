@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['ebo_739',['ebo',['../class_l_graphics_1_1_l_buffer.html#a94caeff72a43cac8033aa5796cf970d0',1,'LGraphics::LBuffer']]],
-  ['ebo_740',['EBO',['../class_l_graphics_1_1_l_buffer.html#aa7bc41285c79904af42b727dd82979ea',1,'LGraphics::LBuffer']]],
+  ['ebo_739',['EBO',['../class_l_graphics_1_1_l_buffer.html#aa7bc41285c79904af42b727dd82979ea',1,'LGraphics::LBuffer']]],
+  ['ebo_740',['ebo',['../class_l_graphics_1_1_l_buffer.html#a94caeff72a43cac8033aa5796cf970d0',1,'LGraphics::LBuffer']]],
   ['enabling_20buffer_20device_20address_741',['Enabling buffer device address',['../enabling_buffer_device_address.html',1,'index']]],
   ['error_742',['Error',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_error.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['error_20codes_743',['Error codes',['../group__errors.html',1,'']]],
