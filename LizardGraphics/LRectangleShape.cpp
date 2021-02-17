@@ -3,6 +3,7 @@
 #include "LRectangleBuffer.h"
 #include "Lshaders.h"
 #include "LApp.h"
+#include "LLogger.h"
 
 namespace LGraphics
 {
@@ -47,6 +48,7 @@ namespace LGraphics
 
     void LRectangleShape::init(LApp* app, bool isInterfaceObj)
     {
+        LOG_CALL
         this->app = app;
         buffer = app->standartRectBuffer;
 #ifdef OPENGL

@@ -1,4 +1,5 @@
 ﻿#include "LBuffer.h"
+#include "LLogger.h"
 #include "pch.h"
 
 namespace LGraphics
@@ -13,6 +14,7 @@ namespace LGraphics
 #ifdef VULKAN
     void LBuffer::init(LApp* app)
     {
+        LOG_CALL
         this->app = app;
         setBuffers();
     }
@@ -24,6 +26,7 @@ namespace LGraphics
 
     void LBuffer::genBuffers()
     {
+        LOG_CALL
 #ifdef OPENGL
         glGenVertexArrays(1, &VAO);
         glGenBuffers(2, VBO);

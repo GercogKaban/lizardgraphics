@@ -1,11 +1,13 @@
 #include "LModel.h"
 #include "LModelBuffer.h"
 #include "LResourceManager.h"
+#include "LLogger.h"
 
 LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath, 
     const char* normalsPath, bool debugInfo)
     :LShape(app,nullptr), modelPath(path)
 {
+    LOG_CALL
     // Base texture and normal map 
     //textures.resize(2);
     loadModel(path, debugInfo);
@@ -26,12 +28,14 @@ LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath,
 
 LGraphics::LModel::~LModel()
 {
+    LOG_CALL
     if (meshesToDraw)
         delete[] meshesToDraw;
 }
 
 void LGraphics::LModel::loadTexture(const char* path, TextureType type)
 {
+    LOG_CALL
     auto texture = LResourceManager::loadTexture(path,mipLevels);
     auto m = LResourceManager::models[modelPath]->textures[type] = texture;
     this->texture = texture;
@@ -39,16 +43,19 @@ void LGraphics::LModel::loadTexture(const char* path, TextureType type)
 
 void LGraphics::LModel::setMeshDrawing(size_t num, bool draw)
 {
+    LOG_CALL
     meshesToDraw[num] = draw;
 }
 
 void LGraphics::LModel::loadModel(const char* modelPath, bool debugInfo)
 {
+    LOG_CALL
     LResourceManager::loadModel(this, modelPath, debugInfo);
 }
 
 void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
+    LOG_CALL
     VkBuffer vertexBuffers[] = { buffer->getVertBuffer() };
     VkDeviceSize offsets[] = { 0 };
 

@@ -14,12 +14,19 @@
 //#define LOG_HEADER std::string(std::ctime(std::move(&std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())))) +\
 //" file: " + __FILE__ + " line: " + __LINE__
 
-#define LOG_HEADER "\n" + LLogger::getCurrentTime() + std::string("file: ") + __FILE__ + " line: " + std::to_string(__LINE__) + '\n'
-#define PRINT(...) LLogger::printMsg(__VA_ARGS__)
-#define PRINTLN(...) LLogger::printMsgLn(__VA_ARGS__)
 
 namespace LGraphics
 {
+    struct LogVar
+    {
+        LogVar(const std::string& str);
+        ~LogVar();
+    };
+
+#define LOG_HEADER LGraphics::LLogger::getCurrentTime() + std::string("file: ") + __FILE__ + " line: " + std::to_string(__LINE__) + '\n'
+#define PRINT(...) LGraphics::LLogger::printMsg(__VA_ARGS__)
+#define PRINTLN(...) LGraphics::LLogger::printMsgLn(__VA_ARGS__)
+#define LOG_CALL LGraphics::LogVar llogvar__(std::string(LOG_HEADER) + __FUNCTION__ + "\n");
 
     enum LLogStates : uint8_t
     {
@@ -37,6 +44,9 @@ namespace LGraphics
     class LLogger : public LObject
     {
     public:
+
+        friend LogVar;
+        friend LApp;
 
         template <typename T>
         class ThreadSafeQueue : private std::queue<T>
@@ -255,8 +265,17 @@ namespace LGraphics
         }
 
 protected:
+           static bool stopLogging;
+//public:
+        //static void stopLogging()
+        //{
+        //    stopLogging = true;
+        //}
 
+public:
 
+protected:
+  
     static void logToFile(std::string msg,
         std::ios_base::_Openmode firstCreationFlag = std::ios_base::app)
     {
@@ -270,24 +289,33 @@ protected:
         static LApp* app_;
 
         static ThreadSafeQueue<std::string> errors;
+        static std::stack<std::string> calls;
         static std::string logFilePath;
 
         static uint8_t states;
     };
 
+    //static void runtimeException(const std::string& str)
+    //{
+    //    PRINTLN(str);
+    //    throw runtimeExceptionCode;
+    //}
+
+    class LAsyncLogger;
+
     class LSyncLogger : public LLogger
     {
     public:
+        friend LAsyncLogger;
         static void tick()
         {
             while (true)
             {
-#ifndef NDEBUG
                 while (errors.size_())
                 {
-                auto err = errors.front_();
-                errors.pop_();
-
+                    auto err = errors.front_();
+                    errors.pop_();
+#ifndef NDEBUG
                 if (states & CONSOLE_DEBUG_LOG)
                     print(err);
                 if (states & FILE_DEBUG_LOG)
@@ -300,10 +328,47 @@ protected:
 #endif
                 firstCreationFlag = std::ios_base::app;
                 }
+
+                if (stopLogging)
+                    return;
             }
         }
 
+        static void emergencyStop()
+        {
+            stop();
+            printCalls();
+        }
+
+        static void stop()
+        {
+            stopLogging = true;
+            tick();
+        }
+
     private:
+
+        static void printCalls()
+        {
+            while (calls.size())
+            {
+                auto err = calls.top();
+                calls.pop();
+#ifndef NDEBUG
+                if (states & CONSOLE_DEBUG_LOG)
+                    print(err);
+                if (states & FILE_DEBUG_LOG)
+                    logToFile(err, firstCreationFlag);
+#else
+                if (states & CONSOLE_RELEASE_LOG)
+                    println(err);
+                if (states & FILE_RELEASE_LOG)
+                    logToFile(err);
+#endif
+                firstCreationFlag = std::ios_base::app;
+            }
+    }
+
         static std::ios_base::_Openmode firstCreationFlag;
     };
 
@@ -311,18 +376,32 @@ protected:
     {
     public:
 
+        static void emergencyStop()
+        {
+            stop();
+            printCalls();
+        }
+
         static void stop()
         {
+            stopLogging = true;
+            tick();
             thread.join();
         }
 
         static void start()
         {
+            started = true;
             thread = std::thread(&LSyncLogger::tick);
         }
 
+        static bool isStarted()
+        {
+            return started;
+        }
     protected:
 
         static std::thread thread;
+        static bool started;
     };
 }

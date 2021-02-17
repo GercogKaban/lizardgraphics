@@ -76,18 +76,21 @@ namespace LGraphics
 
     VkImageView LResourceManager::loadTexture(const char* path, int desiredChannel)
     {
+        LOG_CALL
         size_t dummy;
         return loadTexture(path, dummy, desiredChannel);
     }
 
     VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
     {
+        LOG_CALL
         size_t dummy;
         return loadTexture(bytes, size, name, dummy, desiredChannel);
     }
 
     VkImageView LResourceManager::loadTexture(const char* path, size_t& mipLevels, int desiredChannel)
     {
+        LOG_CALL
         if (!path || !strlen(path))
             return std::get<0>(*textures["dummy"]);
         if (textures.find(path) != textures.end())
@@ -109,6 +112,7 @@ namespace LGraphics
 
     VkImageView LResourceManager::loadTexture(unsigned char* bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel)
     {
+        LOG_CALL
         int height, width, imageChannels;
         if (textures.find(name) != textures.end())
             return std::get<0>(*textures[name]);
@@ -119,6 +123,7 @@ namespace LGraphics
 
     void LResourceManager::loadModel(LModel* model, const char* modelPath, bool debugInfo)
     {
+        LOG_CALL
         if (!models[modelPath])
         {
             tinyobj::attrib_t attrib;
@@ -206,6 +211,7 @@ namespace LGraphics
     VkImageView LResourceManager::createImageView(unsigned char* pixels, int texWidth,
         int texHeight, int texChannels, const char* path, size_t& miplevels)
     {
+        LOG_CALL
         VkImage textureImage;
         VkImageView view;
         VmaAllocation textureImageMemory;

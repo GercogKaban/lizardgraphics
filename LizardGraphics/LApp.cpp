@@ -9,7 +9,6 @@
 #include "CodeGen.h"
 #include "../codegen.h"
 #include "LLogger.h"
-
 #include "LResourceManager.h"
 
 namespace LGraphics
@@ -25,138 +24,285 @@ namespace LGraphics
 #ifdef VULKAN
     LApp::LApp(const LAppCreateInfo& info)
     {
+        LOG_CALL
+        initApp_(info);
+    }
+#endif
+
+    void LApp::initApp_(const LAppCreateInfo& info)
+    {
+#ifdef WIN32
+        __try
+        {
+            this->info = info;
+            if (!info.logFlags)
+                this->info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
+            setupLG();
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+            LLogger::states = info.logFlags;
+            if (info.logFlags & ASYNC_LOG)
+            {
+                if (!LAsyncLogger::isStarted())
+                    LAsyncLogger::start();
+                handleSEH(exception_code());
+                LAsyncLogger::emergencyStop();
+            }
+            else if (info.logFlags & SYNC_LOG)
+            {
+                handleSEH(exception_code());
+                LSyncLogger::emergencyStop();
+            }
+            std::terminate();
+        }
+#else
         this->info = info;
         if (!info.logFlags)
             this->info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
         setupLG();
-    }
 #endif
+    }
 
     LApp::~LApp()
     {
         releaseResources();
     }
 
-    void LApp::loop()
+    void LApp::loop_()
     {
-
-        while (!glfwWindowShouldClose(window_))
+        LOG_CALL
+        try
         {
+            while (!glfwWindowShouldClose(window_))
+            {
 #ifdef VULKAN
 #endif
-            refreshCamera();
-            glfwPollEvents();
+                refreshCamera();
+                glfwPollEvents();
 
-            if (info.logFlags & SYNC_LOG)
-                LSyncLogger::tick();
+                if (info.logFlags & SYNC_LOG)
+                    LSyncLogger::tick();
 
-            while(toDelete.size())
-            {
-                auto obj = toDelete.top();
-                if (obj.first->arrayIndex != getModels().size() + getRectangles().size() - 1);
-                    indexGaps.push_back(obj.first->arrayIndex);
-                if (obj.second == L_MODEL)
-                    deleteWidget(obj.first, models);
-                else
-                    deleteWidget(obj.first, rectangles);
-                toDelete.pop();
-            }
-
-            while (toCreate.size())
-            {
-                auto obj = toCreate.top();
-                if (obj.second == L_MODEL)
-                    addObject(obj.first, models);
-                else if (obj.second == L_RECTANGLE)
-                    addObject(obj.first, rectangles);
-                if (indexGaps.size())
-                {            
-                    obj.first->arrayIndex = indexGaps.front();
-                    indexGaps.pop_front();
-                }
-                else
-                    obj.first->arrayIndex = getModels().size() + getRectangles().size() + 1;
-                toCreate.pop();
-            }
-
-            // Resize swap chain?
-            if (g_SwapChainRebuild)
-            {
-                int width, height;
-                glfwGetFramebufferSize(window_, &width, &height);
-                if (width > 0 && height > 0)
+                while (toDelete.size())
                 {
-                    ImGui_ImplVulkan_SetMinImageCount(g_MinImageCount);
-                    ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, &g_MainWindowData, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
-                    g_MainWindowData.FrameIndex = 0;
-                    g_SwapChainRebuild = false;
+                    auto obj = toDelete.top();
+                    if (obj.first->arrayIndex != getModels().size() + getRectangles().size() - 1);
+                    indexGaps.push_back(obj.first->arrayIndex);
+                    if (obj.second == L_MODEL)
+                        deleteWidget(obj.first, models);
+                    else
+                        deleteWidget(obj.first, rectangles);
+                    toDelete.pop();
                 }
-            }
 
-            // Start the Dear ImGui frame
-            ImGui_ImplVulkan_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
+                while (toCreate.size())
+                {
+                    auto obj = toCreate.top();
+                    if (obj.second == L_MODEL)
+                        addObject(obj.first, models);
+                    else if (obj.second == L_RECTANGLE)
+                        addObject(obj.first, rectangles);
+                    if (indexGaps.size())
+                    {
+                        obj.first->arrayIndex = indexGaps.front();
+                        indexGaps.pop_front();
+                    }
+                    else
+                        obj.first->arrayIndex = getModels().size() + getRectangles().size() + 1;
+                    toCreate.pop();
+                }
 
-            imgui();
+                // Resize swap chain?
+                if (g_SwapChainRebuild)
+                {
+                    int width, height;
+                    glfwGetFramebufferSize(window_, &width, &height);
+                    if (width > 0 && height > 0)
+                    {
+                        ImGui_ImplVulkan_SetMinImageCount(g_MinImageCount);
+                        ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, &g_MainWindowData, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
+                        g_MainWindowData.FrameIndex = 0;
+                        g_SwapChainRebuild = false;
+                    }
+                }
 
-            // Rendering
-            ImGui::Render();
-            ImDrawData* draw_data = ImGui::GetDrawData();
-            const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
-            if (!is_minimized)
-            {
-                memcpy(&wd->ClearValue.color.float32[0], &clear_color, 4 * sizeof(float));
-                FrameRender(wd, draw_data);
-                FramePresent(wd);
-            }
-            beforeDrawingFunc();
+                // Start the Dear ImGui frame
+                ImGui_ImplVulkan_NewFrame();
+                ImGui_ImplGlfw_NewFrame();
+                ImGui::NewFrame();
+
+                imgui();
+
+                // Rendering
+                ImGui::Render();
+                ImDrawData* draw_data = ImGui::GetDrawData();
+                const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
+                if (!is_minimized)
+                {
+                    memcpy(&wd->ClearValue.color.float32[0], &clear_color, 4 * sizeof(float));
+                    FrameRender(wd, draw_data);
+                    FramePresent(wd);
+                }
+                beforeDrawingFunc();
 
 #if LG_MULTITHREAD
-            openGlDrawing.lock();
+                openGlDrawing.lock();
 #endif
 
 #ifdef OPENGL
-            glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+                //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // рисуем в карту теней
-            glViewport(0, 0, shadowHeight, shadowWidth);
-            glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-            glClear(GL_DEPTH_BUFFER_BIT);
+                // рисуем в карту теней
+                glViewport(0, 0, shadowHeight, shadowWidth);
+                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+                glClear(GL_DEPTH_BUFFER_BIT);
 
-            glEnable(GL_DEPTH_TEST);
+                glEnable(GL_DEPTH_TEST);
 #endif
 
 #ifdef OPENGL           
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            glViewport(0, 0, getWindowSize().x, getWindowSize().y);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glViewport(0, 0, getWindowSize().x, getWindowSize().y);
 
-            // рисуем сцену
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glEnable(GL_DEPTH_TEST);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, depthMap);
-            glActiveTexture(GL_TEXTURE0);
+                // рисуем сцену
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glEnable(GL_DEPTH_TEST);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, depthMap);
+                glActiveTexture(GL_TEXTURE0);
 #endif // OPENGL
 
 #ifdef OPENGL 
-            glDisable(GL_DEPTH_TEST);
+                glDisable(GL_DEPTH_TEST);
 #endif
-            afterDrawingFunc();
-            glfwSwapBuffers(window_);
+                afterDrawingFunc();
+                glfwSwapBuffers(window_);
 
 #if LG_MULTITHREAD
-            drawingMutex.unlock();
-            std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
+                drawingMutex.unlock();
+                std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
 #endif
+            }
+
+            if (info.saveObjects == L_TRUE)
+                CodeGen::generateCode("codegen.h", this, "app");
         }
+        catch (std::exception& err)
+        {
+            handleCppException(err);
+            if (info.saveObjects == L_TRUE)
+                CodeGen::generateCode("codegen.h", this, "app");
+            if (info.logFlags & ASYNC_LOG)
+                LAsyncLogger::emergencyStop();
+            else if (info.logFlags & SYNC_LOG)
+                LSyncLogger::emergencyStop();
+            std::terminate();
+        }
+    }
 
-        if (info.saveObjects == L_TRUE)
-            CodeGen::generateCode("codegen.h", this, "app");
-        //vkDeviceWaitIdle(g_Device);
-        //t.stop();
+    void LApp::loop()
+    {
+#ifdef WIN32
+        __try
+        {
+            loop_();
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+            if (info.saveObjects == L_TRUE)
+                CodeGen::generateCode("codegen.h", this, "app");
+            if (info.logFlags & ASYNC_LOG)
+            {
+                handleSEH(exception_code());
+                LAsyncLogger::emergencyStop();
+            }
+            else if (info.logFlags & SYNC_LOG)
+            {
+                handleSEH(exception_code());
+                LSyncLogger::emergencyStop();
+            }
+            std::terminate();
+        }
+#else
+        loop_();
+#endif
 
+    }
+
+    void LApp::handleSEH(const size_t& code)
+    {
+        switch (code)
+        {
+        case EXCEPTION_ACCESS_VIOLATION:         LLogger::calls.push("\n\nerror: EXCEPTION_ACCESS_VIOLATION\ncalls history:"); break;
+        case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:    LLogger::calls.push("\n\nerror: EXCEPTION_ARRAY_BOUNDS_EXCEEDED\ncalls history:"); break;
+        case EXCEPTION_BREAKPOINT:               LLogger::calls.push("\n\nerror: EXCEPTION_BREAKPOINT\ncalls history:"); break;
+        case EXCEPTION_DATATYPE_MISALIGNMENT:    LLogger::calls.push("\n\nerror: EXCEPTION_DATATYPE_MISALIGNMENT\ncalls history:"); break;
+        case EXCEPTION_FLT_DENORMAL_OPERAND:     LLogger::calls.push("\n\nerror: EXCEPTION_FLT_DENORMAL_OPERAND\ncalls history:"); break;
+        case EXCEPTION_FLT_DIVIDE_BY_ZERO:       LLogger::calls.push("\n\nerror: EXCEPTION_FLT_DIVIDE_BY_ZERO\ncalls history:"); break;
+        case EXCEPTION_FLT_INEXACT_RESULT:       LLogger::calls.push("\n\nerror: EXCEPTION_FLT_INEXACT_RESULT\ncalls history:"); break;
+        case EXCEPTION_FLT_INVALID_OPERATION:    LLogger::calls.push("\n\nerror: EXCEPTION_FLT_INVALID_OPERATION\ncalls history:"); break;
+        case EXCEPTION_FLT_OVERFLOW:             LLogger::calls.push("\n\nerror: EXCEPTION_FLT_OVERFLOW\ncalls history:"); break;
+        case EXCEPTION_FLT_STACK_CHECK:          LLogger::calls.push("\n\nerror: EXCEPTION_FLT_STACK_CHECK\ncalls history:"); break;
+        case EXCEPTION_FLT_UNDERFLOW:            LLogger::calls.push("\n\nerror: EXCEPTION_FLT_UNDERFLOW\ncalls history:"); break;
+        case EXCEPTION_ILLEGAL_INSTRUCTION:      LLogger::calls.push("\n\nerror: EXCEPTION_ILLEGAL_INSTRUCTION\ncalls history:"); break;
+        case EXCEPTION_IN_PAGE_ERROR:            LLogger::calls.push("\n\nerror: EXCEPTION_IN_PAGE_ERROR\ncalls history:"); break;
+        case EXCEPTION_INT_DIVIDE_BY_ZERO:       LLogger::calls.push("\n\nerror: EXCEPTION_INT_DIVIDE_BY_ZERO\ncalls history:"); break;
+        case EXCEPTION_INT_OVERFLOW:             LLogger::calls.push("\n\nerror: EXCEPTION_INT_OVERFLOW\ncalls history:"); break;
+        case EXCEPTION_INVALID_DISPOSITION:      LLogger::calls.push("\n\nerror: EXCEPTION_INVALID_DISPOSITION\ncalls history:"); break;
+        case EXCEPTION_NONCONTINUABLE_EXCEPTION: LLogger::calls.push("\n\nerror: EXCEPTION_NONCONTINUABLE_EXCEPTION\ncalls history:"); break;
+        case EXCEPTION_PRIV_INSTRUCTION:         LLogger::calls.push("\n\nerror: EXCEPTION_PRIV_INSTRUCTION\ncalls history:"); break;
+        case EXCEPTION_SINGLE_STEP:              LLogger::calls.push("\n\nerror: EXCEPTION_SINGLE_STEP\ncalls history:"); break;
+        case EXCEPTION_STACK_OVERFLOW:           LLogger::calls.push("\n\nerror: EXCEPTION_STACK_OVERFLOW\ncalls history:"); break;
+        default:  LLogger::calls.push("\n\nerror: UNKNOWN EXCEPTION\ncalls history:");
+        }
+    }
+
+    void LApp::handleCppException(std::exception& err)
+    {
+        if (dynamic_cast<std::runtime_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_RUNTIME_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::logic_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_LOGIC_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::invalid_argument*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_INVALID_ARGUMENT: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::domain_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_DOMAIN_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::length_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_LENGTH_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::out_of_range*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_OUT_OF_RANGE: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_optional_access*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_OPTIONAL_ACCESS: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::range_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_RANGE_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::overflow_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_OVERFLOW_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::underflow_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_UNDERFLOW_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::system_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_SYSTEM_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::ios_base::failure*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_IOS_BASE_FAILURE: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::filesystem::filesystem_error*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_FILESYSTEM_ERROR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_typeid*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_TYPEID: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_cast*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_CAST: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_weak_ptr*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_WEAK_PTR: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_function_call*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_FUNCTION_CALL: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_alloc*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_ALLOC: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_array_new_length*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_ARRAY_NEW_LENGTH: ") + err.what() + "\ncalls history:");
+        else if (dynamic_cast<std::bad_exception*>(&err))
+            LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_EXCEPTION: ") + err.what() + "\ncalls history:");
+        else
+            LLogger::calls.push(std::string("\n\nerror: UNKNOWN_EXCEPTION: ") + err.what() + "\ncalls history:");
     }
 
     glm::vec<2, size_t> LApp::getWindowSize() const
@@ -204,36 +350,43 @@ namespace LGraphics
 
     void LApp::setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func)
     {
+        LOG_CALL
         userMouseButtonCallback = func;
     }
 
     void LApp::setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func)
     {
+        LOG_CALL
         userCursorCallback = func;
     }
 
     void LApp::setUserKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> func)
     {
+        LOG_CALL
         userKeyCallback = func;
     }
 
     void LApp::setUserCharacterCallback(std::function<void(GLFWwindow* window, unsigned int codepoint)> func)
     {
+        LOG_CALL
         userCharacterCallback = func;
     }
 
     void LApp::setUserScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)> func)
     {
+        LOG_CALL
         userScrollCallback = func;
     }
 
     void LApp::setLightPos(glm::vec3 lightPos)
     {
+        LOG_CALL
         this->lightPos = lightPos;
     }
 
     void LApp::setLightSpaceMatrix()
     {
+        LOG_CALL
         const float near_plane = 0.1f, far_plane = 35.0f;
         const float d = 12.0f;
         glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
@@ -243,6 +396,7 @@ namespace LGraphics
 
     void LApp::initTextures(std::vector<LWidget*>& objects)
     {
+        LOG_CALL
         for (auto& w : objects)
             if (!w->isInited())
                 w->init();
@@ -250,12 +404,14 @@ namespace LGraphics
 
     void LApp::setMatrices()
     {
+        LOG_CALL
         refreshCamera();
         refreshProjection();
     }
 
     void LApp::setClearColor(glm::vec4 clearColor)
     {
+        LOG_CALL
         clear_color.x = clearColor.x;
         clear_color.y = clearColor.y;
         clear_color.z = clearColor.z;
@@ -264,6 +420,7 @@ namespace LGraphics
 
     void LApp::refreshCamera()
     {
+        LOG_CALL
         if (info.projection == L_PERSPECTIVE)
             view = glm::lookAt(
                 cameraPos,
@@ -278,20 +435,46 @@ namespace LGraphics
 
     void LApp::refreshProjection()
     {
+        LOG_CALL
         const auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
         if (info.projection == L_PERSPECTIVE)
             projection = glm::perspective(45.0f, aspect, 0.01f, 1000.0f);
         else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 1000.0f);
     }
 
+    void LApp::initErrorRecovering()
+    {
+        LLogger::states = info.logFlags;
+        if (info.logFlags & ASYNC_LOG)
+        {
+            if (!LAsyncLogger::isStarted())
+                LAsyncLogger::start();
+            LAsyncLogger::emergencyStop();
+        }
+        else if (info.logFlags & SYNC_LOG)
+            LSyncLogger::emergencyStop();
+    }
+
     void LApp::setupLG()
     {
-        initRenderer();
-        initLEngine();
+        LOG_CALL
+
+        try
+        {
+            initRenderer();
+            initLEngine();
+        }
+        catch (std::exception& err)
+        {
+            handleCppException(err);
+            initErrorRecovering();
+            std::terminate();
+        }
     }
 
     void LApp::initLEngine()
     {
+        LOG_CALL
         LLogger::initErrors(this);
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
@@ -412,6 +595,7 @@ namespace LGraphics
 
     void LApp::setWindowCallbacks()
     {
+        LOG_CALL
         glfwSetWindowUserPointer(window_, this);
 
         auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
@@ -449,6 +633,8 @@ namespace LGraphics
 #ifdef VULKAN
     void LApp::initRenderer()
     {
+        LOG_CALL
+
 #ifndef NDEBUG
 #ifndef VULKAN
         glfwSetErrorCallback(glfw_error_callback);
@@ -565,10 +751,12 @@ namespace LGraphics
 
     void LApp::checkEvents()
     {
+        LOG_CALL
     }
 
     void LApp::releaseResources()
     {
+        LOG_CALL
 #ifdef VULKAN
 
         auto imCount = wd->ImageCount;
@@ -672,11 +860,13 @@ namespace LGraphics
 
     void LApp::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
+        LOG_CALL
         userMouseButtonCallback(window, button, action, mods);
     }
 
     void LApp::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        LOG_CALL
         if (isCursorEnabled())
             return;
 
@@ -686,6 +876,7 @@ namespace LGraphics
 
     void LApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
+        LOG_CALL
         pressedKeys[key] = action != GLFW_RELEASE;
         userKeyCallback(window, key, scancode, action, mods);
         /*if (pressedKeys[GLFW_KEY_LEFT_ALT] && pressedKeys[GLFW_KEY_ENTER])
@@ -694,11 +885,13 @@ namespace LGraphics
 
     void LApp::character_callback(GLFWwindow* window, unsigned int codepoint)
     {
+        LOG_CALL
         userCharacterCallback(window, codepoint);
     }
 
     void LApp::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
+        LOG_CALL
         userScrollCallback(window, xoffset, yoffset);
     }
 
@@ -707,6 +900,7 @@ namespace LGraphics
     
     VkResult LApp::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT * pCreateInfo, const VkAllocationCallbacks * pAllocator, VkDebugUtilsMessengerEXT * pDebugMessenger)
     {
+        LOG_CALL
         auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
         if (func != nullptr) {
             return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
@@ -718,6 +912,7 @@ namespace LGraphics
 
     void LApp::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks * pAllocator)
     {
+        LOG_CALL
         auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
         if (func != nullptr) {
             func(instance, debugMessenger, pAllocator);
@@ -726,6 +921,7 @@ namespace LGraphics
 
     bool LApp::checkValidationLayerSupport()
     {
+        LOG_CALL
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -750,6 +946,7 @@ namespace LGraphics
 
     void LApp::createInstance()
     {
+        LOG_CALL
         if (enableValidationLayers && !checkValidationLayerSupport()) {
             throw std::runtime_error("validation layers requested, but not available!");
         }
@@ -804,6 +1001,7 @@ namespace LGraphics
 
     void LApp::pickPhysicalDevice()
     {
+        LOG_CALL
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(g_Instance, &deviceCount, nullptr);
 
@@ -830,6 +1028,7 @@ namespace LGraphics
 
     void LApp::createLogicalDevice()
     {
+        LOG_CALL
         QueueFamilyIndices indices = findQueueFamilies(g_PhysicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -878,6 +1077,7 @@ namespace LGraphics
 
     void LApp::createSurface()
     {
+        LOG_CALL
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
         VkAndroidSurfaceCreateInfoKHR createInfo{
       .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
@@ -894,12 +1094,14 @@ namespace LGraphics
 
     void LApp::createGraphicsPipeline()
     {
+        LOG_CALL
         baseShader = new LShaders::Shader("shaders//Vk_objV.spv", "shaders//Vk_objF.spv", this, false);
         lightShader = new LShaders::Shader("shaders//Vk_litobjV.spv", "shaders//Vk_litobjF.spv", this, false);
     }
 
     void LApp::createAllocator()
     {
+        LOG_CALL
         VmaAllocatorCreateInfo allocatorInfo = {};
         allocatorInfo.vulkanApiVersion = VK_API_VERSION_1_0;
         allocatorInfo.physicalDevice = g_PhysicalDevice;
@@ -912,6 +1114,7 @@ namespace LGraphics
 
     void LApp::createRenderPass()
     {
+        LOG_CALL
         VkAttachmentDescription colorAttachment{};
         colorAttachment.format = wd->SurfaceFormat.format;//wd->SurfaceFormat.format;
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -971,6 +1174,7 @@ namespace LGraphics
 
     void LApp::createFramebuffers()
     {
+        LOG_CALL
         swapChainFramebuffers.resize(swapChainImageViews.size());
 
         for (size_t i = 0; i < swapChainImageViews.size(); i++) {
@@ -997,6 +1201,7 @@ namespace LGraphics
 
     void LApp::createCommandPool()
     {
+        LOG_CALL
         QueueFamilyIndices queueFamilyIndices = findQueueFamilies(g_PhysicalDevice);
 
         VkCommandPoolCreateInfo poolInfo{};
@@ -1011,6 +1216,7 @@ namespace LGraphics
 
     void LApp::createUniformBuffers()
     {
+        LOG_CALL
         uniformBuffers.resize(wd->ImageCount);
         uniformBuffersMemory.resize(wd->ImageCount);
 
@@ -1030,6 +1236,7 @@ namespace LGraphics
 
     void LApp::createDescriptorPool()
     {
+        LOG_CALL
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         poolSizes[0].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
@@ -1049,6 +1256,7 @@ namespace LGraphics
 
     void LApp::createImageViews()
     {
+        LOG_CALL
         swapChainImageViews.resize(wd->ImageCount);
 
         for (uint32_t i = 0; i < wd->ImageCount; i++)
@@ -1057,6 +1265,7 @@ namespace LGraphics
 
     void LApp::createDepthResources()
     {
+        LOG_CALL
         depthFormat = findDepthFormat();
         createImage(wd->Width, wd->Height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory,1);
         createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, depthImageView,1);
@@ -1064,6 +1273,7 @@ namespace LGraphics
 
     VkFormat LApp::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
     {
+        LOG_CALL
         for (VkFormat format : candidates) 
         {
             VkFormatProperties props;
@@ -1082,6 +1292,7 @@ namespace LGraphics
 
     VkFormat LApp::findDepthFormat()
     {
+        LOG_CALL
         return findSupportedFormat(
             { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
             VK_IMAGE_TILING_OPTIMAL,
@@ -1091,11 +1302,13 @@ namespace LGraphics
 
     bool LApp::hasStencilComponent(VkFormat format)
     {
+        LOG_CALL
         return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
     }
 
     void LApp::createDescriptorSets()
     {
+        LOG_CALL
         std::vector<VkDescriptorSetLayout> layouts(info.poolSize * wd->ImageCount, descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1146,6 +1359,7 @@ namespace LGraphics
 
     void LApp::createDescriptorSetLayout()
     {
+        LOG_CALL
             VkDescriptorSetLayoutBinding vertexLayoutBinding{};
             vertexLayoutBinding.binding = 0;
             vertexLayoutBinding.descriptorCount = 1;
@@ -1174,6 +1388,7 @@ namespace LGraphics
     void LApp::createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, 
         VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VmaAllocation& imageMemory, uint32_t miplevels)
     {
+        LOG_CALL
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -1215,6 +1430,7 @@ namespace LGraphics
 
     void LApp::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view, uint32_t miplevels)
     {
+        LOG_CALL
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = image;
@@ -1234,6 +1450,7 @@ namespace LGraphics
 
     void LApp::createTextureSampler(VkSampler& sampler, size_t mipLevels)
     {
+        LOG_CALL
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(g_PhysicalDevice, &properties);
 
@@ -1268,6 +1485,7 @@ namespace LGraphics
 
     void LApp::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
     {
+        LOG_CALL
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(g_PhysicalDevice, imageFormat, &formatProperties);
 
@@ -1355,6 +1573,7 @@ namespace LGraphics
 
     VkCommandBuffer LApp::beginSingleTimeCommands()
     {
+        LOG_CALL
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -1375,6 +1594,7 @@ namespace LGraphics
 
     void LApp::endSingleTimeCommands(VkCommandBuffer commandBuffer)
     {
+        LOG_CALL
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};
@@ -1391,6 +1611,7 @@ namespace LGraphics
     void LApp::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer,
         VmaAllocation& allocation)
     {
+        LOG_CALL
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 
@@ -1407,6 +1628,7 @@ namespace LGraphics
 
     void LApp::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize offset)
     {
+        LOG_CALL
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferCopy copyRegion{};
@@ -1419,6 +1641,7 @@ namespace LGraphics
 
     void LApp::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t miplevels)
     {
+        LOG_CALL
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkImageMemoryBarrier barrier{};
@@ -1476,6 +1699,7 @@ namespace LGraphics
 
     void LApp::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
     {
+        LOG_CALL
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferImageCopy region{};
@@ -1549,6 +1773,7 @@ namespace LGraphics
 
     void LApp::mapUniformData()
     {
+        LOG_CALL
         for (size_t i = 0; i < wd->ImageCount; ++i)
             //vmaMap
             vmaMapMemory(allocator, uniformBuffersMemory[i], &uniformsMem[i]);
@@ -1557,6 +1782,7 @@ namespace LGraphics
 
     void LApp::updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w)
     {
+        LOG_CALL
         if (w->texture)
         {
             updateTexture(w->texture, currentImage, objectNum,w->getMipLevels());
@@ -1581,6 +1807,7 @@ namespace LGraphics
 
     void LApp::updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum, size_t mipLevels)
     {
+        LOG_CALL
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = uniformBuffers[currentImage];
         bufferInfo.offset = 0;
@@ -1614,6 +1841,7 @@ namespace LGraphics
 
     void LApp::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT & createInfo)
     {
+        LOG_CALL
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -1623,6 +1851,7 @@ namespace LGraphics
 
     void LApp::setupDebugMessenger()
     {
+        LOG_CALL
         if (!enableValidationLayers) return;
 
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
@@ -1635,6 +1864,7 @@ namespace LGraphics
 
     std::vector<const char*> LApp::getRequiredExtensions()
     {
+        LOG_CALL
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -1651,6 +1881,7 @@ namespace LGraphics
 
     VKAPI_ATTR VkBool32 VKAPI_CALL LApp::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT * pCallbackData, void * pUserData)
     {
+        LOG_CALL
         std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
         return VK_FALSE;
@@ -1658,6 +1889,7 @@ namespace LGraphics
 
     bool LApp::isDeviceSuitable(VkPhysicalDevice device)
     {
+        LOG_CALL
         QueueFamilyIndices indices = findQueueFamilies(device);
 
         bool extensionsSupported = checkDeviceExtensionSupport(device);
@@ -1676,6 +1908,7 @@ namespace LGraphics
 
     bool LApp::checkDeviceExtensionSupport(VkPhysicalDevice device)
     {
+        LOG_CALL
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -1692,6 +1925,7 @@ namespace LGraphics
 
     LApp::QueueFamilyIndices LApp::findQueueFamilies(VkPhysicalDevice device)
     {
+        LOG_CALL
         QueueFamilyIndices indices;
 
         uint32_t queueFamilyCount = 0;
@@ -1725,6 +1959,7 @@ namespace LGraphics
 
     LApp::SwapChainSupportDetails LApp::querySwapChainSupport(VkPhysicalDevice device)
     {
+        LOG_CALL
         SwapChainSupportDetails details;
 
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
@@ -1750,6 +1985,7 @@ namespace LGraphics
 
     VkSurfaceFormatKHR LApp::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
     {
+        LOG_CALL
         for (const auto& availableFormat : availableFormats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                 return availableFormat;
@@ -1761,6 +1997,7 @@ namespace LGraphics
 
     VkPresentModeKHR LApp::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
     {
+        LOG_CALL
         if (info.vsync == L_FALSE)
             return VK_PRESENT_MODE_IMMEDIATE_KHR;
         for (const auto& availablePresentMode : availablePresentModes) {
@@ -1775,6 +2012,7 @@ namespace LGraphics
 
     VkExtent2D LApp::chooseSwapExtent(const VkSurfaceCapabilitiesKHR & capabilities)
     {
+        LOG_CALL
         if (capabilities.currentExtent.width != UINT32_MAX) {
             return capabilities.currentExtent;
         }
@@ -1796,6 +2034,7 @@ namespace LGraphics
 
     uint32_t LApp::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
     {
+        LOG_CALL
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(g_PhysicalDevice, &memProperties);
 
@@ -1812,6 +2051,7 @@ namespace LGraphics
 
     void LApp::setupVulkan()
     {
+        LOG_CALL
         VkResult err;
         wd = &g_MainWindowData;
 
@@ -1886,6 +2126,7 @@ namespace LGraphics
 
     void LApp::SetupVulkanWindow(ImGui_ImplVulkanH_Window * wd, VkSurfaceKHR surface, int width, int height)
     {
+        LOG_CALL
         wd->Surface = surface;
 
         // Check for WSI support
@@ -1930,6 +2171,7 @@ namespace LGraphics
 
     void LApp::FrameRender(ImGui_ImplVulkanH_Window * wd, ImDrawData* draw_data)
     {
+        LOG_CALL
         VkResult err;
 
         VkSemaphore image_acquired_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].ImageAcquiredSemaphore;
@@ -1992,7 +2234,7 @@ namespace LGraphics
             cameraPos,
             //temporary
             {1.0f,1.0f,1.0f},
-            0.1f,
+            0.9f,
             1.0f,
         };
 
@@ -2074,6 +2316,7 @@ namespace LGraphics
 
     void LApp::FramePresent(ImGui_ImplVulkanH_Window * wd)
     {
+        LOG_CALL
         if (g_SwapChainRebuild)
             return;
         VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
@@ -2097,11 +2340,13 @@ namespace LGraphics
 
     void LApp::initTextures()
     {
+        LOG_CALL
         //initTextures(rectangles);
     }
 
     std::array<VkVertexInputAttributeDescription, 3> LApp::Vertex::getAttributeDescriptions()
     {
+        LOG_CALL
         std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;

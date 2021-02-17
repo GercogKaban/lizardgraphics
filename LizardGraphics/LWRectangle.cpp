@@ -3,12 +3,14 @@
 #include "LRectangleBuffer.h"
 #include "LApp.h"
 #include "additional.h"
+#include "LLogger.h"
 
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
     :LRectangleShape(app, path, false)
 {
+    LOG_CALL
     if (app->info.lighting)
         shader = app->getLightningShader();
     else
@@ -48,6 +50,7 @@ void LGraphics::LWRectangle::setMatrices()
 #ifdef VULKAN
 void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
+    LOG_CALL
     app->updateUniformBuffer(frameIndex, arrayIndex, this);
 
     const uint32_t dynamicOffsets[] = 

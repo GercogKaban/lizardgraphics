@@ -1,10 +1,12 @@
 ﻿#include "LMultiRectangleBuffer.h"
+#include "LLogger.h"
 #include "pch.h"
 
 namespace LGraphics
 {
     void LMultiRectangleBuffer::setBuffers()
     {
+        LOG_CALL
         verticesCount = 4; indicesCount = 6 * rectCount, textureCoordsCount = 2;
 
         setVerts();
@@ -14,6 +16,7 @@ namespace LGraphics
 
     void LMultiRectangleBuffer::genBuffers()
     {
+        LOG_CALL
 #ifdef OPENGL
         glGenVertexArrays(1, &VAO);
         glGenBuffers(3, VBO);
@@ -47,6 +50,7 @@ namespace LGraphics
 
     void LMultiRectangleBuffer::setVerts()
     {
+        LOG_CALL
         vertices = new float[coordsCount * verticesCount]
         {
              0.5f,  0.5f, 0.0f,
@@ -66,6 +70,7 @@ namespace LGraphics
 
     void LMultiRectangleBuffer::setInds()
     {
+        LOG_CALL
         ebo = new uint16_t[indicesCount];
 
         for (size_t i = 0; i < rectCount; i++)
@@ -81,6 +86,7 @@ namespace LGraphics
 
     LMultiRectangleBuffer::LMultiRectangleBuffer(size_t rectCount) : rectCount(rectCount)
     {
+        LOG_CALL
 #ifdef OPENGL
         init();
 #endif

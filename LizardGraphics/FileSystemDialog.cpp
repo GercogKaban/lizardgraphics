@@ -6,6 +6,7 @@ using namespace std::filesystem;
 std::string FileSystemDialog::prevPath = current_path().generic_string();
 std::string FileSystemDialog::startDialog(const char* currentPath)
 {
+	LOG_CALL
 	try
 	{
 		if (ImGui::Button("<-"))
@@ -25,7 +26,7 @@ std::string FileSystemDialog::startDialog(const char* currentPath)
 	}
 	catch (std::exception& ex)
 	{
-		LGraphics::PRINTLN(ex.what()); 
+		PRINTLN(ex.what()); 
 	}
 	return currentPath;
 }

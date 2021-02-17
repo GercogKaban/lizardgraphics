@@ -28,6 +28,7 @@ void handle_cmd(android_app* app, int32_t cmd);
 
 #endif
 
+
 #include "ObjectPool.h"
 
 #ifdef OPENGL
@@ -103,6 +104,7 @@ namespace LGraphics
         uint32_t anisotropy = 16;
         LProjections projection = L_ORTHOGRAPHIC;
         uint8_t logFlags = 0;
+        std::string procName;
     };
 
     /*!
@@ -145,6 +147,15 @@ namespace LGraphics
         */
         virtual void loop();
 
+    protected:
+
+        void loop_();
+        void initApp_(const LAppCreateInfo& info);
+
+        void initErrorRecovering();
+
+
+    public:
         /*!
         @brief Возвращает размеры окна (в пикселях).
 
@@ -599,6 +610,9 @@ namespace LGraphics
 #endif
         }
 #endif
+
+        void handleSEH(const size_t& code);
+        void handleCppException(std::exception& err);
 
         GLFWwindow* window_;
 

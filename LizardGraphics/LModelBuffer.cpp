@@ -1,7 +1,9 @@
 #include "LModelBuffer.h"
+#include "LLogger.h"
 
 void LGraphics::LModelBuffer::setBuffers()
 {
+    LOG_CALL
     setVerts();
     setInds();
     genBuffers();
@@ -9,6 +11,7 @@ void LGraphics::LModelBuffer::setBuffers()
 
 void LGraphics::LModelBuffer::setVerts()
 {
+
     //this->vertices = new float[verticesCount];
     //memcpy(vertices, vertices_, verticesCount * sizeof(decltype(vertices)));
 }
@@ -21,6 +24,7 @@ void LGraphics::LModelBuffer::setInds()
 
 void LGraphics::LModelBuffer::genBuffers()
 {
+    LOG_CALL
 #ifdef VULKAN
     indexBuffer.resize(indices.size());
     indexBufferMemory.resize(indices.size());
@@ -36,17 +40,20 @@ void LGraphics::LModelBuffer::genBuffers()
 
 size_t LGraphics::LModelBuffer::getVertSize() const
 {
+    LOG_CALL
     return verticesCount * sizeof(decltype(*vertices.data()));
 }
 
 size_t LGraphics::LModelBuffer::getMeshSize(size_t num) const
 {
+    LOG_CALL
     return indices[num].size() * sizeof(decltype(*indices[num].data()));
 }
 
 LGraphics::LModelBuffer::LModelBuffer(LApp* app, std::vector<float> vertexBuf,
     std::vector<std::vector<uint32_t>> indices)
 {
+    LOG_CALL
     this->app = app;
     this->vertices = vertexBuf;
     this->indices = indices;
@@ -63,6 +70,7 @@ LGraphics::LModelBuffer::LModelBuffer(LApp* app, std::vector<float> vertexBuf,
 
 LGraphics::LModelBuffer::~LModelBuffer()
 {
+    LOG_CALL
 #ifdef VULKAN
     vmaDestroyBuffer(app->allocator, vertexBuffer, vertexBufferMemory);
     vertexBuffer = VK_NULL_HANDLE;

@@ -24,6 +24,14 @@
 #include <array>
 #include <map>
 #include <tuple>
+#include <filesystem>
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+#ifdef __linux__
+#include <csignal>
+#endif
 
 #ifdef OPENGL
 #include "include/GLEW/glew.h"

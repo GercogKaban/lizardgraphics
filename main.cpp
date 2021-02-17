@@ -7,12 +7,13 @@
 
 using namespace LGraphics;
 
-int main()
+int main(int argc, char** argv)
 {
     LAppCreateInfo info;
 
     const size_t poolSize = 100;
 
+    info.procName = argv[0];
     info.anisotropy = 16;
     info.projection = L_PERSPECTIVE;
     info.saveObjects = L_TRUE;
@@ -37,7 +38,7 @@ int main()
         m1->rotateZ(180.0f);
         m1->move(0.0f, 10.0f, 0.0f);
     }
- 
+
     app.setBeforeDrawingFunc([&]()
         {
             if (app.isCursorEnabled())
@@ -71,7 +72,7 @@ int main()
         });
 
     app.setUserCursorCallback([&](GLFWwindow* window, double xpos, double ypos)
-    {
+        {
             float xoffset = xpos - app.getMouseCoords().x;
             float yoffset = ypos - app.getMouseCoords().y;
 
@@ -102,10 +103,9 @@ int main()
             front.y = sin(glm::radians(pitch));
             front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
             app.setCameraFront(glm::normalize(front));
-    });
+        });
 
     app.setLightPos(glm::vec3(-12.5f, 0.0f, 0.0f));
-    //app.drawUI(false);
     app.loop();
     return 0;
 }

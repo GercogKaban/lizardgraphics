@@ -2,6 +2,7 @@
 
 #include "LMultiWRectangle.h"
 #include "LMultiRectangleBuffer.h"
+#include "LLogger.h"
 //#include "LApp.h"
 #include "additional.h"
 
@@ -13,6 +14,7 @@
 LGraphics::LMultiWRectangle::LMultiWRectangle(LApp* app, size_t rectCount)
     : LWidgetGroup<LWRectangle>(app), rectCount(rectCount)
 {
+    LOG_CALL
     //shader = app->multi_defaultShader;
     view = app->getViewMatrix();
     projection = app->getProjectionMatrix();
@@ -31,6 +33,7 @@ LGraphics::LMultiWRectangle::LMultiWRectangle(LApp* app, size_t rectCount)
 
 void LGraphics::LMultiWRectangle::draw()
 {
+    LOG_CALL
     //if (isHidden()) return;
 
     if (!widgets.size())

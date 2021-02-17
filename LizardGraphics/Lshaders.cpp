@@ -1,9 +1,11 @@
 #include "Lshaders.h"
 #include "LApp.h"
+#include "LLogger.h"
 
 #ifdef VULKAN
 VkShaderModule LShaders::Shader::genShaderModule(const char* shader, size_t size)
 {
+    LOG_CALL
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = size;
@@ -24,6 +26,7 @@ VkShaderModule LShaders::Shader::genShaderModule(const char* shader, size_t size
 
 LShaders::Shader::~Shader()
 {
+    LOG_CALL
 #ifdef VULKAN
     vkDestroyPipeline(app->g_Device, graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(app->g_Device, pipelineLayout, nullptr);
@@ -32,6 +35,7 @@ LShaders::Shader::~Shader()
 
 void LShaders::Shader::loadShaders(const char* vertShader, const char* fragShader)
 {
+    LOG_CALL
     size_t vSize, fSize;
     const char* vertShaderSource = loadShader(vertShader,vSize);
     const char* fragShaderSource = loadShader(fragShader,fSize);
@@ -41,7 +45,7 @@ void LShaders::Shader::loadShaders(const char* vertShader, const char* fragShade
 
 void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, size_t vSize, size_t fSize)
 {
-
+    LOG_CALL
 #ifdef OPENGL
     char infoLog[1488];
     GLuint vertex, fragment;
@@ -242,6 +246,7 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
 
 LShaders::Shader::Shader(const char* v_shader, const char* f_shader, LGraphics::LApp * app, bool sourceCode)
 {
+    LOG_CALL
     this->app = app;
     size_t size_v, size_f;
     //if (sourceCode)
@@ -252,6 +257,7 @@ LShaders::Shader::Shader(const char* v_shader, const char* f_shader, LGraphics::
 
 void LShaders::Shader::bindShader(const char* shader, short shaderType)
 {
+    LOG_CALL
 #ifdef OPENGL
     GLuint sh;
     GLint success;
@@ -273,6 +279,7 @@ void LShaders::Shader::bindShader(const char* shader, short shaderType)
 
 const char* LShaders::Shader::loadShader(const char* shader, size_t& shaderSize)
 {
+    LOG_CALL
     std::ifstream in(shader, std::ios::ate | std::ios::binary);
 
     if (!in.is_open())
