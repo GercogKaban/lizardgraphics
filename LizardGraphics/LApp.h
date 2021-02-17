@@ -2,7 +2,7 @@
 
 #include <mutex>
 #include <optional>
-#include <map>
+#include <unordered_map>
 #include <stack>
 #include <deque>
 
@@ -18,7 +18,7 @@ static const char* tag_ = "Lizard_Graphics";
 #define LOGE(...) \
   ((void)__android_log_print(ANDROID_LOG_ERROR, tag_, __VA_ARGS__))
 
-bool initialized_ = false;
+extern bool initialized_;
 bool initialize(android_app* app);
 
 // Functions interacting with Android native activity

@@ -9,7 +9,7 @@ namespace LGraphics
     uint8_t LLogger::states = 0;
     LApp* LLogger::app_;
     std::string LLogger::logFilePath = "log.txt";
-    std::ios_base::_Openmode LSyncLogger::firstCreationFlag = std::ios_base::out;
+    std::ios_base::openmode LSyncLogger::firstCreationFlag = std::ios_base::out;
     std::thread LAsyncLogger::thread;
     bool LLogger::stopLogging = false;
     bool LAsyncLogger::started;

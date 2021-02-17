@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+#ifdef linux
+#define _NODISCARD
+#endif
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -8,6 +11,7 @@
 #include <fstream>
 #include <chrono>
 #include <ctime>
+#include <thread>
 
 #include "LApp.h"
 
@@ -142,7 +146,7 @@ namespace LGraphics
         static void print(const T& text)
         {
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
-            LOGI(tag_, text);
+            LOGI(tag_, text.data());
 #else
             std::cout << text;
 #endif
@@ -152,7 +156,7 @@ namespace LGraphics
         static void println(const T& text)
         {
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
-            LOGI(tag_, text);
+            LOGI(tag_, text.data());
 #else
             std::cout << text << std::endl;
 #endif
@@ -277,7 +281,11 @@ public:
 protected:
   
     static void logToFile(std::string msg,
-        std::ios_base::_Openmode firstCreationFlag = std::ios_base::app)
+        #ifdef WIN32 std::ios_base::_Openmode firstCreationFlag = std::ios_base::app
+        #else
+        std::ios_base::openmode firstCreationFlag = std::ios_base::app
+        #endif
+)
     {
         std::ofstream out(logFilePath, std::ios_base::binary | firstCreationFlag);
         if (!out.is_open())
@@ -369,7 +377,7 @@ protected:
             }
     }
 
-        static std::ios_base::_Openmode firstCreationFlag;
+        static std::ios_base::openmode firstCreationFlag;
     };
 
     class LAsyncLogger : private LSyncLogger

@@ -1,6 +1,5 @@
 #pragma once
 
-LApp* app;
 extern "C"
 {
 #ifdef _MSC_VER 

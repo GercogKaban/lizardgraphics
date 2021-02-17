@@ -6,11 +6,14 @@
 #include "LMultiWRectangle.h"
 #include "LModel.h"
 #include "LModelBuffer.h"
+#ifdef WIN32
 #include "CodeGen.h"
 #include "../codegen.h"
+#endif
 #include "LLogger.h"
 #include "LResourceManager.h"
 
+bool initialized_ = false;
 namespace LGraphics
 {
     LAppCreateInfo LApp::info;
@@ -185,15 +188,18 @@ namespace LGraphics
                 std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
 #endif
             }
-
+#ifdef WIN32
             if (info.saveObjects == L_TRUE)
                 CodeGen::generateCode("codegen.h", this, "app");
+#endif
         }
         catch (std::exception& err)
         {
             handleCppException(err);
+#ifdef WIN32
             if (info.saveObjects == L_TRUE)
                 CodeGen::generateCode("codegen.h", this, "app");
+#endif
             if (info.logFlags & ASYNC_LOG)
                 LAsyncLogger::emergencyStop();
             else if (info.logFlags & SYNC_LOG)
@@ -233,6 +239,7 @@ namespace LGraphics
 
     void LApp::handleSEH(const size_t& code)
     {
+#ifdef WIN32
         switch (code)
         {
         case EXCEPTION_ACCESS_VIOLATION:         LLogger::calls.push("\n\nerror: EXCEPTION_ACCESS_VIOLATION\ncalls history:"); break;
@@ -257,10 +264,12 @@ namespace LGraphics
         case EXCEPTION_STACK_OVERFLOW:           LLogger::calls.push("\n\nerror: EXCEPTION_STACK_OVERFLOW\ncalls history:"); break;
         default:  LLogger::calls.push("\n\nerror: UNKNOWN EXCEPTION\ncalls history:");
         }
+#endif
     }
 
     void LApp::handleCppException(std::exception& err)
     {
+#ifdef WIN32
         if (dynamic_cast<std::runtime_error*>(&err))
             LLogger::calls.push(std::string("\n\nerror: EXCEPTION_RUNTIME_ERROR: ") + err.what() + "\ncalls history:");
         else if (dynamic_cast<std::logic_error*>(&err))
@@ -303,6 +312,7 @@ namespace LGraphics
             LLogger::calls.push(std::string("\n\nerror: EXCEPTION_BAD_EXCEPTION: ") + err.what() + "\ncalls history:");
         else
             LLogger::calls.push(std::string("\n\nerror: UNKNOWN_EXCEPTION: ") + err.what() + "\ncalls history:");
+#endif
     }
 
     glm::vec<2, size_t> LApp::getWindowSize() const
@@ -509,9 +519,10 @@ namespace LGraphics
         });
 
         setMatrices();
-
+#ifdef WIN32
         if (info.loadObjects)
             genWidgets(this);
+#endif
 
 #ifdef OPENGL
         //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
@@ -787,7 +798,7 @@ namespace LGraphics
 
         auto resourseManager = LImage::resManager;
         
-        for (auto& it = resourseManager.textures.begin(); it != resourseManager.textures.end(); it++)
+        for (auto it = resourseManager.textures.begin(); it != resourseManager.textures.end(); it++)
         //for (auto& text : resourseManager.textures)
         {
             vkDestroyImageView(g_Device, std::get<0>(*(it->second)), nullptr);
@@ -815,7 +826,7 @@ namespace LGraphics
 
         delete standartRectBuffer;
 
-        for (auto& w : rectangles)
+        for (auto w : rectangles)
             delete w;
         rectangles.clear();
 
@@ -829,7 +840,7 @@ namespace LGraphics
         }
         models.clear();
 
-        for (auto& it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
+        for (auto it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
         {
             delete it->second;
         }
@@ -1079,13 +1090,17 @@ namespace LGraphics
     {
         LOG_CALL
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
-        VkAndroidSurfaceCreateInfoKHR createInfo{
+        ANativeWindow* w;
+        VkAndroidSurfaceCreateInfoKHR createInfo
+{
       .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
       .pNext = nullptr,
       .flags = 0,
-      .window = window };
-        if (vkCreateAndroidSurfaceKHR(g_Instance, &createInfo, nullptr,
+      .window = w, 
+};
+        if (!vkCreateAndroidSurfaceKHR(g_Instance, &createInfo, nullptr,
             &surface))
+              throw std::runtime_error("failed to create window surface!");
 #else
         if (glfwCreateWindowSurface(g_Instance, window_, nullptr, &surface) != VK_SUCCESS)
             throw std::runtime_error("failed to create window surface!");
@@ -1787,7 +1802,7 @@ namespace LGraphics
         {
             updateTexture(w->texture, currentImage, objectNum,w->getMipLevels());
             if (w->changed <= LWidget::ONE_BUFFER_TO_CHANGE)
-                w->texture = nullptr;
+                w->texture = VkImageView();
         }
 
         if (w->changed == LWidget::UNMODIFIED)
@@ -2380,7 +2395,7 @@ bool initialize(android_app* app)
     }
 }
 
-void android_main(android_app* state)
+void android_main(android_app* app)
 {
     app->onAppCmd = handle_cmd;
 

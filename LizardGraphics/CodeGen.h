@@ -12,7 +12,7 @@ public:
     
 private:
 
-    static void writeToFile(const char* outPath, std::string& code);
+    static void writeToFile(const char* outPath, const std::string& code);
 
     //static void notGenerateData(LGraphics::LWidget* w);
     static std::string getMoveData(LGraphics::LWidget* w);

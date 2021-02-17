@@ -46,10 +46,10 @@ void CodeGen::generateCode(const char* outPath, LGraphics::LApp* app, const char
     }
 
     code += "\n}\n}\n";
-    writeToFile(outPath, includeFiles + code);
+    writeToFile(outPath, std::string(includeFiles) + code);
 }
 
-void CodeGen::writeToFile(const char* outPath, std::string & code)
+void CodeGen::writeToFile(const char* outPath, const std::string & code)
 {
     std::ofstream out;
     out.open(outPath);

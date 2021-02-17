@@ -95,7 +95,7 @@ namespace LGraphics
 #endif
 
 #ifdef VULKAN
-        VkImageView texture = nullptr;
+        VkImageView texture = VkImageView();
         size_t mipLevels = 1;
 #endif
 
