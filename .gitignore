@@ -302,3 +302,7 @@ Doxyfile/
 *.spv
 *.spv
 log.txt
+*.m4
+LizardGraphics/SDL2-2.0.14/android-project/app/build.gradle
+*.java
+LizardGraphics/SDL2-2.0.14/android-project/build.gradle

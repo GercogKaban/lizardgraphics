@@ -281,11 +281,7 @@ public:
 protected:
   
     static void logToFile(std::string msg,
-        #ifdef WIN32 std::ios_base::_Openmode firstCreationFlag = std::ios_base::app
-        #else
-        std::ios_base::openmode firstCreationFlag = std::ios_base::app
-        #endif
-)
+        std::ios_base::openmode firstCreationFlag = std::ios_base::app)
     {
         std::ofstream out(logFilePath, std::ios_base::binary | firstCreationFlag);
         if (!out.is_open())

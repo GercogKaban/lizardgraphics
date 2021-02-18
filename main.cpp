@@ -21,6 +21,7 @@ int main(int argc, char** argv)
     info.lighting = L_TRUE;
     info.poolSize = poolSize;
     info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
+    info.windowCreator = SDL2;
 
     LApp app(info);
 

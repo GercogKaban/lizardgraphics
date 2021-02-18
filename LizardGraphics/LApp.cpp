@@ -13,6 +13,12 @@
 #include "LLogger.h"
 #include "LResourceManager.h"
 
+#include "SDL.h"
+#ifdef VULKAN
+#include "SDL_vulkan.h"
+#endif
+
+
 bool initialized_ = false;
 namespace LGraphics
 {
@@ -132,7 +138,10 @@ namespace LGraphics
 
                 // Start the Dear ImGui frame
                 ImGui_ImplVulkan_NewFrame();
-                ImGui_ImplGlfw_NewFrame();
+                if (info.windowCreator == GLFW3)
+                    ImGui_ImplGlfw_NewFrame();
+                else
+                    ImGui_ImplSDL2_NewFrame(windowSdl);
                 ImGui::NewFrame();
 
                 imgui();
@@ -317,7 +326,10 @@ namespace LGraphics
 
     glm::vec<2, size_t> LApp::getWindowSize() const
     {
-        return glm::vec<2, size_t>(info.wndWidth, info.wndHeight);
+        int w = 0, h = 0;
+        SDL_GetWindowSize(windowSdl, &w, &h);
+        return { w,h };
+        //return glm::vec<2, size_t>(info.wndWidth, info.wndHeight);
     }
 
     void LApp::setMatrices(glm::mat4 view, glm::mat4 projection)
@@ -607,38 +619,42 @@ namespace LGraphics
     void LApp::setWindowCallbacks()
     {
         LOG_CALL
-        glfwSetWindowUserPointer(window_, this);
 
-        auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
+        if (info.windowCreator = GLFW3)
         {
-            static_cast<LApp*>(glfwGetWindowUserPointer(w))->cursor_position_callback(w, xpos, ypos);
-        };
+            glfwSetWindowUserPointer(window_, this);
 
-        auto mouse = [](GLFWwindow* w, int button, int action, int mods)
-        {
-            static_cast<LApp*>(glfwGetWindowUserPointer(w))->mouse_button_callback(w, button, action, mods);
-        };
+            auto cursor_position = [](GLFWwindow* w, double xpos, double ypos)
+            {
+                static_cast<LApp*>(glfwGetWindowUserPointer(w))->cursor_position_callback(w, xpos, ypos);
+            };
 
-        auto key = [](GLFWwindow* window, int key, int scancode, int action, int mods)
-        {
-            static_cast<LApp*>(glfwGetWindowUserPointer(window))->key_callback(window, key, scancode, action, mods);
-        };
+            auto mouse = [](GLFWwindow* w, int button, int action, int mods)
+            {
+                static_cast<LApp*>(glfwGetWindowUserPointer(w))->mouse_button_callback(w, button, action, mods);
+            };
 
-        auto charCallback = [](GLFWwindow* window, unsigned int codepoint)
-        {
-            static_cast<LApp*>(glfwGetWindowUserPointer(window))->character_callback(window, codepoint);
-        };
+            auto key = [](GLFWwindow* window, int key, int scancode, int action, int mods)
+            {
+                static_cast<LApp*>(glfwGetWindowUserPointer(window))->key_callback(window, key, scancode, action, mods);
+            };
 
-        auto scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset)
-        {
-            static_cast<LApp*>(glfwGetWindowUserPointer(window))->scroll_callback(window, xoffset, yoffset);
-        };
+            auto charCallback = [](GLFWwindow* window, unsigned int codepoint)
+            {
+                static_cast<LApp*>(glfwGetWindowUserPointer(window))->character_callback(window, codepoint);
+            };
 
-        glfwSetCursorPosCallback(window_, cursor_position);
-        glfwSetMouseButtonCallback(window_, mouse);
-        glfwSetKeyCallback(window_, key);
-        glfwSetCharCallback(window_, charCallback);
-        glfwSetScrollCallback(window_, scrollCallback);
+            auto scrollCallback = [](GLFWwindow* window, double xoffset, double yoffset)
+            {
+                static_cast<LApp*>(glfwGetWindowUserPointer(window))->scroll_callback(window, xoffset, yoffset);
+            };
+
+            glfwSetCursorPosCallback(window_, cursor_position);
+            glfwSetMouseButtonCallback(window_, mouse);
+            glfwSetKeyCallback(window_, key);
+            glfwSetCharCallback(window_, charCallback);
+            glfwSetScrollCallback(window_, scrollCallback);
+        }     
     }
 
 #ifdef VULKAN
@@ -646,39 +662,62 @@ namespace LGraphics
     {
         LOG_CALL
 
+        if (info.windowCreator == GLFW3)
+        {
+
 #ifndef NDEBUG
 #ifndef VULKAN
-        glfwSetErrorCallback(glfw_error_callback);
+            glfwSetErrorCallback(glfw_error_callback);
 #endif
 #endif
-        if (!glfwInit())
-            throw std::runtime_error("can't init glfw!");
 
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        if (!info.wndHeight)
-        {
-            info.wndWidth = mode->width;
-            info.wndHeight = mode->height;
-        }
+            if (!glfwInit())
+                throw std::runtime_error("can't init glfw!");
+
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+            const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            if (!info.wndHeight)
+            {
+                info.wndWidth = mode->width;
+                info.wndHeight = mode->height;
+            }
 
 #ifdef NDEBUG
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+            glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-        window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", glfwGetPrimaryMonitor(), NULL);
-        fullscreen = true;
+            window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", glfwGetPrimaryMonitor(), NULL);
+            fullscreen = true;
 #else
-        window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", nullptr, NULL);
+            window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", nullptr, NULL);
 #endif
+            setWindowCallbacks();
+            // Setup Vulkan
+            if (!glfwVulkanSupported())
+                throw std::runtime_error("GLFW: Vulkan Not Supported\n");
+        }
+
+        else
+        {
+            if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
+                throw std::runtime_error(SDL_GetError());
+
+            // Setup window
+
+            SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_ALLOW_HIGHDPI);
+            windowSdl = SDL_CreateWindow("Lizard Graphics",
+                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, window_flags);
+            if (!info.wndHeight)
+            {
+                SDL_GetWindowSize(windowSdl, (int*)&info.wndWidth, (int*)&info.wndHeight);
+            }
+        }
+     
 
         //glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        setWindowCallbacks();
-        // Setup Vulkan
-        if (!glfwVulkanSupported())
-            throw std::runtime_error("GLFW: Vulkan Not Supported\n");
+       
 
         setupVulkan();
 
@@ -693,8 +732,14 @@ namespace LGraphics
         ImGui::StyleColorsDark();
         //ImGui::StyleColorsClassic();
 
+        
         // Setup Platform/Renderer backends
-        ImGui_ImplGlfw_InitForVulkan(window_, true);
+        if (info.windowCreator == GLFW3)
+            ImGui_ImplGlfw_InitForVulkan(window_, true);
+
+        else if (info.windowCreator == SDL2)
+            ImGui_ImplSDL2_InitForVulkan(windowSdl);
+
         ImGui_ImplVulkan_InitInfo init_info = {};
         init_info.Instance = g_Instance;
         init_info.PhysicalDevice = g_PhysicalDevice;
@@ -708,6 +753,7 @@ namespace LGraphics
         init_info.ImageCount = wd->ImageCount;
         init_info.CheckVkResultFn = check_vk_result;
         ImGui_ImplVulkan_Init(&init_info, renderPass);
+        
 
         // Load Fonts
         // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -1090,20 +1136,28 @@ namespace LGraphics
     {
         LOG_CALL
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
-        ANativeWindow* w;
+            ANativeWindow* w;
         VkAndroidSurfaceCreateInfoKHR createInfo
-{
-      .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
-      .pNext = nullptr,
-      .flags = 0,
-      .window = w, 
-};
+        {
+              .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
+              .pNext = nullptr,
+              .flags = 0,
+              .window = w,
+        };
         if (!vkCreateAndroidSurfaceKHR(g_Instance, &createInfo, nullptr,
             &surface))
-              throw std::runtime_error("failed to create window surface!");
-#else
-        if (glfwCreateWindowSurface(g_Instance, window_, nullptr, &surface) != VK_SUCCESS)
             throw std::runtime_error("failed to create window surface!");
+#else
+            if (info.windowCreator == GLFW3)
+            {
+                if (glfwCreateWindowSurface(g_Instance, window_, nullptr, &surface) != VK_SUCCESS)
+                    throw std::runtime_error("failed to create window surface!");
+            }
+            else
+            {
+                if (!SDL_Vulkan_CreateSurface(windowSdl, g_Instance, &surface))
+                    throw std::runtime_error("Failed to create Vulkan surface");
+            }
 #endif
     }
 
@@ -1880,11 +1934,34 @@ namespace LGraphics
     std::vector<const char*> LApp::getRequiredExtensions()
     {
         LOG_CALL
-        uint32_t glfwExtensionCount = 0;
-        const char** glfwExtensions;
-        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-        std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+            const char** glfwExtentions;
+            const char** sdlExtentions;
+            uint32_t extensionCount = 0;
+            if (info.windowCreator == GLFW3)
+                glfwExtentions = glfwGetRequiredInstanceExtensions(&extensionCount);
+            else
+            {
+                SDL_Vulkan_GetInstanceExtensions(windowSdl, &extensionCount, NULL);
+                sdlExtentions = new const char* [extensionCount];
+                SDL_Vulkan_GetInstanceExtensions(windowSdl, &extensionCount, sdlExtentions);
+            }
+
+            //if (info.windowCreator == GLFW3)
+
+
+            std::vector<const char*> extensions;
+            extensions.resize(extensionCount);
+            if (info.windowCreator == GLFW3)
+                for (size_t i = 0; i < extensionCount; ++i)
+                    extensions[i] = glfwExtentions[i];
+            else
+                for (size_t i = 0; i < extensionCount; ++i)
+                    extensions[i] = sdlExtentions[i];
+
+            //for (size_t i = 0; i < extensionCount; ++i)
+                delete[] sdlExtentions;
+
         extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME); 
         if (enableValidationLayers) 
         {
