@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['texturecoordscount_5826',['textureCoordsCount',['../class_l_graphics_1_1_l_buffer.html#ab422b9ca8d473664991c575263624056',1,'LGraphics::LBuffer']]],
-  ['textures_5827',['textures',['../class_l_graphics_1_1_l_buffer.html#a9f27b93190282b3f0b35599ded77fdc8',1,'LGraphics::LBuffer']]],
-  ['transparency_5f_5828',['transparency_',['../class_l_graphics_1_1_l_shape.html#ab756d3da3d3bc7807bbb2d036214f284',1,'LGraphics::LShape']]],
-  ['turnedon_5829',['turnedOn',['../class_l_graphics_1_1_l_image.html#aa467339f17051537dba386f40b71e8f5',1,'LGraphics::LImage']]]
+  ['offset_8024',['offset',['../struct_s_d_l___haptic_periodic.html#abc7aa9e9c0d546cb54189a7812fbe554',1,'SDL_HapticPeriodic::offset()'],['../struct_vma_allocation_info.html#a4a3c732388dbdc7a23f9365b00825268',1,'VmaAllocationInfo::offset()']]]
 ];

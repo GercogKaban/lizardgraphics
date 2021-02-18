@@ -1,19 +1,16 @@
 var searchData=
 [
-  ['pallocationcallbacks_5803',['pAllocationCallbacks',['../struct_vma_allocator_create_info.html#aa84222aa55c2b42c1eff64b16978c8c2',1,'VmaAllocatorCreateInfo']]],
-  ['pdevicememorycallbacks_5804',['pDeviceMemoryCallbacks',['../struct_vma_allocator_create_info.html#afbb24551124b16bdaa29f92eb96b8c56',1,'VmaAllocatorCreateInfo']]],
-  ['pfilepath_5805',['pFilePath',['../struct_vma_record_settings.html#aa7461c877e9a181a5909e7c5797a9679',1,'VmaRecordSettings']]],
-  ['pfnallocate_5806',['pfnAllocate',['../struct_vma_device_memory_callbacks.html#ac02066cbe29d1f2f97c68c8c462ee3d5',1,'VmaDeviceMemoryCallbacks']]],
-  ['pfnfree_5807',['pfnFree',['../struct_vma_device_memory_callbacks.html#a74348a8b9bdb165535e010ed195bfdb9',1,'VmaDeviceMemoryCallbacks']]],
-  ['physicaldevice_5808',['physicalDevice',['../struct_vma_allocator_create_info.html#ad09ce637aa92cb7c8c2a742943668087',1,'VmaAllocatorCreateInfo::physicalDevice()'],['../struct_vma_allocator_info.html#a45d976f4f410b9e57fd945af74400d5a',1,'VmaAllocatorInfo::physicalDevice()']]],
-  ['pixels_5809',['pixels',['../struct_g_l_f_wimage.html#a0c532a5c2bb715555279b7817daba0fb',1,'GLFWimage']]],
-  ['pmappeddata_5810',['pMappedData',['../struct_vma_allocation_info.html#a17a39eb34201a610347acb91b38eca79',1,'VmaAllocationInfo']]],
-  ['pool_5811',['pool',['../struct_vma_allocation_create_info.html#ad5aa903b9be1fa934abf2dd6c650fca6',1,'VmaAllocationCreateInfo']]],
-  ['poolcount_5812',['poolCount',['../struct_vma_defragmentation_info2.html#a7e70aa2a1081d849dcc7829b19d3ec9d',1,'VmaDefragmentationInfo2']]],
-  ['precordsettings_5813',['pRecordSettings',['../struct_vma_allocator_create_info.html#ad59c67d8e469176080556530b9c5b60b',1,'VmaAllocatorCreateInfo']]],
-  ['preferredflags_5814',['preferredFlags',['../struct_vma_allocation_create_info.html#a7fe8d81a1ad10b2a2faacacee5b15d6d',1,'VmaAllocationCreateInfo']]],
-  ['preferredlargeheapblocksize_5815',['preferredLargeHeapBlockSize',['../struct_vma_allocator_create_info.html#a8e4714298e3121cdd8b214a1ae7a637a',1,'VmaAllocatorCreateInfo']]],
-  ['priority_5816',['priority',['../struct_vma_allocation_create_info.html#a983d39e1a2e63649d78a960aa2fdd0f7',1,'VmaAllocationCreateInfo::priority()'],['../struct_vma_pool_create_info.html#a16e686c688f6725f119ebf6e24ab5274',1,'VmaPoolCreateInfo::priority()']]],
-  ['puserdata_5817',['pUserData',['../struct_vma_device_memory_callbacks.html#a84102b94fa445b59a8b02b44e7dcb43f',1,'VmaDeviceMemoryCallbacks::pUserData()'],['../struct_vma_allocation_create_info.html#a74e2eb74b3772b657c59473ce605058a',1,'VmaAllocationCreateInfo::pUserData()'],['../struct_vma_allocation_info.html#ad0ea9d64dd733ffd7beff7af6d289ad0',1,'VmaAllocationInfo::pUserData()']]],
-  ['pvulkanfunctions_5818',['pVulkanFunctions',['../struct_vma_allocator_create_info.html#a5e45da0879451e58bee2f3a975f228f5',1,'VmaAllocatorCreateInfo']]]
+  ['language_7983',['language',['../struct_s_d_l___locale.html#a0b568d515a6587876f41fc8e059514c6',1,'SDL_Locale']]],
+  ['large_5fmagnitude_7984',['large_magnitude',['../struct_s_d_l___haptic_left_right.html#a8cd16fe2200ef10cc4f3b4209adef959',1,'SDL_HapticLeftRight']]],
+  ['left_5fcoeff_7985',['left_coeff',['../struct_s_d_l___haptic_condition.html#a2adf52c32f60f0b6826b1e3add2eae7a',1,'SDL_HapticCondition']]],
+  ['left_5fsat_7986',['left_sat',['../struct_s_d_l___haptic_condition.html#a953448774c40818a4f47c6efea21124d',1,'SDL_HapticCondition']]],
+  ['leftright_7987',['leftright',['../union_s_d_l___haptic_effect.html#a3c254b81c1ff41c7888eee0cd0076a12',1,'SDL_HapticEffect']]],
+  ['len_7988',['len',['../struct_s_d_l___audio_c_v_t.html#aeaeb8c5a63c3ab96471fbfdf412c78ff',1,'SDL_AudioCVT']]],
+  ['len_5fcvt_7989',['len_cvt',['../struct_s_d_l___audio_c_v_t.html#a5c60163f34d1947e5b166c23aba9879d',1,'SDL_AudioCVT']]],
+  ['len_5fmult_7990',['len_mult',['../struct_s_d_l___audio_c_v_t.html#ac9662d47cf2348b82b27b151150116b0',1,'SDL_AudioCVT']]],
+  ['len_5fratio_7991',['len_ratio',['../struct_s_d_l___audio_c_v_t.html#a5628ff5ccf711de9d77c0a4a9f57d2f0',1,'SDL_AudioCVT']]],
+  ['length_7992',['length',['../struct_s_d_l___text_editing_event.html#adca95505c0bf212834930df58f6d1aa5',1,'SDL_TextEditingEvent::length()'],['../struct_s_d_l___haptic_custom.html#ad70e8bc2cff74b99d704a757c16b363f',1,'SDL_HapticCustom::length()'],['../struct_s_d_l___haptic_left_right.html#a5b942fee53f1ec77d3fb91a6e89b0196',1,'SDL_HapticLeftRight::length()'],['../struct_s_d_l___haptic_ramp.html#a57e75237507701405af2a3caf34cdb5a',1,'SDL_HapticRamp::length()'],['../struct_s_d_l___haptic_condition.html#ad0efb0a6ddc20f058e87199eaaa95978',1,'SDL_HapticCondition::length()'],['../struct_s_d_l___haptic_periodic.html#a0ef0b17c54aaa5c99886c2a618444026',1,'SDL_HapticPeriodic::length()'],['../struct_s_d_l___haptic_constant.html#aeb994c356b1d236b060f277d157e98ec',1,'SDL_HapticConstant::length()']]],
+  ['level_7993',['level',['../struct_s_d_l___haptic_constant.html#a5b095eea77464623ed57af15f29f4ca6',1,'SDL_HapticConstant']]],
+  ['list_5fblitmap_7994',['list_blitmap',['../struct_s_d_l___surface.html#a17294cb1ec1ef7f77f75cdad26ac795f',1,'SDL_Surface']]],
+  ['locked_7995',['locked',['../struct_s_d_l___surface.html#a5022edaeea1c0a055fa5d6dccba41de2',1,'SDL_Surface']]]
 ];

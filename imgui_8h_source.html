@@ -780,7 +780,7 @@ $(function() {
 <div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;    IMGUI_API const <span class="keywordtype">char</span>*           TableGetColumnName(<span class="keywordtype">int</span> column_n = -1);      <span class="comment">// return &quot;&quot; if column didn&#39;t have a name declared by TableSetupColumn(). Pass -1 to use current column.</span></div>
 <div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;    IMGUI_API ImGuiTableColumnFlags TableGetColumnFlags(<span class="keywordtype">int</span> column_n = -1);     <span class="comment">// return column flags so you can query their Enabled/Visible/Sorted/Hovered status flags. Pass -1 to use current column.</span></div>
 <div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;    IMGUI_API <a class="code" href="struct_im_gui_table_sort_specs.html">ImGuiTableSortSpecs</a>*  TableGetSortSpecs();                        <span class="comment">// get latest sort specs for the table (NULL if not sorting).</span></div>
-<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;    IMGUI_API <span class="keywordtype">void</span>                  TableSetBgColor(ImGuiTableBgTarget target, ImU32 <a class="code" href="structvect__prototype2.html">color</a>, <span class="keywordtype">int</span> column_n = -1);  <span class="comment">// change the color of a cell, row, or column. See ImGuiTableBgTarget_ flags for details.</span></div>
+<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;    IMGUI_API <span class="keywordtype">void</span>                  TableSetBgColor(ImGuiTableBgTarget target, ImU32 color, <span class="keywordtype">int</span> column_n = -1);  <span class="comment">// change the color of a cell, row, or column. See ImGuiTableBgTarget_ flags for details.</span></div>
 <div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160; </div>
 <div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;    <span class="comment">// Legacy Columns API (2020: prefer using Tables!)</span></div>
 <div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <span class="comment">// - You can also use SameLine(pos_x) to mimic simplified columns.</span></div>
@@ -2824,7 +2824,6 @@ $(function() {
 <div class="ttc" id="astruct_im_vec2_html"><div class="ttname"><a href="struct_im_vec2.html">ImVec2</a></div><div class="ttdef"><b>Definition:</b> imgui.h:224</div></div>
 <div class="ttc" id="astruct_im_vec4_html"><div class="ttname"><a href="struct_im_vec4.html">ImVec4</a></div><div class="ttdef"><b>Definition:</b> imgui.h:237</div></div>
 <div class="ttc" id="astruct_im_vector_html"><div class="ttname"><a href="struct_im_vector.html">ImVector</a></div><div class="ttdef"><b>Definition:</b> imgui.h:1603</div></div>
-<div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2</a></div><div class="ttdef"><b>Definition:</b> vectors.h:187</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
