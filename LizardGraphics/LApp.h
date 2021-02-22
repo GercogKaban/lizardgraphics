@@ -28,9 +28,6 @@ void handle_cmd(android_app* app, int32_t cmd);
 
 #endif
 
-#if WIN32
-#pragma comment(lib, "winmm.lib")
-#endif
 
 #include "ObjectPool.h"
 
@@ -45,7 +42,6 @@ void handle_cmd(android_app* app, int32_t cmd);
 #endif
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
-#include "imgui_impl_sdl.h"
 
 #ifdef VULKAN
 #include "imgui_impl_vulkan.h"
@@ -95,12 +91,6 @@ namespace LGraphics
         L_MODEL,
     };
 
-    enum LWindowCreators : uint8_t
-    {
-        GLFW3,
-        SDL2,
-    };
-
     struct LAppCreateInfo
     {
         size_t wndWidth = 0, wndHeight = 0;
@@ -115,7 +105,6 @@ namespace LGraphics
         LProjections projection = L_ORTHOGRAPHIC;
         uint8_t logFlags = 0;
         std::string procName;
-        LWindowCreators windowCreator = GLFW3;
     };
 
     /*!
@@ -354,10 +343,6 @@ namespace LGraphics
             [](GLFWwindow* window, unsigned int codepoint) {};
         std::function<void(GLFWwindow* window, double xoffset, double yoffset)> 
             userScrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
-
-
-        void handleSEH(const size_t& code);
-        void handleCppException(std::exception& err);
 
 #ifdef VULKAN
 
@@ -626,8 +611,10 @@ namespace LGraphics
         }
 #endif
 
+        void handleSEH(const size_t& code);
+        void handleCppException(std::exception& err);
+
         GLFWwindow* window_;
-        SDL_Window* windowSdl;
 
         glm::mat4 view, projection;
 
