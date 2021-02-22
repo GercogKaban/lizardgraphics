@@ -3135,7 +3135,7 @@ $(function() {
 <div class="line"><a name="l03063"></a><span class="lineno"> 3063</span>&#160;} <a class="code" href="struct_vk_clear_depth_stencil_value.html">VkClearDepthStencilValue</a>;</div>
 <div class="line"><a name="l03064"></a><span class="lineno"> 3064</span>&#160; </div>
 <div class="line"><a name="l03065"></a><span class="lineno"><a class="line" href="union_vk_clear_value.html"> 3065</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">union </span><a class="code" href="union_vk_clear_value.html">VkClearValue</a> {</div>
-<div class="line"><a name="l03066"></a><span class="lineno"> 3066</span>&#160;    <a class="code" href="union_vk_clear_color_value.html">VkClearColorValue</a>           color;</div>
+<div class="line"><a name="l03066"></a><span class="lineno"> 3066</span>&#160;    <a class="code" href="union_vk_clear_color_value.html">VkClearColorValue</a>           <a class="code" href="structvect__prototype2.html">color</a>;</div>
 <div class="line"><a name="l03067"></a><span class="lineno"> 3067</span>&#160;    <a class="code" href="struct_vk_clear_depth_stencil_value.html">VkClearDepthStencilValue</a>    depthStencil;</div>
 <div class="line"><a name="l03068"></a><span class="lineno"> 3068</span>&#160;} <a class="code" href="union_vk_clear_value.html">VkClearValue</a>;</div>
 <div class="line"><a name="l03069"></a><span class="lineno"> 3069</span>&#160; </div>
@@ -7904,7 +7904,7 @@ $(function() {
 <div class="line"><a name="l07832"></a><span class="lineno"> 7832</span>&#160;    VkStructureType    sType;</div>
 <div class="line"><a name="l07833"></a><span class="lineno"> 7833</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span>*        pNext;</div>
 <div class="line"><a name="l07834"></a><span class="lineno"> 7834</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>*        pMarkerName;</div>
-<div class="line"><a name="l07835"></a><span class="lineno"> 7835</span>&#160;    <span class="keywordtype">float</span>              color[4];</div>
+<div class="line"><a name="l07835"></a><span class="lineno"> 7835</span>&#160;    <span class="keywordtype">float</span>              <a class="code" href="structvect__prototype2.html">color</a>[4];</div>
 <div class="line"><a name="l07836"></a><span class="lineno"> 7836</span>&#160;} <a class="code" href="struct_vk_debug_marker_marker_info_e_x_t.html">VkDebugMarkerMarkerInfoEXT</a>;</div>
 <div class="line"><a name="l07837"></a><span class="lineno"> 7837</span>&#160; </div>
 <div class="line"><a name="l07838"></a><span class="lineno"> 7838</span>&#160;<span class="keyword">typedef</span> VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetObjectTagEXT)(VkDevice device, <span class="keyword">const</span> <a class="code" href="struct_vk_debug_marker_object_tag_info_e_x_t.html">VkDebugMarkerObjectTagInfoEXT</a>* pTagInfo);</div>
@@ -8776,7 +8776,7 @@ $(function() {
 <div class="line"><a name="l08704"></a><span class="lineno"> 8704</span>&#160;    VkStructureType    sType;</div>
 <div class="line"><a name="l08705"></a><span class="lineno"> 8705</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span>*        pNext;</div>
 <div class="line"><a name="l08706"></a><span class="lineno"> 8706</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>*        pLabelName;</div>
-<div class="line"><a name="l08707"></a><span class="lineno"> 8707</span>&#160;    <span class="keywordtype">float</span>              color[4];</div>
+<div class="line"><a name="l08707"></a><span class="lineno"> 8707</span>&#160;    <span class="keywordtype">float</span>              <a class="code" href="structvect__prototype2.html">color</a>[4];</div>
 <div class="line"><a name="l08708"></a><span class="lineno"> 8708</span>&#160;} <a class="code" href="struct_vk_debug_utils_label_e_x_t.html">VkDebugUtilsLabelEXT</a>;</div>
 <div class="line"><a name="l08709"></a><span class="lineno"> 8709</span>&#160; </div>
 <div class="line"><a name="l08710"></a><span class="lineno"><a class="line" href="struct_vk_debug_utils_object_name_info_e_x_t.html"> 8710</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_vk_debug_utils_object_name_info_e_x_t.html">VkDebugUtilsObjectNameInfoEXT</a> {</div>
@@ -12452,6 +12452,7 @@ $(function() {
 <div class="ttc" id="astruct_vk_write_descriptor_set_html"><div class="ttname"><a href="struct_vk_write_descriptor_set.html">VkWriteDescriptorSet</a></div><div class="ttdef"><b>Definition:</b> vulkan_core.h:2922</div></div>
 <div class="ttc" id="astruct_vk_write_descriptor_set_inline_uniform_block_e_x_t_html"><div class="ttname"><a href="struct_vk_write_descriptor_set_inline_uniform_block_e_x_t.html">VkWriteDescriptorSetInlineUniformBlockEXT</a></div><div class="ttdef"><b>Definition:</b> vulkan_core.h:8867</div></div>
 <div class="ttc" id="astruct_vk_x_y_color_e_x_t_html"><div class="ttname"><a href="struct_vk_x_y_color_e_x_t.html">VkXYColorEXT</a></div><div class="ttdef"><b>Definition:</b> vulkan_core.h:8640</div></div>
+<div class="ttc" id="astructvect__prototype2_html"><div class="ttname"><a href="structvect__prototype2.html">vect_prototype2</a></div><div class="ttdef"><b>Definition:</b> vectors.h:187</div></div>
 <div class="ttc" id="aunion_vk_acceleration_structure_geometry_data_k_h_r_html"><div class="ttname"><a href="union_vk_acceleration_structure_geometry_data_k_h_r.html">VkAccelerationStructureGeometryDataKHR</a></div><div class="ttdef"><b>Definition:</b> vulkan_core.h:11472</div></div>
 <div class="ttc" id="aunion_vk_clear_color_value_html"><div class="ttname"><a href="union_vk_clear_color_value.html">VkClearColorValue</a></div><div class="ttdef"><b>Definition:</b> vulkan_core.h:3054</div></div>
 <div class="ttc" id="aunion_vk_clear_value_html"><div class="ttname"><a href="union_vk_clear_value.html">VkClearValue</a></div><div class="ttdef"><b>Definition:</b> vulkan_core.h:3065</div></div>

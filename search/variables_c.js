@@ -1,28 +1,7 @@
 var searchData=
 [
-  ['magnitude_7996',['magnitude',['../struct_s_d_l___haptic_periodic.html#aad0ad2b00c7e6959da627663d91f7b94',1,'SDL_HapticPeriodic']]],
-  ['major_7997',['major',['../struct_s_d_l__version.html#ad7d7674532073eed237b90f546c97cd0',1,'SDL_version']]],
-  ['map_7998',['map',['../struct_s_d_l___surface.html#a8c1ecad399b0d4f525b1a53b6ee9393f',1,'SDL_Surface']]],
-  ['max_5ftexture_5fheight_7999',['max_texture_height',['../struct_s_d_l___renderer_info.html#a87c6a13e8d535c2148f8913c05e13102',1,'SDL_RendererInfo']]],
-  ['max_5ftexture_5fwidth_8000',['max_texture_width',['../struct_s_d_l___renderer_info.html#a6e6757e3d5c1f0922adaba39380edfa6',1,'SDL_RendererInfo']]],
-  ['maxallocationstomove_8001',['maxAllocationsToMove',['../struct_vma_defragmentation_info.html#aa7c7304e13c71f604c907196c4e28fbc',1,'VmaDefragmentationInfo']]],
-  ['maxblockcount_8002',['maxBlockCount',['../struct_vma_pool_create_info.html#ae41142f2834fcdc82baa4883c187b75c',1,'VmaPoolCreateInfo']]],
-  ['maxbytestomove_8003',['maxBytesToMove',['../struct_vma_defragmentation_info.html#acb311c940a777270e67e1b81c5ab6a1d',1,'VmaDefragmentationInfo']]],
-  ['maxcpuallocationstomove_8004',['maxCpuAllocationsToMove',['../struct_vma_defragmentation_info2.html#a94c2c7223d52878445a8cccce396b671',1,'VmaDefragmentationInfo2']]],
-  ['maxcpubytestomove_8005',['maxCpuBytesToMove',['../struct_vma_defragmentation_info2.html#af78e1ea40c22d85137b65f6b384a4d0a',1,'VmaDefragmentationInfo2']]],
-  ['maxgpuallocationstomove_8006',['maxGpuAllocationsToMove',['../struct_vma_defragmentation_info2.html#a40d53d33e71ba0b66f844ed63c05a3f6',1,'VmaDefragmentationInfo2']]],
-  ['maxgpubytestomove_8007',['maxGpuBytesToMove',['../struct_vma_defragmentation_info2.html#a4ddbc898d0afe1518f863a3763628f08',1,'VmaDefragmentationInfo2']]],
-  ['memorytype_8008',['memoryType',['../struct_vma_allocation_info.html#a7f6b0aa58c135e488e6b40a388dad9d5',1,'VmaAllocationInfo']]],
-  ['memorytypebits_8009',['memoryTypeBits',['../struct_vma_allocation_create_info.html#a3bf940c0271d85d6ba32a4d820075055',1,'VmaAllocationCreateInfo']]],
-  ['memorytypeindex_8010',['memoryTypeIndex',['../struct_vma_pool_create_info.html#a596fa76b685d3f1f688f84a709a5b319',1,'VmaPoolCreateInfo']]],
-  ['message_8011',['message',['../struct_s_d_l___message_box_data.html#ada6ae208a1f85adabbd7a7a08ca609c8',1,'SDL_MessageBoxData']]],
-  ['mgesture_8012',['mgesture',['../union_s_d_l___event.html#ac19b3c6a6b5181a51eb4fbe2cbe726a9',1,'SDL_Event']]],
-  ['minblockcount_8013',['minBlockCount',['../struct_vma_pool_create_info.html#ad8006fb803185c0a699d30f3e9a865ae',1,'VmaPoolCreateInfo']]],
-  ['minor_8014',['minor',['../struct_s_d_l__version.html#a6c35c7bf80245028d5970e6a504ecf57',1,'SDL_version']]],
-  ['mod_8015',['mod',['../struct_s_d_l___keysym.html#ab519d1b8a9939d3d035f7103f3208291',1,'SDL_Keysym']]],
-  ['mode_8016',['mode',['../struct_s_d_l___window_shape_mode.html#a40ebd8b9a76d982cbd87563386cc05de',1,'SDL_WindowShapeMode']]],
-  ['motion_8017',['motion',['../union_s_d_l___event.html#ac3c89e190faacbe84280cd539453bab6',1,'SDL_Event']]],
-  ['mouseonitfunction_8018',['mouseOnItFunction',['../class_l_graphics_1_1_l_widget.html#ad26de8467035b1f7bbdcf571b8fbe21d',1,'LGraphics::LWidget']]],
-  ['move_5f_8019',['move_',['../class_l_graphics_1_1_l_shape.html#a589bd65507ef36fb5020181bb3b19508',1,'LGraphics::LShape']]],
-  ['msg_8020',['msg',['../struct_s_d_l___sys_w_m_event.html#ad5e3dc68aa15582cd0641847d41c74e8',1,'SDL_SysWMEvent']]]
+  ['red_5819',['red',['../struct_g_l_f_wgammaramp.html#a2cce5d968734b685623eef913e635138',1,'GLFWgammaramp']]],
+  ['redbits_5820',['redBits',['../struct_g_l_f_wvidmode.html#a6066c4ecd251098700062d3b735dba1b',1,'GLFWvidmode']]],
+  ['refreshrate_5821',['refreshRate',['../struct_g_l_f_wvidmode.html#a791bdd6c7697b09f7e9c97054bf05649',1,'GLFWvidmode']]],
+  ['requiredflags_5822',['requiredFlags',['../struct_vma_allocation_create_info.html#a9166390303ff42d783305bc31c2b6b90',1,'VmaAllocationCreateInfo']]]
 ];
