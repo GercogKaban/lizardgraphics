@@ -95,19 +95,26 @@ Building for Linux</h1>
 Examples</h1>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Initializing LApp</h2>
-<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">size_t</span> poolSize = 100;</div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;LApp.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;LModel.h&quot;</span></div>
 <div class="line"> </div>
-<div class="line">LGraphics::LAppCreateInfo info;</div>
+<div class="line"><span class="keyword">using namespace </span>LGraphics;</div>
 <div class="line"> </div>
-<div class="line">info.anisotropy = 16;</div>
-<div class="line">info.projection = L_PERSPECTIVE;</div>
-<div class="line">info.saveObjects = L_TRUE;</div>
-<div class="line">info.loadObjects = L_TRUE;</div>
-<div class="line">info.lighting = L_TRUE;</div>
-<div class="line">info.poolSize = poolSize;</div>
-<div class="line">info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;</div>
+<div class="line"><span class="keywordtype">int</span> main()</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">size_t</span> poolSize = 100;</div>
 <div class="line"> </div>
-<div class="line">LGraphics::LApp app(info);</div>
+<div class="line">    LAppCreateInfo info;</div>
+<div class="line"> </div>
+<div class="line">    info.anisotropy = 16;</div>
+<div class="line">    info.projection = L_PERSPECTIVE;</div>
+<div class="line">    info.saveObjects = L_TRUE;</div>
+<div class="line">    info.loadObjects = L_TRUE;</div>
+<div class="line">    info.lighting = L_TRUE;</div>
+<div class="line">    info.poolSize = poolSize;</div>
+<div class="line">    info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;</div>
+<div class="line"> </div>
+<div class="line">    LApp app(info);</div>
 </div><!-- fragment --> <h2><a class="anchor" id="autotoc_md6"></a>
 Adding objects</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> m1 = <span class="keyword">new</span> LModel(&amp;app,</div>
@@ -145,13 +152,14 @@ Setting own code before drawing loop</h2>
 <div class="line">    });</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
 Adding interface</h2>
-<p>You can choose interface rom <a class="el" href="interfaces_8h_source.html">interfaces.h</a> using ImGuiInterface class. </p><div class="fragment"><div class="line"><a class="code" href="class_l_graphics_1_1_im_gui_interface.html">LGraphics::ImGuiInterface</a> interface_(&amp;app);</div>
+<p>You can choose interface rom <a class="el" href="interfaces_8h_source.html">interfaces.h</a> using ImGuiInterface class. </p><div class="fragment"><div class="line">ImGuiInterface interface_(&amp;app);</div>
 <div class="line"><span class="keyword">auto</span> f = std::bind(&amp;ImGuiInterface::imguiInterface, &amp;interface_);</div>
 <div class="line">app.setImgui(f);</div>
-<div class="ttc" id="aclass_l_graphics_1_1_im_gui_interface_html"><div class="ttname"><a href="class_l_graphics_1_1_im_gui_interface.html">LGraphics::ImGuiInterface</a></div><div class="ttdef"><b>Definition:</b> interfaces.h:13</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
 Launching loop</h2>
-<div class="fragment"><div class="line">app.loop()</div>
+<div class="fragment"><div class="line">    app.loop();</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
 TODO</h1>
 <h2><a class="anchor" id="autotoc_md11"></a>
