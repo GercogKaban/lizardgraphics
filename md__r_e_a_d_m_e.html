@@ -92,8 +92,69 @@ Building for Linux</h1>
 <div class="line">make</div>
 </div><!-- fragment --><p>also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
-TODO</h1>
+Examples</h1>
 <h2><a class="anchor" id="autotoc_md5"></a>
+Initializing LApp</h2>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">size_t</span> poolSize = 100;</div>
+<div class="line"> </div>
+<div class="line">LGraphics::LAppCreateInfo info;</div>
+<div class="line"> </div>
+<div class="line">info.anisotropy = 16;</div>
+<div class="line">info.projection = L_PERSPECTIVE;</div>
+<div class="line">info.saveObjects = L_TRUE;</div>
+<div class="line">info.loadObjects = L_TRUE;</div>
+<div class="line">info.lighting = L_TRUE;</div>
+<div class="line">info.poolSize = poolSize;</div>
+<div class="line">info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;</div>
+<div class="line"> </div>
+<div class="line">LGraphics::LApp app(info);</div>
+</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md6"></a>
+Adding objects</h2>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> m1 = <span class="keyword">new</span> LModel(&amp;app,</div>
+<div class="line">            <span class="stringliteral">&quot;models/dog/Wolf_obj.obj&quot;</span>,      <span class="comment">// model path</span></div>
+<div class="line">            <span class="stringliteral">&quot;models/dog/Australian_Cattle_Dog_dif.jpg&quot;</span>, <span class="keyword">nullptr</span>, <span class="keyword">true</span>);     <span class="comment">// texture path</span></div>
+<div class="line"> </div>
+<div class="line">        m1-&gt;rotateX(90.0f);</div>
+<div class="line">        m1-&gt;rotateZ(180.0f);</div>
+<div class="line">        m1-&gt;move(0.0f, 10.0f, 0.0f);</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+Setting own code before drawing loop</h2>
+<div class="fragment"><div class="line">app.setBeforeDrawingFunc([&amp;]()</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">if</span> (app.isCursorEnabled())</div>
+<div class="line">            <span class="keywordflow">return</span>;</div>
+<div class="line">        <span class="keyword">const</span> <span class="keywordtype">float</span> cameraSpeed = 0.002f;</div>
+<div class="line"> </div>
+<div class="line">        glm::vec3 cameraPos = app.getCameraPos();</div>
+<div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> cameraFront = app.getCameraFront();</div>
+<div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> cameraUp = app.getCameraUp();</div>
+<div class="line"> </div>
+<div class="line">        <span class="keyword">const</span> <span class="keywordtype">float</span> tempY = cameraPos.y;</div>
+<div class="line"> </div>
+<div class="line">        if (app.isPressed(GLFW_KEY_W))</div>
+<div class="line">            cameraPos += cameraSpeed * cameraFront;</div>
+<div class="line">        if (app.isPressed(GLFW_KEY_S))</div>
+<div class="line">            cameraPos -= cameraSpeed * cameraFront;</div>
+<div class="line">        if (app.isPressed(GLFW_KEY_A))</div>
+<div class="line">            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;</div>
+<div class="line">        if (app.isPressed(GLFW_KEY_D))</div>
+<div class="line">            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;</div>
+<div class="line"> </div>
+<div class="line">        cameraPos.y = 0.0f;</div>
+<div class="line">        app.setCameraPos(cameraPos);</div>
+<div class="line">    });</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+Adding interface</h2>
+<p>You can choose interface rom <a class="el" href="interfaces_8h_source.html">interfaces.h</a> using ImGuiInterface class. </p><div class="fragment"><div class="line"><a class="code" href="class_l_graphics_1_1_im_gui_interface.html">LGraphics::ImGuiInterface</a> interface_(&amp;app);</div>
+<div class="line"><span class="keyword">auto</span> f = std::bind(&amp;ImGuiInterface::imguiInterface, &amp;interface_);</div>
+<div class="line">app.setImgui(f);</div>
+<div class="ttc" id="aclass_l_graphics_1_1_im_gui_interface_html"><div class="ttname"><a href="class_l_graphics_1_1_im_gui_interface.html">LGraphics::ImGuiInterface</a></div><div class="ttdef"><b>Definition:</b> interfaces.h:13</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+Launching loop</h2>
+<div class="fragment"><div class="line">app.loop()</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
+TODO</h1>
+<h2><a class="anchor" id="autotoc_md11"></a>
 Features</h2>
 <ol type="1">
 <li>Antialiasing</li>
@@ -104,13 +165,13 @@ Features</h2>
 <li>Skeletal animation.</li>
 <li>Grid drawing.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Optimizations</h2>
 <ol type="1">
 <li>Multithread command buffers writing (Vulkan)</li>
 <li>Prerecording command buffers (Vulkan).</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Documentation</h1>
 <p>Here you can find documentation for Lizard Graphics <a href="https://gercogkaban.github.io/lizardgraphics/index.html">https://gercogkaban.github.io/lizardgraphics/index.html</a> </p>
 </div></div><!-- contents -->
