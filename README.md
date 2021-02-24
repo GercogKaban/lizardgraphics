@@ -49,7 +49,7 @@ make
 5. Supporting Android platform.
 6. Runtime API changing.
 7. Skeletal animation.
-8. Logger.
+8. Grid drawing.
 
 # Documentation
 Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
