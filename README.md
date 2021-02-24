@@ -19,37 +19,39 @@ vulkan-1 - https://www.lunarg.com/vulkan-sdk/
 On Windows you need to place this static libraries in the "LizardGraphics/libs" directory.
 
 # Building for Windows
-1. Open command line. 
-2. Clone repository (git clone https://github.com/GercogKaban/lizardgraphics).
-3. Go to the repository directory (cd /d path)
-4. Input following command:
 
-cmake -G "Visual Studio 16 2019" -A x64 -S path -DAPI=VULKAN         (for VS 19).
+```sh
+git clone https://github.com/GercogKaban/lizardgraphics
+cd /d path
+cmake -G "Visual Studio 16 2019" -A x64 -S path -DAPI=VULKAN
+``` 
 
-cmake -G "Visual Studio 15 2017" -A x64 -S path -DAPI=VULKAN         (for VS 17).
+# Building for Linux
+
+```sh
+git clone https://github.com/GercogKaban/lizardgraphics
+cd path
+cmake . -DAPI=VULKAN
+make
+```
 
 also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
 
-# Building for Linux
-1. Open terminal.
-2. Clone repository (git clone https://github.com/GercogKaban/lizardgraphics).
-3. Go to the repository directory (cd path)
-4. Input following commands:
-
-cmake . -DAPI=VULKAN
-
-make
-
 # TODO
 
+## Features
 1. Antialiasing
 2. Shadows.
 3. Reflections.
-4. Optimization.
-5. Supporting Android platform.
-6. Runtime API changing.
-7. Skeletal animation.
-8. Grid drawing.
+4. Supporting Android platform.
+5. Runtime API changing.
+6. Skeletal animation.
+7. Grid drawing.
+
+## Optimizations
+
+1. Multithread command buffers writing (Vulkan)
+2. Prerecording command buffers (Vulkan).
 
 # Documentation
 Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
