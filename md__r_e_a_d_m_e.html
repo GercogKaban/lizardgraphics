@@ -81,38 +81,36 @@ The necessary libraries</h1>
 <p>On Windows you need to place this static libraries in the "LizardGraphics/libs" directory.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Building for Windows</h1>
-<ol type="1">
-<li>Open command line.</li>
-<li>Clone repository (git clone <a href="https://github.com/GercogKaban/lizardgraphics">https://github.com/GercogKaban/lizardgraphics</a>).</li>
-<li>Go to the repository directory (cd /d path)</li>
-<li>Input following command:</li>
-</ol>
-<p>cmake -G "Visual Studio 16 2019" -A x64 -S path -DAPI=VULKAN (for VS 19).</p>
-<p>cmake -G "Visual Studio 15 2017" -A x64 -S path -DAPI=VULKAN (for VS 17).</p>
-<p>also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<div class="fragment"><div class="line">git clone https://github.com/GercogKaban/lizardgraphics</div>
+<div class="line">cd /d path</div>
+<div class="line">cmake -G &quot;Visual Studio 16 2019&quot; -A x64 -S path -DAPI=VULKAN</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 Building for Linux</h1>
-<ol type="1">
-<li>Open terminal.</li>
-<li>Clone repository (git clone <a href="https://github.com/GercogKaban/lizardgraphics">https://github.com/GercogKaban/lizardgraphics</a>).</li>
-<li>Go to the repository directory (cd path)</li>
-<li>Input following commands:</li>
-</ol>
-<p>cmake . -DAPI=VULKAN</p>
-<p>make</p>
+<div class="fragment"><div class="line">git clone https://github.com/GercogKaban/lizardgraphics</div>
+<div class="line">cd path</div>
+<div class="line">cmake . -DAPI=VULKAN</div>
+<div class="line">make</div>
+</div><!-- fragment --><p>also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 TODO</h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Features</h2>
 <ol type="1">
 <li>Antialiasing</li>
 <li>Shadows.</li>
 <li>Reflections.</li>
-<li>Optimization.</li>
 <li>Supporting Android platform.</li>
 <li>Runtime API changing.</li>
 <li>Skeletal animation.</li>
 <li>Grid drawing.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Optimizations</h2>
+<ol type="1">
+<li>Multithread command buffers writing (Vulkan)</li>
+<li>Prerecording command buffers (Vulkan).</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Documentation</h1>
 <p>Here you can find documentation for Lizard Graphics <a href="https://gercogkaban.github.io/lizardgraphics/index.html">https://gercogkaban.github.io/lizardgraphics/index.html</a> </p>
 </div></div><!-- contents -->
