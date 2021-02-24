@@ -10,7 +10,7 @@ void LGraphics::LWidget::rotateX(float angleDegree)
         rotateDegrees[0] -= 360;
     else if (rotateDegrees[0] <= -360)
         rotateDegrees[0] += 360;
-    changed = app->wd->ImageCount;
+    updateUniforms();
 }
 
 void LGraphics::LWidget::rotateY(float angleDegree)
@@ -21,7 +21,7 @@ void LGraphics::LWidget::rotateY(float angleDegree)
         rotateDegrees[1] -= 360;
     else if (rotateDegrees[1] <= -360)
         rotateDegrees[1] += 360;
-    changed = app->wd->ImageCount;
+    updateUniforms();
 }
 
 void LGraphics::LWidget::rotateZ(float angleDegree)
@@ -32,15 +32,20 @@ void LGraphics::LWidget::rotateZ(float angleDegree)
         rotateDegrees[2] -= 360;
     else if (rotateDegrees[2] <= -360)
         rotateDegrees[2] += 360;
-    changed = app->wd->ImageCount;
+    updateUniforms();
 }
 
 void LGraphics::LWidget::setRotate(const glm::mat4 & rotate)
 {
     rotate_ = rotate; 
-    changed = app->wd->ImageCount;
+    updateUniforms();
 }
 
+
+void LGraphics::LWidget::updateUniforms()
+{
+    changed = app->wd->ImageCount;
+}
 
 LGraphics::LWidget::LWidget(LApp* app, const char * path)
     :LImage(path)
@@ -63,4 +68,3 @@ void LGraphics::LWidget::init()
     this->LImage::init();
     isInited_ = true;
 }
-

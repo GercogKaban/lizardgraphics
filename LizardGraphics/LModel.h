@@ -25,9 +25,13 @@ namespace LGraphics
         void loadTexture(const char* path, TextureType type);
 
         void setMeshDrawing(size_t num, bool draw);
-        bool getMeshDrawing(size_t num) const { return meshesToDraw[num]; }
+        bool getMeshDrawing(size_t num) const;
+        //LMaterial getMeshMaterial(size_t num) const;
+
         size_t getMeshesCount() const { return meshesCount; }
         const char* getModelPath() const { return modelPath; }
+
+        //void setMeshMaterial(const LMaterial& material, size_t meshNum = 0);
 
 #ifdef VULKAN
         void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) override;
@@ -40,7 +44,10 @@ namespace LGraphics
 
         const char* modelPath;
         VkImageView* textures;
+
         bool* meshesToDraw = nullptr;
+        //LMaterial* materials = nullptr;
+
         size_t meshesCount = 0;
     };
 }

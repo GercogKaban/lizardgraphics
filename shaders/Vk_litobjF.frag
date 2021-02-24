@@ -13,6 +13,17 @@ layout(location = 8) in vec3 viewPos;
 
 layout(binding = 1) uniform sampler2D texSampler;
 
+//struct Material
+//{
+    //vec3 ambient;
+    //vec3 diffuse;
+    //vec3 specular;
+    //float shininess;
+//};
+
+//layout (constant_id = 0) const uint materialsCount = 1;
+//layout (constant_id = 1) const Material materials[materialsCount];
+
 layout(location = 0) out vec4 outColor;
 
 void main() 

@@ -108,6 +108,30 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     delete[] v_shader;
     delete[] f_shader;
 
+    //struct SpecializationData
+    //{
+    //    uint32_t materialsCount;
+    //    LGraphics::Material* materials;
+    //}data;
+
+    //data.materialsCount = app->info.materials.size();
+    //data.materials = app->info.materials.data();
+
+    //std::array<VkSpecializationMapEntry, 2> specializationMapEntries;
+    //specializationMapEntries[0].constantID = 0;
+    //specializationMapEntries[0].size = sizeof(data.materialsCount);
+    //specializationMapEntries[0].offset = 0;
+
+    //specializationMapEntries[1].constantID = 1;
+    //specializationMapEntries[1].size = data.materialsCount * sizeof(LGraphics::Material);
+    //specializationMapEntries[1].offset = sizeof(uint32_t);
+
+    //VkSpecializationInfo specializationInfo{};
+    //specializationInfo.dataSize = sizeof(data.materialsCount * sizeof(LGraphics::Material) + sizeof(uint32_t));
+    //specializationInfo.mapEntryCount = static_cast<uint32_t>(specializationMapEntries.size());
+    //specializationInfo.pMapEntries = specializationMapEntries.data();
+    //specializationInfo.pData = &data;
+
     VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -119,6 +143,7 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
     fragShaderStageInfo.module = fragShader;
     fragShaderStageInfo.pName = "main";
+    //fragShaderStageInfo.pSpecializationInfo = &specializationInfo;
 
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 

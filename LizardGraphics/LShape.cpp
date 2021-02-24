@@ -7,20 +7,20 @@ namespace LGraphics
 {
     void LShape::color(const glm::vec3 val)
     {
-        changed = app->wd->ImageCount;
         color_ = val;
+        updateUniforms();
     }
 
     void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
     {
-        changed = app->wd->ImageCount;
         color_ = { (float)r / (float)UINT8_MAX, (float)g / UINT8_MAX,(float)b / UINT8_MAX };
+        updateUniforms();
     }
 
     void LShape::transparency(const float val)
     {
-        changed = app->wd->ImageCount;
         transparency_ = val;
+        updateUniforms();
     }
 
     void LShape::scale(const glm::vec3 val)
@@ -30,9 +30,9 @@ namespace LGraphics
 
     void LShape::scale(const float x, const float y, const float z)
     {
-        changed = app->wd->ImageCount;
         auto scaleDif = glm::vec3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
+        updateUniforms();
     }
 
     void LShape::scaleWithoutAlign(const glm::vec3 val)
@@ -47,9 +47,9 @@ namespace LGraphics
 
     void LShape::move(const float x, const float y, const float z)
     {
-        changed = app->wd->ImageCount;
         auto moveDif = glm::vec3(x,y,z) - move_;
-        move_ = { x,y,z };;
+        move_ = { x,y,z };
+        updateUniforms();
     }
 
     void LShape::move(const size_t x, const size_t y)
@@ -66,25 +66,25 @@ namespace LGraphics
 
     float& LShape::getTransparencyRef()
     {
-        changed = app->wd->ImageCount;
+        updateUniforms();
         return transparency_;
     }
 
     glm::vec3& LShape::getColorRef()
     {
-        changed = app->wd->ImageCount;
+        updateUniforms();
         return color_;
     }
 
     glm::vec3& LShape::getScaleRef()
     {
-        changed = app->wd->ImageCount;
+        updateUniforms();
         return scale_;
     }
 
     glm::vec3& LShape::getMoveRef()
     {
-        changed = app->wd->ImageCount;
+        updateUniforms();
         return move_;
     }
 

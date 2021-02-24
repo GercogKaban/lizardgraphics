@@ -91,11 +91,18 @@ namespace LGraphics
         L_MODEL,
     };
 
+    //struct Material
+    //{
+    //    alignas(16) glm::vec3 ambient;
+    //    alignas(16) glm::vec3 diffuse;
+    //    alignas(16) glm::vec3 specular;
+    //    alignas(4)  float shininess;
+    //};
+
     struct LAppCreateInfo
     {
         size_t wndWidth = 0, wndHeight = 0;
         size_t poolSize = 100;
-        //size_t modelPoolSize = 10;
         size_t sleepThread = 0;
         LStates vsync = L_FALSE;
         LStates saveObjects = L_FALSE;
@@ -104,7 +111,7 @@ namespace LGraphics
         uint32_t anisotropy = 16;
         LProjections projection = L_ORTHOGRAPHIC;
         uint8_t logFlags = 0;
-        std::string procName;
+        //std::vector<Material> materials;
     };
 
     /*!
@@ -147,13 +154,14 @@ namespace LGraphics
         */
         virtual void loop();
 
+        void emergencyStop(unsigned long code);
+        void emergencyStop(std::exception& exception);
+
     protected:
 
         void loop_();
         void initApp_(const LAppCreateInfo& info);
-
         void initErrorRecovering();
-
 
     public:
         /*!
@@ -364,6 +372,7 @@ namespace LGraphics
 
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VmaAllocation> uniformBuffersMemory;
+        size_t uniformElementSize;
 
         VkCommandPool commandPool;
         VkImageView dummyTexture;

@@ -162,6 +162,8 @@ namespace LGraphics
         int changed = 3;
         std::string name;
 
+        void updateUniforms();
+
 #ifdef VULKAN
         size_t arrayIndex = 0;
 #endif

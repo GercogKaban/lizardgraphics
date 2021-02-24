@@ -40,6 +40,16 @@ namespace LGraphics
             this->info = info;
             if (!info.logFlags)
                 this->info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
+            /*if (!info.materials.size())
+                this->info.materials.push_back(
+                    Material
+                    {
+                        {1.0f,1.0f,1.0f},
+                        {1.0f,1.0f,1.0f},
+                        {1.0f,1.0f,1.0f},
+                        1.0f
+                    }
+            );*/
             setupLG();
         }
         __except (EXCEPTION_EXECUTE_HANDLER)
@@ -219,16 +229,7 @@ namespace LGraphics
         {
             if (info.saveObjects == L_TRUE)
                 CodeGen::generateCode("codegen.h", this, "app");
-            if (info.logFlags & ASYNC_LOG)
-            {
-                handleSEH(exception_code());
-                LAsyncLogger::emergencyStop();
-            }
-            else if (info.logFlags & SYNC_LOG)
-            {
-                handleSEH(exception_code());
-                LSyncLogger::emergencyStop();
-            }
+            emergencyStop(exception_code());
             std::terminate();
         }
 #else
@@ -237,31 +238,61 @@ namespace LGraphics
 
     }
 
+    void LApp::emergencyStop(std::exception& exception)
+    {
+        if (info.logFlags & ASYNC_LOG)
+        {
+            handleCppException(exception);
+            LAsyncLogger::emergencyStop();
+        }
+        else if (info.logFlags & SYNC_LOG)
+        {
+            handleCppException(exception);
+            LSyncLogger::emergencyStop();
+        }
+        std::terminate();
+    }
+
+    void LApp::emergencyStop(unsigned long code)
+    {
+        if (info.logFlags & ASYNC_LOG)
+        {
+            handleSEH(code);
+            LAsyncLogger::emergencyStop();
+        }
+        else if (info.logFlags & SYNC_LOG)
+        {
+            handleSEH(code);
+            LSyncLogger::emergencyStop();
+        }
+        std::terminate();
+    }
+
     void LApp::handleSEH(const size_t& code)
     {
 #ifdef WIN32
         switch (code)
         {
-        case EXCEPTION_ACCESS_VIOLATION:         LLogger::calls.push("\n\nerror: EXCEPTION_ACCESS_VIOLATION\ncalls history:"); break;
-        case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:    LLogger::calls.push("\n\nerror: EXCEPTION_ARRAY_BOUNDS_EXCEEDED\ncalls history:"); break;
-        case EXCEPTION_BREAKPOINT:               LLogger::calls.push("\n\nerror: EXCEPTION_BREAKPOINT\ncalls history:"); break;
-        case EXCEPTION_DATATYPE_MISALIGNMENT:    LLogger::calls.push("\n\nerror: EXCEPTION_DATATYPE_MISALIGNMENT\ncalls history:"); break;
-        case EXCEPTION_FLT_DENORMAL_OPERAND:     LLogger::calls.push("\n\nerror: EXCEPTION_FLT_DENORMAL_OPERAND\ncalls history:"); break;
-        case EXCEPTION_FLT_DIVIDE_BY_ZERO:       LLogger::calls.push("\n\nerror: EXCEPTION_FLT_DIVIDE_BY_ZERO\ncalls history:"); break;
-        case EXCEPTION_FLT_INEXACT_RESULT:       LLogger::calls.push("\n\nerror: EXCEPTION_FLT_INEXACT_RESULT\ncalls history:"); break;
-        case EXCEPTION_FLT_INVALID_OPERATION:    LLogger::calls.push("\n\nerror: EXCEPTION_FLT_INVALID_OPERATION\ncalls history:"); break;
-        case EXCEPTION_FLT_OVERFLOW:             LLogger::calls.push("\n\nerror: EXCEPTION_FLT_OVERFLOW\ncalls history:"); break;
-        case EXCEPTION_FLT_STACK_CHECK:          LLogger::calls.push("\n\nerror: EXCEPTION_FLT_STACK_CHECK\ncalls history:"); break;
-        case EXCEPTION_FLT_UNDERFLOW:            LLogger::calls.push("\n\nerror: EXCEPTION_FLT_UNDERFLOW\ncalls history:"); break;
-        case EXCEPTION_ILLEGAL_INSTRUCTION:      LLogger::calls.push("\n\nerror: EXCEPTION_ILLEGAL_INSTRUCTION\ncalls history:"); break;
-        case EXCEPTION_IN_PAGE_ERROR:            LLogger::calls.push("\n\nerror: EXCEPTION_IN_PAGE_ERROR\ncalls history:"); break;
-        case EXCEPTION_INT_DIVIDE_BY_ZERO:       LLogger::calls.push("\n\nerror: EXCEPTION_INT_DIVIDE_BY_ZERO\ncalls history:"); break;
-        case EXCEPTION_INT_OVERFLOW:             LLogger::calls.push("\n\nerror: EXCEPTION_INT_OVERFLOW\ncalls history:"); break;
-        case EXCEPTION_INVALID_DISPOSITION:      LLogger::calls.push("\n\nerror: EXCEPTION_INVALID_DISPOSITION\ncalls history:"); break;
-        case EXCEPTION_NONCONTINUABLE_EXCEPTION: LLogger::calls.push("\n\nerror: EXCEPTION_NONCONTINUABLE_EXCEPTION\ncalls history:"); break;
-        case EXCEPTION_PRIV_INSTRUCTION:         LLogger::calls.push("\n\nerror: EXCEPTION_PRIV_INSTRUCTION\ncalls history:"); break;
-        case EXCEPTION_SINGLE_STEP:              LLogger::calls.push("\n\nerror: EXCEPTION_SINGLE_STEP\ncalls history:"); break;
-        case EXCEPTION_STACK_OVERFLOW:           LLogger::calls.push("\n\nerror: EXCEPTION_STACK_OVERFLOW\ncalls history:"); break;
+        case EXCEPTION_ACCESS_VIOLATION:         LLogger::calls.push("\n\nerror: EXCEPTION_ACCESS_VIOLATION\ncalls history:\n"); break;
+        case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:    LLogger::calls.push("\n\nerror: EXCEPTION_ARRAY_BOUNDS_EXCEEDED\ncalls history:\n"); break;
+        case EXCEPTION_BREAKPOINT:               LLogger::calls.push("\n\nerror: EXCEPTION_BREAKPOINT\ncalls history:\n"); break;
+        case EXCEPTION_DATATYPE_MISALIGNMENT:    LLogger::calls.push("\n\nerror: EXCEPTION_DATATYPE_MISALIGNMENT\ncalls history:\n"); break;
+        case EXCEPTION_FLT_DENORMAL_OPERAND:     LLogger::calls.push("\n\nerror: EXCEPTION_FLT_DENORMAL_OPERAND\ncalls history:\n"); break;
+        case EXCEPTION_FLT_DIVIDE_BY_ZERO:       LLogger::calls.push("\n\nerror: EXCEPTION_FLT_DIVIDE_BY_ZERO\ncalls history:\n"); break;
+        case EXCEPTION_FLT_INEXACT_RESULT:       LLogger::calls.push("\n\nerror: EXCEPTION_FLT_INEXACT_RESULT\ncalls history:\n"); break;
+        case EXCEPTION_FLT_INVALID_OPERATION:    LLogger::calls.push("\n\nerror: EXCEPTION_FLT_INVALID_OPERATION\ncalls history:\n"); break;
+        case EXCEPTION_FLT_OVERFLOW:             LLogger::calls.push("\n\nerror: EXCEPTION_FLT_OVERFLOW\ncalls history:\n"); break;
+        case EXCEPTION_FLT_STACK_CHECK:          LLogger::calls.push("\n\nerror: EXCEPTION_FLT_STACK_CHECK\ncalls history:\n"); break;
+        case EXCEPTION_FLT_UNDERFLOW:            LLogger::calls.push("\n\nerror: EXCEPTION_FLT_UNDERFLOW\ncalls history:\n"); break;
+        case EXCEPTION_ILLEGAL_INSTRUCTION:      LLogger::calls.push("\n\nerror: EXCEPTION_ILLEGAL_INSTRUCTION\ncalls history:\n"); break;
+        case EXCEPTION_IN_PAGE_ERROR:            LLogger::calls.push("\n\nerror: EXCEPTION_IN_PAGE_ERROR\ncalls history:\n"); break;
+        case EXCEPTION_INT_DIVIDE_BY_ZERO:       LLogger::calls.push("\n\nerror: EXCEPTION_INT_DIVIDE_BY_ZERO\ncalls history:\n"); break;
+        case EXCEPTION_INT_OVERFLOW:             LLogger::calls.push("\n\nerror: EXCEPTION_INT_OVERFLOW\ncalls history:\n"); break;
+        case EXCEPTION_INVALID_DISPOSITION:      LLogger::calls.push("\n\nerror: EXCEPTION_INVALID_DISPOSITION\ncalls history:\n"); break;
+        case EXCEPTION_NONCONTINUABLE_EXCEPTION: LLogger::calls.push("\n\nerror: EXCEPTION_NONCONTINUABLE_EXCEPTION\ncalls history:\n"); break;
+        case EXCEPTION_PRIV_INSTRUCTION:         LLogger::calls.push("\n\nerror: EXCEPTION_PRIV_INSTRUCTION\ncalls history:\n"); break;
+        case EXCEPTION_SINGLE_STEP:              LLogger::calls.push("\n\nerror: EXCEPTION_SINGLE_STEP\ncalls history:\n"); break;
+        case EXCEPTION_STACK_OVERFLOW:           LLogger::calls.push("\n\nerror: EXCEPTION_STACK_OVERFLOW\ncalls history:\n"); break;
         default:  LLogger::calls.push("\n\nerror: UNKNOWN EXCEPTION\ncalls history:");
         }
 #endif
@@ -799,7 +830,6 @@ namespace LGraphics
         auto resourseManager = LImage::resManager;
         
         for (auto it = resourseManager.textures.begin(); it != resourseManager.textures.end(); it++)
-        //for (auto& text : resourseManager.textures)
         {
             vkDestroyImageView(g_Device, std::get<0>(*(it->second)), nullptr);
             vmaDestroyImage(allocator, std::get<1>(*(it->second)), std::get<2>(*(it->second)));
@@ -808,7 +838,6 @@ namespace LGraphics
         }
 
         for (size_t i = 0; i < swapChainImageViews.size(); i++)
-            //for (auto& text : resourseManager.textures)
         {
             vkDestroyImageView(g_Device, swapChainImageViews[i], nullptr);
         }
@@ -1243,7 +1272,6 @@ namespace LGraphics
         size_t bufferSize = info.poolSize * dynamicAlignment;
         testStructV.model = (glm::mat4*)alignedAlloc(bufferSize, dynamicAlignment);
 
-        VmaAllocation allocation;
         for (size_t i = 0; i < wd->ImageCount; i++)
             createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, uniformBuffers[i], uniformBuffersMemory[i]);

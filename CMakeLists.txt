@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.16)
      
 set(API "OPENGL" CACHE STRING "RENDERING API")
-set(PLATFORM "DESKTOP" CACHE STRING "PLATFORM YOU TARGETING")
+set(PLATFORM "DESKTOP" CACHE STRING "PLATFORM YOU ARE TARGETING")
 add_compile_definitions(${API})
 
 IF (${PLATFORM} MATCHES "DESKTOP")
@@ -43,13 +43,12 @@ ENDIF (${PLATFORM} MATCHES "DESKTOP")
 
 IF(${PLATFORM} MATCHES "MOBILE")
 project (AndroidSharedLib C CXX)
-include_directories(/home/oem/code/glfw)
-#find_package(glfw3 3.3 REQUIRED FATAL_ERROR)
+find_package(glfw3 3.3 REQUIRED FATAL_ERROR)
 set(APP_GLUE_DIR ${ANDROID_NDK}/sources/android/native_app_glue)
 include_directories(${APP_GLUE_DIR})
 add_library(app-glue STATIC ${APP_GLUE_DIR}/android_native_app_glue.c)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -DVK_USE_PLATFORM_ANDROID_KHR")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_ANDROID_KHR")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 add_subdirectory (LizardGraphics)
 include_directories(${CMAKE_CACHEFILE_DIR})

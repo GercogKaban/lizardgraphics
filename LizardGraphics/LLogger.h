@@ -15,10 +15,6 @@
 
 #include "LApp.h"
 
-//#define LOG_HEADER std::string(std::ctime(std::move(&std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())))) +\
-//" file: " + __FILE__ + " line: " + __LINE__
-
-
 namespace LGraphics
 {
     struct LogVar
@@ -281,10 +277,7 @@ public:
 protected:
   
     static void logToFile(std::string msg,
-        #ifdef WIN32 std::ios_base::_Openmode firstCreationFlag = std::ios_base::app
-        #else
         std::ios_base::openmode firstCreationFlag = std::ios_base::app
-        #endif
 )
     {
         std::ofstream out(logFilePath, std::ios_base::binary | firstCreationFlag);
@@ -302,12 +295,6 @@ protected:
 
         static uint8_t states;
     };
-
-    //static void runtimeException(const std::string& str)
-    //{
-    //    PRINTLN(str);
-    //    throw runtimeExceptionCode;
-    //}
 
     class LAsyncLogger;
 

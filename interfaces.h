@@ -71,6 +71,7 @@ namespace LGraphics
 public:
         void imguiInterface()
         {
+            LOG_CALL
             if (!app->drawUI_)
                 return;
             ImGui::Begin("fps", 0,
@@ -327,7 +328,6 @@ public:
                     };
 
                     doLogick(vectors_);
-
 
                     ImGui::PushID(INT_MAX - 1 - i);
                     constexpr float range = 1.0f;

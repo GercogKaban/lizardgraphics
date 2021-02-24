@@ -47,11 +47,28 @@ void LGraphics::LModel::setMeshDrawing(size_t num, bool draw)
     meshesToDraw[num] = draw;
 }
 
+bool LGraphics::LModel::getMeshDrawing(size_t num) const
+{
+    LOG_CALL 
+    return meshesToDraw[num];
+}
+
+//LGraphics::LMaterial LGraphics::LModel::getMeshMaterial(size_t num) const
+//{
+//    LOG_CALL
+//    return materials[num];
+//}
+
 void LGraphics::LModel::loadModel(const char* modelPath, bool debugInfo)
 {
     LOG_CALL
     LResourceManager::loadModel(this, modelPath, debugInfo);
 }
+
+//void LGraphics::LModel::setMeshMaterial(const LMaterial& material, size_t meshNum)
+//{
+//    updateUniforms();
+//}
 
 void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
