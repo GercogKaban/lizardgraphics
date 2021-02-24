@@ -42,10 +42,16 @@ also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
 ## Initializing LApp
 
 ```cpp
-    
+#include "LApp.h"
+#include "LModel.h"
+
+using namespace LGraphics;
+
+int main()
+{
     const size_t poolSize = 100;
 
-    LGraphics::LAppCreateInfo info;
+    LAppCreateInfo info;
 
     info.anisotropy = 16;
     info.projection = L_PERSPECTIVE;
@@ -55,7 +61,7 @@ also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
     info.poolSize = poolSize;
     info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
 
-    LGraphics::LApp app(info);
+    LApp app(info);
 ```
 ## Adding objects
 
@@ -102,7 +108,7 @@ auto m1 = new LModel(&app,
 
 You can choose interface rom interfaces.h using ImGuiInterface class.
 ```cpp
-    LGraphics::ImGuiInterface interface_(&app);
+    ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
 ```
@@ -110,7 +116,9 @@ You can choose interface rom interfaces.h using ImGuiInterface class.
 ## Launching loop
 
 ```cpp
-    app.loop()
+    app.loop();
+    return 0;
+}
 ```
 
 # TODO
