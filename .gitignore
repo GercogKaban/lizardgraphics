@@ -297,8 +297,10 @@ Doxyfile/
 *.png
 *.hxx
 *.exe
-*.jpg
 *.zip
 *.spv
 *.spv
 log.txt
+
+models
+textures

@@ -8,6 +8,8 @@ Reasons to use:
 2. Сross-platform.
 3. Free.
 
+<img src="screenshots/redactor_1.jpg" height="512px">
+
 # The necessary libraries
 
 glfw - https://www.glfw.org/download.html
