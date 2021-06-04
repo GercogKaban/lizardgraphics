@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bindtexture_5599',['bindTexture',['../class_l_graphics_1_1_l_image.html#a3f89b646e86a95f73bfbf9257fdec0d2',1,'LGraphics::LImage']]]
+  ['binddiffuse_5258',['bindDiffuse',['../class_l_graphics_1_1_l_image.html#ab566fd19697e3c42ca93f5d014923a19',1,'LGraphics::LImage']]]
 ];

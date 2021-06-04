@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['writeerror_5758',['writeError',['../class_l_graphics_1_1_l_logger.html#a9f66e50c2b787246f96690ae49008643',1,'LGraphics::LLogger::writeError(const T &amp;t)'],['../class_l_graphics_1_1_l_logger.html#adf9c6da581a756774fb86f64ad758590',1,'LGraphics::LLogger::writeError(const T &amp;t, Args... args)']]]
+  ['use_5423',['use',['../class_l_shaders_1_1_open_g_l_shader.html#a759cf79b93af6cb84e4f8433bb16334d',1,'LShaders::OpenGLShader']]]
 ];

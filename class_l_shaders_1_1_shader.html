@@ -69,6 +69,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_l_shaders_1_1_shader-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">LShaders::Shader Class Reference</div>  </div>
@@ -79,122 +80,42 @@ $(function() {
  <a href="class_l_shaders_1_1_shader.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_lshaders_8h_source.html">Lshaders.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for LShaders::Shader:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_l_shaders_1_1_shader.png" usemap="#LShaders::Shader_map" alt=""/>
+  <map id="LShaders::Shader_map" name="LShaders::Shader_map">
+<area href="class_l_shaders_1_1_open_g_l_shader.html" alt="LShaders::OpenGLShader" shape="rect" coords="0,56,160,80"/>
+<area href="class_l_shaders_1_1_vulkan_shader.html" alt="LShaders::VulkanShader" shape="rect" coords="170,56,330,80"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acd07e4d6b98c0c66ab2fcaf9bc562c1d"><td class="memItemLeft" align="right" valign="top"><a id="acd07e4d6b98c0c66ab2fcaf9bc562c1d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>loadShaders</b> (const char *vertShader, const char *fragShader)</td></tr>
-<tr class="separator:acd07e4d6b98c0c66ab2fcaf9bc562c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe9a6bab74712e7057bbcb0a138ff35c"><td class="memItemLeft" align="right" valign="top"><a id="abe9a6bab74712e7057bbcb0a138ff35c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initShaders</b> (const char *v_shader, const char *f_shader, size_t vSize, size_t fSize)</td></tr>
-<tr class="separator:abe9a6bab74712e7057bbcb0a138ff35c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af00e7bf9bf912fd58ac1d2cc2106fc36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_shaders_1_1_shader.html#af00e7bf9bf912fd58ac1d2cc2106fc36">Shader</a> (const char *v_shader, const char *f_shader, LGraphics::LApp *app, bool sourceCode=true)</td></tr>
-<tr class="memdesc:af00e7bf9bf912fd58ac1d2cc2106fc36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Конструктор  <a href="class_l_shaders_1_1_shader.html#af00e7bf9bf912fd58ac1d2cc2106fc36">More...</a><br /></td></tr>
-<tr class="separator:af00e7bf9bf912fd58ac1d2cc2106fc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97c11ec57614fd20787f822e43c2f4aa"><td class="memItemLeft" align="right" valign="top"><a id="a97c11ec57614fd20787f822e43c2f4aa"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>bindShader</b> (const char *shader, short shaderType)</td></tr>
-<tr class="separator:a97c11ec57614fd20787f822e43c2f4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5365bec154bb02d7e46e7a4f364de4bb"><td class="memItemLeft" align="right" valign="top"><a id="a5365bec154bb02d7e46e7a4f364de4bb"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Shader</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a> *app)</td></tr>
+<tr class="separator:a5365bec154bb02d7e46e7a4f364de4bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a138d6bfb446bfa497d0ea174e4a1765e"><td class="memItemLeft" align="right" valign="top"><a id="a138d6bfb446bfa497d0ea174e4a1765e"></a>
+virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectType</b> () const</td></tr>
+<tr class="separator:a138d6bfb446bfa497d0ea174e4a1765e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a75c8c18d923d3abc544cc4a3b2a38af5"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_shaders_1_1_shader.html#a75c8c18d923d3abc544cc4a3b2a38af5">loadShader</a> (const char *shader, size_t &amp;shaderSize)</td></tr>
-<tr class="memdesc:a75c8c18d923d3abc544cc4a3b2a38af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Активирует шейдер (перед отрисовкой).  <a href="class_l_shaders_1_1_shader.html#a75c8c18d923d3abc544cc4a3b2a38af5">More...</a><br /></td></tr>
+<tr class="memitem:a75c8c18d923d3abc544cc4a3b2a38af5"><td class="memItemLeft" align="right" valign="top"><a id="a75c8c18d923d3abc544cc4a3b2a38af5"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>loadShader</b> (const char *shader, size_t &amp;shaderSize)</td></tr>
 <tr class="separator:a75c8c18d923d3abc544cc4a3b2a38af5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:afd24aa4ff6aa5684ecad1958a34eb012"><td class="memItemLeft" align="right" valign="top"><a id="afd24aa4ff6aa5684ecad1958a34eb012"></a>
+<a class="el" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>app</b></td></tr>
+<tr class="separator:afd24aa4ff6aa5684ecad1958a34eb012"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Класс шейдера. </p>
 <p>Создаёт вершинный и фрагментный шейдер. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af00e7bf9bf912fd58ac1d2cc2106fc36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af00e7bf9bf912fd58ac1d2cc2106fc36">&#9670;&nbsp;</a></span>Shader()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">LShaders::Shader::Shader </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>v_shader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>f_shader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">LGraphics::LApp *&#160;</td>
-          <td class="paramname"><em>app</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>sourceCode</em> = <code>true</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Конструктор </p>
-<p>Создаёт вершинный и фрагментный шейдер. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v_shader</td><td>- массив вершинного шейдера </td></tr>
-    <tr><td class="paramname">v_shader</td><td>- массив фрагментного шейдера </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a75c8c18d923d3abc544cc4a3b2a38af5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75c8c18d923d3abc544cc4a3b2a38af5">&#9670;&nbsp;</a></span>loadShader()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char * LShaders::Shader::loadShader </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>shader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t &amp;&#160;</td>
-          <td class="paramname"><em>shaderSize</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Активирует шейдер (перед отрисовкой). </p>
-<p>Возвращает шейдерную программу. </p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>LizardGraphics/<a class="el" href="_lshaders_8h_source.html">Lshaders.h</a></li>
 <li>LizardGraphics/Lshaders.cpp</li>
 </ul>

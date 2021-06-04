@@ -106,10 +106,13 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>emergencyStop<
 <tr class="memitem:abf9de67b3a4820153ea262f64930d9de"><td class="memItemLeft" align="right" valign="top"><a id="abf9de67b3a4820153ea262f64930d9de"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
 <tr class="separator:abf9de67b3a4820153ea262f64930d9de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2da85180978884d9d5c2bd9752f1568"><td class="memItemLeft" align="right" valign="top"><a id="aa2da85180978884d9d5c2bd9752f1568"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_logger.html#aa2da85180978884d9d5c2bd9752f1568">initErrors</a> (LApp *app)</td></tr>
-<tr class="memdesc:aa2da85180978884d9d5c2bd9752f1568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует класс <a class="el" href="class_l_graphics_1_1_l_logger.html" title="Класс вывода ошибок.">LLogger</a>. <br /></td></tr>
-<tr class="separator:aa2da85180978884d9d5c2bd9752f1568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56250f1c047a00647bff45c7e12b0ef5"><td class="memItemLeft" align="right" valign="top"><a id="a56250f1c047a00647bff45c7e12b0ef5"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setFlags</b> (uint8_t flags)</td></tr>
+<tr class="separator:a56250f1c047a00647bff45c7e12b0ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f487460426407fffc9e2a65fde4eb1d"><td class="memItemLeft" align="right" valign="top"><a id="a3f487460426407fffc9e2a65fde4eb1d"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_logger.html#a3f487460426407fffc9e2a65fde4eb1d">initErrors</a> (uint8_t flags)</td></tr>
+<tr class="memdesc:a3f487460426407fffc9e2a65fde4eb1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализирует класс <a class="el" href="class_l_graphics_1_1_l_logger.html" title="Класс вывода ошибок.">LLogger</a>. <br /></td></tr>
+<tr class="separator:a3f487460426407fffc9e2a65fde4eb1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f3d168f9e5e2257986a2fb297d3000d"><td class="memItemLeft" align="right" valign="top"><a id="a9f3d168f9e5e2257986a2fb297d3000d"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_logger.html#a9f3d168f9e5e2257986a2fb297d3000d">releaseResources</a> ()</td></tr>
 <tr class="memdesc:a9f3d168f9e5e2257986a2fb297d3000d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Освобождает ресурсы. <br /></td></tr>
@@ -158,10 +161,10 @@ template&lt;&gt; </td></tr>
 template&lt;&gt; </td></tr>
 <tr class="memitem:ac9162d929e56ceb9cb07808aa80704b6"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>printMsgLn</b> (const char &amp;t)</td></tr>
 <tr class="separator:ac9162d929e56ceb9cb07808aa80704b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec01fd54b75800ca63b3f1778c6af83f"><td class="memItemLeft" align="right" valign="top"><a id="aec01fd54b75800ca63b3f1778c6af83f"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_logger.html#aec01fd54b75800ca63b3f1778c6af83f">getCurrentTime</a> ()</td></tr>
-<tr class="memdesc:aec01fd54b75800ca63b3f1778c6af83f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Выводит в консоль все не выведенные ошибки. <br /></td></tr>
-<tr class="separator:aec01fd54b75800ca63b3f1778c6af83f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3346e14330a300d2dcf47b70676f0e5f"><td class="memItemLeft" align="right" valign="top"><a id="a3346e14330a300d2dcf47b70676f0e5f"></a>
+::std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_logger.html#a3346e14330a300d2dcf47b70676f0e5f">getCurrentTime</a> ()</td></tr>
+<tr class="memdesc:a3346e14330a300d2dcf47b70676f0e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Выводит в консоль все не выведенные ошибки. <br /></td></tr>
+<tr class="separator:a3346e14330a300d2dcf47b70676f0e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -171,32 +174,26 @@ friend&#160;</td><td class="memItemRight" valign="bottom"><b>LAsyncLogger</b></t
 <tr class="memitem:af6ea09f7f29143a0fc7efcf5682a3010"><td class="memItemLeft" align="right" valign="top"><a id="af6ea09f7f29143a0fc7efcf5682a3010"></a>
 friend&#160;</td><td class="memItemRight" valign="bottom"><b>LogVar</b></td></tr>
 <tr class="separator:af6ea09f7f29143a0fc7efcf5682a3010"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a9eb7d039dce810ddf1f59200da082e"><td class="memItemLeft" align="right" valign="top"><a id="a4a9eb7d039dce810ddf1f59200da082e"></a>
-friend&#160;</td><td class="memItemRight" valign="bottom"><b>LApp</b></td></tr>
-<tr class="separator:a4a9eb7d039dce810ddf1f59200da082e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cc1c1ead5dd0f9e99c82c524bd658ff"><td class="memItemLeft" align="right" valign="top"><a id="a4cc1c1ead5dd0f9e99c82c524bd658ff"></a>
+static ::std::stack&lt;::std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>calls</b></td></tr>
+<tr class="separator:a4cc1c1ead5dd0f9e99c82c524bd658ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:aef958bc92a2f8d6bd474b460594fb73e"><td class="memItemLeft" align="right" valign="top"><a id="aef958bc92a2f8d6bd474b460594fb73e"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>logToFile</b> (std::string msg, std::ios_base::openmode firstCreationFlag=std::ios_base::app)</td></tr>
-<tr class="separator:aef958bc92a2f8d6bd474b460594fb73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08720374532b657fdedcc03e4a4dd54b"><td class="memItemLeft" align="right" valign="top"><a id="a08720374532b657fdedcc03e4a4dd54b"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>logToFile</b> (::std::string msg, ::std::ios_base::openmode firstCreationFlag=::std::ios_base::app)</td></tr>
+<tr class="separator:a08720374532b657fdedcc03e4a4dd54b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:ae2d7a94bcad5f7abf7564fbe172953ed"><td class="memItemLeft" align="right" valign="top"><a id="ae2d7a94bcad5f7abf7564fbe172953ed"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>stopLogging</b> = false</td></tr>
 <tr class="separator:ae2d7a94bcad5f7abf7564fbe172953ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae133388e52103259bd09a58c854cb152"><td class="memItemLeft" align="right" valign="top"><a id="ae133388e52103259bd09a58c854cb152"></a>
-static LApp *&#160;</td><td class="memItemRight" valign="bottom"><b>app_</b></td></tr>
-<tr class="separator:ae133388e52103259bd09a58c854cb152"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8df375e7191ae4e31b051380de02c2ed"><td class="memItemLeft" align="right" valign="top"><a id="a8df375e7191ae4e31b051380de02c2ed"></a>
-static <a class="el" href="class_l_graphics_1_1_l_logger_1_1_thread_safe_queue.html">ThreadSafeQueue</a>&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>errors</b></td></tr>
+static <a class="el" href="class_l_graphics_1_1_l_logger_1_1_thread_safe_queue.html">ThreadSafeQueue</a>&lt;::std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>errors</b></td></tr>
 <tr class="separator:a8df375e7191ae4e31b051380de02c2ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cc1c1ead5dd0f9e99c82c524bd658ff"><td class="memItemLeft" align="right" valign="top"><a id="a4cc1c1ead5dd0f9e99c82c524bd658ff"></a>
-static std::stack&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>calls</b></td></tr>
-<tr class="separator:a4cc1c1ead5dd0f9e99c82c524bd658ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3629c91efbbfb8dc41b9eabc3c8db75"><td class="memItemLeft" align="right" valign="top"><a id="ae3629c91efbbfb8dc41b9eabc3c8db75"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>logFilePath</b> = &quot;log.txt&quot;</td></tr>
+::std::string&#160;</td><td class="memItemRight" valign="bottom"><b>logFilePath</b> = &quot;log.txt&quot;</td></tr>
 <tr class="separator:ae3629c91efbbfb8dc41b9eabc3c8db75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad657a824e46420a6fdd9537200b1a040"><td class="memItemLeft" align="right" valign="top"><a id="ad657a824e46420a6fdd9537200b1a040"></a>
 static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>states</b> = 0</td></tr>

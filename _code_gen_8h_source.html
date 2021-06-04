@@ -69,18 +69,27 @@ $(function() {
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;LizardGraphics/LApp.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;LizardGraphics/LModel.h&quot;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>LGraphics{</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keywordtype">void</span> genWidgets(LGraphics::LApp* app)</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">auto</span> model1 = <span class="keyword">new</span> LModel(app,<span class="stringliteral">&quot;models/dog/Wolf_obj.obj&quot;</span>,<span class="stringliteral">&quot;models/dog/Australian_Cattle_Dog_dif.jpg&quot;</span>);</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;model1-&gt;move(0.000000, 10.000000, 0.000000);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;model1-&gt;scale(0.500000, 0.500000, 1.000000);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;model1-&gt;color(glm::vec3(0.000000, 0.000000, 0.000000));</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;model1-&gt;setRotate(glm::mat4(-1.000000,0.000000,-0.000000,0.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,-0.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;model1-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;LizardGraphics/LWRectangle.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>LGraphics{</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> genWidgets(<a class="code" href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a>* app)</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">auto</span> model1 = <span class="keyword">new</span> LModel(app,<span class="stringliteral">&quot;E:/GAMES/lizardgraphics/models/dog/13463_Australian_Cattle_Dog_v3.obj&quot;</span>,<span class="stringliteral">&quot;E:/GAMES/lizardgraphics/models/dog/Australian_Cattle_Dog_dif.jpg&quot;</span>);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;model1-&gt;move(0.000000, 0.000000, 0.000000);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;model1-&gt;scale(0.500000, 0.500000, 1.000000);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;model1-&gt;color(glm::vec3(0.000000, 0.000000, 0.000000));</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;model1-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;model1-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">auto</span> rect1 = <span class="keyword">new</span> LWRectangle(app,<span class="stringliteral">&quot;E:/GAMES/lizardgraphics/textures/arbiter.png&quot;</span>);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;rect1-&gt;move(0.000000, 0.000000, 0.000000);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;rect1-&gt;scale(3.926000, 3.867000, 0.917000);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;rect1-&gt;color(glm::vec3(1.000000, 1.000000, 1.000000));</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;rect1-&gt;setRotate(glm::mat4(1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000,0.000000,0.000000,0.000000,0.000000,1.000000));</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;rect1-&gt;setName(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:108</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

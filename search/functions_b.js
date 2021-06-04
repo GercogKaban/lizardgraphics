@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['vma_5flen_5fif_5fnot_5fnull_5757',['VMA_LEN_IF_NOT_NULL',['../struct_vma_allocator_create_info.html#a82466e83a09c9c49da27e8ba0f733794',1,'VmaAllocatorCreateInfo::VMA_LEN_IF_NOT_NULL()'],['../struct_vma_defragmentation_info2.html#af6c6394bbd66aed044bc1c5a48dd2589',1,'VmaDefragmentationInfo2::VMA_LEN_IF_NOT_NULL(allocationCount) pAllocations'],['../struct_vma_defragmentation_info2.html#acd3b66fce601c3f042169f13b076544d',1,'VmaDefragmentationInfo2::VMA_LEN_IF_NOT_NULL(allocationCount) pAllocationsChanged'],['../struct_vma_defragmentation_info2.html#a99260f5140b9f72129144022e1dfe795',1,'VmaDefragmentationInfo2::VMA_LEN_IF_NOT_NULL(poolCount) pPools']]]
+  ['transparency_5420',['transparency',['../class_l_graphics_1_1_l_shape.html#a156985a3eee45f336830bb59eef4a4a0',1,'LGraphics::LShape::transparency()'],['../class_l_graphics_1_1_l_widget.html#a063c86504677b2f7b50f4225b051a3b1',1,'LGraphics::LWidget::transparency()']]],
+  ['turnofftexture_5421',['turnOffTexture',['../class_l_graphics_1_1_l_image.html#aefd518aea4f4a0bd10e3fd54c3046977',1,'LGraphics::LImage']]],
+  ['turnontexture_5422',['turnOnTexture',['../class_l_graphics_1_1_l_image.html#a52cb3db1caa0ed27a0b3c8f0ef544502',1,'LGraphics::LImage']]]
 ];

@@ -86,10 +86,12 @@ Inheritance diagram for LGraphics::LBuffer:</div>
  <div class="center">
   <img src="class_l_graphics_1_1_l_buffer.png" usemap="#LGraphics::LBuffer_map" alt=""/>
   <map id="LGraphics::LBuffer_map" name="LGraphics::LBuffer_map">
-<area href="class_l_graphics_1_1_l_object.html" alt="LGraphics::LObject" shape="rect" coords="211,0,412,24"/>
-<area href="class_l_graphics_1_1_l_model_buffer.html" alt="LGraphics::LModelBuffer" shape="rect" coords="0,112,201,136"/>
-<area href="class_l_graphics_1_1_l_multi_rectangle_buffer.html" title="Класс буффера четырёхугольника." alt="LGraphics::LMultiRectangleBuffer" shape="rect" coords="211,112,412,136"/>
-<area href="class_l_graphics_1_1_l_rectangle_buffer.html" title="Класс буффера четырёхугольника." alt="LGraphics::LRectangleBuffer" shape="rect" coords="422,112,623,136"/>
+<area href="class_l_graphics_1_1_l_object.html" alt="LGraphics::LObject" shape="rect" coords="422,0,623,24"/>
+<area href="class_l_graphics_1_1_l_cube_buffer.html" alt="LGraphics::LCubeBuffer" shape="rect" coords="0,112,201,136"/>
+<area href="class_l_graphics_1_1_l_model_buffer.html" alt="LGraphics::LModelBuffer" shape="rect" coords="211,112,412,136"/>
+<area href="class_l_graphics_1_1_l_multi_rectangle_buffer.html" title="Класс буффера четырёхугольника." alt="LGraphics::LMultiRectangleBuffer" shape="rect" coords="422,112,623,136"/>
+<area href="class_l_graphics_1_1_l_rectangle_buffer.html" title="Класс буффера четырёхугольника." alt="LGraphics::LRectangleBuffer" shape="rect" coords="633,112,834,136"/>
+<area href="class_l_graphics_1_1_l_sky_box_buffer.html" alt="LGraphics::LSkyBoxBuffer" shape="rect" coords="844,112,1045,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -120,6 +122,18 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#adcdcdbc9c5ea7a5bf027185425e5831d">getVerticesCount</a> () const</td></tr>
 <tr class="memdesc:adcdcdbc9c5ea7a5bf027185425e5831d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает количество вершин. <br /></td></tr>
 <tr class="separator:adcdcdbc9c5ea7a5bf027185425e5831d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9a8cd25e601065d62cf3a96457188db"><td class="memItemLeft" align="right" valign="top"><a id="af9a8cd25e601065d62cf3a96457188db"></a>
+const GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>getVaoNum</b> () const</td></tr>
+<tr class="separator:af9a8cd25e601065d62cf3a96457188db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a665ab5c861eb73aa977136f84812fed4"><td class="memItemLeft" align="right" valign="top"><a id="a665ab5c861eb73aa977136f84812fed4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *app)</td></tr>
+<tr class="separator:a665ab5c861eb73aa977136f84812fed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e4e929696326d8bb64bdec684954266"><td class="memItemLeft" align="right" valign="top"><a id="a6e4e929696326d8bb64bdec684954266"></a>
+VkBuffer &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVertBuffer</b> ()</td></tr>
+<tr class="separator:a6e4e929696326d8bb64bdec684954266"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a667903622521a25cbf335a9f890a3ccf"><td class="memItemLeft" align="right" valign="top"><a id="a667903622521a25cbf335a9f890a3ccf"></a>
+VkBuffer &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getIndBuffer</b> ()</td></tr>
+<tr class="separator:a667903622521a25cbf335a9f890a3ccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a837fa9a5e28ccda5305b91eb5c83c77b"><td class="memItemLeft" align="right" valign="top"><a id="a837fa9a5e28ccda5305b91eb5c83c77b"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a837fa9a5e28ccda5305b91eb5c83c77b">~LBuffer</a> ()</td></tr>
 <tr class="memdesc:a837fa9a5e28ccda5305b91eb5c83c77b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Деструктор <a class="el" href="class_l_graphics_1_1_l_buffer.html" title="Абстрактный класс буфера вершин.">LBuffer</a>. <br /></td></tr>
@@ -158,15 +172,14 @@ float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 uint16_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#a94caeff72a43cac8033aa5796cf970d0">ebo</a> = nullptr</td></tr>
 <tr class="memdesc:a94caeff72a43cac8033aa5796cf970d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Массив индексов.*&zwj;/. <br /></td></tr>
 <tr class="separator:a94caeff72a43cac8033aa5796cf970d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d89d45a8f4fb4696e800dad4aab4815"><td class="memItemLeft" align="right" valign="top"><a id="a5d89d45a8f4fb4696e800dad4aab4815"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>VBO</b> [4]</td></tr>
-<tr class="separator:a5d89d45a8f4fb4696e800dad4aab4815"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a695e5ac9424a904c713a705d0f222e8b"><td class="memItemLeft" align="right" valign="top"><a id="a695e5ac9424a904c713a705d0f222e8b"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>VBO</b></td></tr>
+<tr class="separator:a695e5ac9424a904c713a705d0f222e8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2766039e22c79d5daed7e31765c475d2"><td class="memItemLeft" align="right" valign="top"><a id="a2766039e22c79d5daed7e31765c475d2"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>VAO</b></td></tr>
 <tr class="separator:a2766039e22c79d5daed7e31765c475d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7bc41285c79904af42b727dd82979ea"><td class="memItemLeft" align="right" valign="top"><a id="aa7bc41285c79904af42b727dd82979ea"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_buffer.html#aa7bc41285c79904af42b727dd82979ea">EBO</a></td></tr>
-<tr class="memdesc:aa7bc41285c79904af42b727dd82979ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenGL буфферы.*&zwj;/. <br /></td></tr>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>EBO</b></td></tr>
 <tr class="separator:aa7bc41285c79904af42b727dd82979ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a072bd05a3895e3d4b0ca1007b975481a"><td class="memItemLeft" align="right" valign="top"><a id="a072bd05a3895e3d4b0ca1007b975481a"></a>
 const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>coordsCount</b> = 3</td></tr>

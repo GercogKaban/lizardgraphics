@@ -73,49 +73,42 @@ $(function() {
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;LRectangleShape.h&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;include/glm/glm.hpp&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_w_rectangle.html">    9</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html">LRectangleShape</a></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    {</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">friend</span> LApp;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a>(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LWRectangle&quot;</span>; }</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="comment">//bool isInterfaceObject() const override { return false; }</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;include/glm/glm.hpp&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>LGraphics</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_w_rectangle.html">    8</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a> : <span class="keyword">public</span> <a class="code" href="class_l_graphics_1_1_l_rectangle_shape.html">LRectangleShape</a></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">friend</span> <a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html">LWRectangle</a>(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* path = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LWRectangle&quot;</span>; }</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> glm::vec4 getScreenCoords() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keyword">virtual</span> glm::vec4 getScreenCoords() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> setMatrices(LApp* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordtype">void</span> setMatrices();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#ifdef VULKAN</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">void</span> draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">void</span> setMatrices(<a class="code" href="class_l_graphics_1_1_l_app.html">LApp</a>* <a class="code" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordtype">void</span> setMatrices();</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb">draw</a>(VkCommandBuffer commandBuffer, uint32_t frameIndex) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">//    glm::mat4 getModelMatrix() const { return calculateModelMatrix(); }</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">//protected:</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifdef OPENGL</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        glm::mat4 getModelMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> calculateModelMatrix(); }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">//    glm::mat4 calculateModelMatrix() const;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="comment">//    glm::mat4 model;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="comment">//    glm::mat4 projection;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">int</span> effectIndex = 0;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        glm::mat4 calculateModelMatrix() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        glm::mat4 model;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        glm::mat4 projection;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    };</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:108</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_rectangle_shape_html"><div class="ttname"><a href="class_l_graphics_1_1_l_rectangle_shape.html">LGraphics::LRectangleShape</a></div><div class="ttdoc">Класс четурёхугольной формы.</div><div class="ttdef"><b>Definition:</b> LRectangleShape.h:12</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html">LGraphics::LWRectangle</a></div><div class="ttdef"><b>Definition:</b> LWRectangle.h:10</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:153</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html">LGraphics::LWRectangle</a></div><div class="ttdef"><b>Definition:</b> LWRectangle.h:9</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html_a96e920f3c4abdbe9429626e1171e82cb"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb">LGraphics::LWRectangle::draw</a></div><div class="ttdeci">void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override</div><div class="ttdoc">Рисует виджет.</div><div class="ttdef"><b>Definition:</b> LWRectangle.cpp:47</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html_afb1a6f0c4d6f17b768d2fb5d5c400e51"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">LGraphics::LWidget::app</a></div><div class="ttdeci">LApp * app</div><div class="ttdoc">Указатель на приложение.</div><div class="ttdef"><b>Definition:</b> LWidget.h:173</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
