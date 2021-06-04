@@ -119,8 +119,6 @@ You can choose interface rom interfaces.h using ImGuiInterface class.
 
 ```cpp
     app.loop();
-    return 0;
-}
 ```
 
 # TODO
