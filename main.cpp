@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 10000;
+    const size_t poolSize = 70000;
 
     LAppCreateInfo info;
 
