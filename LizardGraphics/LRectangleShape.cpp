@@ -49,14 +49,12 @@ namespace LGraphics
     void LRectangleShape::init(LApp* app, bool isInterfaceObj)
     {
         LOG_CALL
-        this->app = app;
+            this->app = app;
         buffer = app->standartRectBuffer;
-#ifdef OPENGL
-        shader = app->standartInterfaceshader;
-#endif
-#ifdef VULKAN
-        shader = app->baseShader;
-#endif
+        if (app->info.api == L_OPENGL)
+            shader = app->openGLLightShader.get();
+        else if (app->info.api == L_VULKAN)
+            shader = app->lightShader.get();
     }
 
     bool LRectangleShape::mouseOnIt()

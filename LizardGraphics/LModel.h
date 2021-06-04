@@ -43,7 +43,7 @@ namespace LGraphics
         bool mouseOnIt() override { return false; }
 
         const char* modelPath;
-        VkImageView* textures;
+        void** textures;
 
         bool* meshesToDraw = nullptr;
         //LMaterial* materials = nullptr;

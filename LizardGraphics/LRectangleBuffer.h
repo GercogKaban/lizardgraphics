@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include "LBuffer.h"
-//#include "vectors.h"
 
 namespace LGraphics
 {
@@ -21,13 +20,9 @@ namespace LGraphics
     public:
 
         const char* getObjectType() const override { return "LRectangleBuffer"; }
-#ifdef OPENGL
-        LRectangleBuffer();
-#endif
 
-#ifdef VULKAN
         LRectangleBuffer(LApp* app);
-#endif
+
         glm::vec3 getTopLeftCorner() { return {vertices[9],vertices[10],vertices[11] };}
         glm::vec3 getTopRightCorner() { return { vertices[0],vertices[1],vertices[2] }; }
         glm::vec3 getBottomLeftCorner() { return { vertices[6],vertices[7],vertices[8] };}

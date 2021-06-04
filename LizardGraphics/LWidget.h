@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <vector>
+#include <queue>
 
 #include "include/glm/glm.hpp"
 
@@ -25,9 +26,8 @@ namespace LGraphics
 
         const char* getObjectType() const override { return "LWidget"; }
         virtual void tick() {}
-#ifdef VULKAN
         virtual void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) = 0; ///< Рисует виджет.
-
+        virtual void draw(){}
         enum UniformChanges
         {
             UNMODIFIED,
@@ -35,10 +35,20 @@ namespace LGraphics
             TWO_BUFFERS_TO_CHANGE,
             THREE_BUFFERS_TO_CHANGE,
         };
-#endif
-#ifdef OPENGL
-        virtual void draw() = 0; ///< Рисует виджет.
-#endif
+
+        struct WidgetUniforms
+        {
+            glm::mat4 model;
+            //int id = -1;
+            //GLuint64 diffuseSampler, shadowMapSampler;
+        };
+
+        //struct WidgetUniformsRef
+        //{
+        //    glm::mat4& model;
+        //    int& id;
+        //    GLuint& diffuseSampler, &shadowMapSampler;
+        //};
 
         /*!
         @brief Устанавливает цвет виджету.
@@ -107,10 +117,13 @@ namespace LGraphics
         /*!
         @brief устанавливает функцию, которая будет срабатывать при наведении мышки на виджет.
         */
-        void setMouseOnItEventFunction(std::function<void()> fun) { mouseOnItFunction = fun; }
+        void setMouseOnItEventFunction(::std::function<void()> fun) { mouseOnItFunction = fun; }
 
-        void setName(std::string name) { this->name = name; }
-        std::string getName() const { return name; }
+        void setMaterial(int material) { this->material = material; updateUniforms();}
+        int getMaterial() const { return material; }
+
+        void setName(::std::string name) { this->name = name; }
+        ::std::string getName() const { return name; }
 
         void rotateX(float angleDegree);
         void rotateY(float angleDegree);
@@ -132,8 +145,10 @@ namespace LGraphics
         virtual glm::vec3& getScaleRef() = 0;         ///< Возвращает размеры виджета.
         virtual glm::vec3& getMoveRef() = 0;          ///< Возвращает вектор move виджета.
         virtual glm::mat4& getRotateRef() { return rotate_; }
+        virtual bool isInstanced() const { return false; }
 
         LShaders::Shader* getShader() { return shader; }
+        void setShader(LShaders::Shader* s) { shader = s; }
 
         virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
 
@@ -142,46 +157,40 @@ namespace LGraphics
         void setHidden(bool hide) { isHidden_ = hide; }   ///< Установить видимость виджета.
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
         bool isInited() const { return isInited_; }
+        bool isChanged() const { return changed != UNMODIFIED; }
+        int getId() const { return id; }
+        
 
-        virtual ~LWidget() {};
+        virtual ~LWidget();
 
     protected:
 
+        int id = -1;
+        int material = 0;
         glm::mat4 rotate_ = glm::mat4(1.0f);
         glm::vec3 rotateDegrees = glm::vec3(0.0f);
 
         LApp* app = nullptr;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
-        std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
-        std::function<void()> animation = std::function<void()>([](){});
-        std::function<void()> breakingAnimation = std::function<void()>([]() {});
+        ::std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
+        ::std::function<void()> animation = ::std::function<void()>([](){});
+        ::std::function<void()> breakingAnimation = ::std::function<void()>([]() {});
 
         bool isInited_ = false;
         LShaders::Shader* shader = nullptr; ///< Шейдер.
 
         int changed = 3;
-        std::string name;
+        ::std::string name;
 
         void updateUniforms();
 
-#ifdef VULKAN
         size_t arrayIndex = 0;
-#endif
 
         /*!
         @brief Конструктор.
         @param path - Путь к изображению.
         */
         LWidget(LApp* app, const char* path);
-
-        /*!
-        @brief Конструктор.
-        @param bytes - массив байт (rgba).
-        @param size - размер массива bytes.
-        */
-#ifdef OPENGL
-        LWidget(LApp* app, const unsigned char* bytes, size_t size);
-#endif
 
         virtual void init();
     };

@@ -26,6 +26,8 @@
 #include <tuple>
 #include <filesystem>
 
+#define VK_VERSION_1_0
+#define IMGUI_IMPL_OPENGL_LOADER_GLEW
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -33,10 +35,8 @@
 #include <csignal>
 #endif
 
-#ifdef OPENGL
 #include "include/GLEW/glew.h"
-#include <GLFW/glfw3.h>
-#endif
+#include "vulkan/vulkan.h"
 
 #ifndef NDEBUG
 #define IMGUI_VULKAN_DEBUG_REPORT
@@ -54,13 +54,11 @@
 #include "vulkan_wrapper.h"
 #endif
 
-#ifdef VULKAN
-#define GLFW_INCLUDE_NONE
-#define GLFW_INCLUDE_VULKAN
+//#define GLFW_INCLUDE_NONE
+//#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#endif
 
-#include "imgui_impl_vulkan.h"
+//#include "imgui_impl_vulkan.h"
 #include "additional.h"
 
 //#endif //PCH_H

@@ -37,7 +37,7 @@ void CodeGen::generateCode(const char* outPath, LGraphics::LApp* app, const char
         genData(obj, name);
     }
 
-    auto rectangles = app->getRectangles();
+    auto rectangles = app->getPrimitives();
     for (size_t i = 0; i < rectangles.size(); ++i)
     {
         auto& obj = rectangles[i];

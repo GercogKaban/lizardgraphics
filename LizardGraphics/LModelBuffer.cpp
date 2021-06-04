@@ -1,5 +1,6 @@
 #include "LModelBuffer.h"
 #include "LLogger.h"
+#include "LApp.h"
 
 void LGraphics::LModelBuffer::setBuffers()
 {

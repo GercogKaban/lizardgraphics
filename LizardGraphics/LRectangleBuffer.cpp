@@ -17,12 +17,12 @@ namespace LGraphics
     void LRectangleBuffer::setVerts()
     {
         LOG_CALL
-        vertices = new float[(coordsCount + textureCoordsCount + normalsCount) * verticesCount]
+        vertices = new float[/*(coordsCount + textureCoordsCount + normalsCount) * verticesCount*/]
         {
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+             0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
         };
     }
 
@@ -35,17 +35,10 @@ namespace LGraphics
             1,2,3
         };
     }
-#ifdef OPENGL
-    LRectangleBuffer::LRectangleBuffer()
-    {
-        init();
-    }
-#endif
-#ifdef VULKAN
+
     LRectangleBuffer::LRectangleBuffer(LApp* app)
     {
         LOG_CALL
         init(app);
     }
-#endif
 }

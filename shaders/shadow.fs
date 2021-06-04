@@ -79,7 +79,10 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {    
-
+    const bool lighting = false;
+    vec3 result(0.0f);
+    if (lighting)
+    {
     DirLight dirLight;
     dirLight.ambient = vec3(0.5f,0.5f,0.5f);
     dirLight.diffuse = vec3(0.7f,0.7f,0.7f);
@@ -99,21 +102,16 @@ void main()
     pointLight.ambient = dirLight.ambient * vec3(1.2f, 1.1f, 1);
     pointLight.diffuse = dirLight.diffuse * vec3(1.2f, 1.1f, 1);
     pointLight.specular = dirLight.specular * vec3(1.2f, 1.1f, 1);
-    
-    
-    vec3 result;
 
     result += CalcPointLight(pointLight, norm, FragPos, viewDir);
 
     pointLight.position.y += 12.0f;
-pointLight.position.z = 0;
+    pointLight.position.z = 0;
 
     result += CalcPointLight(pointLight, norm, FragPos, viewDir);
-   
+   }
     color = vec4(result,1.0f)* texture(ourTexture, TexCoords);
-
     if (color.a - 0.1f < 0) discard;
-
 }
 
 // calculates the color when using a directional light.

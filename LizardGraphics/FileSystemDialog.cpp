@@ -1,4 +1,5 @@
 #include "FileSystemDialog.h"
+#include "imgui.h"
 #include "LLogger.h"
 
 using namespace std::filesystem;

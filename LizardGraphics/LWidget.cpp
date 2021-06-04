@@ -42,26 +42,26 @@ void LGraphics::LWidget::setRotate(const glm::mat4 & rotate)
 }
 
 
+LGraphics::LWidget::~LWidget()
+{
+    app->idManager.releaseID(id);
+}
+
 void LGraphics::LWidget::updateUniforms()
 {
-    changed = app->wd->ImageCount;
+    if (app->getAppInfo().api == L_VULKAN)
+        changed = app->wd->ImageCount;
+    else
+        changed = 1;
 }
 
 LGraphics::LWidget::LWidget(LApp* app, const char * path)
-    :LImage(path)
+    :LImage(path,app->info.api)
 {
+    id = app->idManager.getNewID();
     this->app = app;
-    changed = app->wd->ImageCount;
+    updateUniforms();
 }
-
-#ifdef OPENGL
-LGraphics::LWidget::LWidget(LApp* app, const unsigned char * bytes, size_t size)
-    : LImage(bytes, size)
-{
-    this->app = app;
-    changed = app->wd->ImageCount;
-}
-#endif
 
 void LGraphics::LWidget::init()
 {

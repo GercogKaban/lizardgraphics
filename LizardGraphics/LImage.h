@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "LObject.h"
+#include "vulkan/vulkan.h"
+#include "enums.h"
 
 namespace LGraphics
 {
@@ -17,30 +19,24 @@ namespace LGraphics
         const char* getObjectType() const override { return "LImage"; }
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
-#ifdef OPENGL
-        void setTexture(GLuint id) { texture = id; }
-#endif
-#ifdef VULKAN
-        void setTexture(VkImageView view) { texture = view; }
-#endif
+        void setDiffuse(GLuint id);
+        void setDiffuse(VkImageView view);
+
+        const void* getTexture() const { return textures; }
         /*!
         @brief Привязывает текстуру.
         @param path - путь к изображению.
         */
-        void bindTexture(const char* path, int desiredChannel = 4);
+        void bindDiffuse(const char* path);
 
-#ifdef VULKAN
         /*!
         @brief Привязывает текстуру.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        void bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel = 4);
+        //void bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel = 4);
         size_t getMipLevels() const { return mipLevels; }
-#endif
 
-
-#ifdef VULKAN
         /*!
         @brief Выключает текстуру.
         */
@@ -73,37 +69,34 @@ namespace LGraphics
 
         std::string getTexturePath() const { return texturePath; }
         void init();
-#endif
         ~LImage();
 
     protected:
 
+        //bool imageType;
         /*!
         @brief Конструктор.
         @param path - путь к изображению.
         */
-        LImage(const char* path);
+        LImage(const char* path, RenderingAPI api);
 
         /*!
         @brief Конструктор.
         @param bytes - массив байт (rgba).
         @param size - размер массива bytes.
         */
-        LImage(const unsigned char* bytes, size_t size);
-#ifdef OPENGL
-        GLuint texture; ///< Дескриптор текстуры.
-#endif
+        //LImage(const unsigned char* bytes, size_t size);
+        void* textures = nullptr;
 
-#ifdef VULKAN
-        VkImageView texture = VkImageView();
+        //VkImageView texture = VkImageView();
         size_t mipLevels = 1;
-#endif
 
         bool turnedOn = true; ///< Включена ли текстура.
 
-        std::string texturePath;
+        ::std::string texturePath;
         unsigned char* texturesBytes = nullptr;
         size_t texturesBytesSize = 0;
+        RenderingAPI texturesType;
 
         static LResourceManager resManager;
     };

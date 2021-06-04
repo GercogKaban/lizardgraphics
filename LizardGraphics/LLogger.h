@@ -12,14 +12,18 @@
 #include <chrono>
 #include <ctime>
 #include <thread>
+#include <stack>
+#include <string>
 
-#include "LApp.h"
+#include "LObject.h"
+
+//#include "LApp.h"
 
 namespace LGraphics
 {
     struct LogVar
     {
-        LogVar(const std::string& str);
+        LogVar(const ::std::string& str);
         ~LogVar();
     };
 
@@ -46,8 +50,9 @@ namespace LGraphics
     public:
 
         friend LogVar;
-        friend LApp;
+        //friend LApp;
 
+        static void setFlags(uint8_t flags) { states = flags; }
         template <typename T>
         class ThreadSafeQueue : private std::queue<T>
         {
@@ -114,7 +119,7 @@ namespace LGraphics
             }
 
         private:
-            mutable std::mutex mutex;
+            mutable ::std::mutex mutex;
         };
 
         const char* getObjectType() const override { return "LLogger"; }
@@ -122,10 +127,11 @@ namespace LGraphics
         /*!
         @brief Инициализирует класс LLogger.
         */
-        static void initErrors(LApp* app)
+        static void initErrors(uint8_t flags)
         {
-            app_ = app;
-            states = app->getLogFlags();
+            //app_ = app;
+            states = flags;
+            //states = app->getLogFlags();
             //errors.push_back("");
         }
 
@@ -193,13 +199,13 @@ namespace LGraphics
         template <>
         static void printMsg(const char& t)
         {
-            errors.push_(std::string(t,1));
+            errors.push_(::std::string(t,1));
         }
 
         template <>
         static void printMsg(const size_t& t)
         {
-            errors.push_(std::to_string(t));
+            errors.push_(::std::to_string(t));
         }
 
 
@@ -230,7 +236,7 @@ namespace LGraphics
         template <>
         static void printMsgLn(const char& t)
         {
-            errors.push_(std::string(t,1));
+            errors.push_(::std::string(t,1));
         }
 
         /*!
@@ -258,10 +264,10 @@ namespace LGraphics
         //    std::for_each(errors.begin() + lastErrorNum, errors.end() - 1, printToDisplay);
         //}
 
-        static std::string getCurrentTime()
+        static ::std::string getCurrentTime()
         {
-            auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            return std::string(std::ctime(&time));
+            auto time = ::std::chrono::system_clock::to_time_t(::std::chrono::system_clock::now());
+            return ::std::string(::std::ctime(&time));
         }
 
 protected:
@@ -273,27 +279,27 @@ protected:
         //}
 
 public:
-
+    static ::std::stack<::std::string> calls;
 protected:
   
-    static void logToFile(std::string msg,
-        std::ios_base::openmode firstCreationFlag = std::ios_base::app
+    static void logToFile(::std::string msg,
+        ::std::ios_base::openmode firstCreationFlag = ::std::ios_base::app
 )
     {
-        std::ofstream out(logFilePath, std::ios_base::binary | firstCreationFlag);
+        ::std::ofstream out(logFilePath, ::std::ios_base::binary | firstCreationFlag);
         if (!out.is_open())
-            throw std::runtime_error("wrong path");
+            throw ::std::runtime_error("wrong path");
         out.write(msg.data(), msg.size());
         out.close();
     }
 
-        static LApp* app_;
+        //static LApp* app_;
 
-        static ThreadSafeQueue<std::string> errors;
-        static std::stack<std::string> calls;
-        static std::string logFilePath;
+        static ThreadSafeQueue<::std::string> errors;
+        static ::std::string logFilePath;
 
         static uint8_t states;
+
     };
 
     class LAsyncLogger;
@@ -321,7 +327,7 @@ protected:
                 if (states & FILE_RELEASE_LOG)
                     logToFile(err);
 #endif
-                firstCreationFlag = std::ios_base::app;
+                firstCreationFlag = ::std::ios_base::app;
                 }
 
                 if (stopLogging)
@@ -360,11 +366,11 @@ protected:
                 if (states & FILE_RELEASE_LOG)
                     logToFile(err);
 #endif
-                firstCreationFlag = std::ios_base::app;
+                firstCreationFlag = ::std::ios_base::app;
             }
     }
 
-        static std::ios_base::openmode firstCreationFlag;
+        static ::std::ios_base::openmode firstCreationFlag;
     };
 
     class LAsyncLogger : private LSyncLogger
@@ -387,7 +393,7 @@ protected:
         static void start()
         {
             started = true;
-            thread = std::thread(&LSyncLogger::tick);
+            thread = ::std::thread(&LSyncLogger::tick);
         }
 
         static bool isStarted()
@@ -396,7 +402,7 @@ protected:
         }
     protected:
 
-        static std::thread thread;
+        static ::std::thread thread;
         static bool started;
     };
 }

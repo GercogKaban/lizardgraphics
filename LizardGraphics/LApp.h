@@ -5,6 +5,10 @@
 #include <unordered_map>
 #include <stack>
 #include <deque>
+#include "LLogger.h"
+#include "enums.h"
+#include "LWidget.h"
+//#include "LCube.h"
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 #include <android/log.h>
@@ -28,31 +32,27 @@ void handle_cmd(android_app* app, int32_t cmd);
 
 #endif
 
-
 #include "ObjectPool.h"
 
-#ifdef OPENGL
-#include "include/GLEW/glew.h"
-#include "include/GLFW/glfw3.h"
-#endif
 #include "include/glm/glm.hpp"
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 #include "vulkan_wrapper.h"
 #endif
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
 
-#ifdef VULKAN
-#include "imgui_impl_vulkan.h"
-#include "vk_mem_alloc.h"
-#endif
+#include "include/GLEW/glew.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui/backends/imgui_impl_vulkan.h"
+#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
 
 #include "LObject.h"
 
 namespace LShaders
 {
     class Shader;
+    class VulkanShader;
+    class OpenGLShader;
 }
 
 namespace LGraphics
@@ -72,35 +72,17 @@ namespace LGraphics
     class LModel;
     class ImGuiInterface;
     class LLogger;
-
-    enum LStates : uint8_t
-    {
-        L_FALSE,
-        L_TRUE,
-    };
-
-    enum LProjections : uint8_t
-    {
-        L_PERSPECTIVE,
-        L_ORTHOGRAPHIC,
-    };
-
-    enum LTypes : uint8_t
-    {
-        L_RECTANGLE,
-        L_MODEL,
-    };
-
-    //struct Material
-    //{
-    //    alignas(16) glm::vec3 ambient;
-    //    alignas(16) glm::vec3 diffuse;
-    //    alignas(16) glm::vec3 specular;
-    //    alignas(4)  float shininess;
-    //};
+    class LCircle;
+    class LImage;
+    class LCubeBuffer;
+    class LCube;
+    class LSkyBox;
+    class LRectangleMirror;
+    class InstantPoolCubes;
 
     struct LAppCreateInfo
     {
+        RenderingAPI api = L_VULKAN;
         size_t wndWidth = 0, wndHeight = 0;
         size_t poolSize = 100;
         size_t sleepThread = 0;
@@ -109,16 +91,17 @@ namespace LGraphics
         LStates loadObjects = L_FALSE;
         LStates lighting = L_FALSE;
         uint32_t anisotropy = 16;
+        uint32_t MSAA = 0;
         LProjections projection = L_ORTHOGRAPHIC;
         uint8_t logFlags = 0;
-        //std::vector<Material> materials;
+        LStates redactorMode = L_FALSE;
     };
 
     /*!
     @brief Класс приложения Lizard Graphics
 
-    Объект этого класса должен объявляться перед любым из элементом 
-    LGraphics, т.к. LApp инициализурент OpenGL, GLFW окно и некоторые 
+    Объект этого класса должен объявляться перед любым из элементом
+    LGraphics, т.к. LApp инициализурент OpenGL, GLFW окно и некоторые
     другие вспомогательные классы
     */
     class LApp : public LObject
@@ -127,6 +110,8 @@ namespace LGraphics
         friend LRectangleShape;
         friend LWRectangle;
         friend LShaders::Shader;
+        friend LShaders::VulkanShader;
+        friend LShaders::OpenGLShader;
         friend LBuffer;
         friend LModelBuffer;
         friend LResourceManager;
@@ -134,18 +119,20 @@ namespace LGraphics
         friend LModel;
         friend ImGuiInterface;
         friend LLogger;
+        friend LCircle;
+        friend LImage;
+        friend LCubeBuffer;
+        friend LCube;
+        friend LSkyBox;
+        friend LRectangleMirror;
+        friend InstantPoolCubes;
 
     public:
 
-        
-#ifdef OPENGL
-        LApp();
-#endif
-#ifdef VULKAN
         LApp(const LAppCreateInfo& info);
-#endif
         ~LApp();
 
+        LWidget* findByLID(int id);
         /*!
         @brief Бесконечный цикл
 
@@ -157,18 +144,90 @@ namespace LGraphics
         void emergencyStop(unsigned long code);
         void emergencyStop(std::exception& exception);
 
+        void switchRendererTo(RenderingAPI api);
+        void setAfterSwitchingFunc(std::function<void()> func) { afterSwitchingFunc = func; }
+        const LAppCreateInfo& getAppInfo() const { return info; }
+
+        const int* getObjectsOnScreen() const { return objectsOnScreen; }
+
     protected:
+
+        void* buff;
+
+        template <typename T>
+        class LID
+        {
+        public:
+            LID() {}
+            T getNewID()
+            {
+                T ret;
+                if (gaps.size())
+                {
+                    ret = gaps.front();
+                    gaps.pop();
+                }
+                else
+                    ret = lastId++;
+                return ret;
+            }
+            void releaseID(T id)
+            {
+                gaps.push(id);
+            }
+        private:
+            std::queue<T> gaps;
+            T lastId = 0;
+        };
+
+        class InstantPoolCubes
+        {
+            friend LCube;
+            friend LSkyBox;
+
+            LApp* app;
+            GLuint vbo;
+            LWidget::WidgetUniforms* uniformBuffers;
+            LCube** objs;
+            size_t uniformBuffersSize;
+            //std::vector<LWidget::WidgetUniforms> uniformBuffers;
+            //std::vector<LCube*> objs;
+
+        public:
+
+            InstantPoolCubes(){}
+            ~InstantPoolCubes();
+
+            void setApp(LApp* app);
+            void draw();
+            void makeInstantObj(LCube* cube);
+            void updateBuffer();
+            void initPool();
+
+        }cubeInstantPool;
+
+        int* objectsOnScreen;
+        LID<int> idManager;
 
         void loop_();
         void initApp_(const LAppCreateInfo& info);
         void initErrorRecovering();
+        void updateShaders();
+        void updateBuffers();
+        void updateTextures();
+
+        void drawScene();
 
     public:
+
+        unsigned int cubeTexture;
+        bool renderingToCube = false;
+
         /*!
         @brief Возвращает размеры окна (в пикселях).
 
         */
-        glm::vec<2,size_t> getWindowSize() const;
+        glm::vec<2, size_t> getWindowSize() const;
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
@@ -203,13 +262,13 @@ namespace LGraphics
             assert(collection.size() + 1 <= getPoolSize() && "error, pool overflowed!\n");
             collection.push_back(((C*)w));
         }
-        
+
         void refreshObjectMatrices();
 
-        std::vector<LWRectangle*>& getRectangles() { return rectangles; }
+        std::vector<LWidget*>& getPrimitives() { return primitives; }
         std::vector<LModel*>& getModels() { return models; }
 
-        LShaders::Shader* getStandartWorldObjShader() const;
+        LShaders::Shader* getStandartShader() const;
 
         bool isPressed(int key);
 
@@ -218,7 +277,7 @@ namespace LGraphics
 
         std::mutex& getDrawingMutex() { return drawingMutex; }
 
-        void setSleepTime(size_t milliseconds) { sleepTime = milliseconds;}
+        void setSleepTime(size_t milliseconds) { sleepTime = milliseconds; }
         size_t getSleepTime() const { return sleepTime; }
 
 
@@ -248,14 +307,12 @@ namespace LGraphics
         glm::vec3 getCameraUp() const { return cameraUp; }
         float getViewRadius() const { return viewRadius; }
 
-        LShaders::Shader* getLightningShader() { return lightShader; }
+        const std::unique_ptr<LShaders::Shader>& getLightningShader() { return info.api == L_OPENGL ? openGLLightShader : lightShader; }
         //LShaders::Shader* getLightningShader() { return experimentalLightShader; }
 
         unsigned int getDepthMap() const { return depthMap; }
-         
-        //void setLightDir(glm::vec3 lightDir) { this->lightDir = lightDir; };
-        //glm::vec3 getLightDir() const { return lightDir; }
 
+        void setLighting(LStates state) { info.lighting = state; }
         void setLightPos(glm::vec3 lightPos);
         glm::vec3 getLightPos() const { return lightPos; }
         glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
@@ -271,12 +328,12 @@ namespace LGraphics
         glm::vec3 lightPos; //lightDir;
 
         size_t getPoolSize() const { return info.poolSize; }
-            
+
         void setImgui(std::function<void()> func) { imgui = func; }
         void addObjectToDelete(LWidget* w, LTypes type) { toDelete.push(std::make_pair(w, type)); }
-        void addObjectToCreate(LWidget* w, LTypes type) {toCreate.push(std::make_pair(w, type));}
+        void addObjectToCreate(LWidget* w, LTypes type) { toCreate.push(std::make_pair(w, type)); }
 
-        void setUserMouseButtonCallback (std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
+        void setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
         void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
         void setUserKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> func);
         void setUserCharacterCallback(std::function<void(GLFWwindow* window, unsigned int codepoint)> func);
@@ -294,11 +351,12 @@ namespace LGraphics
     protected:
         static LAppCreateInfo info;
 
+        LSkyBox* skybox = nullptr;
+
         bool drawUI_ = true;
 
-        //VmaBudget budget;
-        std::stack<std::pair<LWidget*,LTypes>> toDelete;
-        std::stack<std::pair<LWidget*,LTypes>> toCreate;
+        std::stack<std::pair<LWidget*, LTypes>> toDelete;
+        std::stack<std::pair<LWidget*, LTypes>> toCreate;
 
         std::function<void()> imgui = []() {};
         glm::vec2 mouseCoords = glm::vec2(0.0f);
@@ -327,12 +385,20 @@ namespace LGraphics
         void setupLG();
         void initLEngine();
         void initRenderer();
+
+        void initOpenGL();
+        void initVulkan();
+
         void setWindowCallbacks();
 
         void initTextures();
 
         void checkEvents();
 
+        void releaseVulkanResources();
+        void releaseOpenGLResources();
+        void releaseGlfwResources();
+        void releaseLGResources();
         void releaseResources();
 
         void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
@@ -341,29 +407,40 @@ namespace LGraphics
         void character_callback(GLFWwindow* window, unsigned int codepoint);
         void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-        std::function<void(GLFWwindow* window, int button, int action, int mods)> userMouseButtonCallback = 
-            [](GLFWwindow* window, int button, int action, int mods){};
+        std::function<void(GLFWwindow* window, int button, int action, int mods)> userMouseButtonCallback =
+            [](GLFWwindow* window, int button, int action, int mods) {};
         std::function<void(GLFWwindow* window, double xpos, double ypos)> userCursorCallback =
             [](GLFWwindow* window, double xpos, double ypos) {};
-        std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> userKeyCallback = 
+        std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> userKeyCallback =
             [](GLFWwindow* window, int key, int scancode, int action, int mods) {};
-        std::function<void(GLFWwindow* window, unsigned int codepoint)> userCharacterCallback = 
+        std::function<void(GLFWwindow* window, unsigned int codepoint)> userCharacterCallback =
             [](GLFWwindow* window, unsigned int codepoint) {};
-        std::function<void(GLFWwindow* window, double xoffset, double yoffset)> 
+        std::function<void(GLFWwindow* window, double xoffset, double yoffset)>
             userScrollCallback = [](GLFWwindow* window, double xoffset, double yoffset) {};
-
-#ifdef VULKAN
 
     public:
         VkDevice getDevice() const { return g_Device; }
     protected:
 
+        struct DirLight
+        {
+            glm::vec3 direction;
+            glm::vec3 ambient;
+            glm::vec3 diffuse;
+            glm::vec3 specular;
+        };
+
+        struct UboDataDynamicV
+        {
+            glm::mat4* model = nullptr;
+        };
+
+        /*struct VulkanStruct
+        {*/
         std::deque<size_t> indexGaps;
 
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
-
-        LShaders::Shader* baseShader, *lightShader;
 
         VkDescriptorPool descriptorPool;
 
@@ -391,9 +468,10 @@ namespace LGraphics
     "VK_LAYER_KHRONOS_validation",
         };
 
-        const std::vector<const char*> deviceExtensions = 
+        const std::vector<const char*> deviceExtensions =
         { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
           VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
+          VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME,
         };
 
 #ifdef NDEBUG
@@ -401,6 +479,16 @@ namespace LGraphics
 #else
         const bool enableValidationLayers = true;
 #endif
+        static const size_t possibleMipLevels = 15;
+        VkSampler textureSamplers[possibleMipLevels];
+
+        std::vector <VkImage> swapChainImages;
+        std::vector<VkImageView> swapChainImageViews;
+
+        UboDataDynamicV testStructV;
+        size_t dynamicAlignment;
+        //} vulkanWrap;
+
 
         VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
             const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
@@ -438,10 +526,6 @@ namespace LGraphics
         void createTextureSampler(VkSampler& sampler, size_t mipLevels);
         void createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, VkImageView& view, uint32_t miplevels);
 
-
-        static const size_t possibleMipLevels = 15;
-        VkSampler textureSamplers[possibleMipLevels];
-
         void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
         VkCommandBuffer beginSingleTimeCommands();
@@ -458,13 +542,13 @@ namespace LGraphics
             VkDeviceSize bufferSize;
             VmaAllocation stagingAllocation;
             VkBuffer stagingBuffer;
-            
+
             VmaStats stats;
             vmaCalculateStats(allocator, &stats);
 
             createBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, dst, allocation);
-            
+
             auto unusedBytes = stats.memoryType[VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT].unusedBytes;
 
             if (!unusedBytes)
@@ -493,7 +577,7 @@ namespace LGraphics
             {
                 bufferSize = unusedBytes;
                 bufSize -= bufferSize;
-                stageBufTransfer(i* unusedBytes);
+                stageBufTransfer(i * unusedBytes);
             }
             if (bufSize)
             {
@@ -502,7 +586,7 @@ namespace LGraphics
             }
         }
 
-        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, 
+        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
             VkBuffer& buffer, VmaAllocation& allocation);
         //void createBufferWithData(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer,
            // VmaAllocation& allocation, void* data);
@@ -520,12 +604,12 @@ namespace LGraphics
         bool isDeviceSuitable(VkPhysicalDevice device);
         bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 
-        struct QueueFamilyIndices 
+        struct QueueFamilyIndices
         {
             std::optional<uint32_t> graphicsFamily;
             std::optional<uint32_t> presentFamily;
 
-            bool isComplete() 
+            bool isComplete()
             {
                 return graphicsFamily.has_value() && presentFamily.has_value();
             }
@@ -543,11 +627,7 @@ namespace LGraphics
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-      
-        std::vector <VkImage> swapChainImages;
-        std::vector<VkImageView> swapChainImageViews;
-
-        struct Vertex 
+        struct Vertex
         {
             glm::vec3 pos;
             glm::vec2 texCoord;
@@ -571,35 +651,34 @@ namespace LGraphics
             alignas(16) glm::mat4 projView;
         };
 
-        struct LightShaderConstants
+        struct ShaderConstants
         {
             alignas(16) glm::mat4 projView;
-            alignas(16) glm::vec3 lightPos;
             alignas(16) glm::vec3 viewPos;
-            alignas(16) glm::vec3 lightColor;
-            alignas(4) float ambient;
-            alignas(4) float specular;
+
+            alignas(16) glm::vec3 lightPos;
+            //alignas(16) glm::vec3 lightColor;
+            alignas(16) glm::vec3 ambient;
+            alignas(16) glm::vec3 diffuse;
+            //alignas(4) int lighting;
+            //alignas(16) glm::vec3 specular;
+
+            //alignas(4) float ambient;
+            //alignas(4) float specular;
         };
 
         struct BaseVertexUBuffer
         {
             alignas(16) glm::mat4 model = glm::mat4(1.0f);
             alignas(16) glm::vec4 color = glm::vec4(1.0f);
+            alignas(4) int materialNum = 0;
         };
 
         uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-
-        struct UboDataDynamicV 
-        {
-            glm::mat4 *model = nullptr;
-        } testStructV;
-
-        size_t dynamicAlignment;
-
         void* alignedAlloc(size_t size, size_t alignment)
         {
-            void *data = nullptr;
+            void* data = nullptr;
 #if defined(_MSC_VER) || defined(__MINGW32__)
             data = _aligned_malloc(size, alignment);
 #else
@@ -618,7 +697,6 @@ namespace LGraphics
             free(data);
 #endif
         }
-#endif
 
         void handleSEH(const size_t& code);
         void handleCppException(std::exception& err);
@@ -632,17 +710,18 @@ namespace LGraphics
         glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
         float viewRadius = 10.0f;
 
-        std::vector<LWRectangle*> rectangles;
+        std::vector<LWidget*> primitives;
         std::vector<LModel*> models;
 
-        int width, height;
+        //int width, height;
 
         size_t sleepTime = 0;
 
+        LBuffer* standartSkyBoxBuffer;
         LBuffer* standartRectBuffer;
+        LBuffer* standartCubeBuffer;
 
-        LShaders::Shader* standartInterfaceshader, *standartWorldObjShader, *checkMarkShader, *colorBarShader, *experimentalLightShader,
-            *shadowMap,*defaultShader, *multi_shadowMap, *multi_defaultShader;
+        std::unique_ptr<LShaders::Shader> openGLLightShader, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -653,17 +732,18 @@ namespace LGraphics
 
         std::function<void()> beforeDrawingFunc = []() {};
         std::function<void()> afterDrawingFunc = []() {};
+        std::function<void()> afterSwitchingFunc = []() {};
 
-        unsigned int shadowWidth = 1024, shadowHeight = 1024;
+        uint32_t shadowWidth = 1024, shadowHeight = 1024;
 
-        unsigned int depthMapFBO, depthMap;
+        GLuint depthMapFBO, depthMap, ssbo;
+
+        bool drawingInShadow;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
-#ifdef VULKAN
-        VkAllocationCallbacks*   g_Allocator = NULL;
+        VkAllocationCallbacks* g_Allocator = NULL;
         VkInstance               g_Instance = VK_NULL_HANDLE;
         VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
-//        Vk
         VkDevice                 g_Device = VK_NULL_HANDLE;
         uint32_t                 g_QueueFamily = (uint32_t)-1;
         VkQueue                  g_Queue = VK_NULL_HANDLE;
@@ -695,7 +775,7 @@ namespace LGraphics
         VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
         {
             (void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
-            fprintf(stderr, "[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
+            PRINTLN("[vulkan] Debug report from ObjectType: ", std::to_string(objectType), "%i\nMessage: ", std::string(pMessage), "\n\n");
             return VK_FALSE;
         }
 #endif // IMGUI_VULKAN_DEBUG_REPORT
@@ -716,9 +796,12 @@ namespace LGraphics
 
         static void glfw_error_callback(int error, const char* description)
         {
-            fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+            PRINTLN("Glfw Error ", std::to_string(error), ": ", description);
+        }
+
+        static void glfw_error_callback_Vk(int error, const char* description)
+        {
         }
     };
-#endif
 }
 

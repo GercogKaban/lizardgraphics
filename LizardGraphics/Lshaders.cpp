@@ -1,9 +1,10 @@
+#include <sstream>
+
 #include "Lshaders.h"
 #include "LApp.h"
 #include "LLogger.h"
 
-#ifdef VULKAN
-VkShaderModule LShaders::Shader::genShaderModule(const char* shader, size_t size)
+VkShaderModule LShaders::VulkanShader::genShaderModule(const char* shader, size_t size)
 {
     LOG_CALL
     VkShaderModuleCreateInfo createInfo{};
@@ -17,90 +18,44 @@ VkShaderModule LShaders::Shader::genShaderModule(const char* shader, size_t size
     return shaderModule;
 }
 
-//void LShaders::Shader::destroy()
-//{
-//    vkDestroyShaderModule(app->device, vertShader, nullptr);
-//    vkDestroyShaderModule(app->device, fragShader, nullptr);
-//}
-#endif
-
-LShaders::Shader::~Shader()
-{
-    LOG_CALL
-#ifdef VULKAN
-    vkDestroyPipeline(app->g_Device, graphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(app->g_Device, pipelineLayout, nullptr);
-#endif
-}
-
-void LShaders::Shader::loadShaders(const char* vertShader, const char* fragShader)
+LShaders::VulkanShader::VulkanShader(LGraphics::LApp* app, const char* vertPath, const char* fragPath)
+    :Shader(app)
 {
     LOG_CALL
     size_t vSize, fSize;
-    const char* vertShaderSource = loadShader(vertShader,vSize);
-    const char* fragShaderSource = loadShader(fragShader,fSize);
-
-    initShaders(vertShaderSource, fragShaderSource, vSize, fSize );
+    auto vertexShader = loadShader(vertPath, vSize);
+    if (!vSize)
+        std::runtime_error("can't load vertex shader by " + std::string(vertPath) + " path!");
+    auto framgentShader = loadShader(fragPath, fSize);
+    if (!fSize)
+        std::runtime_error("can't load fragment shader by " + std::string(fragPath) + " path!");
+    initShaders(vertexShader, framgentShader, vSize, fSize);
 }
 
-void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, size_t vSize, size_t fSize)
+LShaders::OpenGLShader::OpenGLShader(LGraphics::LApp* app, const char* v_shader, const char* f_shader)
+    :Shader(app)
 {
     LOG_CALL
-#ifdef OPENGL
-    char infoLog[1488];
-    GLuint vertex, fragment;
-    GLint success;
-    GLchar* vert = v_shader.data();
-    GLchar* frag = f_shader.data();
-    vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vert, NULL);
-    glCompileShader(vertex);
-    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
-    }
+    size_t size;
+    auto vertexShader = loadShader(v_shader, size);
+    if (!size)
+        std::runtime_error("can't load vertex shader by " + std::string(v_shader) + " path!");
+    auto framgentShader = loadShader(f_shader, size);
+    if (!size)
+        std::runtime_error("can't load fragment shader by " + std::string(f_shader) + " path!");
+    initShaders(vertexShader, framgentShader);
+}
 
+LShaders::VulkanShader::~VulkanShader()
+{
+    LOG_CALL
+    vkDestroyPipeline(app->g_Device, graphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(app->g_Device, pipelineLayout, nullptr);
+}
 
-    // Fragment Shader
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &frag, NULL);
-    glCompileShader(fragment);
-
-    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        GLint maxLength = 0;
-        glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
-
-        // The maxLength includes the NULL character
-        std::vector<GLchar> errorLog(maxLength);
-        glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
-        //int a = 0;
-        //glGetProgramInfoLog(fragment, 1488, &a, infoLog);
-        //auto err = glGetError();
-        std::cout << "ERROR::FRAGMENT_SHADER_FAILED\n" << &errorLog[0] << std::endl;
-    }
-
-    // Shader Program
-    this->program = glCreateProgram();
-    glAttachShader(this->program, vertex);
-    glAttachShader(this->program, fragment);
-    glLinkProgram(this->program);
-
-
-    glGetProgramiv(this->program, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(this->program, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-
-
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
-#endif OPENGL
-#ifdef VULKAN
+void LShaders::VulkanShader::initShaders(const char* v_shader, const char* f_shader, size_t vSize, size_t fSize)
+{
+    LOG_CALL
 
     VkShaderModule vertShader = genShaderModule(v_shader, vSize);
     VkShaderModule fragShader = genShaderModule(f_shader, fSize);
@@ -126,11 +81,11 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
     //specializationMapEntries[1].size = data.materialsCount * sizeof(LGraphics::Material);
     //specializationMapEntries[1].offset = sizeof(uint32_t);
 
-    //VkSpecializationInfo specializationInfo{};
-    //specializationInfo.dataSize = sizeof(data.materialsCount * sizeof(LGraphics::Material) + sizeof(uint32_t));
-    //specializationInfo.mapEntryCount = static_cast<uint32_t>(specializationMapEntries.size());
-    //specializationInfo.pMapEntries = specializationMapEntries.data();
-    //specializationInfo.pData = &data;
+    /*VkSpecializationInfo specializationInfo{};
+    specializationInfo.dataSize = data.materialsCount * sizeof(LGraphics::Material) + sizeof(uint32_t);
+    specializationInfo.mapEntryCount = static_cast<uint32_t>(specializationMapEntries.size());
+    specializationInfo.pMapEntries = specializationMapEntries.data();
+    specializationInfo.pData = &data;*/
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -231,10 +186,7 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
 
     VkPushConstantRange push_constant;
     push_constant.offset = 0;
-    if (app->info.lighting)
-        push_constant.size = sizeof(LGraphics::LApp::LightShaderConstants);
-    else
-        push_constant.size = sizeof(LGraphics::LApp::BaseShaderConstants);
+    push_constant.size = sizeof(LGraphics::LApp::ShaderConstants);
     push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     pipelineLayoutInfo.pPushConstantRanges = &push_constant;
@@ -266,61 +218,86 @@ void LShaders::Shader::initShaders(const char* v_shader, const char* f_shader, s
 
     vkDestroyShaderModule(app->g_Device, vertShader, nullptr);
     vkDestroyShaderModule(app->g_Device, fragShader, nullptr);
-#endif // VULKAN
 }
 
-LShaders::Shader::Shader(const char* v_shader, const char* f_shader, LGraphics::LApp * app, bool sourceCode)
+void LShaders::OpenGLShader::initShaders(const char* v_shader, const char* f_shader)
 {
     LOG_CALL
-    this->app = app;
-    size_t size_v, size_f;
-    //if (sourceCode)
-    //    initShaders(v_shader, f_shader);
-    //else
-        loadShaders(v_shader, f_shader);
-}
-
-void LShaders::Shader::bindShader(const char* shader, short shaderType)
-{
-    LOG_CALL
-#ifdef OPENGL
-    GLuint sh;
+    char infoLog[512];
     GLint success;
-    sh = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(sh, 1, &shader, NULL);
-    glCompileShader(sh);
-    glGetShaderiv(sh, GL_COMPILE_STATUS, &success);
+    const GLchar* vert = (GLchar*)v_shader;
+    const GLchar* frag = (GLchar*)f_shader;
+    GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertex, 1, &vert, NULL);
+    glCompileShader(vertex);
+    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if (!success)
-        throw std::exception("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
+    {
+        glGetShaderInfoLog(vertex, 512, NULL, infoLog);
+        PRINTLN(infoLog);
+        throw std::runtime_error("vertex shader compilation failed!\n");
+    }
+
+    GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment, 1, &frag, NULL);
+    glCompileShader(fragment);
+
+    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        GLint maxLength = 0;
+        glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
+        std::vector<GLchar> errorLog(maxLength);
+        glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
+        PRINTLN("fragment shader compilation failed!\n", &errorLog[0]);
+    }
+
     this->program = glCreateProgram();
-    glAttachShader(this->program, sh);
+    glAttachShader(this->program, vertex);
+    glAttachShader(this->program, fragment);
     glLinkProgram(this->program);
     glGetProgramiv(this->program, GL_LINK_STATUS, &success);
     if (!success)
-        throw std::exception("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
-    glDeleteShader(sh);
-#endif OPENGL
+    {
+        glGetProgramInfoLog(this->program, 512, NULL, infoLog);
+        PRINTLN("shader program linking failed!\n", infoLog);
+    }
+
+    glDeleteShader(vertex);
+    glDeleteShader(fragment);
 }
 
 const char* LShaders::Shader::loadShader(const char* shader, size_t& shaderSize)
 {
     LOG_CALL
+    //std::ifstream in(shader,std::ios::binary);
+
+    //if (!in.is_open())
+    //    throw std::runtime_error("failed to open file!");
+
+    //std::stringstream stream;
+    //stream << in.rdbuf();
+    //shaderSize = stream.str().size();
+    //char* shaderSource = new char[shaderSize + app->info.api == LGraphics::L_VULKAN ? 0 : 1];
+    //memcpy(shaderSource, stream.str().data(), shaderSize);
+    //if (app->info.api == LGraphics::L_OPENGL)
+    //    shaderSource[shaderSize] = '\0';
+    //in.close();
+    //return shaderSource;
+
+
     std::ifstream in(shader, std::ios::ate | std::ios::binary);
 
     if (!in.is_open())
         throw std::runtime_error("failed to open file!");
 
     size_t fileSize = (size_t)in.tellg();
-    shaderSize = fileSize;
+    shaderSize = fileSize + (app->info.api == LGraphics::L_VULKAN ? 0 : 1);
     char* shaderSource = new char[shaderSize];
-    //char* shaderSource = new char[shaderSize];
-
     in.seekg(0);
     in.read(shaderSource, shaderSize);
     in.close();
-
-    //std::vector<char> test(shaderSize);
-    //memcpy(test.data(), shaderSource, shaderSize);
-
+    if (app->info.api == LGraphics::L_OPENGL)
+        shaderSource[shaderSize - 1] = '\0';
     return shaderSource;
 }

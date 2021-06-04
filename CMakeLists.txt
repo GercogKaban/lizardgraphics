@@ -7,7 +7,7 @@ add_compile_definitions(${API})
 IF (${PLATFORM} MATCHES "DESKTOP")
 project (DesktopExample C CXX)
 
-file(GLOB_RECURSE shaders *.VERT *.FRAG)
+file(GLOB_RECURSE shaders *.VERT *.FRAG *.vs *.fs )
 
 set(SOURCE_FILES main.cpp ${shaders})
 set(HEADER_FILES interfaces.h)
@@ -31,11 +31,13 @@ ENDIF(UNIX)
 
 IF (${API} MATCHES "VULKAN")
 IF(WIN32)
-target_link_libraries(DesktopExample LizardGraphics LizardGraphics/libs/vulkan-1 LizardGraphics/libs/glfw3)
+target_link_libraries(DesktopExample LizardGraphics LizardGraphics/libs/vulkan-1 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s opengl32)
 add_custom_command(TARGET DesktopExample PRE_BUILD COMMAND python build_shaders.py)
 ELSE()
 target_link_libraries(DesktopExample LizardGraphics ${Vulkan_LIBRARIES} glfw3 dl pthread)
 ENDIF(WIN32)
+ELSE()
+target_link_libraries(DesktopExample LizardGraphics LizardGraphics/libs/glfw3 LizardGraphics LizardGraphics/libs/glew32s)
 ENDIF(${API} MATCHES "VULKAN")
 
 target_compile_features(DesktopExample PRIVATE cxx_std_17)

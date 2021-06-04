@@ -2,10 +2,17 @@
 
 #include <tuple>
 #include "include/glm/glm.hpp"
-//#include "vectors.h"
+
+#define FOR(i,n) for (size_t j = i; j < n; j++)
 
 namespace LGraphics
 {
+    template <typename T, typename ... Args>
+    auto make_array(const T t, const Args ... args)
+    {
+        return std::array<T, sizeof...(Args) + 1>({ t, args... });
+    }
+
     bool isPointInPolygon(int npol, float* xp, float* yp, glm::vec2 p);
     glm::vec2 pointOnScreenToGlCoords(glm::vec2 screenSize, glm::vec2 point);
     glm::vec2 glCoordsToScreenCoords(glm::vec2 screenSize, glm::vec2 val);

@@ -6,42 +6,36 @@
 
 namespace LGraphics
 {
-    LImage::LImage(const char* path)
+    void LImage::setDiffuse(GLuint id)
+    { 
+        ((LResourceManager::OpenGLImage*)textures)->diffuse = id;
+    }
+    void LImage::setDiffuse(VkImageView view)
+    { 
+        //imageType = 1;
+        //((LResourceManager::VulkanImage*)textures.get())->diffuse.texture = view;
+    }
+
+    LImage::LImage(const char* path, RenderingAPI api)
     {
-        //if (!lazy)
-            //texture = resManager.loadTexture(path);
+        texturesType = api;
         texturePath = !path?"":path;
         if (!texturePath.size()) turnOffTexture();
         init();
     }
 
-#ifdef OPENGL
-    LImage::LImage(const unsigned char* bytes, size_t size)
-    {
-        //if (!lazy)
-            //texture = resManager.loadTexture(bytes,size);
-        //else
-        {
-            texturesBytes = new unsigned char[size];
-            memcpy(texturesBytes, bytes, size);
-            texturesBytesSize = size;
-            //init();
-        }
-    }
-#endif
-
-    void LImage::bindTexture(const char* path, int desiredChannel)
+    void LImage::bindDiffuse(const char* path)
     {
         turnOnTexture();
         texturePath = path;
-        texture = resManager.loadTexture(path,mipLevels);
+        //textures = resManager.loadTexture(path,mipLevels);
     }
 
-    void LImage::bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
-    {
-        turnOnTexture();
-        texture = resManager.loadTexture(bytes,size, name, mipLevels, desiredChannel);
-    }
+    //void LImage::bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
+    //{
+    //    turnOnTexture();
+    //    texture = resManager.loadTexture(bytes,size, name, mipLevels);
+    //}
 
     void LImage::turnOffTexture()
     {
@@ -70,17 +64,17 @@ namespace LGraphics
     void LImage::init()
     {
         if (texturePath.size())
-            texture = resManager.loadTexture(texturePath.data(),mipLevels);
-#ifdef OPENGL
-        else 
-            texture = resManager.loadTexture(texturesBytes, texturesBytesSize);
-#endif
+            textures = resManager.loadTexture(texturePath.data(),mipLevels);
+        //else if (imageType == 0)
+        //    texture = resManager.loadTexture(texturesBytes, texturesBytesSize);
     }
 
     LImage::~LImage()
     {
-#ifdef OPENGL
-        if (texturesBytes) delete[] texturesBytes;
-#endif
+        //if (imageType == 1)
+        //{
+        //    if (texturesBytes) delete[] texturesBytes;
+        //    if (texture) delete texture;
+        //}
     }
 }

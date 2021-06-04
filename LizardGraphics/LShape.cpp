@@ -8,7 +8,8 @@ namespace LGraphics
     void LShape::color(const glm::vec3 val)
     {
         color_ = val;
-        updateUniforms();
+        if (app->getAppInfo().api == L_VULKAN)
+            updateUniforms();
     }
 
     void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
@@ -94,18 +95,28 @@ namespace LGraphics
         if (path) turnOffColor();
     }
 
-#ifdef OPENGL
-    LShape::LShape(LApp* app, const unsigned char* bytes, size_t size)
-        : LWidget(app, bytes, size)
-    {
-        changed = true;
-        turnOffColor();
-    }
-#endif
-
     void LShape::setBuffer(LBuffer* buffer)
     {
         this->buffer = buffer;
+    }
+
+    void LShape::refreshModel()
+    {
+        model = calculateModelMatrix();
+    }
+
+    glm::mat4 LGraphics::LShape::calculateModelMatrix() const
+    {
+#if _DEBUG
+#include "../Optimized/optimized.h"
+        return _calculateModelMatrix(move_, rotate_, scale_);
+#else
+        glm::mat4 model_ = glm::mat4(1.0f);
+        model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
+        model_ *= rotate_;
+        model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
+        return model_;
+#endif
     }
 
     glm::vec3 LShape::getMove() const

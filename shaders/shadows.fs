@@ -1,33 +1,37 @@
-#version 330 core
+#version 430 core
+
 out vec4 color;
 
-struct Material {
+struct Material 
+{
     sampler2D diffuse;
     sampler2D specular;
     float shininess;
 }; 
 
-struct DirLight {
+struct DirLight 
+{
     vec3 direction;
-	
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
 
-struct PointLight {
+struct PointLight 
+{
     vec3 position;
     
     float constant;
     float linear;
     float quadratic;
-	
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
 
-struct SpotLight {
+struct SpotLight 
+{
     vec3 position;
     vec3 direction;
     float cutOff;
@@ -47,28 +51,21 @@ in vec3 FragPos;
 in vec2 TexCoords;
 in vec4 FragPosLightSpace;
 
-//uniform bool LIGHT;
-
-//uniform bool COLOR_R;
-//uniform bool COLOR_GB;
-
-//uniform bool POINT_LIGHT_1;
-//uniform bool POINT_LIGHT_2;
-//uniform bool DIR_LIGHT;
-//uniform bool SPOT_LIGHT;
-//uniform int NR_POINT_LIGHTS;
+in mat4 model;
+uniform sampler2D diffuseMap;
+uniform sampler2D shadowMap;
 
 uniform vec3 viewPos;
-//uniform DirLight dirLight;
-//uniform PointLight pointLights[4];
-//uniform SpotLight spotLight;
-//uniform Material material;
-
-uniform sampler2D ourTexture;
-uniform sampler2D shadowMap;
-uniform vec4 color_;
 uniform vec3 lightPos;
-uniform bool sampleTexture;
+uniform vec3 dirPos;
+
+uniform ivec2 screenSize;
+//uniform int objId;
+
+//layout(std430, binding = 3) buffer Test
+//{
+//    int data_SSBO[];
+//};
 
 // function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -86,9 +83,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
-    vec3 normal = normalize(vec3(0.0f,0.0f,1.0f));
     vec3 lightDir = normalize(lightPos - FragPos);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     //float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
@@ -111,60 +107,23 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     return shadow;
 }
 
-void main()
-{    
-
-    DirLight dirLight;
-    dirLight.ambient = vec3(0.5f,0.5f,0.5f);
-    dirLight.diffuse = vec3(0.7f,0.7f,0.7f);
-    dirLight.specular = vec3(0.3f,0.3f,0.3f);
-    dirLight.direction = vec3(0.5f,0.0f,-1.0f);
-    // properties
-    vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
-
-    PointLight pointLight;
-    pointLight.position = lightPos;
-        
-    pointLight.constant = 0.7f;
-    pointLight.linear = 0.22f;
-    pointLight.quadratic = 0.04f;
-    	
-    pointLight.ambient = dirLight.ambient * vec3(1.2f, 1.1f, 1);
-    pointLight.diffuse = dirLight.diffuse * vec3(1.2f, 1.1f, 1);
-    pointLight.specular = dirLight.specular * vec3(1.2f, 1.1f, 1);
-     
-    vec3 result;
-
-    //result += CalcPointLight(pointLight, norm, FragPos, viewDir);
-
-    //pointLight.position.y += 12.0f;
-    //pointLight.position.z = 0;
-
-    result += CalcPointLight(pointLight, norm, FragPos, viewDir);
-   
-    color = vec4(result,1.0f)* texture(ourTexture, TexCoords);
-
-    if (color.a - 0.1f < 0) discard;
-
-}
-
 // calculates the color when using a directional light.
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
-    vec3 lightDir = normalize(-light.direction);
+    vec3 lightDir = light.direction;
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
+    //vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = max(dot(viewDir, reflectDir), 0.0);
-    //float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // combine results
     vec3 ambient = light.ambient; //* vec3(texture(material.diffuse, TexCoords));
-    vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec; //* vec3(texture(material.specular, TexCoords));
-    return (ambient + diffuse + specular);
-    //return vec3(0.0f,0.0f,0.0f);
+    //float shadow = 0.0f;
+    float shadow = ShadowCalculation(FragPosLightSpace); 
+    return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 // calculates the color when using a point light.
@@ -188,4 +147,46 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     specular *= attenuation;
     float shadow = ShadowCalculation(FragPosLightSpace); 
     return (ambient + (1.0 - shadow) * (diffuse + specular));
+}
+
+void main()
+{    
+    //if (objId == -1)
+    //    discard;
+    //data_SSBO[screenSize.x * int(gl_FragCoord.y) + int(gl_FragCoord.x)] = objId;
+    const bool lighting = true;
+    vec3 result = vec3(1.0f);
+    if (lighting)
+    {
+        result = vec3(0.0f);
+        vec3 viewDir = normalize(viewPos - FragPos);
+    
+        DirLight dirLight;
+        dirLight.ambient = vec3(0.5f,0.5f,0.5f);
+        dirLight.diffuse = vec3(0.7f,0.7f,0.7f);
+        dirLight.specular = vec3(0.3f,0.3f,0.3f);
+        dirLight.direction = normalize(lightPos - dirPos);
+    
+        PointLight pointLight;
+        pointLight.position = lightPos;
+            
+        pointLight.constant = 0.7f;
+        pointLight.linear = 0.22f;
+        pointLight.quadratic = 0.04f;
+            
+        pointLight.ambient = dirLight.ambient * vec3(1.2f, 1.1f, 1);
+        pointLight.diffuse = dirLight.diffuse * vec3(1.2f, 1.1f, 1);
+        pointLight.specular = dirLight.specular * vec3(1.2f, 1.1f, 1);
+    
+        //result += CalcPointLight(pointLight, norm, FragPos, viewDir);
+    
+        //pointLight.position.y += 12.0f;
+        //pointLight.position.z = 0;
+        result += CalcDirLight(dirLight, Normal, viewDir);
+        //result += CalcPointLight(pointLight, Normal, FragPos, viewDir);
+    }
+
+    color = vec4(result,1.0f) * texture(diffuseMap, TexCoords);
+    if (color.a - 0.1f < 0) discard;
+
 }

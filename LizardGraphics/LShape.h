@@ -92,6 +92,9 @@ namespace LGraphics
         glm::vec3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         glm::vec3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         glm::vec3 getMove() const override;   ///< Возвращает расположение виджета.
+        const LBuffer* getBuffer() const { return buffer; }
+
+        const glm::mat4& getModelMatrix() const { return model; }
 
         void turnOffColor() override;
 
@@ -119,7 +122,7 @@ namespace LGraphics
 
         void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
 
-        glm::vec3 scale_ = glm::vec3(0.5f, 0.5f, 1.0f);  ///< Вектор размеров виджета.
+        glm::vec3 scale_ = glm::vec3(0.5f, 0.5f, 0.5f);  ///< Вектор размеров виджета.
         glm::vec3 move_ = glm::vec3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
         glm::vec3 color_ = glm::vec3(0.0f, 0.0f, 0.0f);  ///< Вектор цвета виджета.
 
@@ -129,7 +132,14 @@ namespace LGraphics
 
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 
-        LBuffer* buffer = nullptr; ///< Координатный буфер (вершини, индексы, текстурные координаты).
+        LBuffer* buffer = nullptr; ///< Координатный буфер (вершины, индексы, текстурные координаты).
+
+    protected:
+
+        void refreshModel();
+        glm::mat4 calculateModelMatrix() const;
+        glm::mat4 model;
+        glm::mat4 projection;
     };
 }
 

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 
 #define VMA_IMPLEMENTATION
+#define VKB_VALIDATION_LAYERS
 #include "LApp.h"
 #include "LRectangleBuffer.h"
 #include "LMultiWRectangle.h"
@@ -10,27 +11,22 @@
 #include "CodeGen.h"
 #include "../codegen.h"
 #endif
-#include "LLogger.h"
 #include "LResourceManager.h"
+#include "GLFW/glfw3.h"
+#include "LCubeBuffer.h"
+#include "LSkyBox.h"
+#include "LRectangleMirror.h"
 
-bool initialized_ = false;
 namespace LGraphics
 {
     LAppCreateInfo LApp::info;
-#ifdef OPENGL
-    LApp::LApp()
-    {
-        init();
-    }
-#endif
 
-#ifdef VULKAN
     LApp::LApp(const LAppCreateInfo& info)
     {
         LOG_CALL
         initApp_(info);
+        cubeInstantPool.setApp(this);
     }
-#endif
 
     void LApp::initApp_(const LAppCreateInfo& info)
     {
@@ -40,21 +36,11 @@ namespace LGraphics
             this->info = info;
             if (!info.logFlags)
                 this->info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
-            /*if (!info.materials.size())
-                this->info.materials.push_back(
-                    Material
-                    {
-                        {1.0f,1.0f,1.0f},
-                        {1.0f,1.0f,1.0f},
-                        {1.0f,1.0f,1.0f},
-                        1.0f
-                    }
-            );*/
             setupLG();
         }
         __except (EXCEPTION_EXECUTE_HANDLER)
         {
-            LLogger::states = info.logFlags;
+            LLogger::setFlags(info.logFlags);
             if (info.logFlags & ASYNC_LOG)
             {
                 if (!LAsyncLogger::isStarted())
@@ -82,15 +68,41 @@ namespace LGraphics
         releaseResources();
     }
 
+    void LApp::drawScene()
+    {
+        cubeInstantPool.draw();
+        //if (primitives.size())
+        //    for (size_t i = 0; i < primitives.size(); ++i)
+        //        primitives[i]->draw();
+        if (!drawingInShadow)
+        {
+            glDepthFunc(GL_LEQUAL);
+            if(skybox)
+                skybox->draw();
+            glDepthFunc(GL_LESS);
+        }
+    }
+
     void LApp::loop_()
     {
         LOG_CALL
         try
         {
+            const size_t screenSize = info.wndWidth * info.wndHeight * sizeof(int);
+            if (info.redactorMode)
+            {
+                glGenBuffers(1, &ssbo);
+                objectsOnScreen = new int[screenSize / sizeof(int)];
+                glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+                glBufferData(GL_SHADER_STORAGE_BUFFER, screenSize, objectsOnScreen, GL_DYNAMIC_COPY);
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
+            }
+            cubeInstantPool.initPool();
+            //buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
+            //cubeInstantPool.initPool();
+
             while (!glfwWindowShouldClose(window_))
             {
-#ifdef VULKAN
-#endif
                 refreshCamera();
                 glfwPollEvents();
 
@@ -100,12 +112,12 @@ namespace LGraphics
                 while (toDelete.size())
                 {
                     auto obj = toDelete.top();
-                    if (obj.first->arrayIndex != getModels().size() + getRectangles().size() - 1);
+                    if (obj.first->arrayIndex != getModels().size() + getPrimitives().size() - 1);
                     indexGaps.push_back(obj.first->arrayIndex);
                     if (obj.second == L_MODEL)
                         deleteWidget(obj.first, models);
                     else
-                        deleteWidget(obj.first, rectangles);
+                        deleteWidget(obj.first, primitives);
                     toDelete.pop();
                 }
 
@@ -114,82 +126,94 @@ namespace LGraphics
                     auto obj = toCreate.top();
                     if (obj.second == L_MODEL)
                         addObject(obj.first, models);
-                    else if (obj.second == L_RECTANGLE)
-                        addObject(obj.first, rectangles);
+                    else if (obj.second == L_PRIMITIVE)
+                        addObject(obj.first, primitives);
                     if (indexGaps.size())
                     {
                         obj.first->arrayIndex = indexGaps.front();
                         indexGaps.pop_front();
                     }
                     else
-                        obj.first->arrayIndex = getModels().size() + getRectangles().size() + 1;
+                        obj.first->arrayIndex = getModels().size() + getPrimitives().size() + 1;
                     toCreate.pop();
                 }
 
-                // Resize swap chain?
-                if (g_SwapChainRebuild)
-                {
-                    int width, height;
-                    glfwGetFramebufferSize(window_, &width, &height);
-                    if (width > 0 && height > 0)
-                    {
-                        ImGui_ImplVulkan_SetMinImageCount(g_MinImageCount);
-                        ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, &g_MainWindowData, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
-                        g_MainWindowData.FrameIndex = 0;
-                        g_SwapChainRebuild = false;
-                    }
-                }
-
-                // Start the Dear ImGui frame
-                ImGui_ImplVulkan_NewFrame();
-                ImGui_ImplGlfw_NewFrame();
-                ImGui::NewFrame();
-
-                imgui();
-
-                // Rendering
-                ImGui::Render();
-                ImDrawData* draw_data = ImGui::GetDrawData();
-                const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
-                if (!is_minimized)
-                {
-                    memcpy(&wd->ClearValue.color.float32[0], &clear_color, 4 * sizeof(float));
-                    FrameRender(wd, draw_data);
-                    FramePresent(wd);
-                }
                 beforeDrawingFunc();
 
 #if LG_MULTITHREAD
                 openGlDrawing.lock();
 #endif
 
-#ifdef OPENGL
-                glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-                //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                if (info.api == L_VULKAN)
+                {
+                    if (g_SwapChainRebuild)
+                    {
+                        int width, height;
+                        glfwGetFramebufferSize(window_, &width, &height);
+                        if (width > 0 && height > 0)
+                        {
+                            ImGui_ImplVulkan_SetMinImageCount(g_MinImageCount);
+                            ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, &g_MainWindowData, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
+                            g_MainWindowData.FrameIndex = 0;
+                            g_SwapChainRebuild = false;
+                        }
+                    }
 
-                // рисуем в карту теней
-                glViewport(0, 0, shadowHeight, shadowWidth);
-                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-                glClear(GL_DEPTH_BUFFER_BIT);
+                    ImGui_ImplVulkan_NewFrame();
+                }
+                else if (info.api == L_OPENGL)
+                    ImGui_ImplOpenGL3_NewFrame();
 
-                glEnable(GL_DEPTH_TEST);
-#endif
+                ImGui_ImplGlfw_NewFrame();
+                ImGui::NewFrame();
+                imgui();
+                ImGui::Render();
+                if (info.api == L_VULKAN)
+                {
+                    // Rendering
+                    ImDrawData* draw_data = ImGui::GetDrawData();
+                    const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
+                    if (!is_minimized)
+                    {
+                        memcpy(&wd->ClearValue.color.float32[0], &clear_color, 4 * sizeof(float));
+                        FrameRender(wd, draw_data);
+                        FramePresent(wd);
+                    }
+                }
+                else if (info.api == L_OPENGL)
+                {
+                    if (info.redactorMode)
+                        std::fill(objectsOnScreen, objectsOnScreen + screenSize / sizeof(int), -1);
+                    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
+                    setLightSpaceMatrix();
+                    // рисуем в карту теней
+                    glEnable(GL_DEPTH_TEST);
+                    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    drawingInShadow = true;
+                    glViewport(0, 0, shadowWidth, shadowHeight);
 
-#ifdef OPENGL           
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                glViewport(0, 0, getWindowSize().x, getWindowSize().y);
+                    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+                    glClear(GL_DEPTH_BUFFER_BIT);
+                    drawScene();
+                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-                // рисуем сцену
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                glEnable(GL_DEPTH_TEST);
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, depthMap);
-                glActiveTexture(GL_TEXTURE0);
-#endif // OPENGL
+                    drawingInShadow = false;
+                    glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
+                    glViewport(0, 0, info.wndWidth, info.wndHeight);
 
-#ifdef OPENGL 
-                glDisable(GL_DEPTH_TEST);
-#endif
+                    // рисуем сцену
+                    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    drawScene();
+                    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+                    if (info.redactorMode)
+                    {
+                        buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
+                        memcpy(objectsOnScreen, buff, screenSize);
+                        glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+                    }
+                }
                 afterDrawingFunc();
                 glfwSwapBuffers(window_);
 
@@ -198,10 +222,14 @@ namespace LGraphics
                 std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
 #endif
             }
-#ifdef WIN32
+            if (info.redactorMode)
+            {
+                glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                delete[] objectsOnScreen;
+            }
+            //glDeleteFramebuffers(1, &fbo);
             if (info.saveObjects == L_TRUE)
                 CodeGen::generateCode("codegen.h", this, "app");
-#endif
         }
         catch (std::exception& err)
         {
@@ -216,6 +244,44 @@ namespace LGraphics
                 LSyncLogger::emergencyStop();
             std::terminate();
         }
+    }
+
+    void LApp::switchRendererTo(RenderingAPI api)
+    {
+        if (info.api == api)
+            return;
+
+        if (info.api == L_VULKAN)
+        {
+            releaseVulkanResources();
+            releaseGlfwResources();
+            info.api = api;
+            initOpenGL();
+        }
+        else if (info.api == L_OPENGL)
+        {
+            releaseOpenGLResources();
+            releaseGlfwResources();
+            info.api = api;
+            initVulkan();
+        }
+        setCursorEnabling(false);
+
+        updateShaders();
+        updateBuffers();
+        updateTextures();
+
+        for (auto& k : pressedKeys)
+            k.second = false;
+        afterSwitchingFunc();
+    }
+
+    LWidget* LApp::findByLID(int id)
+    {
+        for (auto& r : primitives)
+            if (r->getId() == id)
+                return r;
+        return nullptr;
     }
 
     void LApp::loop()
@@ -236,6 +302,31 @@ namespace LGraphics
         loop_();
 #endif
 
+    }
+
+    void LApp::updateShaders()
+    {
+        for (auto& p : primitives)
+            p->setShader(getStandartShader());
+        for (auto& m : models)
+            m->setShader(getStandartShader());
+    }
+
+    void LApp::updateBuffers()
+    {
+        //for (auto& p : primitives)
+        //    p->setBuffer(standartRectBuffer);
+        //for (auto& m : models)
+        //    m->setShader(getStandartShader());
+    }
+
+    void LApp::updateTextures()
+    {
+        //for (auto& r : rectangles)
+        //{
+        //    size_t dummy;
+        //    r->setTexture((VkImageView)LResourceManager::loadTexture(r->getTexturePath().data(),dummy));
+        //}
     }
 
     void LApp::emergencyStop(std::exception& exception)
@@ -364,9 +455,9 @@ namespace LGraphics
         //        dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
     }
 
-    LShaders::Shader * LApp::getStandartWorldObjShader() const
+    LShaders::Shader* LApp::getStandartShader() const
     {
-        return baseShader;
+        return info.api == L_VULKAN? lightShader.get() : openGLLightShader.get();
     }
 
     bool LApp::isPressed(int key)
@@ -431,7 +522,7 @@ namespace LGraphics
         const float near_plane = 0.1f, far_plane = 35.0f;
         const float d = 12.0f;
         glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f)/*!!!*/, glm::vec3(0.0, 1.0, 0.0));
+        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(7.5f,0.0f,7.5f)/*!!!*/, glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
     }
 
@@ -485,7 +576,7 @@ namespace LGraphics
 
     void LApp::initErrorRecovering()
     {
-        LLogger::states = info.logFlags;
+        LLogger::setFlags(info.logFlags);
         if (info.logFlags & ASYNC_LOG)
         {
             if (!LAsyncLogger::isStarted())
@@ -516,30 +607,14 @@ namespace LGraphics
     void LApp::initLEngine()
     {
         LOG_CALL
-        LLogger::initErrors(this);
+        LLogger::initErrors(info.logFlags);
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
-            
-        standartRectBuffer = new LRectangleBuffer(this);
-#ifdef OPENGL
-        standartRectBuffer = new LRectangleBuffer();
-        standartInterfaceshader = new LShaders::Shader(LShaders::interface_v, LShaders::interface_f);
-        standartWorldObjShader = new LShaders::Shader(LShaders::world_v, LShaders::interface_f);
-        checkMarkShader = new LShaders::Shader(LShaders::interface_v, LShaders::checkMark_f);
-        colorBarShader = new LShaders::Shader(LShaders::interface_v, LShaders::colorBar_f);
-        experimentalLightShader = new LShaders::Shader("light_v.vs", "light_f.fs", false);
-        shadowMap = new LShaders::Shader("shadowMap.vs", "shadowMap.fs", false);
-        defaultShader = new LShaders::Shader("shadows.vs", "shadows.fs", false);
-#endif OPENGL
-        //multi_shadowMap = new LShaders::Shader("multi_shadowMap.vs", "multi_shadowMap.fs", false);
-        //multi_defaultShader = new LShaders::Shader("multi_shadows.vs", "multi_shadows.fs", false);
-        //textRenderer = new LTextRender(this);
 
         lwRectPool.setCreationCallback([&]()
         {
             auto lwRect = new LWRectangle(this);
-            removeWidget(lwRect, rectangles);
-            //getNonInterfaceObjects().pop_back();
+            removeWidget(lwRect, primitives);
             return lwRect;
         });
 
@@ -554,33 +629,7 @@ namespace LGraphics
         if (info.loadObjects)
             genWidgets(this);
 #endif
-
-#ifdef OPENGL
-        //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-        //unsigned int depthMapFBO;
-        glGenFramebuffers(1, &depthMapFBO);
-        // create depth texture
-        //unsigned int depthMap;
-        glGenTextures(1, &depthMap);
-        glBindTexture(GL_TEXTURE_2D, depthMap);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        float borderColor_[] = { borderColor.x,borderColor.y,borderColor.z,borderColor.w };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
-        // attach depth texture as FBO's depth buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif // OPENGL
-
-//#ifdef VULKAN
-//#endif // VULKAN
-
+        //cubeInstantPool.initPool();
     }
 
 #ifdef OPENGL
@@ -672,20 +721,110 @@ namespace LGraphics
         glfwSetScrollCallback(window_, scrollCallback);
     }
 
-#ifdef VULKAN
-    void LApp::initRenderer()
+    void LApp::initOpenGL()
     {
         LOG_CALL
-
-#ifndef NDEBUG
-#ifndef VULKAN
         glfwSetErrorCallback(glfw_error_callback);
+        if (!glfwInit())
+            throw std::runtime_error("can't init glfw.");
+        //info.poolSize = MAXSIZE_T;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //                                              Window creation                                              //
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        if (!info.wndHeight)
+        {
+            info.wndWidth = mode->width;
+            info.wndHeight = mode->height;
+        }
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        glfwWindowHint(GLFW_SAMPLES, info.MSAA);
+#ifndef NDEBUG
+        window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", NULL, NULL);
+        //width = info.wndWidth;
+        //height = info.wndHeight;
+#else
+        info.wndWidth = mode->width;
+        info.wndHeight = mode->height;
+
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        window_ = glfwCreateWindow(mode->width, mode->height, "Lizard Graphics", glfwGetPrimaryMonitor(), NULL);
 #endif
-#endif
+        const char* glsl_version = "#version 330";
+
+        glfwMakeContextCurrent(window_);
+
+        setWindowCallbacks();
+        glfwGetFramebufferSize(window_, (int*)(&info.wndWidth), (int*)(&info.wndHeight));
+
+        glewExperimental = GL_TRUE;
+        glewInit();
+        if (!glewIsSupported("GL_ARB_bindless_texture"))
+            throw std::runtime_error("can't load GL_ARB_bindless_texture!");
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glEnable(GL_MULTISAMPLE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        if (info.vsync == L_TRUE)
+           glfwSwapInterval(1);
+
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        ImGui::StyleColorsDark();
+
+        ImGui_ImplGlfw_InitForOpenGL(window_, true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
+        if (info.api == L_OPENGL)
+        {
+            openGLLightShader.reset(new LShaders::OpenGLShader(this, "shaders//shadows.vs", "shaders//shadows.fs"));
+            //openGLLightShader.reset(new LShaders::OpenGLShader(this, "shaders//base.vs", "shaders//base.fs"));
+            skyBoxShader.reset(new LShaders::OpenGLShader(this, "shaders//skybox.vs", "shaders//skybox.fs"));
+            skyBoxMirrorShader.reset(new LShaders::OpenGLShader(this, "shaders//baseMirror.vs", "shaders//baseMirror.fs"));
+            shadowMapShader.reset(new LShaders::OpenGLShader(this, "shaders//shadowMap.vs", "shaders//shadowMap.fs"));
+        }
+        standartRectBuffer = new LRectangleBuffer(this);
+        standartSkyBoxBuffer = new LSkyBoxBuffer(this);
+        standartCubeBuffer = new LCubeBuffer(this);
+        glViewport(0, 0, info.wndWidth, info.wndHeight);
+
+        glGenFramebuffers(1, &depthMapFBO);
+
+        glGenTextures(1, &depthMap);
+        glBindTexture(GL_TEXTURE_2D, depthMap);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        float borderColor_[] = { borderColor.x,borderColor.y,borderColor.z,borderColor.w };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void LApp::initVulkan()
+    {
+        LOG_CALL
+        glfwSetErrorCallback(glfw_error_callback_Vk);
         if (!glfwInit())
             throw std::runtime_error("can't init glfw!");
 
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);   
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if (!info.wndHeight)
         {
@@ -755,7 +894,6 @@ namespace LGraphics
         //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
         //IM_ASSERT(font != NULL);
 
-       
         // Upload Fonts
         {
             // Use any command queue
@@ -789,6 +927,16 @@ namespace LGraphics
         // Our statel
         IMGUI_CHECKVERSION();
     }
+
+#ifdef VULKAN
+    void LApp::initRenderer()
+    {
+        LOG_CALL
+        if (info.api == L_OPENGL)
+           initOpenGL();
+        else if (info.api == L_VULKAN)
+           initVulkan();
+    }
 #endif
 
     void LApp::checkEvents()
@@ -796,12 +944,10 @@ namespace LGraphics
         LOG_CALL
     }
 
-    void LApp::releaseResources()
+    void LApp::releaseVulkanResources()
     {
         LOG_CALL
-#ifdef VULKAN
-
-        auto imCount = wd->ImageCount;
+            auto imCount = wd->ImageCount;
 
         vkDeviceWaitIdle(g_Device);
 
@@ -816,8 +962,6 @@ namespace LGraphics
         for (size_t i = 0; i < imCount; ++i)
             vmaUnmapMemory(allocator, uniformBuffersMemory[i]);
 
-        delete baseShader;
-
         for (size_t i = 0; i < imCount; i++)
             vmaDestroyBuffer(allocator, uniformBuffers[i], uniformBuffersMemory[i]);
 
@@ -828,14 +972,16 @@ namespace LGraphics
             vkDestroySampler(g_Device, textureSamplers[i], nullptr);
 
         auto resourseManager = LImage::resManager;
-        
+
         for (auto it = resourseManager.textures.begin(); it != resourseManager.textures.end(); it++)
         {
-            vkDestroyImageView(g_Device, std::get<0>(*(it->second)), nullptr);
-            vmaDestroyImage(allocator, std::get<1>(*(it->second)), std::get<2>(*(it->second)));
+            //vkDestroyImageView(g_Device, (VkImageView)std::get<0>(*(it->second)), nullptr);
+            //vmaDestroyImage(allocator, std::get<1>(*(it->second)), std::get<2>(*(it->second)));
 
-            delete it->second;
+            //delete it->second;
         }
+
+        resourseManager.textures.clear();
 
         for (size_t i = 0; i < swapChainImageViews.size(); i++)
         {
@@ -855,48 +1001,92 @@ namespace LGraphics
 
         delete standartRectBuffer;
 
-        for (auto w : rectangles)
-            delete w;
-        rectangles.clear();
+        //for (auto w : rectangles)
+        //    delete w;
+        //rectangles.clear();
 
         for (auto& m : models)
         {
             LModelBuffer* b = (LModelBuffer*)m->buffer;
             vmaDestroyBuffer(allocator, b->vertexBuffer, b->vertexBufferMemory);
-            for (size_t i = 0; i < b->indexBuffer.size();++i)
+            for (size_t i = 0; i < b->indexBuffer.size(); ++i)
                 vmaDestroyBuffer(allocator, b->indexBuffer[i], b->indexBufferMemory[i]);
-            delete m;
+            //delete m;
         }
-        models.clear();
+        //models.clear();
 
         for (auto it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
         {
-            delete it->second;
+            //delete it->second;
         }
 
         vkDestroyCommandPool(g_Device, commandPool, nullptr);
         vmaDestroyAllocator(allocator);
         vkDestroyDevice(g_Device, nullptr);
 
-        if (enableValidationLayers) 
+        if (enableValidationLayers)
             DestroyDebugUtilsMessengerEXT(g_Instance, debugMessenger, nullptr);
 
         vkDestroyInstance(g_Instance, nullptr);
-#endif
+    }
+    void LApp::releaseOpenGLResources()
+    {
+        LOG_CALL
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+        //for (auto& t : LResourceManager::textures)
+        //{
+        //    auto diffuse = ((LResourceManager::OpenGLImage*)t.second.textures)->diffuse.texture;
+        //    auto normals = ((LResourceManager::OpenGLImage*)t.second.textures)->normals.texture;
 
+        //    if (diffuse)
+        //    {
+        //        glDeleteTextures(1, diffuse);
+        //        delete diffuse;
+        //    }
+        //    if (normals)
+        //    {
+        //        glDeleteTextures(1, normals);
+        //        delete normals;
+        //    }
+        //}
+        LResourceManager::textures.clear();
+        delete standartRectBuffer;
+        delete standartCubeBuffer;
+    }
+
+    void LApp::releaseGlfwResources()
+    {
         glfwDestroyWindow(window_);
         glfwTerminate();
+    }
 
-#ifdef OPENGL
-        delete standartInterfaceshader;
-        delete standartWorldObjShader;
-        delete checkMarkShader;
-        LError::releaseResources();
-#endif OPENGL
+    void LApp::releaseLGResources()
+    {
+        LOG_CALL 
+    }
 
+    void LApp::releaseResources()
+    {
+        LOG_CALL
+        releaseLGResources();
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::stop();
+        if (info.api == L_VULKAN)
+            releaseVulkanResources();
+        else if (info.api == L_OPENGL)
+            releaseOpenGLResources();
+
+        for (auto p : primitives)
+            delete p;
+        primitives.clear();
+
+        for (auto& m : models)
+            delete m;
+        models.clear();
     }
+
 
     void LApp::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
@@ -907,9 +1097,6 @@ namespace LGraphics
     void LApp::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     {
         LOG_CALL
-        if (isCursorEnabled())
-            return;
-
         userCursorCallback(window, xpos, ypos);
         mouseCoords = { (float)xpos,(float)ypos };
     }
@@ -1007,14 +1194,17 @@ namespace LGraphics
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
         extensions.push_back("VK_KHR_android_surface");
 #endif
+        //extensions.push_back
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
-        //VkValidationFeatureEnableEXT enables[] = { VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT };
-        //VkValidationFeaturesEXT features = {};
-        //features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-        //features.enabledValidationFeatureCount = 1;
-        //features.pEnabledValidationFeatures = enables;
+        VkValidationFeatureEnableEXT enabled[] = { VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT };
+        VkValidationFeaturesEXT features = { VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT };
+        features.disabledValidationFeatureCount = 0;
+        features.enabledValidationFeatureCount = 1;
+        features.pDisabledValidationFeatures = nullptr;
+        features.pEnabledValidationFeatures = enabled;
+        features.pNext = createInfo.pNext;
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
         //debugCreateInfo.pNext = &features;
@@ -1023,9 +1213,9 @@ namespace LGraphics
         {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
-
+            createInfo.enabledLayerCount = 1;
+            createInfo.pNext = &features;
             populateDebugMessengerCreateInfo(debugCreateInfo);
-            //createInfo.pNext = &features;
         }
         else 
         {
@@ -1063,7 +1253,7 @@ namespace LGraphics
 
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(g_PhysicalDevice, &deviceProperties);
-        PRINTLN(LOG_HEADER,deviceProperties.deviceName);
+        PRINTLN(deviceProperties.deviceName);
     }
 
     void LApp::createLogicalDevice()
@@ -1115,32 +1305,11 @@ namespace LGraphics
         vkGetDeviceQueue(g_Device, g_QueueFamily, 0, &g_Queue);
     }
 
-    void LApp::createSurface()
-    {
-        LOG_CALL
-#ifdef VK_USE_PLATFORM_ANDROID_KHR
-        ANativeWindow* w;
-        VkAndroidSurfaceCreateInfoKHR createInfo
-{
-      .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
-      .pNext = nullptr,
-      .flags = 0,
-      .window = w, 
-};
-        if (!vkCreateAndroidSurfaceKHR(g_Instance, &createInfo, nullptr,
-            &surface))
-              throw std::runtime_error("failed to create window surface!");
-#else
-        if (glfwCreateWindowSurface(g_Instance, window_, nullptr, &surface) != VK_SUCCESS)
-            throw std::runtime_error("failed to create window surface!");
-#endif
-    }
-
     void LApp::createGraphicsPipeline()
     {
         LOG_CALL
-        baseShader = new LShaders::Shader("shaders//Vk_objV.spv", "shaders//Vk_objF.spv", this, false);
-        lightShader = new LShaders::Shader("shaders//Vk_litobjV.spv", "shaders//Vk_litobjF.spv", this, false);
+        //baseShader = new LShaders::Shader("shaders//Vk_objV.spv", "shaders//Vk_objF.spv", this, false);
+        lightShader.reset(new LShaders::VulkanShader(this,"shaders//Vk_litobjV.spv", "shaders//Vk_litobjF.spv"));
     }
 
     void LApp::createAllocator()
@@ -1211,9 +1380,8 @@ namespace LGraphics
         renderPassInfo.dependencyCount = 1;
         renderPassInfo.pDependencies = &dependency;
 
-        if (vkCreateRenderPass(g_Device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+        if (vkCreateRenderPass(g_Device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
             throw std::runtime_error("failed to create render pass!");
-        }
     }
 
     void LApp::createFramebuffers()
@@ -1237,9 +1405,8 @@ namespace LGraphics
             framebufferInfo.layers = 1;
             // framebufferInfo.flags = ;
 
-            if (vkCreateFramebuffer(g_Device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+            if (vkCreateFramebuffer(g_Device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS)
                 throw std::runtime_error("failed to create framebuffer!");
-            }
         }
     }
 
@@ -1253,9 +1420,8 @@ namespace LGraphics
         poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
         poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
-        if (vkCreateCommandPool(g_Device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+        if (vkCreateCommandPool(g_Device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
             throw std::runtime_error("failed to create graphics command pool!");
-        }
     }
 
     void LApp::createUniformBuffers()
@@ -1264,7 +1430,9 @@ namespace LGraphics
         uniformBuffers.resize(wd->ImageCount);
         uniformBuffersMemory.resize(wd->ImageCount);
 
-        size_t minUboAlignment = minUniformBufferOffsetAlignment;
+        const size_t minUboAlignment = minUniformBufferOffsetAlignment;
+        constexpr int materialSize = sizeof(int);
+
         dynamicAlignment = getPowerTwoAlign(sizeof(BaseVertexUBuffer));
 
         assert(dynamicAlignment > minUboAlignment && dynamicAlignment <= 256 && "error wrong alignment size");
@@ -1274,7 +1442,7 @@ namespace LGraphics
 
         for (size_t i = 0; i < wd->ImageCount; i++)
             createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+                VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
     }
 
     void LApp::createDescriptorPool()
@@ -1283,8 +1451,10 @@ namespace LGraphics
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         poolSizes[0].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
+        //poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        //poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize *wd->ImageCount);
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -1373,6 +1543,11 @@ namespace LGraphics
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(BaseVertexUBuffer);
 
+            VkDescriptorBufferInfo bufferInfo2{};
+            bufferInfo2.buffer = uniformBuffers[j];
+            bufferInfo2.offset = bufferInfo.range;
+            bufferInfo2.range = sizeof(int);
+
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             imageInfo.imageView = dummyTexture;
@@ -1387,6 +1562,14 @@ namespace LGraphics
             descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+            //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            //descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
+            //descriptorWrites[1].dstBinding = 1;
+            //descriptorWrites[1].dstArrayElement = 0;
+            //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+            //descriptorWrites[1].descriptorCount = 1;
+            //descriptorWrites[1].pBufferInfo = &bufferInfo2;
 
             descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
@@ -1408,7 +1591,14 @@ namespace LGraphics
             vertexLayoutBinding.descriptorCount = 1;
             vertexLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
             vertexLayoutBinding.pImmutableSamplers = nullptr;
-            vertexLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+            vertexLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+            //VkDescriptorSetLayoutBinding materialLayoutBinding{};
+            //materialLayoutBinding.binding = 1;
+            //materialLayoutBinding.descriptorCount = 1;
+            //materialLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+            //materialLayoutBinding.pImmutableSamplers = nullptr;
+            //materialLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
             VkDescriptorSetLayoutBinding samplerLayoutBinding{};
             samplerLayoutBinding.binding = 1;
@@ -1417,7 +1607,8 @@ namespace LGraphics
             samplerLayoutBinding.pImmutableSamplers = nullptr;
             samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-            std::array<VkDescriptorSetLayoutBinding, 2> bindings = { vertexLayoutBinding, /*fragmentLayoutBinding,*/ samplerLayoutBinding };
+            std::array<VkDescriptorSetLayoutBinding, 2> bindings = 
+            { vertexLayoutBinding, samplerLayoutBinding };
             VkDescriptorSetLayoutCreateInfo layoutInfo{};
             layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
             layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
@@ -1818,34 +2009,54 @@ namespace LGraphics
     {
         LOG_CALL
         for (size_t i = 0; i < wd->ImageCount; ++i)
-            //vmaMap
             vmaMapMemory(allocator, uniformBuffersMemory[i], &uniformsMem[i]);
-            //vkMapMemory(g_Device, uniformBuffersMemory[i], 0, info.poolSize * dynamicAlignment, 0, &uniformsMem[i]);
     }
 
     void LApp::updateUniformBuffer(uint32_t currentImage, uint32_t objectNum, LWidget* w)
     {
         LOG_CALL
-        if (w->texture)
-        {
-            updateTexture(w->texture, currentImage, objectNum,w->getMipLevels());
-            if (w->changed <= LWidget::ONE_BUFFER_TO_CHANGE)
-                w->texture = VkImageView();
-        }
+        //if (info.api == L_VULKAN)
+        //{
+        //    if (w->textures)
+        //    {
+        //        VkImageView texture = (VkImageView)w->((LResourceManager::VulkanImage*)textures.get());
+        //        updateTexture(texture, currentImage, objectNum, w->getMipLevels());
+        //        if (w->changed <= LWidget::ONE_BUFFER_TO_CHANGE)
+        //            w->texture = VkImageView();
+        //    }
 
-        if (w->changed == LWidget::UNMODIFIED)
-            return;
+        //    if (w->changed == LWidget::UNMODIFIED)
+        //        return;
 
-        w->changed--;
-        glm::mat4* modelMat = (glm::mat4*)(((uint64_t)testStructV.model + (objectNum * dynamicAlignment)));
+        //    w->changed--;
+        //    glm::mat4* modelMat = (glm::mat4*)(((char*)testStructV.model + (objectNum * dynamicAlignment)));
 
-        *modelMat = ((LWRectangle*)w)->calculateModelMatrix();
-        glm::vec4* color = (glm::vec4*)((uint64_t)modelMat + sizeof(glm::mat4));
-        auto col = w->getColor();
-        *color = { col.x, col.y, col.z, w->getTransparency() };
+        //    *modelMat = ((LWRectangle*)w)->calculateModelMatrix();
+        //    glm::vec4* color = (glm::vec4*)((char*)modelMat + sizeof(glm::mat4));
+        //    const auto col = w->getColor();
+        //    *color = { col.x, col.y, col.z, w->getTransparency() };
+        //    int* materialNum = (int*)((char*)color + sizeof(glm::vec4));
+        //    *materialNum = w->getMaterial();
 
-        uint64_t offset = objectNum * dynamicAlignment;
-        memcpy(((char*) uniformsMem[currentImage]) + offset, modelMat, sizeof(BaseVertexUBuffer));
+        //    const int material = w->getMaterial();
+
+        //    const auto offset = (char*)uniformsMem[currentImage] + objectNum * dynamicAlignment;
+        //    //const auto materialOffset = offset + sizeof(BaseVertexUBuffer);
+        //    memcpy(offset, modelMat, sizeof(BaseVertexUBuffer));
+        //    //memcpy(materialOffset, &material, sizeof(int));
+        //}   
+
+//        else if (info.api == L_OPENGL)
+//        {
+//            auto shader = (LShaders::OpenGLShader*)w->getShader();
+//            const auto projView = getProjectionMatrix() * getViewMatrix();
+//            //        const float t = sqrt(3);
+////const glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
+////glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
+//   glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "model"), 1, GL_FALSE, glm::value_ptr(((LWRectangle*)w)->calculateModelMatrix()));
+//   glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "projView"), 1, GL_FALSE, glm::value_ptr(projView));
+////glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
+//        }
     }
 
     void LApp::updateTexture(VkImageView& view, uint32_t currentImage, uint32_t objectNum, size_t mipLevels)
@@ -1861,6 +2072,11 @@ namespace LGraphics
         imageInfo.imageView = view;
         imageInfo.sampler = textureSamplers[mipLevels-1];
 
+        VkDescriptorBufferInfo bufferInfo2{};
+        bufferInfo2.buffer = uniformBuffers[currentImage];
+        bufferInfo2.offset = bufferInfo.range;
+        bufferInfo2.range = sizeof(int);
+
         std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
         descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -1870,6 +2086,14 @@ namespace LGraphics
         descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         descriptorWrites[0].descriptorCount = 1;
         descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+        //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        //descriptorWrites[1].dstSet = descriptorSets[objectNum * wd->ImageCount + currentImage];
+        //descriptorWrites[1].dstBinding = 1;
+        //descriptorWrites[1].dstArrayElement = 0;
+        //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        //descriptorWrites[1].descriptorCount = 1;
+        //descriptorWrites[1].pBufferInfo = &bufferInfo2;
 
         descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrites[1].dstSet = descriptorSets[objectNum * wd->ImageCount + currentImage];
@@ -1887,9 +2111,10 @@ namespace LGraphics
         LOG_CALL
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | VK_DEBUG_REPORT_INFORMATION_BIT_EXT;
         createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
+        //createInfo.flags = VK_DEBUG_REPORT_INFORMATION_BIT_EXT;
     }
 
     void LApp::setupDebugMessenger()
@@ -1915,18 +2140,15 @@ namespace LGraphics
         std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
         extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME); 
         if (enableValidationLayers) 
-        {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-        }
-
+        //extensions.push_back
         return extensions;
     }
 
     VKAPI_ATTR VkBool32 VKAPI_CALL LApp::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT * pCallbackData, void * pUserData)
     {
         LOG_CALL
-        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
-
+        PRINTLN("validation layer: ",pCallbackData->pMessage, "\n");
         return VK_FALSE;
     }
 
@@ -2107,13 +2329,6 @@ namespace LGraphics
         createLogicalDevice();
         createAllocator();
 
-        //size_t size = 268435456;
-        //VkBuffer buffer;
-        //VmaAllocation alloc;
-        //createBuffer(size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        //    VK_MEMORY_PROPERTY_HOST_CACHED_BIT, buffer, alloc);
-
-
         glfwGetFramebufferSize(window_, (int*)(&info.wndWidth), (int*)(&info.wndHeight));
         SetupVulkanWindow(wd, surface, info.wndWidth, info.wndHeight);
 
@@ -2127,8 +2342,8 @@ namespace LGraphics
         createFramebuffers();
 
         LResourceManager::setApp(this);
-        size_t dummy;
-        dummyTexture = LResourceManager::loadTexture(notexture, notextureSize, "dummy", dummy);
+        //size_t dummy;
+        //dummyTexture = (VkImageView)LResourceManager::loadTexture(notexture, notextureSize, "dummy", dummy);
 
         for (size_t i = 1; i < possibleMipLevels+1; ++i)
             createTextureSampler(textureSamplers[i-1], i);
@@ -2137,6 +2352,7 @@ namespace LGraphics
 
         createDescriptorPool();
         createDescriptorSets();
+        standartRectBuffer = new LRectangleBuffer(this);
 
         {
             VkDescriptorPoolSize pool_sizes[] =
@@ -2196,6 +2412,27 @@ namespace LGraphics
         // Create SwapChain, RenderPass, Framebuffer, etc.
         IM_ASSERT(g_MinImageCount >= 2);
         ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
+    }
+
+    void LApp::createSurface()
+    {
+        LOG_CALL
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+            ANativeWindow* w;
+        VkAndroidSurfaceCreateInfoKHR createInfo
+        {
+              .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
+              .pNext = nullptr,
+              .flags = 0,
+              .window = w,
+        };
+        if (!vkCreateAndroidSurfaceKHR(g_Instance, &createInfo, nullptr,
+            &surface))
+            throw std::runtime_error("failed to create window surface!");
+#else
+            if (glfwCreateWindowSurface(g_Instance, window_, nullptr, &surface) != VK_SUCCESS)
+                throw std::runtime_error("failed to create window surface!");
+#endif
     }
     
 //    void LApp::CleanupVulkan()
@@ -2264,32 +2501,22 @@ namespace LGraphics
             vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
         }
 
-        auto viewProj = getProjectionMatrix() * getViewMatrix();
-        LApp::BaseShaderConstants baseShaderCnst
-        {
-            viewProj
-        };
+        const auto viewProj = getProjectionMatrix() * getViewMatrix();
 
-        LApp::LightShaderConstants lightShaderCnst
+        LApp::ShaderConstants shaderCnst
         {
             viewProj,
-            lightPos,
             cameraPos,
-            //temporary
-            {1.0f,1.0f,1.0f},
-            0.9f,
-            1.0f,
+            lightPos,
+            {0.9f,0.9f,0.9f},
+            {0.5f,0.5f,0.5f},
+            //info.lighting,
         };
 
-        if (rectangles.size())
+        if (primitives.size())
         {
-            auto obj = rectangles[0];
-            auto shader = obj->getShader();
-
-            LApp::BaseShaderConstants data
-            {
-                getProjectionMatrix()* getViewMatrix(),
-            };
+            auto obj = primitives[0];
+            auto shader = (LShaders::VulkanShader*)obj->getShader();
 
             VkBuffer vertexBuffers[] = { ((LWRectangle*)obj)->buffer->getVertBuffer() };
             VkDeviceSize offsets[] = { 0 };
@@ -2299,34 +2526,21 @@ namespace LGraphics
             vkCmdBindVertexBuffers(fd->CommandBuffer, 0, 1, vertexBuffers, offsets);
             vkCmdBindIndexBuffer(fd->CommandBuffer, ((LWRectangle*)obj)->buffer->getIndBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
-            if (info.lighting)
-            {
-                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
-                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::LightShaderConstants), &lightShaderCnst);
-            }
-            else
-                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
-                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &baseShaderCnst);
+            vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::ShaderConstants), &shaderCnst);
 
-            for (size_t i = 0; i < rectangles.size(); ++i)
-                rectangles[i]->draw(fd->CommandBuffer, wd->FrameIndex);
+            for (size_t i = 0; i < primitives.size(); ++i)
+                primitives[i]->draw(fd->CommandBuffer, wd->FrameIndex);
         }
 
         if (models.size())
         {
             auto obj = models[0];
-            auto shader = obj->getShader();
+            auto shader = (LShaders::VulkanShader*)obj->getShader();
 
             vkCmdBindPipeline(fd->CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
-
-            if (info.lighting)
-            {
-                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
-                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::LightShaderConstants), &lightShaderCnst);
-            }
-            else
-                vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
-                    VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::BaseShaderConstants), &baseShaderCnst);
+            vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
+                VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::ShaderConstants), &shaderCnst);
 
             for (size_t i = 0; i < models.size(); ++i)
                 models[i]->draw(fd->CommandBuffer, wd->FrameIndex);
@@ -2377,7 +2591,7 @@ namespace LGraphics
             return;
         }
         check_vk_result(err);
-        wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount; // Now we can use the next set of semaphores
+        wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount;
     }
 
 
@@ -2414,11 +2628,116 @@ namespace LGraphics
     }
 }
 
+void LGraphics::LApp::InstantPoolCubes::setApp(LApp* app)
+{
+    this->app = app;
+    uniformBuffersSize = app->info.poolSize;
+    uniformBuffers = new LWidget::WidgetUniforms[uniformBuffersSize];
+    objs = new LCube* [uniformBuffersSize];
+    std::fill(objs, objs + uniformBuffersSize, nullptr);
+}
+
+void LGraphics::LApp::InstantPoolCubes::draw()
+{
+    auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
+    if (app->drawingInShadow)
+        shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
+    GLuint shaderProgram = shader->getShaderProgram();
+
+    const auto proj = app->getProjectionMatrix();
+    const auto view = app->getViewMatrix();
+
+    shader->use();
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
+
+    if (!app->drawingInShadow)
+    {
+        glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
+        glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
+        glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
+        glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
+        glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
+    }
+
+    LCube* obj = nullptr;
+    bool modified = false;
+    for (size_t i = 0; i < uniformBuffersSize; ++i)
+    {
+        if (objs[i])
+        {
+            obj = objs[i];
+            if (obj->isChanged())
+            {
+                modified = true;
+                obj->changed = LWidget::UNMODIFIED;
+                obj->refreshModel();
+                uniformBuffers[i].model = obj->getModelMatrix();
+            }
+        }
+        //else
+        //    uniformBuffers[i].id = -1;
+    }
+    if (modified)
+        updateBuffer();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, *(GLuint*)obj->getTexture());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, app->depthMap);
+    glBindVertexArray(app->standartCubeBuffer->getVaoNum());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, uniformBuffersSize);
+}
+
+LGraphics::LApp::InstantPoolCubes::~InstantPoolCubes()
+{
+    delete[] uniformBuffers;
+    delete[] objs;
+    glDeleteBuffers(1, &vbo);
+}
+
+void LGraphics::LApp::InstantPoolCubes::updateBuffer()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::WidgetUniforms) * uniformBuffersSize, uniformBuffers, GL_STATIC_DRAW);
+
+    glBindVertexArray(app->standartCubeBuffer->getVaoNum());
+    const size_t vec4Size = sizeof(glm::vec4);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(vec4Size));
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+    //glVertexAttribDivisor(7, 1);
+    //glVertexAttribDivisor(8, 1);
+    //glVertexAttribDivisor(9, 1);
+    glBindVertexArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void LGraphics::LApp::InstantPoolCubes::initPool()
+{
+    glGenBuffers(1, &vbo);
+    updateBuffer();
+}
+
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 bool initialize(android_app* app)
 {
     if (!InitVulkan()) {
-        LOGE("Vulkan is unavailable, install vulkan and re-start");
+        LOGE("Vulkan is unavailable, install vulkan and restart");
         return false;
     }
 }

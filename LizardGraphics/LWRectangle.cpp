@@ -11,12 +11,9 @@ LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
     :LRectangleShape(app, path, false)
 {
     LOG_CALL
-    if (app->info.lighting)
-        shader = app->getLightningShader();
-    else
-        shader = app->getStandartWorldObjShader();
+    shader = app->getLightningShader().get();
     projection = app->getProjectionMatrix();
-    app->addObjectToCreate(this, L_RECTANGLE);
+    app->addObjectToCreate(this, L_PRIMITIVE);
 }
 
 glm::vec4 LGraphics::LWRectangle::getScreenCoords() const
@@ -41,13 +38,12 @@ void LGraphics::LWRectangle::setMatrices()
     //        glm::vec3(0.0f, 0.0f, 0.0f),
     //        glm::vec3(0.0f, 1.0f, 0.0f));
 
-    auto aspect = (float)app->getWindowSize().x / (float)app->getWindowSize().y;
+    //auto aspect = (float)app->getWindowSize().x / (float)app->getWindowSize().y;
 
     //projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
-    projection = glm::ortho(-1.0f, 1.0f, -1.0f / aspect, 1.0f / aspect, 0.1f, 1000.0f);
+    //projection = glm::ortho(-1.0f, 1.0f, -1.0f / aspect, 1.0f / aspect, 0.1f, 1000.0f);
 }
 
-#ifdef VULKAN
 void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
     LOG_CALL
@@ -58,85 +54,61 @@ void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameI
     };
 
      vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-        getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[arrayIndex * 2 + frameIndex], 1, dynamicOffsets);
+         ((LShaders::VulkanShader*)getShader())->getPipelineLayout(), 0, 1, &app->descriptorSets[arrayIndex * 2 + frameIndex], 1, dynamicOffsets);
 
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(buffer->getIndCount()), 1, 0, 0, 0);
 }
-#endif
-#ifdef OPENGL
+
 void LGraphics::LWRectangle::draw()
 {
-    //if (isHidden()) return;
+    if (isHidden())
+        return;
 
-    //getShader()->use();
-    auto shader = getShader()->getShaderProgram();
-    auto lightPos = app->getLightPos();
+    auto shader = (LShaders::OpenGLShader*)getShader();
+    if (app->drawingInShadow)
+        shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
+    GLuint shaderProgram = shader->getShaderProgram();
 
-    model = calculateModelMatrix();
+    const auto proj = app->getProjectionMatrix();
+    const auto view = app->getViewMatrix();
+    const auto model = calculateModelMatrix();
 
-    glUniform1i(glGetUniformLocation(shader, "ourTexture"), 0);
-    glUniform1i(glGetUniformLocation(shader, "shadowMap"), 1);
+    shader->use();
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
+    glUniform1i(glGetUniformLocation(shaderProgram, "objId"), id);
 
-    //glUniform1i(glGetUniformLocation(shader, "sampleTexture"), isTextureTurnedOn());
-    //glUniform1i(glGetUniformLocation(shader, "isometric"), isometric);
+    if (!app->drawingInShadow)
+    {
+        glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
+        glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
 
-    glUniformMatrix4fv(glGetUniformLocation(shader, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->getLightSpaceMatrix()));
-    glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
-    // test
-    //int data = -1;
-
-    //GLuint ssbo;
-    //glGenBuffers(1, &ssbo);
-    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    //glBufferData(GL_SHADER_STORAGE_BUFFER, 4, &data, GL_STATIC_DRAW);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
+        glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
+        glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
+    }
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, getTexture());
+    glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, app->getDepthMap());
-
-
-    const float t = sqrt(3);
-    const glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
-    glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
-    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(app->getViewMatrix()));
-    glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
-
+    glBindTexture(GL_TEXTURE_2D, app->depthMap);
     glBindVertexArray(buffer->getVaoNum());
-    glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
-
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    //GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-    //memcpy(&data, p, sizeof(data));
-    //glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-    //std::cout << data << std::endl;
-
-    //glBindVertexArray(0);
-    //(GL_SHADER_STORAGE_BUFFER, 0); // unbind
-    //glBindVertexArray(0);
-
-
-    if (innerWidgets)
-    for (auto& i : *innerWidgets)
-        i->draw();
+    glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_SHORT, 0);
 }
-#endif
 
-glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
-{
-#if _DEBUG
-#include "../Optimized/optimized.h"
-    return _calculateModelMatrix(move_, rotate_, scale_);
-#else
-    glm::mat4 model_ = glm::mat4(1.0f);
-    model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
-    model_ *= rotate_;
-    model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
-    return model_;
-#endif
-}
+//glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
+//{
+//#if _DEBUG
+//#include "../Optimized/optimized.h"
+//    return _calculateModelMatrix(move_, rotate_, scale_);
+//#else
+//    glm::mat4 model_ = glm::mat4(1.0f);
+//    model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
+//    model_ *= rotate_;
+//    model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
+//    return model_;
+//#endif
+//}

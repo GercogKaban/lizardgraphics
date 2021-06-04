@@ -3,8 +3,6 @@
 #include "LModel.h"
 #include "LTimer.h"
 #include "LLogger.h"
-
-#include <iostream>
 #include "FileSystemDialog.h"
 
 namespace LGraphics
@@ -71,7 +69,7 @@ namespace LGraphics
 public:
         void imguiInterface()
         {
-            LOG_CALL
+            //LOG_CALL
             if (!app->drawUI_)
                 return;
             ImGui::Begin("fps", 0,
@@ -79,10 +77,13 @@ public:
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
-                ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar|
+                ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | 
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoMouseInputs);
+
             ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "camera pos: x = %.3f, y = %.3f, z = %.3f",app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
+            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "camera front: x = %.3f, y = %.3f, z = %.3f", app->cameraFront.x, app->cameraFront.y, app->cameraFront.z);
+            ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "renderer: %s", app->info.api == L_OPENGL ? "OpenGL" : "Vulkan");
             ImGui::End();
 
             auto fileDialog = [&](char* arr)
@@ -228,7 +229,7 @@ public:
                             if (obj->getObjectType() == std::string("LModel"))
                                 app->addObjectToDelete(obj, L_MODEL);
                             else if (obj->getObjectType() == std::string("LWRectangle"))
-                                app->addObjectToDelete(obj, L_RECTANGLE);
+                                app->addObjectToDelete(obj, L_PRIMITIVE);
                             deleteDialog = false;
                         }
                         ImGui::SameLine();
@@ -382,11 +383,11 @@ public:
                 ImGui::PopID();
             }
 
-            for (size_t i = 0; i < app->getRectangles().size(); ++i)
+            for (size_t i = 0; i < app->getPrimitives().size(); ++i)
             {
                 const size_t id = i + app->getModels().size();
                 ImGui::PushID(id);
-                drawObjectUI(id, app->getRectangles()[i], "rect");
+                drawObjectUI(id, app->getPrimitives()[i], "rect");
                 ImGui::PopID();
             }
             firstDialog = false;

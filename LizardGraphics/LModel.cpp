@@ -2,6 +2,7 @@
 #include "LModelBuffer.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
+#include "LApp.h"
 
 LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath, 
     const char* normalsPath, bool debugInfo)
@@ -22,7 +23,7 @@ LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath,
 
     app->addObjectToCreate(this, L_MODEL);
 #ifdef VULKAN
-    shader = app->baseShader;
+    shader = app->lightShader.get();
 #endif
 }
 
@@ -36,9 +37,9 @@ LGraphics::LModel::~LModel()
 void LGraphics::LModel::loadTexture(const char* path, TextureType type)
 {
     LOG_CALL
-    auto texture = LResourceManager::loadTexture(path,mipLevels);
-    auto m = LResourceManager::models[modelPath]->textures[type] = texture;
-    this->texture = texture;
+    //auto texture = LResourceManager::loadTexture(path,mipLevels);
+    //auto m = LResourceManager::models[modelPath]->textures[type] = texture;
+    //this->texture = texture;
 }
 
 void LGraphics::LModel::setMeshDrawing(size_t num, bool draw)
@@ -62,7 +63,7 @@ bool LGraphics::LModel::getMeshDrawing(size_t num) const
 void LGraphics::LModel::loadModel(const char* modelPath, bool debugInfo)
 {
     LOG_CALL
-    LResourceManager::loadModel(this, modelPath, debugInfo);
+    //LResourceManager::loadModel(this, modelPath, debugInfo);
 }
 
 //void LGraphics::LModel::setMeshMaterial(const LMaterial& material, size_t meshNum)
@@ -84,7 +85,7 @@ void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
     };
 
     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-        getShader()->getPipelineLayout(), 0, 1, &app->descriptorSets[arrayIndex * 2 + frameIndex], 1, dynamicOffsets);
+        ((LShaders::VulkanShader*)getShader())->getPipelineLayout(), 0, 1, &app->descriptorSets[arrayIndex * 2 + frameIndex], 1, dynamicOffsets);
 
     for (size_t mesh = 0; mesh < ((LModelBuffer*)buffer)->getIndBuffer().size(); ++mesh)
     {
