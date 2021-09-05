@@ -1,0 +1,6 @@
+[submodule "LizardGraphics/VulkanMemory/Allocator"]
+	path = LizardGraphics/VulkanMemory/Allocator
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
+[submodule "LizardGraphics/imgui"]
+	path = LizardGraphics/imgui
+	url = https://github.com/ocornut/imgui

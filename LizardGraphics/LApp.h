@@ -40,7 +40,7 @@ void handle_cmd(android_app* app, int32_t cmd);
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include "imgui/backends/imgui_impl_glfw.h"
 #include "imgui/backends/imgui_impl_vulkan.h"
-#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
+#include "VulkanMemory/Allocator/include/vk_mem_alloc.h"
 
 #include "include/GLFW/glfw3.h"
 //#include "vulkan/vulkan.h"
