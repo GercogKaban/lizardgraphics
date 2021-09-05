@@ -1,9 +1,9 @@
-#include "LApp.h"
-#include "LWRectangle.h"
-#include "LModel.h"
-#include "LTimer.h"
-#include "LLogger.h"
-#include "FileSystemDialog.h"
+#include "LizardGraphics/LApp.h"
+#include "LizardGraphics/LWRectangle.h"
+#include "LizardGraphics/LModel.h"
+#include "LizardGraphics/LTimer.h"
+#include "LizardGraphics/LLogger.h"
+#include "LizardGraphics/FileSystemDialog.h"
 
 namespace LGraphics
 {

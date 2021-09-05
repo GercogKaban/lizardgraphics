@@ -45,6 +45,5 @@ source_group("Header Files" FILES ${HEADER_FILES})
 add_dependencies(LizardGraphics Optimized)
 
 target_link_libraries(LizardGraphics Optimized)
-
-target_precompile_headers(LizardGraphics PUBLIC pch.h)
+target_precompile_headers(LizardGraphics PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:pch.h>")
 target_compile_features(LizardGraphics PRIVATE cxx_std_17)
