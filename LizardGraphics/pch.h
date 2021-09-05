@@ -35,7 +35,6 @@
 #include <csignal>
 #endif
 
-#include "include/GLEW/glew.h"
 #include "vulkan/vulkan.h"
 
 #ifndef NDEBUG
@@ -56,9 +55,11 @@
 
 //#define GLFW_INCLUDE_NONE
 //#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+//#include "include/GLEW/glew.h"
+//#include "include/GLFW/glfw3.h"
 
 //#include "imgui_impl_vulkan.h"
+//#include "imgui/backends/imgui_impl_opengl3.h"
 #include "additional.h"
 
 //#endif //PCH_H

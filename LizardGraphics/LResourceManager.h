@@ -6,7 +6,7 @@
 
 #include "include/stb/stb_image.h"
 #include "include/tinyobjloader/tiny_obj_loader.h"
-#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
+//#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 #include "include/GLEW/glew.h"
 #include "LApp.h"
 

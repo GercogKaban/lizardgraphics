@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 70000;
+    const size_t poolSize = 500;
 
     LAppCreateInfo info;
 
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     info.poolSize = poolSize;
     //info.wndHeight = 600;
     //info.wndWidth = 800;
-    const auto spread = 500;
+    const auto spread = 10;
     LApp app(info);
     srand(time(0));
     ImGuiInterface interface_(&app);
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     {
         for (size_t i = 0; i < poolSize - 1; ++i)
         {
-            c = new LCube(&app, "textures/image1.bmp");
+            c = new LCube(&app, "textures/gold.jpg");
             c->move(rand() % 100, rand() % spread, rand() % spread);
             c->rotateX(rand() % spread);
             c->rotateY(rand() % spread);

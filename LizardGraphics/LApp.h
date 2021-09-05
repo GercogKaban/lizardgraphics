@@ -8,7 +8,6 @@
 #include "LLogger.h"
 #include "enums.h"
 #include "LWidget.h"
-//#include "LCube.h"
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 #include <android/log.h>
@@ -30,21 +29,22 @@ void android_main(struct android_app* state);
 void terminate(void);
 void handle_cmd(android_app* app, int32_t cmd);
 
+#include "vulkan_wrapper.h"
 #endif
 
 #include "ObjectPool.h"
 
 #include "include/glm/glm.hpp"
 
-#ifdef VK_USE_PLATFORM_ANDROID_KHR
-#include "vulkan_wrapper.h"
-#endif
-
 #include "include/GLEW/glew.h"
-#include "imgui/backends/imgui_impl_glfw.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui/backends/imgui_impl_glfw.h"
 #include "imgui/backends/imgui_impl_vulkan.h"
-#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
+#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
+
+#include "include/GLFW/glfw3.h"
+//#include "vulkan/vulkan.h"
+//#include "include/GLEW/glew.h"
 
 #include "LObject.h"
 

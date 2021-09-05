@@ -4,7 +4,7 @@
 //#ifdef OPENGL
 #include "include/GLEW/glew.h"
 #include "vulkan/vulkan.h"
-#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
+//#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 //#endif
 
 //#include "LApp.h"
@@ -60,8 +60,8 @@ namespace LGraphics
         const GLuint getVaoNum() const { return VAO; }
 
         void init(LApp* app);
-        VkBuffer& getVertBuffer() { return vertexBuffer; }
-        VkBuffer& getIndBuffer() { return indexBuffer; }
+        //VkBuffer& getVertBuffer() { return vertexBuffer; }
+        //VkBuffer& getIndBuffer() { return indexBuffer; }
 
         /*!
         @brief Деструктор LBuffer.
@@ -99,9 +99,9 @@ namespace LGraphics
         VkBuffer indexBuffer = VK_NULL_HANDLE;
         VmaAllocation vertexBufferMemory = VK_NULL_HANDLE;
         VmaAllocation indexBufferMemory = VK_NULL_HANDLE;
-        LApp* app;
 #endif // VULKAN
 
+        LApp* app;
 //#ifdef OPENGL
         float* vertices = nullptr; ///< Массив вершин.*/
         uint16_t* ebo = nullptr;       ///< Массив индексов.*/

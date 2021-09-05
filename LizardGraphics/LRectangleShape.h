@@ -16,6 +16,7 @@ namespace LGraphics
 
         bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
         void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum);
+        void draw();
         LRectangleShape(LApp* app, const char* path = nullptr, bool isInterfaceObj = true);
 
         float calculateWidgetLength();

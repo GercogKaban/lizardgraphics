@@ -157,8 +157,8 @@ public:
                 {
                     if (radioModel)
                     {
-                        auto m = new LModel(app, modelPath_, texturePath_);
-                        m->setName(createObjName);
+                        //auto m = new LModel(app, modelPath_, texturePath_);
+                        //m->setName(createObjName);
                     }
                     else if (radioRectangle)
                     {

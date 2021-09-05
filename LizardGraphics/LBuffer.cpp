@@ -45,11 +45,11 @@ namespace LGraphics
             glBindVertexArray(0);
         }
 
-        else if (app->info.api == L_VULKAN)
-        {
-            app->createBuffer(vertices, vertexBuffer, vertexBufferMemory, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, getVertSize());
-            app->createBuffer(ebo, indexBuffer, indexBufferMemory, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, getIndSize());
-        }
+        //else if (app->info.api == L_VULKAN)
+        //{
+        //    app->createBuffer(vertices, vertexBuffer, vertexBufferMemory, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, getVertSize());
+        //    app->createBuffer(ebo, indexBuffer, indexBufferMemory, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, getIndSize());
+        //}
     }
 
     LBuffer::~LBuffer()
@@ -60,14 +60,14 @@ namespace LGraphics
             glDeleteBuffers(1, &VBO);
             glDeleteVertexArrays(1, &VAO);
         }
-        else if (app->info.api == L_VULKAN)
-        {
-            if (vertexBuffer)
-                vmaDestroyBuffer(app->allocator, vertexBuffer, vertexBufferMemory);
+        //else if (app->info.api == L_VULKAN)
+        //{
+        //    if (vertexBuffer)
+        //        vmaDestroyBuffer(app->allocator, vertexBuffer, vertexBufferMemory);
 
-            if (indexBuffer)
-                vmaDestroyBuffer(app->allocator, indexBuffer, indexBufferMemory);
-        }
+        //    if (indexBuffer)
+        //        vmaDestroyBuffer(app->allocator, indexBuffer, indexBufferMemory);
+        //}
         if (vertices) delete[] vertices;
         if (ebo) delete[] ebo;
     }

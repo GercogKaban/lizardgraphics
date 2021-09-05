@@ -2,6 +2,7 @@
 
 #include "LObject.h"
 #include "vulkan/vulkan.h"
+#include "include/GLEW/glew.h"
 #include "enums.h"
 
 namespace LGraphics

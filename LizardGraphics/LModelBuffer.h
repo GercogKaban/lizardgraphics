@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LBuffer.h"
+//#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 
 namespace LGraphics
 {
@@ -27,16 +28,16 @@ namespace LGraphics
             std::vector<std::vector<uint32_t>>);
         ~LModelBuffer();
 
-        std::vector<VkBuffer>& getIndBuffer() { return indexBuffer; }
+        //std::vector<VkBuffer>& getIndBuffer() { return indexBuffer; }
 
     private:
 
         std::vector<std::vector<uint32_t>> indices;
         std::vector<float> vertices;
 
-        std::vector <VkBuffer> indexBuffer;
-        std::vector <VmaAllocation> indexBufferMemory;
-        VkBuffer texCoordsBuffer;
-        VmaAllocation texCoordsMemory;
+        //std::vector <VkBuffer> indexBuffer;
+        //std::vector <VmaAllocation> indexBufferMemory;
+        //VkBuffer texCoordsBuffer;
+        //VmaAllocation texCoordsMemory;
     };
 }

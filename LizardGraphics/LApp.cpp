@@ -4,7 +4,6 @@
 #define VKB_VALIDATION_LAYERS
 #include "LApp.h"
 #include "LRectangleBuffer.h"
-#include "LMultiWRectangle.h"
 #include "LModel.h"
 #include "LModelBuffer.h"
 #ifdef WIN32
@@ -12,7 +11,6 @@
 #include "../codegen.h"
 #endif
 #include "LResourceManager.h"
-#include "GLFW/glfw3.h"
 #include "LCubeBuffer.h"
 #include "LSkyBox.h"
 #include "LRectangleMirror.h"
@@ -636,51 +634,53 @@ namespace LGraphics
     void LApp::initRenderer()
     {
         glfwInit();
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              Window creation                                              //
-        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
-
-        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-#ifndef NDEBUG
-        window_ = glfwCreateWindow(mode->width - 1, mode->height, "Lizard Graphics", NULL, NULL);
-        width = mode->width - 1;
-        height = mode->height;
-#else
-        width = mode->width;
-        height = mode->height;
-
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-#endif
-        window_ = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
-
-        glfwMakeContextCurrent(window_);
-
- //                                             Window creation                                              //
- //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        setWindowCallbacks();
-        glfwGetFramebufferSize(window_, &width, &height);
-
-        glewExperimental = GL_TRUE;
-        glewInit();
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glfwSwapInterval(0);
-
-
-        int width_, height_;
-        glfwGetFramebufferSize(window_, &width_, &height_);
-        glViewport(0, 0, width_, height_);
+        initOpenGL();
+//       
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////                                              Window creation                                              //
+//        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+//
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+//
+//        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+//#ifndef NDEBUG
+//        window_ = glfwCreateWindow(mode->width - 1, mode->height, "Lizard Graphics", NULL, NULL);
+//        info.wndWidth = mode->width - 1;
+//        info.wndHeight = mode->height;
+//#else
+//        width = mode->width;
+//        height = mode->height;
+//
+//        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+//        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+//        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+//        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+//        window_ = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
+//#endif
+//
+//        glfwMakeContextCurrent(window_);
+//
+// //                                             Window creation                                              //
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        setWindowCallbacks();
+//        glfwGetFramebufferSize(window_, &(int&)info.wndWidth, &(int&)info.wndHeight);
+//
+//        glewExperimental = GL_TRUE;
+//        glewInit();
+//
+//        glEnable(GL_BLEND);
+//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//        //glfwSwapInterval(0);
+//
+//
+//        int width_, height_;
+//        glfwGetFramebufferSize(window_, &width_, &height_);
+//        glViewport(0, 0, width_, height_);
     }
 #endif
 
@@ -732,7 +732,7 @@ namespace LGraphics
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //                                              Window creation                                              //
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        if (!info.wndHeight)
+        if (!info.wndHeight || !info.wndWidth)
         {
             info.wndWidth = mode->width;
             info.wndHeight = mode->height;
@@ -747,8 +747,6 @@ namespace LGraphics
         glfwWindowHint(GLFW_SAMPLES, info.MSAA);
 #ifndef NDEBUG
         window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", NULL, NULL);
-        //width = info.wndWidth;
-        //height = info.wndHeight;
 #else
         info.wndWidth = mode->width;
         info.wndHeight = mode->height;
@@ -1005,20 +1003,20 @@ namespace LGraphics
         //    delete w;
         //rectangles.clear();
 
-        for (auto& m : models)
-        {
-            LModelBuffer* b = (LModelBuffer*)m->buffer;
-            vmaDestroyBuffer(allocator, b->vertexBuffer, b->vertexBufferMemory);
-            for (size_t i = 0; i < b->indexBuffer.size(); ++i)
-                vmaDestroyBuffer(allocator, b->indexBuffer[i], b->indexBufferMemory[i]);
-            //delete m;
-        }
+        //for (auto& m : models)
+        //{
+        //    LModelBuffer* b = (LModelBuffer*)m->buffer;
+        //    vmaDestroyBuffer(allocator, b->vertexBuffer, b->vertexBufferMemory);
+        //    for (size_t i = 0; i < b->indexBuffer.size(); ++i)
+        //        vmaDestroyBuffer(allocator, b->indexBuffer[i], b->indexBufferMemory[i]);
+        //    //delete m;
+        //}
         //models.clear();
 
-        for (auto it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
-        {
-            //delete it->second;
-        }
+        //for (auto it = resourseManager.models.begin(); it != resourseManager.models.end(); it++)
+        //{
+        //    delete it->second;
+        //}
 
         vkDestroyCommandPool(g_Device, commandPool, nullptr);
         vmaDestroyAllocator(allocator);
@@ -1123,8 +1121,6 @@ namespace LGraphics
     }
 
 
-#ifdef VULKAN
-    
     VkResult LApp::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT * pCreateInfo, const VkAllocationCallbacks * pAllocator, VkDebugUtilsMessengerEXT * pDebugMessenger)
     {
         LOG_CALL
@@ -2312,8 +2308,6 @@ namespace LGraphics
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-#endif
-
     void LApp::setupVulkan()
     {
         LOG_CALL
@@ -2515,7 +2509,7 @@ namespace LGraphics
 
         if (primitives.size())
         {
-            auto obj = primitives[0];
+            /*auto obj = primitives[0];
             auto shader = (LShaders::VulkanShader*)obj->getShader();
 
             VkBuffer vertexBuffers[] = { ((LWRectangle*)obj)->buffer->getVertBuffer() };
@@ -2530,7 +2524,7 @@ namespace LGraphics
                 VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::ShaderConstants), &shaderCnst);
 
             for (size_t i = 0; i < primitives.size(); ++i)
-                primitives[i]->draw(fd->CommandBuffer, wd->FrameIndex);
+                primitives[i]->draw(fd->CommandBuffer, wd->FrameIndex);*/
         }
 
         if (models.size())

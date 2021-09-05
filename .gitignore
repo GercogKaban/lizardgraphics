@@ -76,7 +76,6 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
-*.lib
 *.rar
 *.qml
 

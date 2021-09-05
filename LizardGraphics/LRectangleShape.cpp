@@ -13,13 +13,13 @@ namespace LGraphics
         init(app, isInterfaceObj);
     }
 
-#ifdef OPENGL
-    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size, bool isInterfaceObj)
-        :LShape(app,bytes,size)
-    {
-        init(app, isInterfaceObj);
-    }
-#endif 
+//#ifdef OPENGL
+//    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size, bool isInterfaceObj)
+//        :LShape(app,bytes,size)
+//    {
+//        init(app, isInterfaceObj);
+//    }
+//#endif 
 
     float LRectangleShape::calculateWidgetLength()
     {
@@ -78,13 +78,13 @@ namespace LGraphics
 #ifdef OPENGL
     void LRectangleShape::draw()
     {
-        auto shader = getShader();
+        auto shader = (LShaders::OpenGLShader*)getShader();
         shader->use();
         if (isTextureTurnedOn()) 
             glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
         else 
             glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 0);
-        glBindTexture(GL_TEXTURE_2D, getTexture());
+        glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
         glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
         glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
@@ -95,9 +95,9 @@ namespace LGraphics
         //glBindVertexArray(0);
         //if (label.text.size())
         //    LLine::display(label);
-        if (innerWidgets)
+        /*if (innerWidgets)
             for (auto& i : *innerWidgets)
-                i->draw();
+                i->draw();*/
     }
 #endif OPENGL
 
