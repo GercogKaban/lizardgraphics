@@ -160,14 +160,14 @@ int main(int argc, char** argv)
     {
         if (app.isCursorEnabled())
         {
-            if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
-            {
-                auto coords = app.getMouseCoords();
-                coords.y = app.getWindowSize().y - coords.y;
-                const auto id = app.getObjectsOnScreen()[app.getWindowSize().x * (int)coords.y + (int)coords.x];
-                if (id >= 0)
-                    app.findByLID(id)->rotateX(45.0f);
-            }
+            //if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
+            //{
+            //    auto coords = app.getMouseCoords();
+            //    coords.y = app.getWindowSize().y - coords.y;
+            //    const auto id = app.getObjectsOnScreen()[app.getWindowSize().x * (int)coords.y + (int)coords.x];
+            //    if (id >= 0)
+            //        app.findByLID(id)->rotateX(45.0f);
+            //}
         }
     });
 

@@ -8,6 +8,7 @@ add_subdirectory (../Optimized Optimized)
 
 set(API "OPENGL" CACHE STRING "RENDERING API")
 add_compile_definitions(${API})
+add_compile_definitions(LIB_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}\")
 
 set (SOURCE_FILES textures.cpp LShape.cpp LRectangleShape.cpp LImage.cpp 
 LRectangleBuffer.cpp LLogger.cpp LBuffer.cpp LApp.cpp LWidget.cpp 

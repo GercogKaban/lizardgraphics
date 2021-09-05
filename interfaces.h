@@ -77,7 +77,7 @@ public:
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
-                ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | 
+                ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoMouseInputs);
 
             ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

@@ -4,12 +4,12 @@ set(API "OPENGL" CACHE STRING "RENDERING API")
 set(PLATFORM "DESKTOP" CACHE STRING "PLATFORM YOU ARE TARGETING")
 add_compile_definitions(${API})
 
+#file (GLOB_RECURSE LIBS LizardGraphics/libs/*.lib)
+
 IF (${PLATFORM} MATCHES "DESKTOP")
 project (DesktopExample C CXX)
 
-file(GLOB_RECURSE shaders *.VERT *.FRAG *.vs *.fs )
-
-set(SOURCE_FILES main.cpp ${shaders})
+set(SOURCE_FILES main.cpp)
 set(HEADER_FILES interfaces.h)
 
 ADD_EXECUTABLE(DesktopExample ${SOURCE_FILES} ${HEADER_FILES})
@@ -31,8 +31,9 @@ ENDIF(UNIX)
 
 #IF (${API} MATCHES "VULKAN")
 IF(WIN32)
-target_link_libraries(DesktopExample LizardGraphics LizardGraphics/libs/vulkan-1 LizardGraphics/libs/glfw3 LizardGraphics/libs/glew32s opengl32)
-add_custom_command(TARGET DesktopExample PRE_BUILD COMMAND python build_shaders.py)
+target_link_directories(DesktopExample PUBLIC LizardGraphics/libs)
+target_link_libraries(DesktopExample LizardGraphics opengl32 glfw3 glew32s vulkan-1)
+#add_custom_command(TARGET DesktopExample PRE_BUILD COMMAND python build_shaders.py)
 ELSE()
 target_link_libraries(DesktopExample LizardGraphics ${Vulkan_LIBRARIES} glfw3 dl pthread)
 ENDIF(WIN32)

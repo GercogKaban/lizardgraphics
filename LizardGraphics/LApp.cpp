@@ -785,11 +785,21 @@ namespace LGraphics
         ImGui_ImplOpenGL3_Init(glsl_version);
         if (info.api == L_OPENGL)
         {
-            openGLLightShader.reset(new LShaders::OpenGLShader(this, "shaders//shadows.vs", "shaders//shadows.fs"));
-            //openGLLightShader.reset(new LShaders::OpenGLShader(this, "shaders//base.vs", "shaders//base.fs"));
-            skyBoxShader.reset(new LShaders::OpenGLShader(this, "shaders//skybox.vs", "shaders//skybox.fs"));
-            skyBoxMirrorShader.reset(new LShaders::OpenGLShader(this, "shaders//baseMirror.vs", "shaders//baseMirror.fs"));
-            shadowMapShader.reset(new LShaders::OpenGLShader(this, "shaders//shadowMap.vs", "shaders//shadowMap.fs"));
+            openGLLightShader.reset(new LShaders::OpenGLShader(this
+                 ,(std::string(LIB_PATH)+"//shaders//shadows.vs").data()
+                ,(std::string(LIB_PATH) + "//shaders//shadows.fs").data()));
+
+            skyBoxShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//skybox.vs").data()
+                , (std::string(LIB_PATH) + "//shaders//skybox.fs").data()));
+
+            skyBoxMirrorShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//baseMirror.vs").data()
+                , (std::string(LIB_PATH) + "//shaders//baseMirror.fs").data()));
+
+            shadowMapShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.vs").data()
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.fs").data()));
         }
         standartRectBuffer = new LRectangleBuffer(this);
         standartSkyBoxBuffer = new LSkyBoxBuffer(this);
