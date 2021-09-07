@@ -41,10 +41,13 @@
 #define IMGUI_VULKAN_DEBUG_REPORT
 #endif
 
+#define GLM_ENABLE_EXPERIMENTAL
 //#define GLM_EXTERNAL_TEMPLATE
 #include "include/glm/glm.hpp"
 #include "include/glm/gtc/matrix_transform.hpp"
 #include "include/glm/gtc/type_ptr.hpp"
+#include "include/glm/gtc/quaternion.hpp"
+#include "include/glm/gtx/matrix_decompose.hpp"
 
 #include "ObjectPool.h"
 #include "textures.h"

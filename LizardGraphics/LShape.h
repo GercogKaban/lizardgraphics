@@ -83,6 +83,8 @@ namespace LGraphics
         */
         void move(const glm::vec<2, size_t> val) override;
 
+        void setModel(const glm::mat4& model) override;
+
         float& getTransparencyRef() override;
         glm::vec3& getColorRef() override; ///< Возвращает цвет виджета.
         glm::vec3& getScaleRef() override; ///< Возвращает размеры виджета.

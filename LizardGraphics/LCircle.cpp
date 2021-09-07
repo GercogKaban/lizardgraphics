@@ -10,6 +10,6 @@ LGraphics::LCircle::LCircle(LApp* app)
             shader = app->getLightningShader().get();
         //else
             //shader = app->getStandartWorldObjShader();
-    projection = app->getProjectionMatrix();
-    app->addObjectToCreate(this, L_PRIMITIVE);
+    //projection = app->getProjectionMatrix();
+    //app->addObjectToCreate(this, L_PRIMITIVE);
 }

@@ -227,9 +227,9 @@ public:
                         {
                             sliderRanges[i].inited = false;
                             if (obj->getObjectType() == std::string("LModel"))
-                                app->addObjectToDelete(obj, L_MODEL);
+                                app->safeDelete(obj);
                             else if (obj->getObjectType() == std::string("LWRectangle"))
-                                app->addObjectToDelete(obj, L_PRIMITIVE);
+                                app->safeDelete(obj);
                             deleteDialog = false;
                         }
                         ImGui::SameLine();
@@ -376,20 +376,20 @@ public:
                     obj->setName(objName);
                 }
             };
-            for (size_t i = 0; i < app->getModels().size(); ++i)
-            {
-                ImGui::PushID(i);
-                drawObjectUI(i, app->getModels()[i], "model");
-                ImGui::PopID();
-            }
+            //for (size_t i = 0; i < app->getModels().size(); ++i)
+            //{
+            //    ImGui::PushID(i);
+            //    drawObjectUI(i, app->getModels()[i], "model");
+            //    ImGui::PopID();
+            //}
 
-            for (size_t i = 0; i < app->getPrimitives().size(); ++i)
-            {
-                const size_t id = i + app->getModels().size();
-                ImGui::PushID(id);
-                drawObjectUI(id, app->getPrimitives()[i], "rect");
-                ImGui::PopID();
-            }
+            //for (size_t i = 0; i < app->getPrimitives().size(); ++i)
+            //{
+            //    const size_t id = i + app->getModels().size();
+            //    ImGui::PushID(id);
+            //    drawObjectUI(id, app->getPrimitives()[i], "rect");
+            //    ImGui::PopID();
+            //}
             firstDialog = false;
             ImGui::EndChild();
             ImGui::End();

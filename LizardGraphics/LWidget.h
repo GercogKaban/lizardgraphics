@@ -5,6 +5,7 @@
 #include <queue>
 
 #include "include/glm/glm.hpp"
+#include "include/glm/gtc/quaternion.hpp"
 
 //#include "vectors.h"
 #include "Lshaders.h"
@@ -28,6 +29,7 @@ namespace LGraphics
         virtual void tick() {}
         virtual void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) = 0; ///< Рисует виджет.
         virtual void draw(){}
+
         enum UniformChanges
         {
             UNMODIFIED,
@@ -35,13 +37,18 @@ namespace LGraphics
             TWO_BUFFERS_TO_CHANGE,
             THREE_BUFFERS_TO_CHANGE,
         };
-
+    
         struct WidgetUniforms
         {
             glm::mat4 model;
+            // offset текстуры
+            // размер текстуры
+
             //int id = -1;
-            //GLuint64 diffuseSampler, shadowMapSampler;
         };
+
+        using RectangleUniforms = WidgetUniforms;
+        using CubeUniforms = WidgetUniforms;
 
         //struct WidgetUniformsRef
         //{
@@ -114,13 +121,14 @@ namespace LGraphics
         */
         virtual void move(const glm::vec<2, size_t> v) = 0;
 
+        virtual void setModel(const glm::mat4& model) = 0;
         /*!
         @brief устанавливает функцию, которая будет срабатывать при наведении мышки на виджет.
         */
         void setMouseOnItEventFunction(::std::function<void()> fun) { mouseOnItFunction = fun; }
 
-        void setMaterial(int material) { this->material = material; updateUniforms();}
-        int getMaterial() const { return material; }
+        virtual void setMaterial(int material) { this->material = material; setUpdateUniformsFlag();}
+        virtual int getMaterial() const { return material; }
 
         void setName(::std::string name) { this->name = name; }
         ::std::string getName() const { return name; }
@@ -138,13 +146,17 @@ namespace LGraphics
         virtual glm::vec3 getColor() const = 0;         ///< Возвращает цвет виджета.
         virtual glm::vec3 getScale() const = 0;         ///< Возвращает размеры виджета.
         virtual glm::vec3 getMove() const  = 0;          ///< Возвращает вектор move виджета.
-        virtual glm::mat4 getRotate() const { return rotate_; }
+
+        virtual glm::quat getRotateQ() const { return rotate_q; }
+        virtual glm::mat4 getRotate() const { return glm::mat4_cast(rotate_q); }
 
         virtual float& getTransparencyRef() = 0;   ///< Возвращает прозрачность виджета.
         virtual glm::vec3& getColorRef() = 0;         ///< Возвращает цвет виджета.
         virtual glm::vec3& getScaleRef() = 0;         ///< Возвращает размеры виджета.
         virtual glm::vec3& getMoveRef() = 0;          ///< Возвращает вектор move виджета.
-        virtual glm::mat4& getRotateRef() { return rotate_; }
+
+
+        virtual glm::quat& getRotateRef() { return rotate_q; }
         virtual bool isInstanced() const { return false; }
 
         LShaders::Shader* getShader() { return shader; }
@@ -158,19 +170,21 @@ namespace LGraphics
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
         bool isInited() const { return isInited_; }
         bool isChanged() const { return changed != UNMODIFIED; }
-        int getId() const { return id; }
+        //virtual int getId() const { return id; }
         
 
         virtual ~LWidget();
 
     protected:
 
-        int id = -1;
+        uint64_t id = 0;
         int material = 0;
-        glm::mat4 rotate_ = glm::mat4(1.0f);
+
+        glm::quat rotate_q = glm::quat(0,0,0,1);
+        //glm::mat4 rotate_ = glm::mat4(1.0f);
         glm::vec3 rotateDegrees = glm::vec3(0.0f);
 
-        LApp* app = nullptr;    ///< Указатель на приложение.
+        static LApp* app;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
         ::std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
         ::std::function<void()> animation = ::std::function<void()>([](){});
@@ -182,7 +196,11 @@ namespace LGraphics
         int changed = 3;
         ::std::string name;
 
-        void updateUniforms();
+        void setUpdateUniformsFlag();
+
+        // временное название
+
+        //virtual void setGlobalUniforms(GLuint shader) {}
 
         size_t arrayIndex = 0;
 
@@ -193,5 +211,8 @@ namespace LGraphics
         LWidget(LApp* app, const char* path);
 
         virtual void init();
+
+    private:
+        static std::vector<WidgetUniforms> uniforms;
     };
 }

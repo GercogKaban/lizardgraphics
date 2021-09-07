@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 500;
+    const size_t poolSize = 2;
 
     LAppCreateInfo info;
 
@@ -30,7 +30,8 @@ int main(int argc, char** argv)
     info.poolSize = poolSize;
     //info.wndHeight = 600;
     //info.wndWidth = 800;
-    const auto spread = 10;
+
+    const auto spread = 2;
     LApp app(info);
     srand(time(0));
     ImGuiInterface interface_(&app);
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
     LCube* c;
     if (!info.loadObjects)
     {
-        for (size_t i = 0; i < poolSize - 1; ++i)
+        for (size_t i = 0; i < poolSize; ++i)
         {
             c = new LCube(&app, "textures/gold.jpg");
             c->move(rand() % 100, rand() % spread, rand() % spread);
@@ -57,9 +58,9 @@ int main(int argc, char** argv)
         //    c->scale(1.0f, 1.0f, 1.0f);
         //}
 
-        c = new LCube(&app, "textures/gold.jpg");
-        c->scale(0.1f, 0.1f, 0.1f);
-        c->move(7.5f, 0.0f, 7.5f);
+        //c = new LCube(&app, "textures/gold.jpg");
+        //c->scale(0.1f, 0.1f, 0.1f);
+        //c->move(7.5f, 0.0f, 7.5f);
         //new LSkyBox(&app, {
         //    "textures/skyboxes/Spacebox4/_right.png",
         //    "textures/skyboxes/Spacebox4/_left.png",

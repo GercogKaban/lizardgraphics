@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <stack>
 #include <deque>
+#include <array>
 #include "LLogger.h"
 #include "enums.h"
 #include "LWidget.h"
@@ -155,31 +156,31 @@ namespace LGraphics
 
         void* buff;
 
-        template <typename T>
-        class LID
-        {
-        public:
-            LID() {}
-            T getNewID()
-            {
-                T ret;
-                if (gaps.size())
-                {
-                    ret = gaps.front();
-                    gaps.pop();
-                }
-                else
-                    ret = lastId++;
-                return ret;
-            }
-            void releaseID(T id)
-            {
-                gaps.push(id);
-            }
-        private:
-            std::queue<T> gaps;
-            T lastId = 0;
-        };
+        //template <typename T>
+        //class LID
+        //{
+        //public:
+        //    LID() {}
+        //    T getNewID()
+        //    {
+        //        T ret;
+        //        if (gaps.size())
+        //        {
+        //            ret = gaps.front();
+        //            gaps.pop();
+        //        }
+        //        else
+        //            ret = lastId++;
+        //        return ret;
+        //    }
+        //    void releaseID(T id)
+        //    {
+        //        gaps.push(id);
+        //    }
+        //private:
+        //    std::queue<T> gaps;
+        //    T lastId = 0;
+        //};
 
         class InstantPoolCubes
         {
@@ -208,7 +209,7 @@ namespace LGraphics
         }cubeInstantPool;
 
         int* objectsOnScreen;
-        LID<int> idManager;
+        //LID<int> idManager;
 
         void loop_();
         void initApp_(const LAppCreateInfo& info);
@@ -238,35 +239,38 @@ namespace LGraphics
 
         //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
-
-        template <typename C>
-        LWidget* removeWidget(LWidget* w, C& collection)
+        
+        template<typename T>
+        void fastErase(std::vector<T>& collection, size_t id)
         {
-            for (size_t i = 0; i < collection.size(); ++i)
-                if (collection[i] == w)
-                {
-                    collection.erase(collection.begin() + i);
-                    break;
-                }
-            return w;
+            const auto lastObjId = collection.size() - 1;
+            if (lastObjId != id)
+            {
+                collection[id] = collection[lastObjId];
+                collection[lastObjId]->id = id;
+            }
+            collection.pop_back();
         }
 
-        template <typename C>
-        void deleteWidget(LWidget* w, C& collection)
+        void addObject(LWidget* w);
+        void removeObject(LWidget* w);
+        void deleteObject(LWidget* w)
         {
-            delete removeWidget(w, collection);
+            removeObject(w);
+            delete w;
         }
 
-        template <typename C>
-        void addObject(LWidget* w, std::vector<C*>& collection)
-        {
-            assert(collection.size() + 1 <= getPoolSize() && "error, pool overflowed!\n");
-            collection.push_back(((C*)w));
-        }
+
+        //template <typename C>
+        //void addObject(LWidget* w, std::vector<C*>& collection)
+        //{
+        //    assert(collection.size() + 1 <= getPoolSize() && "error, pool overflowed!\n");
+        //    collection.push_back(((C*)w));
+        //}
 
         void refreshObjectMatrices();
 
-        std::vector<LWidget*>& getPrimitives() { return primitives; }
+        auto& getPrimitives() { return primitives; }
         std::vector<LModel*>& getModels() { return models; }
 
         LShaders::Shader* getStandartShader() const;
@@ -331,8 +335,9 @@ namespace LGraphics
         size_t getPoolSize() const { return info.poolSize; }
 
         void setImgui(std::function<void()> func) { imgui = func; }
-        void addObjectToDelete(LWidget* w, LTypes type) { toDelete.push(std::make_pair(w, type)); }
-        void addObjectToCreate(LWidget* w, LTypes type) { toCreate.push(std::make_pair(w, type)); }
+
+
+        void safeDelete(LWidget* w) { toDelete.push(w); }
 
         void setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
         void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
@@ -356,8 +361,8 @@ namespace LGraphics
 
         bool drawUI_ = true;
 
-        std::stack<std::pair<LWidget*, LTypes>> toDelete;
-        std::stack<std::pair<LWidget*, LTypes>> toCreate;
+        std::stack<LWidget*> toDelete;
+        std::stack<LWidget*> toCreate;
 
         std::function<void()> imgui = []() {};
         glm::vec2 mouseCoords = glm::vec2(0.0f);
@@ -711,7 +716,8 @@ namespace LGraphics
         glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
         float viewRadius = 10.0f;
 
-        std::vector<LWidget*> primitives;
+        std::vector<LWidget*> primitives[3];
+        //std::vector<LWidget*> primitives;
         std::vector<LModel*> models;
 
         //int width, height;

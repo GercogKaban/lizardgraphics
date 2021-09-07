@@ -21,7 +21,7 @@ LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath,
     if (normalsPath)
         loadTexture(normalsPath, NORMALS);
 
-    app->addObjectToCreate(this, L_MODEL);
+    app->toCreate.push(this);
 #ifdef VULKAN
     shader = app->lightShader.get();
 #endif

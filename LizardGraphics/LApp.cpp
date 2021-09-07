@@ -68,7 +68,8 @@ namespace LGraphics
 
     void LApp::drawScene()
     {
-        cubeInstantPool.draw();
+        LCube::drawInstanced();
+        //cubeInstantPool.draw();
         //if (primitives.size())
         //    for (size_t i = 0; i < primitives.size(); ++i)
         //        primitives[i]->draw();
@@ -95,7 +96,8 @@ namespace LGraphics
                 glBufferData(GL_SHADER_STORAGE_BUFFER, screenSize, objectsOnScreen, GL_DYNAMIC_COPY);
                 glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
             }
-            cubeInstantPool.initPool();
+            
+            //cubeInstantPool.initPool();
             //buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
             //cubeInstantPool.initPool();
 
@@ -110,29 +112,14 @@ namespace LGraphics
                 while (toDelete.size())
                 {
                     auto obj = toDelete.top();
-                    if (obj.first->arrayIndex != getModels().size() + getPrimitives().size() - 1);
-                    indexGaps.push_back(obj.first->arrayIndex);
-                    if (obj.second == L_MODEL)
-                        deleteWidget(obj.first, models);
-                    else
-                        deleteWidget(obj.first, primitives);
+                    deleteObject(obj);
                     toDelete.pop();
                 }
 
                 while (toCreate.size())
                 {
                     auto obj = toCreate.top();
-                    if (obj.second == L_MODEL)
-                        addObject(obj.first, models);
-                    else if (obj.second == L_PRIMITIVE)
-                        addObject(obj.first, primitives);
-                    if (indexGaps.size())
-                    {
-                        obj.first->arrayIndex = indexGaps.front();
-                        indexGaps.pop_front();
-                    }
-                    else
-                        obj.first->arrayIndex = getModels().size() + getPrimitives().size() + 1;
+                    addObject(obj);
                     toCreate.pop();
                 }
 
@@ -274,13 +261,13 @@ namespace LGraphics
         afterSwitchingFunc();
     }
 
-    LWidget* LApp::findByLID(int id)
-    {
-        for (auto& r : primitives)
-            if (r->getId() == id)
-                return r;
-        return nullptr;
-    }
+    //LWidget* LApp::findByLID(int id)
+    //{
+    //    for (auto& r : primitives)
+    //        if (r->getId() == id)
+    //            return r;
+    //    return nullptr;
+    //}
 
     void LApp::loop()
     {
@@ -304,8 +291,9 @@ namespace LGraphics
 
     void LApp::updateShaders()
     {
-        for (auto& p : primitives)
-            p->setShader(getStandartShader());
+        for (auto& v : primitives)
+            for (auto& p : v)
+                p->setShader(getStandartShader());
         for (auto& m : models)
             m->setShader(getStandartShader());
     }
@@ -445,6 +433,43 @@ namespace LGraphics
         this->view = view;
         this->projection = projection;
     }
+
+    void LApp::addObject(LWidget* w)
+    {
+        if (dynamic_cast<LCube*>(w))
+        {
+            w->id = primitives[L_CUBE].size();
+            primitives[L_CUBE].push_back(w);
+        }
+
+        else if (dynamic_cast<LWRectangle*>(w))
+        {
+            w->id = primitives[L_RECTANGLE].size();
+            primitives[L_RECTANGLE].push_back(w);       
+        }
+        else if (dynamic_cast<LModel*>(w))
+        {
+            w->id = primitives[L_MODEL].size();
+            primitives[L_MODEL].push_back(w);
+        }
+    }
+
+    void LApp::removeObject(LWidget* w)
+    {
+        if (dynamic_cast<LCube*>(w))
+        {
+            LCube::uniforms.pop_back();
+            if (w != primitives[L_CUBE].back())
+                LCube::objChanged.push_back((LCube*)primitives[L_CUBE].back());
+            fastErase(primitives[L_CUBE], w->id);
+        }
+        else if (dynamic_cast<LWRectangle*>(w))   
+            fastErase(primitives[L_RECTANGLE], w->id);
+        else if (dynamic_cast<LModel*>(w)) fastErase(primitives[L_MODEL], w->id);
+        else throw std::runtime_error("wrong object type");
+    }
+
+
 
     void LApp::refreshObjectMatrices()
     {
@@ -612,20 +637,21 @@ namespace LGraphics
         lwRectPool.setCreationCallback([&]()
         {
             auto lwRect = new LWRectangle(this);
-            removeWidget(lwRect, primitives);
+            removeObject(lwRect);
             return lwRect;
         });
 
         lwRectPool.setReleaseFunction([&]()
         {
             //while (auto w = lwRectPool.pop())
-            //    deleteWidget(w);
+            //    deleteObject(w);
         });
 
         setMatrices();
 #ifdef WIN32
         if (info.loadObjects)
             genWidgets(this);
+        LCube::initInstanceBuffer();
 #endif
         //cubeInstantPool.initPool();
     }
@@ -745,18 +771,18 @@ namespace LGraphics
 
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
         glfwWindowHint(GLFW_SAMPLES, info.MSAA);
-#ifndef NDEBUG
+//#ifndef NDEBUG
         window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", NULL, NULL);
-#else
-        info.wndWidth = mode->width;
-        info.wndHeight = mode->height;
-
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        window_ = glfwCreateWindow(mode->width, mode->height, "Lizard Graphics", glfwGetPrimaryMonitor(), NULL);
-#endif
+//#else
+//        info.wndWidth = mode->width;
+//        info.wndHeight = mode->height;
+//
+//        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+//        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+//        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+//        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+//        window_ = glfwCreateWindow(mode->width, mode->height, "Lizard Graphics", glfwGetPrimaryMonitor(), NULL);
+//#endif
         const char* glsl_version = "#version 330";
 
         glfwMakeContextCurrent(window_);
@@ -1066,13 +1092,15 @@ namespace LGraphics
 
     void LApp::releaseGlfwResources()
     {
+        LOG_CALL
         glfwDestroyWindow(window_);
         glfwTerminate();
     }
 
     void LApp::releaseLGResources()
     {
-        LOG_CALL 
+        LOG_CALL
+        glDeleteBuffers(1, &LCube::vbo);
     }
 
     void LApp::releaseResources()
@@ -1086,9 +1114,9 @@ namespace LGraphics
         else if (info.api == L_OPENGL)
             releaseOpenGLResources();
 
-        for (auto p : primitives)
-            delete p;
-        primitives.clear();
+        for (auto objs : primitives)
+            for (auto o : objs)
+                delete o;
 
         for (auto& m : models)
             delete m;
@@ -2517,7 +2545,7 @@ namespace LGraphics
             //info.lighting,
         };
 
-        if (primitives.size())
+        //if (primitives.size())
         {
             /*auto obj = primitives[0];
             auto shader = (LShaders::VulkanShader*)obj->getShader();
@@ -2643,7 +2671,7 @@ void LGraphics::LApp::InstantPoolCubes::setApp(LApp* app)
 
 void LGraphics::LApp::InstantPoolCubes::draw()
 {
-    auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
+    /*auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
     if (app->drawingInShadow)
         shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
     GLuint shaderProgram = shader->getShaderProgram();
@@ -2682,8 +2710,6 @@ void LGraphics::LApp::InstantPoolCubes::draw()
                 uniformBuffers[i].model = obj->getModelMatrix();
             }
         }
-        //else
-        //    uniformBuffers[i].id = -1;
     }
     if (modified)
         updateBuffer();
@@ -2693,7 +2719,7 @@ void LGraphics::LApp::InstantPoolCubes::draw()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, app->depthMap);
     glBindVertexArray(app->standartCubeBuffer->getVaoNum());
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, uniformBuffersSize);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, uniformBuffersSize);*/
 }
 
 LGraphics::LApp::InstantPoolCubes::~InstantPoolCubes()

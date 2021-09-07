@@ -11,7 +11,7 @@ namespace LGraphics
 
         friend LApp;
 
-        LWRectangle(LApp* app, const char* path = nullptr);
+        LWRectangle(LApp* app, const char* path = nullptr, bool notRectangle = false);
         const char* getObjectType() const override { return "LWRectangle"; }
 
         virtual glm::vec4 getScreenCoords() const;
@@ -21,6 +21,12 @@ namespace LGraphics
 
         void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override;
         void draw() override;
+
+        static void drawInstanced();
+
+    protected:
+        static std::vector<RectangleUniforms> uniforms;
+
     //    glm::mat4 getModelMatrix() const { return calculateModelMatrix(); }
 
     //protected:

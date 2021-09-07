@@ -105,7 +105,7 @@ LGraphics::LSkyBox::LSkyBox(LApp* app, const std::vector<std::string>& paths)
     this->buffer = app->standartSkyBoxBuffer;
     this->shader = app->skyBoxShader.get();
     if (app->skybox)
-        app->toDelete.push(std::make_pair(app->skybox,L_PRIMITIVE));
+        app->toDelete.push(app->skybox);
     app->skybox = this;
     app->toCreate.pop();
 }
