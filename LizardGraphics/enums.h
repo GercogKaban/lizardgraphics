@@ -17,7 +17,14 @@ namespace LGraphics
 
     enum LTypes : uint8_t
     {
-        L_PRIMITIVE,
+        L_FLAT,
+        L_VOLUMETRIC,
+    };
+
+    enum LGClasses : uint8_t
+    {
+        L_RECTANGLE,
+        L_CUBE,
         L_MODEL,
     };
 

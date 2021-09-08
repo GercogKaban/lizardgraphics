@@ -7,13 +7,15 @@
 
 #include "include/glm/gtc/type_ptr.hpp"
 
-LGraphics::LWRectangle::LWRectangle(LApp * app, const char * path)
+std::vector<LGraphics::LWidget::RectangleUniforms> LGraphics::LWRectangle::uniforms;
+
+LGraphics::LWRectangle::LWRectangle(LApp* app, const char* path, bool notRectangle)
     :LRectangleShape(app, path, false)
 {
     LOG_CALL
     shader = app->getLightningShader().get();
     projection = app->getProjectionMatrix();
-    app->addObjectToCreate(this, L_PRIMITIVE);
+    app->toCreate.push(this);
 }
 
 glm::vec4 LGraphics::LWRectangle::getScreenCoords() const
@@ -97,6 +99,10 @@ void LGraphics::LWRectangle::draw()
     glBindTexture(GL_TEXTURE_2D, app->depthMap);
     glBindVertexArray(buffer->getVaoNum());
     glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_SHORT, 0);
+}
+
+void LGraphics::LWRectangle::drawInstanced()
+{
 }
 
 //glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const

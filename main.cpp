@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 500;
+    const size_t poolSize = 100000;
 
     LAppCreateInfo info;
 
@@ -28,9 +28,9 @@ int main(int argc, char** argv)
     info.MSAA = 4;
     info.vsync = L_FALSE;
     info.poolSize = poolSize;
-    //info.wndHeight = 600;
-    //info.wndWidth = 800;
-    const auto spread = 10;
+    //info.freeThreads = 1;
+
+    const auto spread = 500;
     LApp app(info);
     srand(time(0));
     ImGuiInterface interface_(&app);
@@ -39,9 +39,9 @@ int main(int argc, char** argv)
     LCube* c;
     if (!info.loadObjects)
     {
-        for (size_t i = 0; i < poolSize - 1; ++i)
+        for (size_t i = 0; i < poolSize; ++i)
         {
-            c = new LCube(&app, "textures/gold.jpg");
+            c = new LCube(&app, "E:/GAMES/lizardgraphics/textures//gold2.jpg");
             c->move(rand() % 100, rand() % spread, rand() % spread);
             c->rotateX(rand() % spread);
             c->rotateY(rand() % spread);
@@ -57,9 +57,9 @@ int main(int argc, char** argv)
         //    c->scale(1.0f, 1.0f, 1.0f);
         //}
 
-        c = new LCube(&app, "textures/gold.jpg");
-        c->scale(0.1f, 0.1f, 0.1f);
-        c->move(7.5f, 0.0f, 7.5f);
+        //c = new LCube(&app, "textures/gold.jpg");
+        //c->scale(0.1f, 0.1f, 0.1f);
+        //c->move(7.5f, 0.0f, 7.5f);
         //new LSkyBox(&app, {
         //    "textures/skyboxes/Spacebox4/_right.png",
         //    "textures/skyboxes/Spacebox4/_left.png",
@@ -81,6 +81,17 @@ int main(int argc, char** argv)
             const float shiftCoef = -1.5f;
             glm::vec3 shift = glm::normalize(move - glm::vec3(7.5f, 0.0f, 7.5f)) * shiftCoef;
 
+            int i = 0;
+            auto p = app.getPrimitives()[L_CUBE];
+            while (i < poolSize)
+            {
+                p[i]->rotateX(1.0f);
+                p[i]->rotateY(1.0f);
+                p[i]->rotateZ(1.0f);
+                p[i]->move(p[i]->getMove() + 0.01f);
+                p[i]->scale(p[i]->getScale() + 0.001f);
+                i++;
+            }
 
             GLfloat camX = sin(glfwGetTime());
             GLfloat camZ = cos(glfwGetTime());

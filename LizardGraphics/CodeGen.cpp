@@ -7,46 +7,46 @@
 
 void CodeGen::generateCode(const char* outPath, LGraphics::LApp* app, const char* appName)
 {
-    std::vector<std::string> includeFilesVector;
-    std::string includeFiles = "#include \"LizardGraphics/LApp.h\"\n";
-    std::string code = "namespace LGraphics{\nvoid genWidgets(LGraphics::LApp* app)\n{\n";
+    //std::vector<std::string> includeFilesVector;
+    //std::string includeFiles = "#include \"LizardGraphics/LApp.h\"\n";
+    //std::string code = "namespace LGraphics{\nvoid genWidgets(LGraphics::LApp* app)\n{\n";
 
-    auto genData = [&](LGraphics::LWidget* obj, std::string name)
-    {
-        //if (std::find(notGenerateList.begin(), notGenerateList.end(), obj) != notGenerateList.end())
-        //    continue;
-        if (std::find(includeFilesVector.begin(), includeFilesVector.end(), obj->getObjectType()) == includeFilesVector.end())
-        {
-            includeFilesVector.push_back(obj->getObjectType());
-            includeFiles += "#include \"" + std::string("LizardGraphics/") + obj->getObjectType() + ".h\"\n";
-        }
-        code += "auto " + name + " = new " + getConstructor(obj, appName) + '\n' +
-            name + "->move(" + getMoveData(obj) + ");\n" +
-            name + "->scale(" + getScaleData(obj) + ");\n" + name + "->color(glm::vec3(" + getColorData(obj) + "));\n" +
-            name + "->setRotate(glm::mat4(" + getRotateData(obj) + "));\n" +
-            name + "->setName(\"" + obj->getName() + "\");\n";
+    //auto genData = [&](LGraphics::LWidget* obj, std::string name)
+    //{
+    //    //if (std::find(notGenerateList.begin(), notGenerateList.end(), obj) != notGenerateList.end())
+    //    //    continue;
+    //    if (std::find(includeFilesVector.begin(), includeFilesVector.end(), obj->getObjectType()) == includeFilesVector.end())
+    //    {
+    //        includeFilesVector.push_back(obj->getObjectType());
+    //        includeFiles += "#include \"" + std::string("LizardGraphics/") + obj->getObjectType() + ".h\"\n";
+    //    }
+    //    code += "auto " + name + " = new " + getConstructor(obj, appName) + '\n' +
+    //        name + "->move(" + getMoveData(obj) + ");\n" +
+    //        name + "->scale(" + getScaleData(obj) + ");\n" + name + "->color(glm::vec3(" + getColorData(obj) + "));\n" +
+    //        name + "->setRotate(glm::mat4(" + getRotateData(obj) + "));\n" +
+    //        name + "->setName(\"" + obj->getName() + "\");\n";
 
-        includeFiles += "\n";
-    };
+    //    includeFiles += "\n";
+    //};
 
-    auto models = app->getModels();
-    for (size_t i = 0; i < models.size(); ++i)
-    {
-        auto& obj = models[i];
-        auto name = "model" + std::to_string(i + 1);
-        genData(obj, name);
-    }
+    //auto models = app->getModels();
+    //for (size_t i = 0; i < models.size(); ++i)
+    //{
+    //    auto& obj = models[i];
+    //    auto name = "model" + std::to_string(i + 1);
+    //    genData(obj, name);
+    //}
 
-    auto rectangles = app->getPrimitives();
-    for (size_t i = 0; i < rectangles.size(); ++i)
-    {
-        auto& obj = rectangles[i];
-        auto name = "rect" + std::to_string(i + 1);
-        genData((LGraphics::LWidget*)obj, name);
-    }
+    //auto rectangles = app->getPrimitives();
+    //for (size_t i = 0; i < rectangles.size(); ++i)
+    //{
+    //    auto& obj = rectangles[i];
+    //    auto name = "rect" + std::to_string(i + 1);
+    //    genData((LGraphics::LWidget*)obj, name);
+    //}
 
-    code += "\n}\n}\n";
-    writeToFile(outPath, std::string(includeFiles) + code);
+    //code += "\n}\n}\n";
+    //writeToFile(outPath, std::string(includeFiles) + code);
 }
 
 void CodeGen::writeToFile(const char* outPath, const std::string & code)

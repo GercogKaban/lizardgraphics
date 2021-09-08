@@ -9,19 +9,19 @@ namespace LGraphics
     {
         color_ = val;
         if (app->getAppInfo().api == L_VULKAN)
-            updateUniforms();
+            setUpdateUniformsFlag();
     }
 
     void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
     {
         color_ = { (float)r / (float)UINT8_MAX, (float)g / UINT8_MAX,(float)b / UINT8_MAX };
-        updateUniforms();
+        setUpdateUniformsFlag();
     }
 
     void LShape::transparency(const float val)
     {
         transparency_ = val;
-        updateUniforms();
+        setUpdateUniformsFlag();
     }
 
     void LShape::scale(const glm::vec3 val)
@@ -33,7 +33,7 @@ namespace LGraphics
     {
         auto scaleDif = glm::vec3(x, y, z) - scale_;
         scaleWithoutAlign({ x,y,z });
-        updateUniforms();
+        setUpdateUniformsFlag();
     }
 
     void LShape::scaleWithoutAlign(const glm::vec3 val)
@@ -50,7 +50,7 @@ namespace LGraphics
     {
         auto moveDif = glm::vec3(x,y,z) - move_;
         move_ = { x,y,z };
-        updateUniforms();
+        setUpdateUniformsFlag();
     }
 
     void LShape::move(const size_t x, const size_t y)
@@ -65,27 +65,34 @@ namespace LGraphics
         LShape::move(coords.x, coords.y, 0.0f);
     }
 
+    void LShape::setModel(const glm::mat4& model)
+    {
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        glm::decompose(model, scale_, rotate_q, move_, skew, perspective);
+    }
+
     float& LShape::getTransparencyRef()
     {
-        updateUniforms();
+        setUpdateUniformsFlag();
         return transparency_;
     }
 
     glm::vec3& LShape::getColorRef()
     {
-        updateUniforms();
+        setUpdateUniformsFlag();
         return color_;
     }
 
     glm::vec3& LShape::getScaleRef()
     {
-        updateUniforms();
+        setUpdateUniformsFlag();
         return scale_;
     }
 
     glm::vec3& LShape::getMoveRef()
     {
-        updateUniforms();
+        setUpdateUniformsFlag();
         return move_;
     }
 
@@ -109,11 +116,11 @@ namespace LGraphics
     {
 #if _DEBUG
 #include "../Optimized/optimized.h"
-        return _calculateModelMatrix(move_, rotate_, scale_);
+        return _calculateModelMatrix(move_, glm::mat4_cast(rotate_q), scale_);
 #else
         glm::mat4 model_ = glm::mat4(1.0f);
         model_ = glm::translate(model_, glm::vec3(move_.x, move_.y, move_.z));
-        model_ *= rotate_;
+        model_ *= glm::mat4_cast(rotate_q);
         model_ = glm::scale(model_, glm::vec3(scale_.x, scale_.y, scale_.z));
         return model_;
 #endif

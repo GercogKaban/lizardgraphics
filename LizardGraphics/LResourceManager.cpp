@@ -71,6 +71,7 @@ namespace LGraphics
         //
         stbi_image_free(pixels);
         textures.emplace(std::make_pair(std::string(path), std::move(TexturesData{ new OpenGLImage{ texture, 0 } })));
+        app->ttt = texture;
         return &((OpenGLImage*)textures[path].textures)->diffuse;
     }
 
@@ -122,7 +123,7 @@ namespace LGraphics
         glGenTextures(1, texture);
         glBindTexture(GL_TEXTURE_2D, *texture);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)app->info.anisotropy);
