@@ -69,6 +69,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -102,19 +103,25 @@ Public Types</h2></td></tr>
 , <b>THREE_BUFFERS_TO_CHANGE</b>
  }</td></tr>
 <tr class="separator:a21082fd64717d5b834ba145c291091d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9edc878a89e4438496b88b48106642ce"><td class="memItemLeft" align="right" valign="top"><a id="a9edc878a89e4438496b88b48106642ce" name="a9edc878a89e4438496b88b48106642ce"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>RectangleUniforms</b> = <a class="el" href="struct_l_graphics_1_1_l_widget_1_1_widget_uniforms.html">WidgetUniforms</a></td></tr>
+<tr class="separator:a9edc878a89e4438496b88b48106642ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9260d3ddc54a86a90776930bfde90b80"><td class="memItemLeft" align="right" valign="top"><a id="a9260d3ddc54a86a90776930bfde90b80" name="a9260d3ddc54a86a90776930bfde90b80"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>CubeUniforms</b> = <a class="el" href="struct_l_graphics_1_1_l_widget_1_1_widget_uniforms.html">WidgetUniforms</a></td></tr>
+<tr class="separator:a9260d3ddc54a86a90776930bfde90b80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a83b5cd1e5b04ecc8cf0309475a95c26e"><td class="memItemLeft" align="right" valign="top"><a id="a83b5cd1e5b04ecc8cf0309475a95c26e" name="a83b5cd1e5b04ecc8cf0309475a95c26e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>LWRectangle</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, const char *path=nullptr)</td></tr>
-<tr class="separator:a83b5cd1e5b04ecc8cf0309475a95c26e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9024a10997ce4bf18e0bb280864c3738"><td class="memItemLeft" align="right" valign="top"><a id="a9024a10997ce4bf18e0bb280864c3738" name="a9024a10997ce4bf18e0bb280864c3738"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LWRectangle</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#aabf3c986fb175ca19f7a5ea8c9140c64">app</a>, const char *path=nullptr, bool notRectangle=false)</td></tr>
+<tr class="separator:a9024a10997ce4bf18e0bb280864c3738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0dbae54603b6e156ff12cdc9e2dcf01"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#ad0dbae54603b6e156ff12cdc9e2dcf01">getObjectType</a> () const override</td></tr>
 <tr class="separator:ad0dbae54603b6e156ff12cdc9e2dcf01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad58fed5a139b1d48c792c895f96a41aa"><td class="memItemLeft" align="right" valign="top"><a id="ad58fed5a139b1d48c792c895f96a41aa" name="ad58fed5a139b1d48c792c895f96a41aa"></a>
 virtual glm::vec4&#160;</td><td class="memItemRight" valign="bottom"><b>getScreenCoords</b> () const</td></tr>
 <tr class="separator:ad58fed5a139b1d48c792c895f96a41aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4522c3da9a21ec6bd441354695e7ae4c"><td class="memItemLeft" align="right" valign="top"><a id="a4522c3da9a21ec6bd441354695e7ae4c" name="a4522c3da9a21ec6bd441354695e7ae4c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#aabf3c986fb175ca19f7a5ea8c9140c64">app</a>)</td></tr>
 <tr class="separator:a4522c3da9a21ec6bd441354695e7ae4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2a9daa54815b70cb3d69a22f4ddbaba"><td class="memItemLeft" align="right" valign="top"><a id="ad2a9daa54815b70cb3d69a22f4ddbaba" name="ad2a9daa54815b70cb3d69a22f4ddbaba"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> ()</td></tr>
@@ -175,6 +182,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scaleWithoutAlign</b>
 <tr class="memitem:a41cb2b8bf287fe4d570b7eed9120ad51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#a41cb2b8bf287fe4d570b7eed9120ad51">move</a> (const glm::vec&lt; 2, size_t &gt; val) override</td></tr>
 <tr class="memdesc:a41cb2b8bf287fe4d570b7eed9120ad51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Перемещает виджет.  <a href="class_l_graphics_1_1_l_shape.html#a41cb2b8bf287fe4d570b7eed9120ad51">More...</a><br /></td></tr>
 <tr class="separator:a41cb2b8bf287fe4d570b7eed9120ad51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed08dbe2dbfeb819708f2d73b9c57156"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#aed08dbe2dbfeb819708f2d73b9c57156">setModel</a> (const glm::mat4 &amp;model) override</td></tr>
+<tr class="separator:aed08dbe2dbfeb819708f2d73b9c57156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a280f06f78d6a1ef8aff773432ad7ccc7"><td class="memItemLeft" align="right" valign="top">float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_shape.html#a280f06f78d6a1ef8aff773432ad7ccc7">getTransparencyRef</a> () override</td></tr>
 <tr class="memdesc:a280f06f78d6a1ef8aff773432ad7ccc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Возвращает прозрачность виджета.  <a href="class_l_graphics_1_1_l_shape.html#a280f06f78d6a1ef8aff773432ad7ccc7">More...</a><br /></td></tr>
 <tr class="separator:a280f06f78d6a1ef8aff773432ad7ccc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,12 +230,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>tick</b> ()</
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMouseOnItEventFunction</b> (::std::function&lt; void()&gt; fun)</td></tr>
 <tr class="memdesc:a8de7df00d23818df29617b9c462e1706"><td class="mdescLeft">&#160;</td><td class="mdescRight">устанавливает функцию, которая будет срабатывать при наведении мышки на виджет. <br /></td></tr>
 <tr class="separator:a8de7df00d23818df29617b9c462e1706"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58337ccf9dbc274e3ace4294c32fe380"><td class="memItemLeft" align="right" valign="top"><a id="a58337ccf9dbc274e3ace4294c32fe380" name="a58337ccf9dbc274e3ace4294c32fe380"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMaterial</b> (int material)</td></tr>
-<tr class="separator:a58337ccf9dbc274e3ace4294c32fe380"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfd8a08daf69213c9398c7d1febc47ed"><td class="memItemLeft" align="right" valign="top"><a id="adfd8a08daf69213c9398c7d1febc47ed" name="adfd8a08daf69213c9398c7d1febc47ed"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getMaterial</b> () const</td></tr>
-<tr class="separator:adfd8a08daf69213c9398c7d1febc47ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44a34d7d240601c0d93ae20b20fa3939"><td class="memItemLeft" align="right" valign="top"><a id="a44a34d7d240601c0d93ae20b20fa3939" name="a44a34d7d240601c0d93ae20b20fa3939"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setMaterial</b> (int material)</td></tr>
+<tr class="separator:a44a34d7d240601c0d93ae20b20fa3939"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a2f6531aaf742de14c3d3735c7a2086"><td class="memItemLeft" align="right" valign="top"><a id="a9a2f6531aaf742de14c3d3735c7a2086" name="a9a2f6531aaf742de14c3d3735c7a2086"></a>
+virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>getMaterial</b> () const</td></tr>
+<tr class="separator:a9a2f6531aaf742de14c3d3735c7a2086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad99728ce5553caf326e583bc7fe6542f"><td class="memItemLeft" align="right" valign="top"><a id="ad99728ce5553caf326e583bc7fe6542f" name="ad99728ce5553caf326e583bc7fe6542f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (::std::string name)</td></tr>
 <tr class="separator:ad99728ce5553caf326e583bc7fe6542f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -234,13 +243,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (::std::s
 ::std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const</td></tr>
 <tr class="separator:ad2eb2f496c2cb90cbb0da835d1ee82ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a027bd0117d7c315140710d00c77a26f1"><td class="memItemLeft" align="right" valign="top"><a id="a027bd0117d7c315140710d00c77a26f1" name="a027bd0117d7c315140710d00c77a26f1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateX</b> (float angleDegree)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateX</b> (float angleDegree)</td></tr>
 <tr class="separator:a027bd0117d7c315140710d00c77a26f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af593224631388f361ab8ec65105702f9"><td class="memItemLeft" align="right" valign="top"><a id="af593224631388f361ab8ec65105702f9" name="af593224631388f361ab8ec65105702f9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateY</b> (float angleDegree)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateY</b> (float angleDegree)</td></tr>
 <tr class="separator:af593224631388f361ab8ec65105702f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cff4d9c74ffc863683d6f6918b9a585"><td class="memItemLeft" align="right" valign="top"><a id="a6cff4d9c74ffc863683d6f6918b9a585" name="a6cff4d9c74ffc863683d6f6918b9a585"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateZ</b> (float angleDegree)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>rotateZ</b> (float angleDegree)</td></tr>
 <tr class="separator:a6cff4d9c74ffc863683d6f6918b9a585"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84e796bd3c4625e57f61665e8dbb6994"><td class="memItemLeft" align="right" valign="top"><a id="a84e796bd3c4625e57f61665e8dbb6994" name="a84e796bd3c4625e57f61665e8dbb6994"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getRotateDegrees</b> () const</td></tr>
@@ -248,12 +257,15 @@ glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getRotateDegrees
 <tr class="memitem:a6c10e36e186f7e3997c39b566b8d3229"><td class="memItemLeft" align="right" valign="top"><a id="a6c10e36e186f7e3997c39b566b8d3229" name="a6c10e36e186f7e3997c39b566b8d3229"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setRotate</b> (const glm::mat4 &amp;rotate)</td></tr>
 <tr class="separator:a6c10e36e186f7e3997c39b566b8d3229"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc666d3c6024c6d9a4f39c854959e87b"><td class="memItemLeft" align="right" valign="top"><a id="acc666d3c6024c6d9a4f39c854959e87b" name="acc666d3c6024c6d9a4f39c854959e87b"></a>
+virtual glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>getRotateQ</b> () const</td></tr>
+<tr class="separator:acc666d3c6024c6d9a4f39c854959e87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa22192dca0c69a8f1db1a0e159a510b7"><td class="memItemLeft" align="right" valign="top"><a id="aa22192dca0c69a8f1db1a0e159a510b7" name="aa22192dca0c69a8f1db1a0e159a510b7"></a>
 virtual glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>getRotate</b> () const</td></tr>
 <tr class="separator:aa22192dca0c69a8f1db1a0e159a510b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4137dfbb08a35c4bd469e8b44b3c37f"><td class="memItemLeft" align="right" valign="top"><a id="af4137dfbb08a35c4bd469e8b44b3c37f" name="af4137dfbb08a35c4bd469e8b44b3c37f"></a>
-virtual glm::mat4 &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getRotateRef</b> ()</td></tr>
-<tr class="separator:af4137dfbb08a35c4bd469e8b44b3c37f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdab9525e7f2c0e48673db51e72f3ab3"><td class="memItemLeft" align="right" valign="top"><a id="abdab9525e7f2c0e48673db51e72f3ab3" name="abdab9525e7f2c0e48673db51e72f3ab3"></a>
+virtual glm::quat &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getRotateRef</b> ()</td></tr>
+<tr class="separator:abdab9525e7f2c0e48673db51e72f3ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e602498cc1c4ffeb6d0081259db4f7c"><td class="memItemLeft" align="right" valign="top"><a id="a2e602498cc1c4ffeb6d0081259db4f7c" name="a2e602498cc1c4ffeb6d0081259db4f7c"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInstanced</b> () const</td></tr>
 <tr class="separator:a2e602498cc1c4ffeb6d0081259db4f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,9 +294,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInited</b> () const
 <tr class="memitem:a7fd72d64db2ec3110dc8dd5cf37de786"><td class="memItemLeft" align="right" valign="top"><a id="a7fd72d64db2ec3110dc8dd5cf37de786" name="a7fd72d64db2ec3110dc8dd5cf37de786"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isChanged</b> () const</td></tr>
 <tr class="separator:a7fd72d64db2ec3110dc8dd5cf37de786"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f8b5369f0c7a3442218d639c175bba8"><td class="memItemLeft" align="right" valign="top"><a id="a0f8b5369f0c7a3442218d639c175bba8" name="a0f8b5369f0c7a3442218d639c175bba8"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getId</b> () const</td></tr>
-<tr class="separator:a0f8b5369f0c7a3442218d639c175bba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef8a2819a251f64adb1f1f3a4f59dc90"><td class="memItemLeft" align="right" valign="top"><a id="aef8a2819a251f64adb1f1f3a4f59dc90" name="aef8a2819a251f64adb1f1f3a4f59dc90"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (GLuint id)</td></tr>
 <tr class="separator:aef8a2819a251f64adb1f1f3a4f59dc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,6 +331,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTextureTurnedOn</b>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getTexturePath</b> () const</td></tr>
 <tr class="separator:a5e01507c7a06c158357d61dbc699a2ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac273411b2312cb55975b866447ddcdce"><td class="memItemLeft" align="right" valign="top"><a id="ac273411b2312cb55975b866447ddcdce" name="ac273411b2312cb55975b866447ddcdce"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>drawInstanced</b> ()</td></tr>
+<tr class="separator:ac273411b2312cb55975b866447ddcdce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a796372a3470d9e9b4688afbe1093464a"><td class="memItemLeft" align="right" valign="top"><a id="a796372a3470d9e9b4688afbe1093464a" name="a796372a3470d9e9b4688afbe1093464a"></a>
@@ -331,7 +346,7 @@ friend&#160;</td><td class="memItemRight" valign="bottom"><b>LApp</b></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a0720d56bcd8a12c1bf2646261fa744d0"><td class="memItemLeft" align="right" valign="top"><a id="a0720d56bcd8a12c1bf2646261fa744d0" name="a0720d56bcd8a12c1bf2646261fa744d0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#afb1a6f0c4d6f17b768d2fb5d5c400e51">app</a>, bool isInterfaceObj)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *<a class="el" href="class_l_graphics_1_1_l_widget.html#aabf3c986fb175ca19f7a5ea8c9140c64">app</a>, bool isInterfaceObj)</td></tr>
 <tr class="separator:a0720d56bcd8a12c1bf2646261fa744d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e116c48dd9471e6a2a1536f8430b9ee"><td class="memItemLeft" align="right" valign="top"><a id="a6e116c48dd9471e6a2a1536f8430b9ee" name="a6e116c48dd9471e6a2a1536f8430b9ee"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
@@ -346,9 +361,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshModel</b> ()</
 <tr class="memitem:a0bfb8aaad997a2b58148fa4749603ba2"><td class="memItemLeft" align="right" valign="top"><a id="a0bfb8aaad997a2b58148fa4749603ba2" name="a0bfb8aaad997a2b58148fa4749603ba2"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>calculateModelMatrix</b> () const</td></tr>
 <tr class="separator:a0bfb8aaad997a2b58148fa4749603ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95fee0957bb6c9f67960931bd96f6cd5"><td class="memItemLeft" align="right" valign="top"><a id="a95fee0957bb6c9f67960931bd96f6cd5" name="a95fee0957bb6c9f67960931bd96f6cd5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>updateUniforms</b> ()</td></tr>
-<tr class="separator:a95fee0957bb6c9f67960931bd96f6cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9210db51ad8ec37a294e127a76d83d64"><td class="memItemLeft" align="right" valign="top"><a id="a9210db51ad8ec37a294e127a76d83d64" name="a9210db51ad8ec37a294e127a76d83d64"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpdateUniformsFlag</b> ()</td></tr>
+<tr class="separator:a9210db51ad8ec37a294e127a76d83d64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -378,22 +393,18 @@ glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>model</b></td></
 <tr class="memitem:a4055be371a4a7ff532013f49d76ef8eb"><td class="memItemLeft" align="right" valign="top"><a id="a4055be371a4a7ff532013f49d76ef8eb" name="a4055be371a4a7ff532013f49d76ef8eb"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>projection</b></td></tr>
 <tr class="separator:a4055be371a4a7ff532013f49d76ef8eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14f3ede150638e0f29071c20acd2cefd"><td class="memItemLeft" align="right" valign="top"><a id="a14f3ede150638e0f29071c20acd2cefd" name="a14f3ede150638e0f29071c20acd2cefd"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> = -1</td></tr>
-<tr class="separator:a14f3ede150638e0f29071c20acd2cefd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa60d8b386b825ef04be6ddcf736ab7c2"><td class="memItemLeft" align="right" valign="top"><a id="aa60d8b386b825ef04be6ddcf736ab7c2" name="aa60d8b386b825ef04be6ddcf736ab7c2"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> = 0</td></tr>
+<tr class="separator:aa60d8b386b825ef04be6ddcf736ab7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fff77b1560c0fd99f1f3000810e6139"><td class="memItemLeft" align="right" valign="top"><a id="a6fff77b1560c0fd99f1f3000810e6139" name="a6fff77b1560c0fd99f1f3000810e6139"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>material</b> = 0</td></tr>
 <tr class="separator:a6fff77b1560c0fd99f1f3000810e6139"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40c8ce12285e9cad81ebc924432ca010"><td class="memItemLeft" align="right" valign="top"><a id="a40c8ce12285e9cad81ebc924432ca010" name="a40c8ce12285e9cad81ebc924432ca010"></a>
-glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>rotate_</b> = glm::mat4(1.0f)</td></tr>
-<tr class="separator:a40c8ce12285e9cad81ebc924432ca010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2802d5df35245fa4321ab04ada9f1bfb"><td class="memItemLeft" align="right" valign="top"><a id="a2802d5df35245fa4321ab04ada9f1bfb" name="a2802d5df35245fa4321ab04ada9f1bfb"></a>
+glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>rotate_q</b> = glm::quat(0,0,0,1)</td></tr>
+<tr class="separator:a2802d5df35245fa4321ab04ada9f1bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90c5610eb1e5aa0bf900a2f5f7da2b2d"><td class="memItemLeft" align="right" valign="top"><a id="a90c5610eb1e5aa0bf900a2f5f7da2b2d" name="a90c5610eb1e5aa0bf900a2f5f7da2b2d"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>rotateDegrees</b> = glm::vec3(0.0f)</td></tr>
 <tr class="separator:a90c5610eb1e5aa0bf900a2f5f7da2b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="memItemLeft" align="right" valign="top"><a id="afb1a6f0c4d6f17b768d2fb5d5c400e51" name="afb1a6f0c4d6f17b768d2fb5d5c400e51"></a>
-<a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>app</b> = nullptr</td></tr>
-<tr class="memdesc:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Указатель на приложение. <br /></td></tr>
-<tr class="separator:afb1a6f0c4d6f17b768d2fb5d5c400e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6106763de9a9a59206806ed4a4d7d0d4"><td class="memItemLeft" align="right" valign="top"><a id="a6106763de9a9a59206806ed4a4d7d0d4" name="a6106763de9a9a59206806ed4a4d7d0d4"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isHidden_</b> = false</td></tr>
 <tr class="memdesc:a6106763de9a9a59206806ed4a4d7d0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Видимость виджета. <br /></td></tr>
@@ -449,6 +460,13 @@ RenderingAPI&#160;</td><td class="memItemRight" valign="bottom"><b>texturesType<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a8af3f91c975bb9ce52cfa97f0a179b0f"><td class="memItemLeft" align="right" valign="top"><a id="a8af3f91c975bb9ce52cfa97f0a179b0f" name="a8af3f91c975bb9ce52cfa97f0a179b0f"></a>
+static std::vector&lt; <a class="el" href="struct_l_graphics_1_1_l_widget_1_1_widget_uniforms.html">RectangleUniforms</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>uniforms</b></td></tr>
+<tr class="separator:a8af3f91c975bb9ce52cfa97f0a179b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabf3c986fb175ca19f7a5ea8c9140c64"><td class="memItemLeft" align="right" valign="top"><a id="aabf3c986fb175ca19f7a5ea8c9140c64" name="aabf3c986fb175ca19f7a5ea8c9140c64"></a>
+static <a class="el" href="class_l_graphics_1_1_l_app.html">LApp</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>app</b> = nullptr</td></tr>
+<tr class="memdesc:aabf3c986fb175ca19f7a5ea8c9140c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Указатель на приложение. <br /></td></tr>
+<tr class="separator:aabf3c986fb175ca19f7a5ea8c9140c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7ba44f123936084d369ede2b06d89ee"><td class="memItemLeft" align="right" valign="top"><a id="aa7ba44f123936084d369ede2b06d89ee" name="aa7ba44f123936084d369ede2b06d89ee"></a>
 static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResourceManager</a>&#160;</td><td class="memItemRight" valign="bottom"><b>resManager</b></td></tr>
 <tr class="separator:aa7ba44f123936084d369ede2b06d89ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1229,6 +1247,34 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 </dl>
 
 <p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#a77e00c7ab07aea750912a0ffabac10d6">LGraphics::LWidget</a>.</p>
+
+</div>
+</div>
+<a id="aed08dbe2dbfeb819708f2d73b9c57156" name="aed08dbe2dbfeb819708f2d73b9c57156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed08dbe2dbfeb819708f2d73b9c57156">&#9670;&nbsp;</a></span>setModel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LGraphics::LShape::setModel </td>
+          <td>(</td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>model</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a>.</p>
 
 </div>
 </div>

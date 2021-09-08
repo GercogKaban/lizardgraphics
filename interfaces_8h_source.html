@@ -294,9 +294,9 @@ $(function() {
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                        {</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                            sliderRanges[i].inited = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                            <span class="keywordflow">if</span> (obj-&gt;getObjectType() == std::string(<span class="stringliteral">&quot;LModel&quot;</span>))</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                                app-&gt;addObjectToDelete(obj, L_MODEL);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                                app-&gt;safeDelete(obj);</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (obj-&gt;getObjectType() == std::string(<span class="stringliteral">&quot;LWRectangle&quot;</span>))</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                                app-&gt;addObjectToDelete(obj, L_PRIMITIVE);</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                                app-&gt;safeDelete(obj);</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                            deleteDialog = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                        }</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                        ImGui::SameLine();</div>
@@ -442,20 +442,20 @@ $(function() {
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                    obj-&gt;setName(objName);</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                }</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            };</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; app-&gt;getModels().size(); ++i)</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            {</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                ImGui::PushID(i);</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                drawObjectUI(i, app-&gt;getModels()[i], <span class="stringliteral">&quot;model&quot;</span>);</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                ImGui::PopID();</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            }</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <span class="comment">//for (size_t i = 0; i &lt; app-&gt;getModels().size(); ++i)</span></div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            <span class="comment">//{</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            <span class="comment">//    ImGui::PushID(i);</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            <span class="comment">//    drawObjectUI(i, app-&gt;getModels()[i], &quot;model&quot;);</span></div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            <span class="comment">//    ImGui::PopID();</span></div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            <span class="comment">//}</span></div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; app-&gt;getPrimitives().size(); ++i)</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            {</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = i + app-&gt;getModels().size();</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>                ImGui::PushID(<span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>                drawObjectUI(<span class="keywordtype">id</span>, app-&gt;getPrimitives()[i], <span class="stringliteral">&quot;rect&quot;</span>);</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                ImGui::PopID();</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>            }</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            <span class="comment">//for (size_t i = 0; i &lt; app-&gt;getPrimitives().size(); ++i)</span></div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            <span class="comment">//{</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>            <span class="comment">//    const size_t id = i + app-&gt;getModels().size();</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>            <span class="comment">//    ImGui::PushID(id);</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            <span class="comment">//    drawObjectUI(id, app-&gt;getPrimitives()[i], &quot;rect&quot;);</span></div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>            <span class="comment">//    ImGui::PopID();</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>            <span class="comment">//}</span></div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            firstDialog = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>            ImGui::EndChild();</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>            ImGui::End();</div>
@@ -464,9 +464,9 @@ $(function() {
 <div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    </div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>}</div>
 <div class="ttc" id="aclass_l_graphics_1_1_im_gui_interface_html"><div class="ttname"><a href="class_l_graphics_1_1_im_gui_interface.html">LGraphics::ImGuiInterface</a></div><div class="ttdef"><b>Definition:</b> interfaces.h:11</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:109</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">Класс приложения Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:111</div></div>
 <div class="ttc" id="aclass_l_graphics_1_1_l_w_rectangle_html"><div class="ttname"><a href="class_l_graphics_1_1_l_w_rectangle.html">LGraphics::LWRectangle</a></div><div class="ttdef"><b>Definition:</b> LWRectangle.h:9</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a></div><div class="ttdoc">Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LWidget.h:21</div></div>
+<div class="ttc" id="aclass_l_graphics_1_1_l_widget_html"><div class="ttname"><a href="class_l_graphics_1_1_l_widget.html">LGraphics::LWidget</a></div><div class="ttdoc">Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LWidget.h:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

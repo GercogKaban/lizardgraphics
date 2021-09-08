@@ -103,8 +103,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_app_1_1_instant_pool_cubes.html">InstantPoolCubes</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_app_1_1_l_i_d.html">LID</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_queue_family_indices.html">QueueFamilyIndices</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_shader_constants.html">ShaderConstants</a></td></tr>
@@ -156,24 +154,25 @@ glm::vec&lt; 2, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:a51d32404425f92fe18812b2f805b2d86"><td class="memItemLeft" align="right" valign="top"><a id="a51d32404425f92fe18812b2f805b2d86" name="a51d32404425f92fe18812b2f805b2d86"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> (glm::mat4 view, glm::mat4 projection)</td></tr>
 <tr class="separator:a51d32404425f92fe18812b2f805b2d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8ef6fc88675c0fbd0b7437d7909f9e0"><td class="memTemplParams" colspan="2"><a id="ac8ef6fc88675c0fbd0b7437d7909f9e0" name="ac8ef6fc88675c0fbd0b7437d7909f9e0"></a>
-template&lt;typename C &gt; </td></tr>
-<tr class="memitem:ac8ef6fc88675c0fbd0b7437d7909f9e0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>removeWidget</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, C &amp;collection)</td></tr>
-<tr class="separator:ac8ef6fc88675c0fbd0b7437d7909f9e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06df850c5a6147b95a1409198f3dd342"><td class="memTemplParams" colspan="2"><a id="a06df850c5a6147b95a1409198f3dd342" name="a06df850c5a6147b95a1409198f3dd342"></a>
-template&lt;typename C &gt; </td></tr>
-<tr class="memitem:a06df850c5a6147b95a1409198f3dd342"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>deleteWidget</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, C &amp;collection)</td></tr>
-<tr class="separator:a06df850c5a6147b95a1409198f3dd342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6239b18331e6b5bdcdb8d612c0225d40"><td class="memTemplParams" colspan="2"><a id="a6239b18331e6b5bdcdb8d612c0225d40" name="a6239b18331e6b5bdcdb8d612c0225d40"></a>
-template&lt;typename C &gt; </td></tr>
-<tr class="memitem:a6239b18331e6b5bdcdb8d612c0225d40"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, std::vector&lt; C * &gt; &amp;collection)</td></tr>
-<tr class="separator:a6239b18331e6b5bdcdb8d612c0225d40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3b085075e9a1cd7701f24143856531e"><td class="memTemplParams" colspan="2"><a id="ad3b085075e9a1cd7701f24143856531e" name="ad3b085075e9a1cd7701f24143856531e"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ad3b085075e9a1cd7701f24143856531e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>fastErase</b> (std::vector&lt; T &gt; &amp;collection, size_t id)</td></tr>
+<tr class="separator:ad3b085075e9a1cd7701f24143856531e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb4b5004d5d8ad1be75bee12802514e1"><td class="memItemLeft" align="right" valign="top"><a id="adb4b5004d5d8ad1be75bee12802514e1" name="adb4b5004d5d8ad1be75bee12802514e1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
+<tr class="separator:adb4b5004d5d8ad1be75bee12802514e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0db0c193997046f495d8f2cf97505b2"><td class="memItemLeft" align="right" valign="top"><a id="ae0db0c193997046f495d8f2cf97505b2" name="ae0db0c193997046f495d8f2cf97505b2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>removeObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
+<tr class="separator:ae0db0c193997046f495d8f2cf97505b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af727b0d550636dbf2733bb2293017b79"><td class="memItemLeft" align="right" valign="top"><a id="af727b0d550636dbf2733bb2293017b79" name="af727b0d550636dbf2733bb2293017b79"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>deleteObject</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
+<tr class="separator:af727b0d550636dbf2733bb2293017b79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a676bc94c3a985132055ef91906f52f48"><td class="memItemLeft" align="right" valign="top"><a id="a676bc94c3a985132055ef91906f52f48" name="a676bc94c3a985132055ef91906f52f48"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshObjectMatrices</b> ()</td></tr>
 <tr class="separator:a676bc94c3a985132055ef91906f52f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54a9c96157475f016dbde40629ddd2ea"><td class="memItemLeft" align="right" valign="top"><a id="a54a9c96157475f016dbde40629ddd2ea" name="a54a9c96157475f016dbde40629ddd2ea"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getPrimitives</b> ()</td></tr>
-<tr class="separator:a54a9c96157475f016dbde40629ddd2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace3c90943486d5072448c9f5a3974b1f"><td class="memItemLeft" align="right" valign="top"><a id="ace3c90943486d5072448c9f5a3974b1f" name="ace3c90943486d5072448c9f5a3974b1f"></a>
+auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getPrimitives</b> ()</td></tr>
+<tr class="separator:ace3c90943486d5072448c9f5a3974b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b3c4f1c770f42b62cb27bbcf0728715"><td class="memItemLeft" align="right" valign="top"><a id="a4b3c4f1c770f42b62cb27bbcf0728715" name="a4b3c4f1c770f42b62cb27bbcf0728715"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_model.html">LModel</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getModels</b> ()</td></tr>
 <tr class="separator:a4b3c4f1c770f42b62cb27bbcf0728715"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,12 +281,9 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getPoolSize</b> () 
 <tr class="memitem:ade97d9666fa86758dc5ff33f6fa69463"><td class="memItemLeft" align="right" valign="top"><a id="ade97d9666fa86758dc5ff33f6fa69463" name="ade97d9666fa86758dc5ff33f6fa69463"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setImgui</b> (std::function&lt; void()&gt; func)</td></tr>
 <tr class="separator:ade97d9666fa86758dc5ff33f6fa69463"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7f0f2e48531612f25d9c8aa9fbda6cb"><td class="memItemLeft" align="right" valign="top"><a id="aa7f0f2e48531612f25d9c8aa9fbda6cb" name="aa7f0f2e48531612f25d9c8aa9fbda6cb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addObjectToDelete</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, LTypes type)</td></tr>
-<tr class="separator:aa7f0f2e48531612f25d9c8aa9fbda6cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58808e7f96e8b3bb9ee7d6477bafa077"><td class="memItemLeft" align="right" valign="top"><a id="a58808e7f96e8b3bb9ee7d6477bafa077" name="a58808e7f96e8b3bb9ee7d6477bafa077"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addObjectToCreate</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w, LTypes type)</td></tr>
-<tr class="separator:a58808e7f96e8b3bb9ee7d6477bafa077"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeef080e82857d62fcb90ea4ba5a55839"><td class="memItemLeft" align="right" valign="top"><a id="aeef080e82857d62fcb90ea4ba5a55839" name="aeef080e82857d62fcb90ea4ba5a55839"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>safeDelete</b> (<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *w)</td></tr>
+<tr class="separator:aeef080e82857d62fcb90ea4ba5a55839"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f8e6d2f1eed71c3b0d5249df9c49086"><td class="memItemLeft" align="right" valign="top"><a id="a0f8e6d2f1eed71c3b0d5249df9c49086" name="a0f8e6d2f1eed71c3b0d5249df9c49086"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setUserMouseButtonCallback</b> (std::function&lt; void(<a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> *window, int button, int action, int mods)&gt; func)</td></tr>
 <tr class="separator:a0f8e6d2f1eed71c3b0d5249df9c49086"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,6 +323,9 @@ virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getOb
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:add913e30b17addcb780b65df738b25a1"><td class="memItemLeft" align="right" valign="top"><a id="add913e30b17addcb780b65df738b25a1" name="add913e30b17addcb780b65df738b25a1"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>ttt</b> = 0</td></tr>
+<tr class="separator:add913e30b17addcb780b65df738b25a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca0edfab192b085e4c946194b286b466"><td class="memItemLeft" align="right" valign="top"><a id="aca0edfab192b085e4c946194b286b466" name="aca0edfab192b085e4c946194b286b466"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>cubeTexture</b></td></tr>
 <tr class="separator:aca0edfab192b085e4c946194b286b466"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -633,21 +632,18 @@ class <a class="el" href="class_l_graphics_1_1_l_app_1_1_instant_pool_cubes.html
 <tr class="memitem:a74dbb6e45284df716763177cc22aa260"><td class="memItemLeft" align="right" valign="top"><a id="a74dbb6e45284df716763177cc22aa260" name="a74dbb6e45284df716763177cc22aa260"></a>
 int *&#160;</td><td class="memItemRight" valign="bottom"><b>objectsOnScreen</b></td></tr>
 <tr class="separator:a74dbb6e45284df716763177cc22aa260"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fad74740edb5a4ff082c161a53e74bb"><td class="memItemLeft" align="right" valign="top"><a id="a0fad74740edb5a4ff082c161a53e74bb" name="a0fad74740edb5a4ff082c161a53e74bb"></a>
-<a class="el" href="class_l_graphics_1_1_l_app_1_1_l_i_d.html">LID</a>&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>idManager</b></td></tr>
-<tr class="separator:a0fad74740edb5a4ff082c161a53e74bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad323ab5cab93cd05691c357fcdc4222f"><td class="memItemLeft" align="right" valign="top"><a id="ad323ab5cab93cd05691c357fcdc4222f" name="ad323ab5cab93cd05691c357fcdc4222f"></a>
 <a class="el" href="class_l_graphics_1_1_l_sky_box.html">LSkyBox</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>skybox</b> = nullptr</td></tr>
 <tr class="separator:ad323ab5cab93cd05691c357fcdc4222f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abadb285558ff8e4d34f02d6d69659576"><td class="memItemLeft" align="right" valign="top"><a id="abadb285558ff8e4d34f02d6d69659576" name="abadb285558ff8e4d34f02d6d69659576"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>drawUI_</b> = true</td></tr>
 <tr class="separator:abadb285558ff8e4d34f02d6d69659576"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaab180771986ec0408ba9f878e4813f8"><td class="memItemLeft" align="right" valign="top"><a id="aaab180771986ec0408ba9f878e4813f8" name="aaab180771986ec0408ba9f878e4813f8"></a>
-std::stack&lt; std::pair&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *, LTypes &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>toDelete</b></td></tr>
-<tr class="separator:aaab180771986ec0408ba9f878e4813f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d6fd43502b8a8da6a3f34dbd8a7eb05"><td class="memItemLeft" align="right" valign="top"><a id="a7d6fd43502b8a8da6a3f34dbd8a7eb05" name="a7d6fd43502b8a8da6a3f34dbd8a7eb05"></a>
-std::stack&lt; std::pair&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *, LTypes &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>toCreate</b></td></tr>
-<tr class="separator:a7d6fd43502b8a8da6a3f34dbd8a7eb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae125079fe4d68dbb2ae2f611cdc98b87"><td class="memItemLeft" align="right" valign="top"><a id="ae125079fe4d68dbb2ae2f611cdc98b87" name="ae125079fe4d68dbb2ae2f611cdc98b87"></a>
+std::stack&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>toDelete</b></td></tr>
+<tr class="separator:ae125079fe4d68dbb2ae2f611cdc98b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fc7bb1483dea82041fbede50f180cee"><td class="memItemLeft" align="right" valign="top"><a id="a7fc7bb1483dea82041fbede50f180cee" name="a7fc7bb1483dea82041fbede50f180cee"></a>
+std::stack&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>toCreate</b></td></tr>
+<tr class="separator:a7fc7bb1483dea82041fbede50f180cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace477fe544f3916e9ec62a1ce57bef99"><td class="memItemLeft" align="right" valign="top"><a id="ace477fe544f3916e9ec62a1ce57bef99" name="ace477fe544f3916e9ec62a1ce57bef99"></a>
 std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>imgui</b> = []() {}</td></tr>
 <tr class="separator:ace477fe544f3916e9ec62a1ce57bef99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -792,9 +788,9 @@ glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>cameraUp</b> = g
 <tr class="memitem:ad9070eb37548c8c3de1cb13e986c37be"><td class="memItemLeft" align="right" valign="top"><a id="ad9070eb37548c8c3de1cb13e986c37be" name="ad9070eb37548c8c3de1cb13e986c37be"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>viewRadius</b> = 10.0f</td></tr>
 <tr class="separator:ad9070eb37548c8c3de1cb13e986c37be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8232dbae5dcb78caebb7c9c7a7975651"><td class="memItemLeft" align="right" valign="top"><a id="a8232dbae5dcb78caebb7c9c7a7975651" name="a8232dbae5dcb78caebb7c9c7a7975651"></a>
-std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>primitives</b></td></tr>
-<tr class="separator:a8232dbae5dcb78caebb7c9c7a7975651"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbd18d42355c2436e0e31f80c7c8b298"><td class="memItemLeft" align="right" valign="top"><a id="acbd18d42355c2436e0e31f80c7c8b298" name="acbd18d42355c2436e0e31f80c7c8b298"></a>
+std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>primitives</b> [3]</td></tr>
+<tr class="separator:acbd18d42355c2436e0e31f80c7c8b298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adffb5c3cdbeb5cb03ede04ac20f1c7e1"><td class="memItemLeft" align="right" valign="top"><a id="adffb5c3cdbeb5cb03ede04ac20f1c7e1" name="adffb5c3cdbeb5cb03ede04ac20f1c7e1"></a>
 std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_model.html">LModel</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>models</b></td></tr>
 <tr class="separator:adffb5c3cdbeb5cb03ede04ac20f1c7e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
