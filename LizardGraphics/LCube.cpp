@@ -1,16 +1,15 @@
 #include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
 #include "LApp.h"
 #include "LCubeBuffer.h"
 #include "include/glm/gtc/type_ptr.hpp"
 
 std::vector<LGraphics::LWidget::CubeUniforms> LGraphics::LCube::uniforms;
+
+#ifdef EXPERIMENTAL_SET
+std::set<LGraphics::LCube*> LGraphics::LCube::objChanged;
+#else
 std::vector<LGraphics::LCube*> LGraphics::LCube::objChanged;
+#endif
 bool LGraphics::LCube::needToResetBuffer = false;
 GLuint LGraphics::LCube::vbo;
 
@@ -84,18 +83,46 @@ void LGraphics::LCube::drawInstanced()
     setGlobalUniforms(shaderProgram);
     updateBuffer();
     glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, *(GLuint*)obj->getTexture());
+    glBindTexture(GL_TEXTURE_2D, app->ttt);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, app->depthMap);
     glBindVertexArray(app->standartCubeBuffer->getVaoNum());
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, uniforms.size());
 }
 
+void LGraphics::LCube::setModel(const glm::mat4& model)
+{
+    LShape::setModel(model);
+    objChanged.push_back(this);
+}
+
+void LGraphics::LCube::scale(const float x, const float y, const float z)
+{
+    LShape::scale(x, y, z);
+    objChanged.push_back(this);
+}
+
 void LGraphics::LCube::move(const float x, const float y, const float z)
 {
-    auto moveDif = glm::vec3(x, y, z) - move_;
-    move_ = { x,y,z };
-    setUpdateUniformsFlag();
+    LShape::move(x, y, z);
+    objChanged.push_back(this);
+}
+
+void LGraphics::LCube::rotateX(float angle)
+{
+    LWidget::rotateX(angle);
+    objChanged.push_back(this);
+}
+
+void LGraphics::LCube::rotateY(float angle)
+{
+    LWidget::rotateY(angle);
+    objChanged.push_back(this);
+}
+
+void LGraphics::LCube::rotateZ(float angle)
+{
+    LWidget::rotateZ(angle);
     objChanged.push_back(this);
 }
 
@@ -108,7 +135,26 @@ void LGraphics::LCube::updateBuffer()
             resetInstanceBuffer();
             needToResetBuffer = false;
         }
-        LWidget::CubeUniforms* buffer = (LWidget::CubeUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::CubeUniforms) * uniforms.size(), GL_MAP_WRITE_BIT);
+        LWidget::CubeUniforms* buffer = (LWidget::CubeUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::CubeUniforms) * uniforms.size(), 
+            GL_MAP_WRITE_BIT);
+
+#ifdef PARALLEL_UPDATE
+
+        if (objChanged.size() > 1000 && app->info.freeThreads > 1)
+        {
+                std::thread* threads = new std::thread[app->info.freeThreads];
+                for (size_t i = 0; i < app->info.freeThreads; ++i)
+                {
+                    const size_t interval = i * objChanged.size() / app->info.freeThreads;
+                    threads[i] = std::thread(LCube::updateBufferParallel, buffer, objChanged, interval, interval + objChanged.size() / app->info.freeThreads);
+                }
+
+                for (size_t i = 0; i < app->info.freeThreads; ++i)
+                    threads[i].join();
+                delete[] threads;
+        }
+        else
+#endif
         for (auto obj : objChanged)
             buffer[obj->id].model = ((LCube*)app->primitives[L_CUBE][obj->id])->calculateModelMatrix();
         objChanged.clear();
@@ -165,4 +211,10 @@ void LGraphics::LCube::resetInstanceBuffer()
     glBindVertexArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void LGraphics::LCube::updateBufferParallel(LWidget::CubeUniforms* buffer, std::vector<LCube*>& changed, size_t begin, size_t end)
+{
+    for (size_t i = begin; i < end;i++)
+        buffer[changed[i]->id].model = ((LCube*)app->primitives[L_CUBE][changed[i]->id])->calculateModelMatrix();
 }

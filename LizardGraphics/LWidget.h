@@ -133,9 +133,9 @@ namespace LGraphics
         void setName(::std::string name) { this->name = name; }
         ::std::string getName() const { return name; }
 
-        void rotateX(float angleDegree);
-        void rotateY(float angleDegree);
-        void rotateZ(float angleDegree);
+        virtual void rotateX(float angleDegree);
+        virtual void rotateY(float angleDegree);
+        virtual void rotateZ(float angleDegree);
 
         glm::vec3 getRotateDegrees() const { return rotateDegrees; }
         void setRotate(const glm::mat4& rotate);

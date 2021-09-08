@@ -97,6 +97,7 @@ namespace LGraphics
         LProjections projection = L_ORTHOGRAPHIC;
         uint8_t logFlags = 0;
         LStates redactorMode = L_FALSE;
+        size_t freeThreads = std::max((int)std::thread::hardware_concurrency() - 2, 1);
     };
 
     /*!
@@ -131,6 +132,7 @@ namespace LGraphics
 
     public:
 
+        GLuint ttt = 0;
         LApp(const LAppCreateInfo& info);
         ~LApp();
 

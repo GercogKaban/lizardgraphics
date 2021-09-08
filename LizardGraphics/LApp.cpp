@@ -69,10 +69,6 @@ namespace LGraphics
     void LApp::drawScene()
     {
         LCube::drawInstanced();
-        //cubeInstantPool.draw();
-        //if (primitives.size())
-        //    for (size_t i = 0; i < primitives.size(); ++i)
-        //        primitives[i]->draw();
         if (!drawingInShadow)
         {
             glDepthFunc(GL_LEQUAL);
@@ -652,6 +648,7 @@ namespace LGraphics
         if (info.loadObjects)
             genWidgets(this);
         LCube::initInstanceBuffer();
+        LResourceManager::setApp(this);
 #endif
         //cubeInstantPool.initPool();
     }
