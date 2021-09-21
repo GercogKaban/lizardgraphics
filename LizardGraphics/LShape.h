@@ -94,6 +94,7 @@ namespace LGraphics
         glm::vec3 getColor() const override { return color_; } ///< Возвращает цвет виджета.
         glm::vec3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         glm::vec3 getMove() const override;   ///< Возвращает расположение виджета.
+
         const LBuffer* getBuffer() const { return buffer; }
 
         const glm::mat4& getModelMatrix() const { return model; }

@@ -4,6 +4,8 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normals;
 layout (location = 2) in vec2 textureCoords;
 layout (location = 3) in mat4 model;
+layout (location = 7) in vec2 offset;
+layout (location = 8) in vec2 textureSize;
 
 //uniform mat4 model;
 uniform mat4 proj;
@@ -18,5 +20,7 @@ void main()
 	FragPos = vec3(model * vec4(position, 1.0f)); 
 	Normal = mat3(transpose(inverse(model))) * normals;   
 	gl_Position =  proj * view * vec4(FragPos, 1.0f); 
-	TexCoord = vec2(textureCoords.x, 1.0f - textureCoords.y);
+	TexCoord = vec2(
+		(textureCoords.x + offset.x)*textureSize.x , 
+		(1.0f - textureCoords.y * textureSize.y)+ offset.y*textureSize.y);
 }

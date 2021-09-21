@@ -20,8 +20,12 @@ namespace LGraphics
         const char* getObjectType() const override { return "LImage"; }
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
+#ifdef MEGATEXTURE_LG
+        virtual void setDiffuse(const char* path);
+#else
         void setDiffuse(GLuint id);
         void setDiffuse(VkImageView view);
+#endif 
 
         const void* getTexture() const { return textures; }
         /*!

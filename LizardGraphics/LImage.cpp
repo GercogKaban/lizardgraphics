@@ -6,6 +6,12 @@
 
 namespace LGraphics
 {
+#ifdef MEGATEXTURE_LG
+    void LImage::setDiffuse(const char* path)
+    {
+        this->texturePath = std::filesystem::current_path().generic_string() + "/" + path;
+    }
+#else
     void LImage::setDiffuse(GLuint id)
     { 
         ((LResourceManager::OpenGLImage*)textures)->diffuse = id;
@@ -15,11 +21,12 @@ namespace LGraphics
         //imageType = 1;
         //((LResourceManager::VulkanImage*)textures.get())->diffuse.texture = view;
     }
+#endif
 
     LImage::LImage(const char* path, RenderingAPI api)
     {
         texturesType = api;
-        texturePath = !path?"":path;
+        texturePath = !path?"": std::filesystem::current_path().generic_string() + "/" + path;
         if (!texturePath.size()) turnOffTexture();
         init();
     }

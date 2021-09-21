@@ -1,4 +1,6 @@
 ﻿#pragma once
+#define MEGATEXTURE_LG
+
 namespace LGraphics
 {
     class LObject

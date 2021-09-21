@@ -20,6 +20,7 @@ namespace LGraphics
 		void setModel(const glm::mat4& model) override;
 		void scale(const float x, const float y, const float z) override;
 		void move(const float x, const float y, const float z) override;
+		void setDiffuse(const char* path) override;
 
 		void rotateX(float angle) override;
 		void rotateY(float angle) override;
@@ -28,6 +29,7 @@ namespace LGraphics
 	protected:
 
 		static void updateBuffer();
+		static void updateUniforms(LWidget::CubeUniforms* buffer, size_t id);
 		static void setGlobalUniforms(GLuint shader);
 		static void initInstanceBuffer();
 		static void resetInstanceBuffer();

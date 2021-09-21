@@ -4,11 +4,12 @@
 #include <variant>
 #include <memory>
 
-#include "include/stb/stb_image.h"
+//#include "include/stb/stb_image.h"
 #include "include/tinyobjloader/tiny_obj_loader.h"
 //#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 #include "include/GLEW/glew.h"
 #include "LApp.h"
+#include "AtlasGenerator.h"
 
 //#define OGL_IMG LResourceManager::OpenGLImage
 //#define VK_IMG LResourceManager::OpenGLImage
@@ -102,10 +103,8 @@ namespace LGraphics
         friend LRectangleMirror;
 
     public:
-        // uses ResourceManager
-        //static TexturesData loadTextureImageObject(const char* diffusePath, const char* normalsPath, const char* name);
 
-        // doesn't use ResourceManager
+        static void  loadCacheAtlases();
         static void* loadTexture(const char* path, size_t& mipLevels);
         static void* loadCubeTexture(const std::vector<std::string>& paths, const char* name);
 
@@ -113,6 +112,8 @@ namespace LGraphics
         //static void loadModel(LModel* model, const char* modelPath, bool debugInfo = false);
 
         static void setApp(LApp* app) { LResourceManager::app = app; }
+
+        ~LResourceManager();
 
     private:
 
@@ -130,8 +131,11 @@ namespace LGraphics
 
 
         static LApp* app;
+
+        static std::vector<AtlasData> atlasData;
         static std::unordered_map<std::string, TexturesData> textures;
         static std::unordered_map<std::string, ModelData> models;
+        //static std::hash_set<std::string> atlasTextures;
     };
 }
 
