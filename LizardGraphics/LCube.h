@@ -3,17 +3,16 @@
 #include "LApp.h"
 #include <set>
 
-#define PARALLEL_UPDATE
-
 namespace LGraphics
 {
-	class LCube : public LWRectangle
+	class LCube : public LRectangleShape
 	{
 	public:
 
 		friend LApp;
 
 		LCube(LApp* app, const char* path);
+		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override{}
 		void draw() override;
 		static void drawInstanced();
 
@@ -30,7 +29,7 @@ namespace LGraphics
 
 		static void updateBuffer();
 		static void updateUniforms(LWidget::CubeUniforms* buffer, size_t id);
-		static void setGlobalUniforms(GLuint shader);
+		//static void setGlobalUniforms(GLuint shader);
 		static void initInstanceBuffer();
 		static void resetInstanceBuffer();
 
@@ -40,11 +39,6 @@ namespace LGraphics
 		static GLuint vbo;
 		static std::vector<CubeUniforms> uniforms;
 
-
-#ifdef EXPERIMENTAL_SET
-		static std::set<LCube*> objChanged;
-#else
 		static std::vector<LCube*> objChanged;
-#endif
 	};
 }

@@ -36,13 +36,13 @@ int main(int argc, char** argv)
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LCube* c;
+    LWRectangle* c;
     if (!info.loadObjects)
     {
-        auto t = new LCube(&app, "textures/gold2.jpg");
+        auto t = new LWRectangle(&app, "textures/gold2.jpg");
         t->move(5.0f, 0, 0);
-        new LCube(&app, "textures/gold.jpg");
-        c = new LCube(&app, "textures/gold2.jpg");
+        new LWRectangle(&app, "textures/gold.jpg");
+        c = new LWRectangle(&app, "textures/gold2.jpg");
         for (size_t i = 0; i < poolSize; ++i)
         {   
             //c = new LCube(&app, "textures/gold2.jpg");

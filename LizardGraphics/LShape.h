@@ -139,6 +139,8 @@ namespace LGraphics
 
     protected:
 
+        static void setGlobalUniforms(GLuint shaderProgram);
+
         void refreshModel();
         glm::mat4 calculateModelMatrix() const;
         glm::mat4 model;

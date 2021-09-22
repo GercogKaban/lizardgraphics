@@ -1,4 +1,5 @@
 ﻿#pragma once
+#define PARALLEL_UPDATE
 
 #include <mutex>
 #include <optional>

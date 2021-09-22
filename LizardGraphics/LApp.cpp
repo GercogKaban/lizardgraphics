@@ -70,6 +70,7 @@ namespace LGraphics
     void LApp::drawScene()
     {
         LCube::drawInstanced();
+        LWRectangle::drawInstanced();
         if (!drawingInShadow)
         {
             glDepthFunc(GL_LEQUAL);
@@ -186,7 +187,7 @@ namespace LGraphics
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                     drawScene();
                     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-                    if (info.redactorMode)
+                    if (info.redactorMode == L_TRUE)
                     {
                         buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
                         memcpy(objectsOnScreen, buff, screenSize);
@@ -458,7 +459,12 @@ namespace LGraphics
             fastErase(primitives[L_CUBE], w->id);
         }
         else if (dynamic_cast<LWRectangle*>(w))   
+        {
+            LWRectangle::uniforms.pop_back();
+            if (w != primitives[L_RECTANGLE].back())
+                LWRectangle::objChanged.push_back((LWRectangle*)primitives[L_RECTANGLE].back());
             fastErase(primitives[L_RECTANGLE], w->id);
+        }
         else if (dynamic_cast<LModel*>(w)) fastErase(primitives[L_MODEL], w->id);
         else throw std::runtime_error("wrong object type");
     }
@@ -646,6 +652,7 @@ namespace LGraphics
         if (info.loadObjects)
             genWidgets(this);
         LCube::initInstanceBuffer();
+        LWRectangle::initInstanceBuffer();
         LResourceManager::setApp(this);
 
         // тут должна быть ещё проверка изменились ли файлы текстур
@@ -672,7 +679,6 @@ namespace LGraphics
         size_t dummy;
         megatexture.id = ((LResourceManager::OpenGLImage*)LResourceManager::loadTexture("textures/out.jpg", dummy))->diffuse;
 
-        //const auto& t : megatexture.textureAtl.getAtlasData().texturePaths
         for (size_t i = 0; i < megatexture.textureAtl.getAtlasData().texturePaths.size();++i)
         {
             const auto& atlData = megatexture.textureAtl.getAtlasData();
@@ -1137,6 +1143,7 @@ namespace LGraphics
     {
         LOG_CALL
         glDeleteBuffers(1, &LCube::vbo);
+        glDeleteBuffers(1, &LWRectangle::vbo);
     }
 
     void LApp::releaseResources()
