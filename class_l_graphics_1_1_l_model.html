@@ -71,6 +71,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="class_l_graphics_1_1_l_model-members.html">List of all members</a>  </div>
@@ -279,12 +280,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInited</b> () const
 <tr class="memitem:a7fd72d64db2ec3110dc8dd5cf37de786"><td class="memItemLeft" align="right" valign="top"><a id="a7fd72d64db2ec3110dc8dd5cf37de786" name="a7fd72d64db2ec3110dc8dd5cf37de786"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isChanged</b> () const</td></tr>
 <tr class="separator:a7fd72d64db2ec3110dc8dd5cf37de786"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef8a2819a251f64adb1f1f3a4f59dc90"><td class="memItemLeft" align="right" valign="top"><a id="aef8a2819a251f64adb1f1f3a4f59dc90" name="aef8a2819a251f64adb1f1f3a4f59dc90"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (GLuint id)</td></tr>
-<tr class="separator:aef8a2819a251f64adb1f1f3a4f59dc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84245b7336a34f2bd603ba29595fa054"><td class="memItemLeft" align="right" valign="top"><a id="a84245b7336a34f2bd603ba29595fa054" name="a84245b7336a34f2bd603ba29595fa054"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (VkImageView view)</td></tr>
-<tr class="separator:a84245b7336a34f2bd603ba29595fa054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a991b3663ad27577b7f0d617fb4acabb3"><td class="memItemLeft" align="right" valign="top"><a id="a991b3663ad27577b7f0d617fb4acabb3" name="a991b3663ad27577b7f0d617fb4acabb3"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (const char *path)</td></tr>
+<tr class="separator:a991b3663ad27577b7f0d617fb4acabb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aa42ec2ee33a393da8b55107873d97f"><td class="memItemLeft" align="right" valign="top"><a id="a7aa42ec2ee33a393da8b55107873d97f" name="a7aa42ec2ee33a393da8b55107873d97f"></a>
 const void *&#160;</td><td class="memItemRight" valign="bottom"><b>getTexture</b> () const</td></tr>
 <tr class="separator:a7aa42ec2ee33a393da8b55107873d97f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -349,6 +347,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpdateUniformsFlag
 <tr class="memitem:a6e116c48dd9471e6a2a1536f8430b9ee"><td class="memItemLeft" align="right" valign="top"><a id="a6e116c48dd9471e6a2a1536f8430b9ee" name="a6e116c48dd9471e6a2a1536f8430b9ee"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
 <tr class="separator:a6e116c48dd9471e6a2a1536f8430b9ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a975da3fbb4eb845c77908d5a63abc8bb"><td class="memItemLeft" align="right" valign="top"><a id="a975da3fbb4eb845c77908d5a63abc8bb" name="a975da3fbb4eb845c77908d5a63abc8bb"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setGlobalUniforms</b> (GLuint shaderProgram)</td></tr>
+<tr class="separator:a975da3fbb4eb845c77908d5a63abc8bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -623,7 +627,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 <p>Рисует виджет. </p>
 
-<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb">LGraphics::LWRectangle</a>.</p>
+<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_cube.html#a116b706085cf7f3b6f290517d1081b14">LGraphics::LCube</a>, and <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb">LGraphics::LWRectangle</a>.</p>
 
 </div>
 </div>
@@ -1001,6 +1005,8 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 <p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ad0416d556b95dad44553ba8d893500f2">LGraphics::LWidget</a>.</p>
 
+<p>Reimplemented in <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#ab84ebd1e4043bd83ad9eeb18b0fbc222">LGraphics::LWRectangle</a>.</p>
+
 </div>
 </div>
 <a id="a23946f45d7be871b30b52a4503f6a98f" name="a23946f45d7be871b30b52a4503f6a98f"></a>
@@ -1175,6 +1181,8 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 </dl>
 
 <p>Implements <a class="el" href="class_l_graphics_1_1_l_widget.html#ab2b3dc1ef93a7bc2c86ef69808e12ab5">LGraphics::LWidget</a>.</p>
+
+<p>Reimplemented in <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#a69e83d8c79a2701f7f72b9a0c2554f2a">LGraphics::LWRectangle</a>.</p>
 
 </div>
 </div>

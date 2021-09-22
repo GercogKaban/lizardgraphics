@@ -95,10 +95,10 @@ Inheritance diagram for LGraphics::LWidget:</div>
 <area href="class_l_graphics_1_1_l_circle.html" alt="LGraphics::LCircle" shape="rect" coords="0,224,175,248"/>
 <area href="class_l_graphics_1_1_l_model.html" alt="LGraphics::LModel" shape="rect" coords="185,224,360,248"/>
 <area href="class_l_graphics_1_1_l_rectangle_shape.html" title="Класс четурёхугольной формы." alt="LGraphics::LRectangleShape" shape="rect" coords="370,224,545,248"/>
-<area href="class_l_graphics_1_1_l_w_rectangle.html" alt="LGraphics::LWRectangle" shape="rect" coords="370,280,545,304"/>
-<area href="class_l_graphics_1_1_l_cube.html" alt="LGraphics::LCube" shape="rect" coords="370,336,545,360"/>
-<area href="class_l_graphics_1_1_l_rectangle_mirror.html" alt="LGraphics::LRectangleMirror" shape="rect" coords="277,392,452,416"/>
-<area href="class_l_graphics_1_1_l_sky_box.html" alt="LGraphics::LSkyBox" shape="rect" coords="462,392,637,416"/>
+<area href="class_l_graphics_1_1_l_cube.html" alt="LGraphics::LCube" shape="rect" coords="277,280,452,304"/>
+<area href="class_l_graphics_1_1_l_w_rectangle.html" alt="LGraphics::LWRectangle" shape="rect" coords="462,280,637,304"/>
+<area href="class_l_graphics_1_1_l_rectangle_mirror.html" alt="LGraphics::LRectangleMirror" shape="rect" coords="185,336,360,360"/>
+<area href="class_l_graphics_1_1_l_sky_box.html" alt="LGraphics::LSkyBox" shape="rect" coords="370,336,545,360"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -266,12 +266,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInited</b> () const
 <tr class="memitem:a7fd72d64db2ec3110dc8dd5cf37de786"><td class="memItemLeft" align="right" valign="top"><a id="a7fd72d64db2ec3110dc8dd5cf37de786" name="a7fd72d64db2ec3110dc8dd5cf37de786"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isChanged</b> () const</td></tr>
 <tr class="separator:a7fd72d64db2ec3110dc8dd5cf37de786"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef8a2819a251f64adb1f1f3a4f59dc90"><td class="memItemLeft" align="right" valign="top"><a id="aef8a2819a251f64adb1f1f3a4f59dc90" name="aef8a2819a251f64adb1f1f3a4f59dc90"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (GLuint id)</td></tr>
-<tr class="separator:aef8a2819a251f64adb1f1f3a4f59dc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84245b7336a34f2bd603ba29595fa054"><td class="memItemLeft" align="right" valign="top"><a id="a84245b7336a34f2bd603ba29595fa054" name="a84245b7336a34f2bd603ba29595fa054"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (VkImageView view)</td></tr>
-<tr class="separator:a84245b7336a34f2bd603ba29595fa054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a991b3663ad27577b7f0d617fb4acabb3"><td class="memItemLeft" align="right" valign="top"><a id="a991b3663ad27577b7f0d617fb4acabb3" name="a991b3663ad27577b7f0d617fb4acabb3"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setDiffuse</b> (const char *path)</td></tr>
+<tr class="separator:a991b3663ad27577b7f0d617fb4acabb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aa42ec2ee33a393da8b55107873d97f"><td class="memItemLeft" align="right" valign="top"><a id="a7aa42ec2ee33a393da8b55107873d97f" name="a7aa42ec2ee33a393da8b55107873d97f"></a>
 const void *&#160;</td><td class="memItemRight" valign="bottom"><b>getTexture</b> () const</td></tr>
 <tr class="separator:a7aa42ec2ee33a393da8b55107873d97f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -606,7 +603,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 <p>Рисует виджет. </p>
 
-<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb">LGraphics::LWRectangle</a>.</p>
+<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_cube.html#a116b706085cf7f3b6f290517d1081b14">LGraphics::LCube</a>, and <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb">LGraphics::LWRectangle</a>.</p>
 
 </div>
 </div>
@@ -982,7 +979,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_cube.html#a1768e802c33ceb77cd93ee2cb1d89260">LGraphics::LCube</a>, and <a class="el" href="class_l_graphics_1_1_l_shape.html#a9a5e07297af96cc3d96da7f8799fecfa">LGraphics::LShape</a>.</p>
+<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_cube.html#a1768e802c33ceb77cd93ee2cb1d89260">LGraphics::LCube</a>, <a class="el" href="class_l_graphics_1_1_l_shape.html#a9a5e07297af96cc3d96da7f8799fecfa">LGraphics::LShape</a>, and <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#ab84ebd1e4043bd83ad9eeb18b0fbc222">LGraphics::LWRectangle</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1154,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_cube.html#a391a22721778eb591f889b13309fb8e4">LGraphics::LCube</a>, and <a class="el" href="class_l_graphics_1_1_l_shape.html#acccf886325328e58da6b8623748e51f1">LGraphics::LShape</a>.</p>
+<p>Implemented in <a class="el" href="class_l_graphics_1_1_l_cube.html#a391a22721778eb591f889b13309fb8e4">LGraphics::LCube</a>, <a class="el" href="class_l_graphics_1_1_l_shape.html#acccf886325328e58da6b8623748e51f1">LGraphics::LShape</a>, and <a class="el" href="class_l_graphics_1_1_l_w_rectangle.html#a69e83d8c79a2701f7f72b9a0c2554f2a">LGraphics::LWRectangle</a>.</p>
 
 </div>
 </div>

@@ -80,7 +80,7 @@ var searchData=
   ['displayproperties2khr_77',['DisplayProperties2KHR',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_display_properties2_k_h_r.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['displaypropertieskhr_78',['DisplayPropertiesKHR',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_display_properties_k_h_r.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['displaysurfacecreateinfokhr_79',['DisplaySurfaceCreateInfoKHR',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_display_surface_create_info_k_h_r.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['draw_80',['draw',['../class_l_graphics_1_1_l_widget.html#a442f1e5be816072d1d4f5816f62dac89',1,'LGraphics::LWidget::draw()'],['../class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb',1,'LGraphics::LWRectangle::draw()']]],
+  ['draw_80',['draw',['../class_l_graphics_1_1_l_cube.html#a116b706085cf7f3b6f290517d1081b14',1,'LGraphics::LCube::draw()'],['../class_l_graphics_1_1_l_widget.html#a442f1e5be816072d1d4f5816f62dac89',1,'LGraphics::LWidget::draw()'],['../class_l_graphics_1_1_l_w_rectangle.html#a96e920f3c4abdbe9429626e1171e82cb',1,'LGraphics::LWRectangle::draw()']]],
   ['drawindexedindirectcommand_81',['DrawIndexedIndirectCommand',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_draw_indexed_indirect_command.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['drawindirectcommand_82',['DrawIndirectCommand',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_draw_indirect_command.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['drawmeshtasksindirectcommandnv_83',['DrawMeshTasksIndirectCommandNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_draw_mesh_tasks_indirect_command_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],

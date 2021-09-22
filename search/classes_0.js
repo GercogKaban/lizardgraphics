@@ -26,11 +26,13 @@ var searchData=
   ['arrayproxynotemporaries_23',['ArrayProxyNoTemporaries',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_array_proxy_no_temporaries.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['arraywrapper1d_24',['ArrayWrapper1D',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_array_wrapper1_d.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['arraywrapper2d_25',['ArrayWrapper2D',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_array_wrapper2_d.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentdescription_26',['AttachmentDescription',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_description.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentdescription2_27',['AttachmentDescription2',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_description2.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentdescriptionstencillayout_28',['AttachmentDescriptionStencilLayout',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_description_stencil_layout.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentreference_29',['AttachmentReference',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_reference.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentreference2_30',['AttachmentReference2',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_reference2.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentreferencestencillayout_31',['AttachmentReferenceStencilLayout',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_reference_stencil_layout.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['attachmentsamplelocationsext_32',['AttachmentSampleLocationsEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_sample_locations_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]]
+  ['atlas_26',['Atlas',['../class_atlas.html',1,'']]],
+  ['atlasdata_27',['AtlasData',['../struct_atlas_data.html',1,'']]],
+  ['attachmentdescription_28',['AttachmentDescription',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_description.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['attachmentdescription2_29',['AttachmentDescription2',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_description2.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['attachmentdescriptionstencillayout_30',['AttachmentDescriptionStencilLayout',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_description_stencil_layout.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['attachmentreference_31',['AttachmentReference',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_reference.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['attachmentreference2_32',['AttachmentReference2',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_reference2.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['attachmentreferencestencillayout_33',['AttachmentReferenceStencilLayout',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_reference_stencil_layout.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['attachmentsamplelocationsext_34',['AttachmentSampleLocationsEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_attachment_sample_locations_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]]
 ];
