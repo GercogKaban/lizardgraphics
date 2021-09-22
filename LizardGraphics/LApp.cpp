@@ -15,6 +15,7 @@
 #include "LSkyBox.h"
 #include "LRectangleMirror.h"
 
+
 namespace LGraphics
 {
     LAppCreateInfo LApp::info;
@@ -69,6 +70,7 @@ namespace LGraphics
     void LApp::drawScene()
     {
         LCube::drawInstanced();
+        LWRectangle::drawInstanced();
         if (!drawingInShadow)
         {
             glDepthFunc(GL_LEQUAL);
@@ -93,9 +95,7 @@ namespace LGraphics
                 glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
             }
             
-            //cubeInstantPool.initPool();
             //buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-            //cubeInstantPool.initPool();
 
             while (!glfwWindowShouldClose(window_))
             {
@@ -170,7 +170,6 @@ namespace LGraphics
                     // рисуем в карту теней
                     glEnable(GL_DEPTH_TEST);
                     glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                     drawingInShadow = true;
                     glViewport(0, 0, shadowWidth, shadowHeight);
 
@@ -188,7 +187,7 @@ namespace LGraphics
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                     drawScene();
                     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-                    if (info.redactorMode)
+                    if (info.redactorMode == L_TRUE)
                     {
                         buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
                         memcpy(objectsOnScreen, buff, screenSize);
@@ -460,7 +459,12 @@ namespace LGraphics
             fastErase(primitives[L_CUBE], w->id);
         }
         else if (dynamic_cast<LWRectangle*>(w))   
+        {
+            LWRectangle::uniforms.pop_back();
+            if (w != primitives[L_RECTANGLE].back())
+                LWRectangle::objChanged.push_back((LWRectangle*)primitives[L_RECTANGLE].back());
             fastErase(primitives[L_RECTANGLE], w->id);
+        }
         else if (dynamic_cast<LModel*>(w)) fastErase(primitives[L_MODEL], w->id);
         else throw std::runtime_error("wrong object type");
     }
@@ -648,9 +652,50 @@ namespace LGraphics
         if (info.loadObjects)
             genWidgets(this);
         LCube::initInstanceBuffer();
+        LWRectangle::initInstanceBuffer();
         LResourceManager::setApp(this);
+
+        // тут должна быть ещё проверка изменились ли файлы текстур
+        if (!isExists("textures/out.jpg") /*|| changed */)
+        {
+            std::vector<std::string> textures;
+            //using fs = std::filesystem;
+            for (auto& p : std::filesystem::recursive_directory_iterator(std::filesystem::path(std::filesystem::current_path().generic_string() +
+                "/textures")))
+            {
+                auto fileEnd = p.path().generic_string().substr(p.path().generic_string().size() - 3);
+                if (fileEnd == "png" || fileEnd == "jpg" || fileEnd == "tga" || fileEnd == "bmp"
+                    || fileEnd == "BMP")
+                    textures.push_back(p.path().generic_string());
+            }
+            megatexture.textureAtl.makeAtlas(textures);
+            megatexture.textureAtl.saveAtlas();
+
+            auto texturePaths = megatexture.textureAtl.getAtlasData().texturePaths;
+        }
+        else  
+            megatexture.textureAtl.loadAtlas("atlas_info");
+
+        size_t dummy;
+        megatexture.id = ((LResourceManager::OpenGLImage*)LResourceManager::loadTexture("textures/out.jpg", dummy))->diffuse;
+
+        for (size_t i = 0; i < megatexture.textureAtl.getAtlasData().texturePaths.size();++i)
+        {
+            const auto& atlData = megatexture.textureAtl.getAtlasData();
+            const auto& path = atlData.texturePaths[i];
+            const auto textureDims = atlData.atlasSize;
+
+            LResourceManager::textures.insert(std::make_pair(path, new GLuint(megatexture.id)));
+            megatexture.subtextures.insert(std::make_pair(
+                path, std::make_pair(
+                    glm::vec2((float)atlData.textureOffsets[i].first / (float)textureDims.first,
+                    (float)atlData.textureOffsets[i].second / (float)textureDims.second ),
+
+                    glm::vec2((float)atlData.textureDims[i].first / (float)textureDims.first,
+                    (float)atlData.textureDims[i].second / (float)textureDims.second ))
+            ));
+        }
 #endif
-        //cubeInstantPool.initPool();
     }
 
 #ifdef OPENGL
@@ -1082,7 +1127,7 @@ namespace LGraphics
         //        delete normals;
         //    }
         //}
-        LResourceManager::textures.clear();
+        //LResourceManager::textures.clear();
         delete standartRectBuffer;
         delete standartCubeBuffer;
     }
@@ -1098,6 +1143,7 @@ namespace LGraphics
     {
         LOG_CALL
         glDeleteBuffers(1, &LCube::vbo);
+        glDeleteBuffers(1, &LWRectangle::vbo);
     }
 
     void LApp::releaseResources()

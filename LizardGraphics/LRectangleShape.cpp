@@ -11,6 +11,9 @@ namespace LGraphics
         :LShape(app,path)
     {
         init(app, isInterfaceObj);
+        shader = app->getLightningShader().get();
+        projection = app->getProjectionMatrix();
+        app->toCreate.push(this);
     }
 
 //#ifdef OPENGL

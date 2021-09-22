@@ -63,6 +63,11 @@ namespace LGraphics
         return{ (float)r / (float)sizeof(unsigned char), (float)g / (float)sizeof(unsigned char), (float)b / (float)sizeof(unsigned char) };
     }
 
+    bool isExists(const std::string& path)
+    {
+        return std::filesystem::exists(path);
+    }
+
     size_t getPowerTwoAlign(size_t size)
     {
         size_t i = 2;

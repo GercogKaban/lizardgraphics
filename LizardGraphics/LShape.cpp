@@ -137,6 +137,27 @@ namespace LGraphics
         color_ = rgbToFloat(1, 1, 1);
     }
 
+    void LGraphics::LShape::setGlobalUniforms(GLuint shaderProgram)
+    {
+        const auto proj = app->getProjectionMatrix();
+        const auto view = app->getViewMatrix();
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
+
+        if (!app->drawingInShadow)
+        {
+            glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
+            glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
+            glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
+
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+            glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
+            glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
+            glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
+        }
+    }
+
     LShape::~LShape()
     {
         //delete buffer;

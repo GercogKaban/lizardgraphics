@@ -4,6 +4,7 @@
 #include "pch.h"
 
 //#include "LApp.h"
+
 #include "LResourceManager.h"
 #include "LModel.h"
 #include "LModelBuffer.h"
@@ -14,6 +15,7 @@ namespace LGraphics
 {
     std::unordered_map<std::string, LResourceManager::TexturesData> LResourceManager::textures;
     std::unordered_map<std::string, LResourceManager::ModelData> LResourceManager::models;
+    std::vector<AtlasData> LResourceManager::atlasData;
     LApp* LResourceManager::app;
 
     //LResourceManager::TexturesData LResourceManager::loadTextureImageObject(const char* diffusePath, const char* normalsPath, const char* name)
@@ -49,6 +51,22 @@ namespace LGraphics
     //    }
     //}
 
+    void LResourceManager::loadCacheAtlases()
+    {
+        Atlas atl("dummy");
+        auto atls = atl.getCacheAtlases();
+        for (const auto& a : atls)
+        {
+            atl.loadAtlas(a);
+            auto data = atl.getAtlasData();
+            atlasData.push_back(data);
+            size_t dummy;
+            loadTexture(data.atlasPath.data(), dummy);
+            for (const auto& d : data.texturePaths)
+                textures.insert(std::make_pair(d, &atlasData[atlasData.size() - 1]));
+        }
+    }
+
     void* LResourceManager::loadTexture(const char* path, size_t& mipLevels)
     {
         //auto it = textures.find(path);
@@ -71,7 +89,6 @@ namespace LGraphics
         //
         stbi_image_free(pixels);
         textures.emplace(std::make_pair(std::string(path), std::move(TexturesData{ new OpenGLImage{ texture, 0 } })));
-        app->ttt = texture;
         return &((OpenGLImage*)textures[path].textures)->diffuse;
     }
 
@@ -115,6 +132,30 @@ namespace LGraphics
         ////    textData = new LResourceManager::VulkanImage{ LResourceManager::VulkanTexture{nullptr}, LResourceManager::VulkanTexture{nullptr} };
         //textures.insert(std::make_pair(std::string(name), LResourceManager::TexturesData{ textData }));
         return texture;
+    }
+
+    LResourceManager::~LResourceManager()
+    {
+        std::vector<std::string> text;
+        text.reserve(textures.size());
+        for (const auto& t : textures)
+        {
+            if (dynamic_cast<AtlasData*>((AtlasData*)t.second.textures))
+            {
+                auto data = (AtlasData*)t.second.textures;
+                for (const auto& path : data->texturePaths)
+                    text.push_back(path);
+            }
+            else
+                text.push_back(t.first);
+        }
+
+        
+        Atlas atl("out.jpg");
+        atl.setSizeThreshold(INT_MAX);
+        atl.makeAtlas(text);
+        atl.saveAtlas();
+        LResourceManager::textures.clear();
     }
 
     void LResourceManager::genTexture(uint8_t* bytes, int width, int height, GLuint* texture)

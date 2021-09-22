@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 100000;
+    const size_t poolSize = 2;
 
     LAppCreateInfo info;
 
@@ -30,22 +30,26 @@ int main(int argc, char** argv)
     info.poolSize = poolSize;
     //info.freeThreads = 1;
 
-    const auto spread = 500;
+    const auto spread = 1;
     LApp app(info);
     srand(time(0));
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LCube* c;
+    LWRectangle* c;
     if (!info.loadObjects)
     {
+        auto t = new LWRectangle(&app, "textures/gold2.jpg");
+        t->move(5.0f, 0, 0);
+        new LWRectangle(&app, "textures/gold.jpg");
+        c = new LWRectangle(&app, "textures/gold2.jpg");
         for (size_t i = 0; i < poolSize; ++i)
-        {
-            c = new LCube(&app, "E:/GAMES/lizardgraphics/textures//gold2.jpg");
-            c->move(rand() % 100, rand() % spread, rand() % spread);
-            c->rotateX(rand() % spread);
-            c->rotateY(rand() % spread);
-            c->rotateZ(rand() % spread);
+        {   
+            //c = new LCube(&app, "textures/gold2.jpg");
+            //c->move(rand() % 5, rand() % spread, rand() % spread);
+            //c->rotateX(rand() % spread);
+            //c->rotateY(rand() % spread);
+            //c->rotateZ(rand() % spread);
         }
 
         //for (size_t i = 0; i < 20; ++i)
@@ -83,15 +87,15 @@ int main(int argc, char** argv)
 
             int i = 0;
             auto p = app.getPrimitives()[L_CUBE];
-            while (i < poolSize)
-            {
-                p[i]->rotateX(1.0f);
-                p[i]->rotateY(1.0f);
-                p[i]->rotateZ(1.0f);
-                p[i]->move(p[i]->getMove() + 0.01f);
-                p[i]->scale(p[i]->getScale() + 0.001f);
-                i++;
-            }
+            //while (i < poolSize)
+            //{
+            //    p[i]->rotateX(1.0f);
+            //    p[i]->rotateY(1.0f);
+            //    p[i]->rotateZ(1.0f);
+            //    p[i]->move(p[i]->getMove() + 0.01f);
+            //    p[i]->scale(p[i]->getScale() + 0.001f);
+            //    i++;
+            //}
 
             GLfloat camX = sin(glfwGetTime());
             GLfloat camZ = cos(glfwGetTime());

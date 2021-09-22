@@ -27,5 +27,7 @@ namespace LGraphics
 
     glm::vec3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b);
 
+    bool isExists(const std::string& path);
+
     size_t getPowerTwoAlign(size_t size);
 }

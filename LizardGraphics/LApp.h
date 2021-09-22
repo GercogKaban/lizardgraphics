@@ -1,4 +1,5 @@
 ﻿#pragma once
+#define PARALLEL_UPDATE
 
 #include <mutex>
 #include <optional>
@@ -48,6 +49,7 @@ void handle_cmd(android_app* app, int32_t cmd);
 //#include "vulkan/vulkan.h"
 //#include "include/GLEW/glew.h"
 
+#include "AtlasGenerator.h"
 #include "LObject.h"
 
 namespace LShaders
@@ -132,7 +134,6 @@ namespace LGraphics
 
     public:
 
-        GLuint ttt = 0;
         LApp(const LAppCreateInfo& info);
         ~LApp();
 
@@ -221,6 +222,13 @@ namespace LGraphics
         void updateTextures();
 
         void drawScene();
+
+        struct Megatexture
+        {
+            Atlas textureAtl = Atlas("textures/out.jpg");
+            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures;
+            GLuint id; 
+        } megatexture;
 
     public:
 

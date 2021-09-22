@@ -1,4 +1,7 @@
 #include "LCube.h"
+#include "LCube.h"
+#include "LCube.h"
+#include "LCube.h"
 #include "LApp.h"
 #include "LCubeBuffer.h"
 #include "include/glm/gtc/type_ptr.hpp"
@@ -14,15 +17,17 @@ bool LGraphics::LCube::needToResetBuffer = false;
 GLuint LGraphics::LCube::vbo;
 
 LGraphics::LCube::LCube(LApp* app, const char* path)
-	:LWRectangle(app,path)
+	:LRectangleShape(app,path)
 {
     LOG_CALL
-        //id = app->primitives[L_CUBE].size();
-        //app->primitives[L_CUBE].push_back(this);
+    objChanged.push_back(this);
     if (uniforms.size() == uniforms.capacity())
        needToResetBuffer = true;
     uniforms.push_back(CubeUniforms());
 	setBuffer(app->standartCubeBuffer);
+    //shader = app->getLightningShader().get();
+    //projection = app->getProjectionMatrix();
+    //app->toCreate.push(this);
 }
 
 void LGraphics::LCube::draw()
@@ -75,6 +80,7 @@ void LGraphics::LCube::draw()
 
 void LGraphics::LCube::drawInstanced()
 {
+    if (!uniforms.size()) return;
     auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
     if (app->drawingInShadow)
         shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
@@ -83,11 +89,11 @@ void LGraphics::LCube::drawInstanced()
     setGlobalUniforms(shaderProgram);
     updateBuffer();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, app->ttt);
+    glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, app->depthMap);
     glBindVertexArray(app->standartCubeBuffer->getVaoNum());
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, uniforms.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, app->standartCubeBuffer->getVerticesCount(), uniforms.size());
 }
 
 void LGraphics::LCube::setModel(const glm::mat4& model)
@@ -105,6 +111,12 @@ void LGraphics::LCube::scale(const float x, const float y, const float z)
 void LGraphics::LCube::move(const float x, const float y, const float z)
 {
     LShape::move(x, y, z);
+    objChanged.push_back(this);
+}
+
+void LGraphics::LCube::setDiffuse(const char* path)
+{
+    texturePath = path;
     objChanged.push_back(this);
 }
 
@@ -142,45 +154,34 @@ void LGraphics::LCube::updateBuffer()
 
         if (objChanged.size() > 1000 && app->info.freeThreads > 1)
         {
-                std::thread* threads = new std::thread[app->info.freeThreads];
-                for (size_t i = 0; i < app->info.freeThreads; ++i)
-                {
-                    const size_t interval = i * objChanged.size() / app->info.freeThreads;
-                    threads[i] = std::thread(LCube::updateBufferParallel, buffer, objChanged, interval, interval + objChanged.size() / app->info.freeThreads);
-                }
+            std::thread* threads = new std::thread[app->info.freeThreads];
+            for (size_t i = 0; i < app->info.freeThreads; ++i)
+            {
+                const size_t interval = i * objChanged.size() / app->info.freeThreads;
+                threads[i] = std::thread(LCube::updateBufferParallel, buffer, objChanged, interval, interval + objChanged.size() / app->info.freeThreads);
+            }
 
-                for (size_t i = 0; i < app->info.freeThreads; ++i)
-                    threads[i].join();
-                delete[] threads;
+            for (size_t i = 0; i < app->info.freeThreads; ++i)
+                threads[i].join();
+            delete[] threads;
         }
         else
 #endif
-        for (auto obj : objChanged)
-            buffer[obj->id].model = ((LCube*)app->primitives[L_CUBE][obj->id])->calculateModelMatrix();
+        for (const auto& obj : objChanged)
+            updateUniforms(buffer, obj->id);
         objChanged.clear();
         glUnmapNamedBuffer(vbo);
     }
 }
 
-void LGraphics::LCube::setGlobalUniforms(GLuint shaderProgram)
+void LGraphics::LCube::updateUniforms(LWidget::CubeUniforms* buffer, size_t id)
 {
-    const auto proj = app->getProjectionMatrix();
-    const auto view = app->getViewMatrix();
-
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
-
-    if (!app->drawingInShadow)
-    {
-        glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
-        glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
-        glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
-
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
-    }
+    auto p = ((LCube*)app->primitives[L_CUBE][id])->getTexturePath();
+    const auto subtexture = app->megatexture.subtextures[((LCube*)app->primitives[L_CUBE][id])->getTexturePath()];
+    auto& obj = buffer[id];
+    obj.model = ((LCube*)app->primitives[L_CUBE][id])->calculateModelMatrix();
+    obj.offset = subtexture.first;
+    obj.textureSize = subtexture.second;
 }
 
 void LGraphics::LCube::initInstanceBuffer()
@@ -191,30 +192,37 @@ void LGraphics::LCube::initInstanceBuffer()
 void LGraphics::LCube::resetInstanceBuffer()
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::WidgetUniforms) * uniforms.capacity(), uniforms.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::CubeUniforms) * uniforms.capacity(), uniforms.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(app->standartCubeBuffer->getVaoNum());
     const size_t vec4Size = sizeof(glm::vec4);
+    const size_t vec2Size = sizeof(glm::vec2);
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::CubeUniforms), (void*)0);
     glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(vec4Size));
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::CubeUniforms), (void*)(vec4Size));
     glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::CubeUniforms), (void*)(2 * vec4Size));
     glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::CubeUniforms), (void*)(3 * vec4Size));
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::CubeUniforms), (void*)(4 * vec4Size));
+    glEnableVertexAttribArray(8);
+    glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::CubeUniforms), (void*)((4 * vec4Size) + vec2Size));
 
     glVertexAttribDivisor(3, 1);
     glVertexAttribDivisor(4, 1);
     glVertexAttribDivisor(5, 1);
     glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+    glVertexAttribDivisor(8, 1);
     glBindVertexArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void LGraphics::LCube::updateBufferParallel(LWidget::CubeUniforms* buffer, std::vector<LCube*>& changed, size_t begin, size_t end)
+void LGraphics::LCube::updateBufferParallel(LWidget::RectangleUniforms* buffer, std::vector<LCube*>& changed, size_t begin, size_t end)
 {
-    for (size_t i = begin; i < end;i++)
-        buffer[changed[i]->id].model = ((LCube*)app->primitives[L_CUBE][changed[i]->id])->calculateModelMatrix();
+    for (size_t i = begin; i < end; i++)
+        updateUniforms(buffer, changed[i]->id);
 }

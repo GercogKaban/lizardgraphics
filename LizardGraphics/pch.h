@@ -49,6 +49,8 @@
 #include "include/glm/gtc/quaternion.hpp"
 #include "include/glm/gtx/matrix_decompose.hpp"
 
+#include "include/stb/stb_image.h"
+
 #include "ObjectPool.h"
 #include "textures.h"
 

@@ -41,10 +41,8 @@ namespace LGraphics
         struct WidgetUniforms
         {
             glm::mat4 model;
-            // offset текстуры
-            // размер текстуры
-
-            //int id = -1;
+            glm::vec2 offset;
+            glm::vec2 textureSize;
         };
 
         using RectangleUniforms = WidgetUniforms;
