@@ -38,6 +38,10 @@ int main(int argc, char** argv)
     app.setImgui(f);
     LCube* c;
 
+    app.fog.density = 0.02f;
+    app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
+    app.fog.isEnabled = true;
+
     auto s = new LSpotLight(&app);
     s->setRadius(25);
     if (!info.loadObjects)
@@ -60,13 +64,13 @@ int main(int argc, char** argv)
         //c = new LCube(&app, "textures/gold.jpg");
         //c->scale(0.1f, 0.1f, 0.1f);
         //c->move(7.5f, 0.0f, 7.5f);
-        //new LSkyBox(&app, {
-        //    "textures/skyboxes/Spacebox4/_right.png",
-        //    "textures/skyboxes/Spacebox4/_left.png",
-        //    "textures/skyboxes/Spacebox4/_top.png",
-        //    "textures/skyboxes/Spacebox4/_bottom.png",
-        //    "textures/skyboxes/Spacebox4/_front.png",
-        //    "textures/skyboxes/Spacebox4/_back.png", });
+        new LSkyBox(&app, {
+            "skyboxes/4k_red/right.png",
+            "skyboxes/4k_red/left.png",
+            "skyboxes/4k_red/top.png",
+            "skyboxes/4k_red/bottom.png",
+            "skyboxes/4k_red/front.png",
+            "skyboxes/4k_red/back.png", });
     }
 
     app.setBeforeDrawingFunc([&]()

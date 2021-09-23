@@ -185,8 +185,12 @@ namespace LGraphics
 
     public:
 
-        unsigned int cubeTexture;
-        bool renderingToCube = false;
+        struct LFog
+        {
+            glm::vec3 color;
+            float density;
+            bool isEnabled = false;
+        }fog;
 
         /*!
         @brief Возвращает размеры окна (в пикселях).

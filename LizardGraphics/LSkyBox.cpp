@@ -125,6 +125,14 @@ void LGraphics::LSkyBox::draw()
 
     glUniformMatrix4fv(glGetUniformLocation(shader, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
     glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniform1f(glGetUniformLocation(shader, "skyboxDepth"), skyboxDepth);
+    if (app->fog.isEnabled)
+    {
+        glUniform3f(glGetUniformLocation(shader, "fog.color"), app->fog.color.x, app->fog.color.y, app->fog.color.z);
+        glUniform1f(glGetUniformLocation(shader, "fog.density"), app->fog.density);
+        glUniform1i(glGetUniformLocation(shader, "fog.isEnabled"), true);
+    }
+
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, *(GLuint*)getTexture());
     glBindVertexArray(buffer->getVaoNum());

@@ -25,6 +25,8 @@ namespace LGraphics
 
 		LSkyBox(LApp* app, const std::vector<std::string>& paths);
 		void draw() override;
+
+		float skyboxDepth = 0.01f;
 	};
 }
 

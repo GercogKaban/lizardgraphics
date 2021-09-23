@@ -153,6 +153,7 @@ namespace LGraphics
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
+            // setting directed light
             glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.position"), app->globalDirLight.position.x, 
                 app->globalDirLight.position.y, app->globalDirLight.position.z);
             glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.direction"), app->globalDirLight.direction.x,
@@ -166,7 +167,9 @@ namespace LGraphics
 
             glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
 
+            
             char res[32];
+            // setting point light
             FOR(i,0, app->lights[L_POINT_LIGHT].size())
             {
                 sprintf(res, "pointSources[%i]", i);
@@ -187,6 +190,7 @@ namespace LGraphics
                 glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
             }
 
+            // setting spot light
             FOR(i,0, app->lights[L_SPOT_LIGHT].size())
             {
                 sprintf(res, "spotSources[%i]", i);
@@ -213,6 +217,14 @@ namespace LGraphics
 
             glUniform1i(glGetUniformLocation(shaderProgram, "pointSourcesCount"), app->lights[L_POINT_LIGHT].size());
             glUniform1i(glGetUniformLocation(shaderProgram, "spotSourcesCount"), app->lights[L_SPOT_LIGHT].size());
+
+            // setting fog
+            if (app->fog.isEnabled)
+            {
+                glUniform3f(glGetUniformLocation(shaderProgram, "fog.color"), app->fog.color.x, app->fog.color.y, app->fog.color.z);
+                glUniform1f(glGetUniformLocation(shaderProgram, "fog.density"), app->fog.density);
+                glUniform1i(glGetUniformLocation(shaderProgram, "fog.isEnabled"), true);
+            }
         }
     }
 

@@ -51,10 +51,18 @@ struct SpotLight
     bool calculateShadow;   
 };
 
+struct Fog
+{
+    vec3 color;
+    float density;
+    bool isEnabled;
+};
+
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
 in vec3 projCoords;
+in vec4 eyeSpacePosition;
 
 in mat4 model;
 uniform sampler2D diffuseMap;
@@ -69,6 +77,7 @@ uniform int spotSourcesCount = 0;
 uniform PointLight pointSources[MAX_LIGHTS];
 uniform SpotLight spotSources[MAX_LIGHTS];
 uniform DirLight dirLight;
+uniform Fog fog;
 //uniform int objId;
 
 //layout(std430, binding = 3) buffer Test
@@ -80,6 +89,13 @@ uniform DirLight dirLight;
 vec3 CalcDirLight(DirLight light, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 viewDir);
+
+float getFogFactor(float fogCoordinate)
+{
+	float result = exp(-pow(fog.density * fogCoordinate, 2.0));
+	result = 1.0 - clamp(result, 0.0, 1.0);
+	return result;
+}
 
 float ShadowCalculation(vec3 lightDir)
 {
@@ -196,6 +212,15 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 
 void main()
 {    
+    float fogCoordinate = abs(eyeSpacePosition.z / eyeSpacePosition.w);
+    if(fog.isEnabled)
+    {    
+        if (fogCoordinate == 1.0)
+        {
+            color = vec4(fog.color, 1.0);
+            return;
+        }
+    }
     //if (objId == -1)
     //    discard;
     //data_SSBO[screenSize.x * int(gl_FragCoord.y) + int(gl_FragCoord.x)] = objId;
@@ -212,5 +237,7 @@ void main()
     }
 
     color = vec4(result,1.0f) * texture(diffuseMap, TexCoords);
+    if(fog.isEnabled)
+       color = mix(color, vec4(fog.color, 1.0), getFogFactor(fogCoordinate));
     if (color.a - 0.1f < 0) discard;
 }

@@ -11,11 +11,9 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
 out vec3 projCoords;
+out vec4 eyeSpacePosition;
 
 out mat4 model;
-//out int objId;
-//out sampler2D diffuseMap;
-//out sampler2D shadowMap;
 
 uniform mat4 view;
 uniform mat4 proj;
@@ -23,22 +21,19 @@ uniform mat4 lightSpaceMatrix;
 
 void main()
 {
-    FragPos = vec3(model_ * vec4(position, 1.0));
+    vec4 temp = model_ * vec4(position, 1.0);
+    eyeSpacePosition = view*temp;
+    FragPos = vec3(temp);
     Normal = normalize(mat3(transpose(inverse(model_))) * normals);  
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 
     TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
 		textureCoords.y*textureSize.y + offset.y);
-    //TexCoords = textureCoords;
     gl_Position = proj * view * model_ * vec4(position, 1.0);
     model = model_;
 
     // perform perspective divide
     vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
-    // transform to [0,1] range
     projCoords = projCoords_ * 0.5 + 0.5;
-    //objId = objId_;
-    //diffuseMap = diffuseMap_;
-    //shadowMap = shadowMap_;
 }
