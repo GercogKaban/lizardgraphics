@@ -3,7 +3,7 @@
 #include <tuple>
 #include "include/glm/glm.hpp"
 
-#define FOR(i,n) for (size_t j = i; j < n; j++)
+#define FOR(var,j,n) for (size_t var = j; i < n; i++)
 
 namespace LGraphics
 {

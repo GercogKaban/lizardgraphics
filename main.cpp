@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 2;
+    const size_t poolSize = 10000;
 
     LAppCreateInfo info;
 
@@ -30,26 +30,22 @@ int main(int argc, char** argv)
     info.poolSize = poolSize;
     //info.freeThreads = 1;
 
-    const auto spread = 1;
+    const auto spread = 500;
     LApp app(info);
     srand(time(0));
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LWRectangle* c;
+    LCube* c;
+
+    auto s = new LSpotLight(&app);
+    s->setRadius(25);
     if (!info.loadObjects)
     {
-        auto t = new LWRectangle(&app, "textures/gold2.jpg");
-        t->move(5.0f, 0, 0);
-        new LWRectangle(&app, "textures/gold.jpg");
-        c = new LWRectangle(&app, "textures/gold2.jpg");
         for (size_t i = 0; i < poolSize; ++i)
         {   
-            //c = new LCube(&app, "textures/gold2.jpg");
-            //c->move(rand() % 5, rand() % spread, rand() % spread);
-            //c->rotateX(rand() % spread);
-            //c->rotateY(rand() % spread);
-            //c->rotateZ(rand() % spread);
+            c = new LCube(&app, "textures/gold2.jpg");
+            c->move(rand() % spread, 0.0f, rand() % spread);
         }
 
         //for (size_t i = 0; i < 20; ++i)
@@ -82,11 +78,11 @@ int main(int argc, char** argv)
             const auto move = c->getMove();
 
             const float radius = poolSize + 13.0f;
-            const float shiftCoef = -1.5f;
-            glm::vec3 shift = glm::normalize(move - glm::vec3(7.5f, 0.0f, 7.5f)) * shiftCoef;
+            const float shiftCoef = -1.05f;
+            glm::vec3 shift = glm::normalize(move - app.getDirLightPos()) * shiftCoef;
 
             int i = 0;
-            auto p = app.getPrimitives()[L_CUBE];
+            //auto p = app.getPrimitives()[L_CUBE];
             //while (i < poolSize)
             //{
             //    p[i]->rotateX(1.0f);
@@ -123,7 +119,9 @@ int main(int argc, char** argv)
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            app.setLightPos(glm::vec3(move.x + shift.x, move.y + 2.5f, move.z + shift.z));
+            app.setDirLightPos(glm::vec3(move.x + shift.x, move.y + 2.5f, move.z + shift.z));
+            s->direction = cameraFront;
+            s->position = cameraPos;
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)
@@ -186,7 +184,7 @@ int main(int argc, char** argv)
         }
     });
 
-    app.setLightPos(app.getCameraPos());
+    app.setDirLightPos(app.getCameraPos());
     app.loop();
     return 0;
 }

@@ -24,7 +24,6 @@ namespace LGraphics
     {
         LOG_CALL
         initApp_(info);
-        cubeInstantPool.setApp(this);
     }
 
     void LApp::initApp_(const LAppCreateInfo& info)
@@ -429,6 +428,32 @@ namespace LGraphics
         this->projection = projection;
     }
 
+    void LApp::addLight(LLight* l)
+    {
+        if (dynamic_cast<LPointLight*>(l))
+        {
+            if (lights[L_POINT_LIGHT].size() + 1 > MAX_LIGHTS)
+                throw std::runtime_error("too many pointlight sources");
+            l->id = lights[L_POINT_LIGHT].size();
+            lights[L_POINT_LIGHT].push_back(l);
+        }
+        else if (dynamic_cast<LSpotLight*>(l))
+        {
+            if (lights[L_SPOT_LIGHT].size() + 1 > MAX_LIGHTS)
+                throw std::runtime_error("too many spotlight sources");
+            l->id = lights[L_SPOT_LIGHT].size();
+            lights[L_SPOT_LIGHT].push_back(l);
+        }
+    }
+
+    void LApp::removeLight(LLight* l)
+    {
+        if (dynamic_cast<LPointLight*>(l))
+            fastErase(lights[L_POINT_LIGHT], l->id);
+        else if (dynamic_cast<LSpotLight*>(l))
+            fastErase(lights[L_SPOT_LIGHT], l->id);
+    }
+
     void LApp::addObject(LWidget* w)
     {
         if (dynamic_cast<LCube*>(w))
@@ -436,7 +461,6 @@ namespace LGraphics
             w->id = primitives[L_CUBE].size();
             primitives[L_CUBE].push_back(w);
         }
-
         else if (dynamic_cast<LWRectangle*>(w))
         {
             w->id = primitives[L_RECTANGLE].size();
@@ -533,10 +557,29 @@ namespace LGraphics
         userScrollCallback = func;
     }
 
-    void LApp::setLightPos(glm::vec3 lightPos)
+    void LApp::setDirLightPos(glm::vec3 lightPos)
     {
-        LOG_CALL
-        this->lightPos = lightPos;
+        globalDirLight.position = lightPos;
+    }
+
+    void LApp::setDirLightDirection(glm::vec3 direction)
+    {
+        globalDirLight.direction = direction;
+    }
+
+    void LApp::setDirLightAmbient(glm::vec3 ambient)
+    {
+        globalDirLight.ambient = ambient;
+    }
+
+    void LApp::setDirLightDiffuse(glm::vec3 diffuse)
+    {
+        globalDirLight.diffuse = diffuse;
+    }
+
+    void LApp::setDirLightSpecular(glm::vec3 specular)
+    {
+        globalDirLight.specular = specular;
     }
 
     void LApp::setLightSpaceMatrix()
@@ -545,7 +588,7 @@ namespace LGraphics
         const float near_plane = 0.1f, far_plane = 35.0f;
         const float d = 12.0f;
         glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(7.5f,0.0f,7.5f)/*!!!*/, glm::vec3(0.0, 1.0, 0.0));
+        glm::mat4 lightView = glm::lookAt(globalDirLight.position, globalDirLight.direction, glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
     }
 
@@ -655,6 +698,7 @@ namespace LGraphics
         LWRectangle::initInstanceBuffer();
         LResourceManager::setApp(this);
 
+        // Инициализация атласа 
         // тут должна быть ещё проверка изменились ли файлы текстур
         if (!isExists("textures/out.jpg") /*|| changed */)
         {
@@ -695,62 +739,20 @@ namespace LGraphics
                     (float)atlData.textureDims[i].second / (float)textureDims.second ))
             ));
         }
+
+        globalDirLight.position = glm::vec3(0.0f, 0.0f, 0.0f);
+        globalDirLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+        globalDirLight.diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
+        globalDirLight.specular = glm::vec3(0.3f, 0.3f, 0.3f);
+        globalDirLight.direction = glm::vec3(7.5,0.0f,7.5f);
 #endif
     }
 
-#ifdef OPENGL
     void LApp::initRenderer()
     {
         glfwInit();
         initOpenGL();
-//       
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////                                              Window creation                                              //
-//        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-//
-//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-//        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
-//
-//        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-//#ifndef NDEBUG
-//        window_ = glfwCreateWindow(mode->width - 1, mode->height, "Lizard Graphics", NULL, NULL);
-//        info.wndWidth = mode->width - 1;
-//        info.wndHeight = mode->height;
-//#else
-//        width = mode->width;
-//        height = mode->height;
-//
-//        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-//        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-//        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-//        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-//        window_ = glfwCreateWindow(mode->width, mode->height, "window", glfwGetPrimaryMonitor(), nullptr);
-//#endif
-//
-//        glfwMakeContextCurrent(window_);
-//
-// //                                             Window creation                                              //
-// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//        setWindowCallbacks();
-//        glfwGetFramebufferSize(window_, &(int&)info.wndWidth, &(int&)info.wndHeight);
-//
-//        glewExperimental = GL_TRUE;
-//        glewInit();
-//
-//        glEnable(GL_BLEND);
-//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//        //glfwSwapInterval(0);
-//
-//
-//        int width_, height_;
-//        glfwGetFramebufferSize(window_, &width_, &height_);
-//        glViewport(0, 0, width_, height_);
     }
-#endif
 
     void LApp::setWindowCallbacks()
     {
@@ -2582,7 +2584,7 @@ namespace LGraphics
         {
             viewProj,
             cameraPos,
-            lightPos,
+            globalDirLight.position,
             {0.9f,0.9f,0.9f},
             {0.5f,0.5f,0.5f},
             //info.lighting,
@@ -2701,109 +2703,6 @@ namespace LGraphics
 
         return attributeDescriptions;
     }
-}
-
-void LGraphics::LApp::InstantPoolCubes::setApp(LApp* app)
-{
-    this->app = app;
-    uniformBuffersSize = app->info.poolSize;
-    uniformBuffers = new LWidget::WidgetUniforms[uniformBuffersSize];
-    objs = new LCube* [uniformBuffersSize];
-    std::fill(objs, objs + uniformBuffersSize, nullptr);
-}
-
-void LGraphics::LApp::InstantPoolCubes::draw()
-{
-    /*auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
-    if (app->drawingInShadow)
-        shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
-    GLuint shaderProgram = shader->getShaderProgram();
-
-    const auto proj = app->getProjectionMatrix();
-    const auto view = app->getViewMatrix();
-
-    shader->use();
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
-
-    if (!app->drawingInShadow)
-    {
-        glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
-        glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
-        glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
-
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
-    }
-
-    LCube* obj = nullptr;
-    bool modified = false;
-    for (size_t i = 0; i < uniformBuffersSize; ++i)
-    {
-        if (objs[i])
-        {
-            obj = objs[i];
-            if (obj->isChanged())
-            {
-                modified = true;
-                obj->changed = LWidget::UNMODIFIED;
-                obj->refreshModel();
-                uniformBuffers[i].model = obj->getModelMatrix();
-            }
-        }
-    }
-    if (modified)
-        updateBuffer();
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, *(GLuint*)obj->getTexture());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, app->depthMap);
-    glBindVertexArray(app->standartCubeBuffer->getVaoNum());
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, uniformBuffersSize);*/
-}
-
-LGraphics::LApp::InstantPoolCubes::~InstantPoolCubes()
-{
-    delete[] uniformBuffers;
-    delete[] objs;
-    glDeleteBuffers(1, &vbo);
-}
-
-void LGraphics::LApp::InstantPoolCubes::updateBuffer()
-{
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::WidgetUniforms) * uniformBuffersSize, uniformBuffers, GL_STATIC_DRAW);
-
-    glBindVertexArray(app->standartCubeBuffer->getVaoNum());
-    const size_t vec4Size = sizeof(glm::vec4);
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(vec4Size));
-    glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
-
-    glVertexAttribDivisor(3, 1);
-    glVertexAttribDivisor(4, 1);
-    glVertexAttribDivisor(5, 1);
-    glVertexAttribDivisor(6, 1);
-    //glVertexAttribDivisor(7, 1);
-    //glVertexAttribDivisor(8, 1);
-    //glVertexAttribDivisor(9, 1);
-    glBindVertexArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void LGraphics::LApp::InstantPoolCubes::initPool()
-{
-    glGenBuffers(1, &vbo);
-    updateBuffer();
 }
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR

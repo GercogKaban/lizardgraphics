@@ -9,6 +9,19 @@ struct DirLight
     vec3 specular;
 };
 
+struct Light 
+{
+    vec3 position;  
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+	
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 
 //struct Material 
 //{
@@ -50,8 +63,9 @@ void DirLight_()
     //if (FragPos.x >= viewPos.x)
     {
     	vec3 viewDir = normalize(viewPos - FragPos);
-        vec3 reflectDir = reflect(-lightDir, norm);  
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0f);
+
+    	vec3 halfwayDir = normalize(lightDir + viewDir);  
+        spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
         specular = dirLight.specular * spec;
     }
         
@@ -62,5 +76,5 @@ void DirLight_()
 
 void main()
 {
-	DirLight_();
+	 DirLight_();
 }

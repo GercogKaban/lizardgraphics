@@ -83,7 +83,7 @@ void main()
     vec3 result(0.0f);
     if (lighting)
     {
-    DirLight dirLight;
+            DirLight dirLight;
     dirLight.ambient = vec3(0.5f,0.5f,0.5f);
     dirLight.diffuse = vec3(0.7f,0.7f,0.7f);
     dirLight.specular = vec3(0.3f,0.3f,0.3f);
@@ -98,7 +98,7 @@ void main()
     pointLight.constant = 0.7f;
     pointLight.linear = 0.22f;
     pointLight.quadratic = 0.04f;
-    	
+        
     pointLight.ambient = dirLight.ambient * vec3(1.2f, 1.1f, 1);
     pointLight.diffuse = dirLight.diffuse * vec3(1.2f, 1.1f, 1);
     pointLight.specular = dirLight.specular * vec3(1.2f, 1.1f, 1);
@@ -110,6 +110,7 @@ void main()
 
     result += CalcPointLight(pointLight, norm, FragPos, viewDir);
    }
+
     color = vec4(result,1.0f)* texture(ourTexture, TexCoords);
     if (color.a - 0.1f < 0) discard;
 }
@@ -121,9 +122,8 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = max(dot(viewDir, reflectDir), 0.0);
-    //float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
     // combine results
     vec3 ambient = light.ambient; //* vec3(texture(material.diffuse, TexCoords));
     vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));

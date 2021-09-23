@@ -28,6 +28,12 @@ namespace LGraphics
         L_MODEL,
     };
 
+    enum LLights : uint8_t
+    {
+        L_POINT_LIGHT,
+        L_SPOT_LIGHT,
+    };
+
     enum RenderingAPI : uint8_t
     {
         L_VULKAN,

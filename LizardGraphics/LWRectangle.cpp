@@ -48,42 +48,42 @@ void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameI
 
 void LGraphics::LWRectangle::draw()
 {
-    if (isHidden())
-        return;
+    //if (isHidden())
+    //    return;
 
-    auto shader = (LShaders::OpenGLShader*)getShader();
-    if (app->drawingInShadow)
-        shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
-    GLuint shaderProgram = shader->getShaderProgram();
+    //auto shader = (LShaders::OpenGLShader*)getShader();
+    //if (app->drawingInShadow)
+    //    shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
+    //GLuint shaderProgram = shader->getShaderProgram();
 
-    const auto proj = app->getProjectionMatrix();
-    const auto view = app->getViewMatrix();
-    const auto model = calculateModelMatrix();
+    //const auto proj = app->getProjectionMatrix();
+    //const auto view = app->getViewMatrix();
+    //const auto model = calculateModelMatrix();
 
-    shader->use();
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
-    glUniform1i(glGetUniformLocation(shaderProgram, "objId"), id);
+    //shader->use();
+    //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
+    //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    //glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
+    //glUniform1i(glGetUniformLocation(shaderProgram, "objId"), id);
 
-    if (!app->drawingInShadow)
-    {
-        glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
-        glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
+    //if (!app->drawingInShadow)
+    //{
+    //    glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
+    //    glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
 
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
-    }
+    //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+    //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    //    glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
+    //    glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
+    //    glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
+    //}
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, app->depthMap);
-    glBindVertexArray(buffer->getVaoNum());
-    glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_SHORT, 0);
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
+    //glActiveTexture(GL_TEXTURE1);
+    //glBindTexture(GL_TEXTURE_2D, app->depthMap);
+    //glBindVertexArray(buffer->getVaoNum());
+    //glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_SHORT, 0);
 }
 
 void LGraphics::LWRectangle::drawInstanced()

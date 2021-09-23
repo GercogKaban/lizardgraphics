@@ -1,5 +1,6 @@
 ﻿#pragma once
 #define PARALLEL_UPDATE
+#define MAX_LIGHTS 128
 
 #include <mutex>
 #include <optional>
@@ -51,6 +52,7 @@ void handle_cmd(android_app* app, int32_t cmd);
 
 #include "AtlasGenerator.h"
 #include "LObject.h"
+#include "LLights.h"
 
 namespace LShaders
 {
@@ -131,6 +133,9 @@ namespace LGraphics
         friend LSkyBox;
         friend LRectangleMirror;
         friend InstantPoolCubes;
+        friend LLight;
+        friend LSpotLight;
+        friend LPointLight;
 
     public:
 
@@ -158,58 +163,6 @@ namespace LGraphics
     protected:
 
         void* buff;
-
-        //template <typename T>
-        //class LID
-        //{
-        //public:
-        //    LID() {}
-        //    T getNewID()
-        //    {
-        //        T ret;
-        //        if (gaps.size())
-        //        {
-        //            ret = gaps.front();
-        //            gaps.pop();
-        //        }
-        //        else
-        //            ret = lastId++;
-        //        return ret;
-        //    }
-        //    void releaseID(T id)
-        //    {
-        //        gaps.push(id);
-        //    }
-        //private:
-        //    std::queue<T> gaps;
-        //    T lastId = 0;
-        //};
-
-        class InstantPoolCubes
-        {
-            friend LCube;
-            friend LSkyBox;
-
-            LApp* app;
-            GLuint vbo;
-            LWidget::WidgetUniforms* uniformBuffers;
-            LCube** objs;
-            size_t uniformBuffersSize;
-            //std::vector<LWidget::WidgetUniforms> uniformBuffers;
-            //std::vector<LCube*> objs;
-
-        public:
-
-            InstantPoolCubes(){}
-            ~InstantPoolCubes();
-
-            void setApp(LApp* app);
-            void draw();
-            void makeInstantObj(LCube* cube);
-            void updateBuffer();
-            void initPool();
-
-        }cubeInstantPool;
 
         int* objectsOnScreen;
         //LID<int> idManager;
@@ -262,6 +215,14 @@ namespace LGraphics
             collection.pop_back();
         }
 
+        void addLight(LLight* l);
+        void removeLight(LLight* l);
+        void deleteLight(LLight* l)
+        {
+            removeLight(l);
+            delete l;
+        }
+
         void addObject(LWidget* w);
         void removeObject(LWidget* w);
         void deleteObject(LWidget* w)
@@ -281,6 +242,10 @@ namespace LGraphics
         void refreshObjectMatrices();
 
         auto& getPrimitives() { return primitives; }
+
+        auto& getSpotLight() { return lights[L_SPOT_LIGHT]; }
+        auto& getPointLights() { return lights[L_POINT_LIGHT]; }
+        auto& getLights() {return lights;}
         std::vector<LModel*>& getModels() { return models; }
 
         LShaders::Shader* getStandartShader() const;
@@ -328,8 +293,6 @@ namespace LGraphics
         unsigned int getDepthMap() const { return depthMap; }
 
         void setLighting(LStates state) { info.lighting = state; }
-        void setLightPos(glm::vec3 lightPos);
-        glm::vec3 getLightPos() const { return lightPos; }
         glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
 
         bool lightIsInited() const { return lightIsInited_; }
@@ -340,8 +303,6 @@ namespace LGraphics
         ObjectPool<LWRectangle*> lwRectPool;
 
         std::vector<LNonWidget*> customObjects;
-        glm::vec3 lightPos; //lightDir;
-
         size_t getPoolSize() const { return info.poolSize; }
 
         void setImgui(std::function<void()> func) { imgui = func; }
@@ -436,15 +397,63 @@ namespace LGraphics
 
     public:
         VkDevice getDevice() const { return g_Device; }
+
+        void setDirLightPos(glm::vec3 lightPos);
+        void setDirLightDirection(glm::vec3 direction);
+        void setDirLightAmbient(glm::vec3 ambient);
+        void setDirLightDiffuse(glm::vec3 diffuse);
+        void setDirLightSpecular(glm::vec3 specular);
+
+        glm::vec3 getDirLightPos() const { return globalDirLight.position; }
+        glm::vec3 getDirLightDirection() const { return globalDirLight.direction; }
+        glm::vec3 getDirLightAmbient() const { return globalDirLight.position; }
+        glm::vec3 getDirLightDiffuse() const { return globalDirLight.position; }
+        glm::vec3 getDirLightSpecular() const { return globalDirLight.position; }
+
     protected:
 
         struct DirLight
         {
+            glm::vec3 position;
             glm::vec3 direction;
             glm::vec3 ambient;
             glm::vec3 diffuse;
             glm::vec3 specular;
-        };
+        }globalDirLight;
+
+        //struct PointLight
+        //{
+        //    glm::vec3 position;
+        //    glm::vec3 ambient;
+        //    glm::vec3 diffuse;
+        //    glm::vec3 specular;
+
+        //    float constant;
+        //    float linear;
+        //    float quadratic;
+
+        //    bool calculateShadow;
+        //};
+
+        //struct SpotLight
+        //{
+        //    glm::vec3 position;
+        //    glm::vec3 direction;
+        //    glm::vec3 ambient;
+        //    glm::vec3 diffuse;
+        //    glm::vec3 specular;
+
+        //    float cutOff;
+        //    float outerCutOff;
+        //    float constant;
+        //    float linear;
+        //    float quadratic;
+
+        //    bool calculateShadow;
+        //};
+
+        //std::vector<PointLight> pointLights;
+        //std::vector<SpotLight> spotLights;
 
         struct UboDataDynamicV
         {
@@ -453,7 +462,7 @@ namespace LGraphics
 
         /*struct VulkanStruct
         {*/
-        std::deque<size_t> indexGaps;
+        //std::deque<size_t> indexGaps;
 
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
@@ -727,6 +736,7 @@ namespace LGraphics
         float viewRadius = 10.0f;
 
         std::vector<LWidget*> primitives[3];
+        std::vector<LLight*> lights[2];
         //std::vector<LWidget*> primitives;
         std::vector<LModel*> models;
 

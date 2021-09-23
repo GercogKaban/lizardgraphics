@@ -1,7 +1,4 @@
 #include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
-#include "LCube.h"
 #include "LApp.h"
 #include "LCubeBuffer.h"
 #include "include/glm/gtc/type_ptr.hpp"
@@ -46,23 +43,7 @@ void LGraphics::LCube::draw()
     const auto model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(glGetUniformLocation(shaderProgram, "objId"), id);
-    //
-
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
-    if (!app->drawingInShadow)
-    {
-        const auto proj = app->getProjectionMatrix();
-        const auto view = app->getViewMatrix();
-
-        glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
-        glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
-
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), app->lightPos.x, app->lightPos.y, app->lightPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-        glUniform3f(glGetUniformLocation(shaderProgram, "dirPos"), 7.5f, 0.0f, 7.5f);
-    }
+    setGlobalUniforms(shaderProgram);
 
     //glUniform3f(glGetUniformLocation(shader, "dirLight.direction"), 1000.0f, 3.0f, 200.0f);
     //glUniform3f(glGetUniformLocation(shader, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
@@ -75,7 +56,6 @@ void LGraphics::LCube::draw()
     glBindTexture(GL_TEXTURE_2D, app->depthMap);
     glBindVertexArray(buffer->getVaoNum());
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    //glBindVertexArray(0);
 }
 
 void LGraphics::LCube::drawInstanced()
