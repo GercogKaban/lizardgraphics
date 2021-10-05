@@ -124,13 +124,9 @@ You can choose interface rom interfaces.h using ImGuiInterface class.
 # TODO
 
 ## Features
-1. Antialiasing
-2. Shadows.
-3. Reflections.
-4. Supporting Android platform.
-5. Runtime API changing.
-6. Skeletal animation.
-7. Grid drawing.
+1. Fixing shadows.
+2. Reflections.
+3. Skeletal animation.
 
 ## Optimizations
 
