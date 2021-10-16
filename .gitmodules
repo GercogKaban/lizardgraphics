@@ -4,6 +4,3 @@
 [submodule "LizardGraphics/imgui"]
 	path = LizardGraphics/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "\\GAMES\\lizardgraphics\\LizardGraphics\\assimp"]
-	path = \\GAMES\\lizardgraphics\\LizardGraphics\\assimp
-	url = E:\\GAMES\\lizardgraphics\\LizardGraphics\\assimp
