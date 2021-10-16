@@ -53,11 +53,11 @@ int main(int argc, char** argv)
     //s->setRadius(25);
     if (!info.loadObjects)
     {
-        auto m = new LModel(&app, {"CashRegister_01.gltf"});
+        auto m = new LModel(&app, {"Walking.fbx"});
         m->scale(2.0f, 2.0f, 2.0f);
         m->move(0.0, 0.0f, 0.0f);
         m->rotateX(180.0f);
-        m->getMehes()[0].buffer->setGeometry
+        
         for (size_t i = 0; i < poolSize - 1; ++i)
         {   
             c = new LModel(&app, { "CashRegister_01.gltf"});

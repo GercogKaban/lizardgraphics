@@ -214,7 +214,10 @@ namespace LGraphics
 
                     // рисуем в карту теней
                     glEnable(GL_DEPTH_TEST);
-                    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+                    if (fog.isEnabled)
+                        glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
+                    else
+                        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
                     drawingInShadow = true;
 
                     FOR(i, 0, lights[L_SPOT_LIGHT].size())
@@ -248,7 +251,10 @@ namespace LGraphics
                     glViewport(0, 0, info.wndWidth, info.wndHeight);
 
                     // рисуем сцену
-                    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+                    if (fog.isEnabled)
+                        glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
+                    else
+                        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                     drawScene();
                     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -708,6 +714,7 @@ namespace LGraphics
         modelsDirectories.insert(std::make_pair(MEDIUM, "models/medium"));
         modelsDirectories.insert(std::make_pair(HIGH, "models/high"));
 
+        LResourceManager::textures.insert(std::make_pair("dummy", TexturesData{ new TexturesData::OGLImageData }));
         //lwRectPool.setCreationCallback([&]()
         //{
         //    auto lwRect = new LWRectangle(this);

@@ -205,6 +205,9 @@ namespace LGraphics
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
+            auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
+            m_GlobalInverseTransform.Inverse();
+
             PRINTLN("ERROR::ASSIMP::", std::string(importer.GetErrorString()), '\n');
             return;
         }
@@ -350,6 +353,8 @@ namespace LGraphics
             {
                 size_t dummy;
                 GLuint* texture = (GLuint*)loadTexture(texturesPath.data(), dummy);
+                if (!texture)
+                    return textures.find("dummy")->second;
                 TexturesData d;
                 auto& td = TO_GL(d);
                 if (type == aiTextureType_DIFFUSE)
@@ -359,5 +364,6 @@ namespace LGraphics
                 //return d;
             }
         }
+        return textures.find("dummy")->second;
     }
 }
