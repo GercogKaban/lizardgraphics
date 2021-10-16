@@ -1,6 +1,7 @@
 #pragma once
 #include "LShape.h"
 #include "LImage.h"
+#include "LBuffer.h"
 
 namespace LGraphics
 {
@@ -26,6 +27,7 @@ namespace LGraphics
         const char* getObjectType() const { return "LModel"; }
 
         LModel(LApp* app, ModelResource res);
+        LModel(LApp* app, const std::vector<Vertex>& vertices);
         ~LModel();
         const auto& getMehes() const { return meshes; };
         void draw() override;

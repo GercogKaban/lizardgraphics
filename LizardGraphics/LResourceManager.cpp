@@ -205,13 +205,13 @@ namespace LGraphics
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
-            auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
-            m_GlobalInverseTransform.Inverse();
 
             PRINTLN("ERROR::ASSIMP::", std::string(importer.GetErrorString()), '\n');
             return;
         }
 
+        auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
+        m_GlobalInverseTransform.Inverse();
         std::vector<LModel::Mesh> meshes;
         processNode(app, meshes, scene->mRootNode, scene);
         model->meshes = meshes;

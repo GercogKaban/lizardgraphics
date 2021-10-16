@@ -3,7 +3,7 @@
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
-#include "LBuffer.h"
+//#include "LBuffer.h"
 
 LGraphics::LModel::LModel(LApp* app, ModelResource modelResource)
     :LShape(app)
@@ -25,9 +25,25 @@ LGraphics::LModel::LModel(LApp* app, ModelResource modelResource)
 #endif
 }
 
+LGraphics::LModel::LModel(LApp* app, const std::vector<Vertex>& vertices)
+    :LShape(app)
+{
+    setShader(app->modelShader.get());
+    std::vector<uint32_t> dummy;
+    meshes = { {new LBuffer(app, vertices, dummy), nullptr} };
+    app->toCreate.push(this);
+}
+
 LGraphics::LModel::~LModel()
 {
     LOG_CALL
+    for (auto& m : meshes)
+    {
+        if (m.buffer)
+            delete m.buffer;
+        if (m.image)
+            delete m.image;
+    }
 }
 
 void LGraphics::LModel::draw()
@@ -42,23 +58,28 @@ void LGraphics::LModel::draw()
     //if (!app->drawingInShadow)
     //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
 
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
     FOR(i, 0, meshes.size())
     {
         //if (!app->drawingInShadow)
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
-        auto& diffuse = meshes[i].image->getDiffuse();
-        const auto castedDiff = TO_GL(diffuse);
+        if (meshes[i].image)
+        {
+            auto& diffuse = meshes[i].image->getDiffuse();
+            const auto castedDiff = TO_GL(diffuse);
 #ifdef MEGATEXTURE_LG
-        glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
-        glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
+            glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
+            glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
 #endif
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, castedDiff.id);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, castedDiff.id);
+        }
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
         glBindVertexArray(meshes[i].buffer->getVaoNum());
-        glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
-        //glBindVertexArray(0);
+        if (meshes[i].buffer->getIndices().size())
+            glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
     }
 }
 
