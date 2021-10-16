@@ -234,7 +234,7 @@ private:
 			return atlasCachePath;
 		}
 
-		std::string getAtlasExtensuin() const
+		std::string getAtlasExtension() const
 		{
 			return atlasExtension;
 		}
