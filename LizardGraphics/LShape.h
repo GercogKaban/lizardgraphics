@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "LWidget.h"
-//#include "include/glm/gtc/matrix_transform.hpp"
-//#include "vectors.h"
 
 namespace LGraphics
 {
@@ -95,8 +93,6 @@ namespace LGraphics
         glm::vec3 getScale() const override { return scale_; } ///< Возвращает размеры виджета.
         glm::vec3 getMove() const override;   ///< Возвращает расположение виджета.
 
-        const LBuffer* getBuffer() const { return buffer; }
-
         const glm::mat4& getModelMatrix() const { return model; }
 
         void turnOffColor() override;
@@ -111,19 +107,7 @@ namespace LGraphics
         @param path - путь к изображению.
         @param component - указатель на LBaseComponent.
         */
-        LShape(LApp* app, const char* path);
-
-#ifdef OPENGL
-        /*!
-        @brief
-        @param bytes - массив байт (rgba).
-        @param size - размер массива bytes.
-        @param component - указатель на LBaseComponent.
-        */
-        LShape(LApp* app, const unsigned char* bytes, size_t size);
-#endif
-
-        void setBuffer(LBuffer* buffer);  ///< Устанавливает буфер.
+        LShape(LApp* app /*, ImageResource res*/);
 
         glm::vec3 scale_ = glm::vec3(0.5f, 0.5f, 0.5f);  ///< Вектор размеров виджета.
         glm::vec3 move_ = glm::vec3(0.0f, 0.0f, 0.0f);   ///< Вектор расположение виджета.
@@ -135,16 +119,13 @@ namespace LGraphics
 
         float transparency_ = 1.0f;                ///< Прозрачность виджета.
 
-        LBuffer* buffer = nullptr; ///< Координатный буфер (вершины, индексы, текстурные координаты).
-
     protected:
 
         static void setGlobalUniforms(GLuint shaderProgram);
 
         void refreshModel();
         glm::mat4 calculateModelMatrix() const;
-        glm::mat4 model;
-        glm::mat4 projection;
+        glm::mat4 model = glm::mat4(1.0f);
     };
 }
 

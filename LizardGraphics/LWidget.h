@@ -9,7 +9,7 @@
 
 //#include "vectors.h"
 #include "Lshaders.h"
-#include "LImage.h"
+#include "LObject.h"
 
 namespace LGraphics
 {
@@ -18,7 +18,7 @@ namespace LGraphics
     /*!
     @brief Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.
     */
-    class LWidget : public LImage
+    class LWidget : public LObject
     {
     public:
 
@@ -120,10 +120,6 @@ namespace LGraphics
         virtual void move(const glm::vec<2, size_t> v) = 0;
 
         virtual void setModel(const glm::mat4& model) = 0;
-        /*!
-        @brief устанавливает функцию, которая будет срабатывать при наведении мышки на виджет.
-        */
-        void setMouseOnItEventFunction(::std::function<void()> fun) { mouseOnItFunction = fun; }
 
         virtual void setMaterial(int material) { this->material = material; setUpdateUniformsFlag();}
         virtual int getMaterial() const { return material; }
@@ -160,8 +156,6 @@ namespace LGraphics
         LShaders::Shader* getShader() { return shader; }
         void setShader(LShaders::Shader* s) { shader = s; }
 
-        virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
-
         void show() { isHidden_ = false; }   ///< Показать виджет.
         void hide() { isHidden_ = true; }    ///< Скрыть виджет.
         void setHidden(bool hide) { isHidden_ = hide; }   ///< Установить видимость виджета.
@@ -184,10 +178,6 @@ namespace LGraphics
 
         static LApp* app;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
-        ::std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
-        ::std::function<void()> animation = ::std::function<void()>([](){});
-        ::std::function<void()> breakingAnimation = ::std::function<void()>([]() {});
-
         bool isInited_ = false;
         LShaders::Shader* shader = nullptr; ///< Шейдер.
 
@@ -206,9 +196,7 @@ namespace LGraphics
         @brief Конструктор.
         @param path - Путь к изображению.
         */
-        LWidget(LApp* app, const char* path);
-
-        virtual void init();
+        LWidget(LApp* app/*, ImageResource res*/);
 
     private:
         static std::vector<WidgetUniforms> uniforms;

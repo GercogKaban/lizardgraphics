@@ -3,9 +3,6 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normals;
 layout (location = 2) in vec2 textureCoords;
-layout (location = 3) in mat4 model_;
-layout (location = 7) in vec2 offset;
-layout (location = 8) in vec2 textureSize;
 
 out vec3 FragPos;
 out vec3 Normal;
@@ -18,6 +15,10 @@ out mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 uniform mat4 lightSpaceMatrix;
+
+uniform mat4 model_;
+uniform vec2 offset;
+uniform vec2 textureSize;
 
 void main()
 {

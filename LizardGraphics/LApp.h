@@ -102,6 +102,9 @@ namespace LGraphics
         uint8_t logFlags = 0;
         LStates redactorMode = L_FALSE;
         size_t freeThreads = std::max((int)std::thread::hardware_concurrency() - 2, 1);
+        ModelLoading loading = LGraphics::ModelLoading::QUALITY;
+        QualityLevels texturesQuality = LGraphics::QualityLevels::AUTO;
+        //QualityLevels modelsQuality = LGraphics::QualityLevels::AUTO;
     };
 
     /*!
@@ -162,9 +165,13 @@ namespace LGraphics
 
     protected:
 
+        GLuint currentDepthMap;
         void* buff;
 
         int* objectsOnScreen;
+        uint32_t modelLoadingFlags = 0;
+        std::unordered_map<QualityLevels, std::string> texturesDirectories;
+        std::unordered_map<QualityLevels, std::string> modelsDirectories;
         //LID<int> idManager;
 
         void loop_();
@@ -175,13 +182,20 @@ namespace LGraphics
         void updateTextures();
 
         void drawScene();
-
+        
         struct Megatexture
         {
             Atlas textureAtl = Atlas("textures/out.jpg");
-            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures;
-            GLuint id; 
+            Atlas normalAtl = Atlas("textures/out_n.jpg");
+            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal;
+            GLuint id, idNormal; 
         } megatexture;
+
+    protected:
+
+        void generateMegatexture(const std::string& texturesPath, Atlas& atl);
+        void initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures,
+            GLuint megatextureId, TextureTypes type);
 
     public:
 
@@ -294,13 +308,7 @@ namespace LGraphics
         const std::unique_ptr<LShaders::Shader>& getLightningShader() { return info.api == L_OPENGL ? openGLLightShader : lightShader; }
         //LShaders::Shader* getLightningShader() { return experimentalLightShader; }
 
-        unsigned int getDepthMap() const { return depthMap; }
-
         void setLighting(LStates state) { info.lighting = state; }
-        glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
-
-        bool lightIsInited() const { return lightIsInited_; }
-        void initLight() { lightIsInited_ = true; }
 
         glm::vec2 getMouseCoords() const { return mouseCoords; }
 
@@ -349,15 +357,12 @@ namespace LGraphics
 
         bool cursorEnabled = true;
         bool cameraFrontViewLock = false;
-        bool lightIsInited_ = false;
 
         bool prevCameraFrontDefined = false;
         glm::vec3 prevCameraFront = glm::vec3(0.0f);
-        glm::mat4 lightSpaceMatrix;
 
-        void setLightSpaceMatrix();
+        std::deque<LLight*> lightsToInit;
 
-        void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();
 
         void refreshCamera();
@@ -402,71 +407,12 @@ namespace LGraphics
     public:
         VkDevice getDevice() const { return g_Device; }
 
-        void setDirLightPos(glm::vec3 lightPos);
-        void setDirLightDirection(glm::vec3 direction);
-        void setDirLightAmbient(glm::vec3 ambient);
-        void setDirLightDiffuse(glm::vec3 diffuse);
-        void setDirLightSpecular(glm::vec3 specular);
-
-        glm::vec3 getDirLightPos() const { return globalDirLight.position; }
-        glm::vec3 getDirLightDirection() const { return globalDirLight.direction; }
-        glm::vec3 getDirLightAmbient() const { return globalDirLight.position; }
-        glm::vec3 getDirLightDiffuse() const { return globalDirLight.position; }
-        glm::vec3 getDirLightSpecular() const { return globalDirLight.position; }
-
     protected:
-
-        struct DirLight
-        {
-            glm::vec3 position;
-            glm::vec3 direction;
-            glm::vec3 ambient;
-            glm::vec3 diffuse;
-            glm::vec3 specular;
-        }globalDirLight;
-
-        //struct PointLight
-        //{
-        //    glm::vec3 position;
-        //    glm::vec3 ambient;
-        //    glm::vec3 diffuse;
-        //    glm::vec3 specular;
-
-        //    float constant;
-        //    float linear;
-        //    float quadratic;
-
-        //    bool calculateShadow;
-        //};
-
-        //struct SpotLight
-        //{
-        //    glm::vec3 position;
-        //    glm::vec3 direction;
-        //    glm::vec3 ambient;
-        //    glm::vec3 diffuse;
-        //    glm::vec3 specular;
-
-        //    float cutOff;
-        //    float outerCutOff;
-        //    float constant;
-        //    float linear;
-        //    float quadratic;
-
-        //    bool calculateShadow;
-        //};
-
-        //std::vector<PointLight> pointLights;
-        //std::vector<SpotLight> spotLights;
 
         struct UboDataDynamicV
         {
             glm::mat4* model = nullptr;
         };
-
-        /*struct VulkanStruct
-        {*/
-        //std::deque<size_t> indexGaps;
 
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
@@ -752,7 +698,8 @@ namespace LGraphics
         LBuffer* standartRectBuffer;
         LBuffer* standartCubeBuffer;
 
-        std::unique_ptr<LShaders::Shader> openGLLightShader, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader;
+        std::unique_ptr<LShaders::Shader> openGLLightShader, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader,
+            modelShader, shadowMapModelShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -765,9 +712,7 @@ namespace LGraphics
         std::function<void()> afterDrawingFunc = []() {};
         std::function<void()> afterSwitchingFunc = []() {};
 
-        uint32_t shadowWidth = 1024, shadowHeight = 1024;
-
-        GLuint depthMapFBO, depthMap, ssbo;
+        GLuint ssbo;
 
         bool drawingInShadow;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "LShape.h"
+#include "LImage.h"
 
 namespace LGraphics
 {
@@ -8,27 +9,22 @@ namespace LGraphics
     /*!
     @brief Класс четурёхугольной формы.
     */
-    class LRectangleShape : public LShape
+    class LRectangleShape : public LShape, public LImage
     {
     public:
 
         const char* getObjectType() const override { return "LRectanlgeShape"; }
 
-        bool mouseOnIt() override; ///< Возвращает находится ли мышка на виджете.
         void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum);
         void draw();
-        LRectangleShape(LApp* app, const char* path = nullptr, bool isInterfaceObj = true);
+        LRectangleShape(LApp* app, ImageResource res);
 
-        float calculateWidgetLength();
-
-        glm::vec3 getTopLeftCorner() const;
-        glm::vec3 getTopRightCorner() const;
-        glm::vec3 getBottomLeftCorner() const;
-        glm::vec3 getBottomRightCorner() const;
-
+        const LBuffer* getBuffer() const { return buffer; }
+        void setBuffer(LBuffer* buffer) { this->buffer = buffer; }
     protected:
 
-        void init(LApp* app, bool isInterfaceObj);
+        void init(LApp* app);
+        LBuffer* buffer = nullptr; ///< Координатный буфер (вершины, индексы, текстурные координаты, нормали).
     };
 }
 

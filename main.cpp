@@ -14,7 +14,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 10000;
+    const size_t poolSize = 20;
 
     LAppCreateInfo info;
 
@@ -28,30 +28,44 @@ int main(int argc, char** argv)
     info.MSAA = 4;
     info.vsync = L_FALSE;
     info.poolSize = poolSize;
+
+#ifndef NDEBUG
+    info.texturesQuality = LOW;
+#else
+    info.texturesQuality = HIGH;
+#endif
     //info.freeThreads = 1;
 
-    const auto spread = 500;
+    const auto spread = 5;
     LApp app(info);
     srand(time(0));
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LCube* c;
+    LModel* c;
 
     app.fog.density = 0.02f;
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
     app.fog.isEnabled = true;
 
-    auto s = new LSpotLight(&app);
-    s->setRadius(25);
+    auto s = new LPointLight(&app);
+    //s->turnOnShadowCalc();
+    //s->setRadius(25);
     if (!info.loadObjects)
     {
-        for (size_t i = 0; i < poolSize; ++i)
+        auto m = new LModel(&app, {"CashRegister_01.gltf"});
+        m->scale(2.0f, 2.0f, 2.0f);
+        m->move(0.0, 0.0f, 0.0f);
+        m->rotateX(180.0f);
+        for (size_t i = 0; i < poolSize - 1; ++i)
         {   
-            c = new LCube(&app, "textures/gold2.jpg");
-            c->move(rand() % spread, 0.0f, rand() % spread);
+            c = new LModel(&app, { "CashRegister_01.gltf"});
+            c->move(rand() % spread, -0.2f, rand() % spread);
+            c->scale(1.0f, 1.0f, 1.0f);
+            c->rotateX(180.0f);
         }
 
+        
         //for (size_t i = 0; i < 20; ++i)
         //    for (size_t j = 0; j < 20; ++j)
         //{
@@ -64,15 +78,10 @@ int main(int argc, char** argv)
         //c = new LCube(&app, "textures/gold.jpg");
         //c->scale(0.1f, 0.1f, 0.1f);
         //c->move(7.5f, 0.0f, 7.5f);
-        new LSkyBox(&app, {
-            "skyboxes/4k_red/right.png",
-            "skyboxes/4k_red/left.png",
-            "skyboxes/4k_red/top.png",
-            "skyboxes/4k_red/bottom.png",
-            "skyboxes/4k_red/front.png",
-            "skyboxes/4k_red/back.png", });
+        //new LSkyBox(&app, {"red"});
     }
 
+    bool flag = true;
     app.setBeforeDrawingFunc([&]()
         {
             if (app.isCursorEnabled())
@@ -83,7 +92,7 @@ int main(int argc, char** argv)
 
             const float radius = poolSize + 13.0f;
             const float shiftCoef = -1.05f;
-            glm::vec3 shift = glm::normalize(move - app.getDirLightPos()) * shiftCoef;
+            glm::vec3 shift = glm::normalize(move - s->getPosition()) * shiftCoef;
 
             int i = 0;
             //auto p = app.getPrimitives()[L_CUBE];
@@ -123,15 +132,19 @@ int main(int argc, char** argv)
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            app.setDirLightPos(glm::vec3(move.x + shift.x, move.y + 2.5f, move.z + shift.z));
-            s->direction = cameraFront;
-            s->position = cameraPos;
+            if (flag)
+            {
+                //s->setDirection(cameraFront);
+                s->setPosition(cameraPos);
+            }
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)
         {
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
+            if (app.isPressed(GLFW_KEY_X))
+                flag = !flag;
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });
@@ -188,7 +201,7 @@ int main(int argc, char** argv)
         }
     });
 
-    app.setDirLightPos(app.getCameraPos());
+    //app.setDirLightPos(app.getCameraPos());
     app.loop();
     return 0;
 }

@@ -12,8 +12,8 @@ bool LGraphics::LWRectangle::needToResetBuffer;
 GLuint LGraphics::LWRectangle::vbo;
 std::vector<LGraphics::LWRectangle*> LGraphics::LWRectangle::objChanged;
 
-LGraphics::LWRectangle::LWRectangle(LApp* app, const char* path, bool notRectangle)
-    :LRectangleShape(app, path, false)
+LGraphics::LWRectangle::LWRectangle(LApp* app, ImageResource res)
+    :LRectangleShape(app, res)
 {
     LOG_CALL
     objChanged.push_back(this);
@@ -21,15 +21,6 @@ LGraphics::LWRectangle::LWRectangle(LApp* app, const char* path, bool notRectang
         needToResetBuffer = true;
     uniforms.push_back(RectangleUniforms());
 }
-
-//glm::vec4 LGraphics::LWRectangle::getScreenCoords() const
-//{
-//    glm::vec4 coords_ = glm::vec4{
-//    (((LRectangleBuffer*)buffer)->getBottomLeftCorner().x + ((LRectangleBuffer*)buffer)->getBottomRightCorner().x)/2.0f,
-//    (((LRectangleBuffer*)buffer)->getTopRightCorner().y + ((LRectangleBuffer*)buffer)->getBottomRightCorner().y) / 2.0f,
-//    0.0f, 1.0f};
-//    return projection * app->getViewMatrix() * calculateModelMatrix() * coords_;
-//}
 
 void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
@@ -43,9 +34,10 @@ void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameI
      vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
          ((LShaders::VulkanShader*)getShader())->getPipelineLayout(), 0, 1, &app->descriptorSets[arrayIndex * 2 + frameIndex], 1, dynamicOffsets);
 
-    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(buffer->getIndCount()), 1, 0, 0, 0);
+    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(buffer->getIndices().size()), 1, 0, 0, 0);
 }
 
+// deprecated
 void LGraphics::LWRectangle::draw()
 {
     //if (isHidden())
@@ -99,9 +91,9 @@ void LGraphics::LWRectangle::drawInstanced()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, app->depthMap);
+    glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
     glBindVertexArray(app->standartRectBuffer->getVaoNum());
-    glDrawElementsInstanced(GL_TRIANGLES, app->standartRectBuffer->getIndCount(), GL_UNSIGNED_SHORT, 0, uniforms.size());
+    glDrawElementsInstanced(GL_TRIANGLES, app->standartRectBuffer->getIndices().size(), GL_UNSIGNED_SHORT, 0, uniforms.size());
     //glDrawArraysInstanced(GL_TRIANGLES, 0, 6, uniforms.size());
 }
 
@@ -125,7 +117,7 @@ void LGraphics::LWRectangle::move(const float x, const float y, const float z)
 
 void LGraphics::LWRectangle::setDiffuse(const char* path)
 {
-    texturePath = path;
+    imageResourceName = path;
     objChanged.push_back(this);
 }
 
@@ -185,8 +177,8 @@ void LGraphics::LWRectangle::updateBuffer()
 
 void LGraphics::LWRectangle::updateUniforms(LWidget::RectangleUniforms* buffer, size_t id)
 {
-    auto p = ((LWRectangle*)app->primitives[L_RECTANGLE][id])->getTexturePath();
-    const auto subtexture = app->megatexture.subtextures[((LWRectangle*)app->primitives[L_RECTANGLE][id])->getTexturePath()];
+    auto p = ((LWRectangle*)app->primitives[L_RECTANGLE][id])->getImageResourceName();
+    const auto subtexture = app->megatexture.subtextures[((LWRectangle*)app->primitives[L_RECTANGLE][id])->getImageResourceName()];
     auto& obj = buffer[id];
     obj.model = ((LWRectangle*)app->primitives[L_RECTANGLE][id])->calculateModelMatrix();
     obj.offset = subtexture.first;

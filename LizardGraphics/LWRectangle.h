@@ -11,7 +11,7 @@ namespace LGraphics
 
         friend LApp;
 
-        LWRectangle(LApp* app, const char* path = nullptr, bool notRectangle = false);
+        LWRectangle(LApp* app, ImageResource res);
         const char* getObjectType() const override { return "LWRectangle"; }
 
         //virtual glm::vec4 getScreenCoords() const;

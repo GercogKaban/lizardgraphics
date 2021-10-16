@@ -96,15 +96,9 @@ namespace LGraphics
         return move_;
     }
 
-    LShape::LShape(LApp* app, const char * path)
-        : LWidget(app, path)
+    LShape::LShape(LApp* app /*, ImageResource res*/)
+        :LWidget(app)
     {
-        if (path) turnOffColor();
-    }
-
-    void LShape::setBuffer(LBuffer* buffer)
-    {
-        this->buffer = buffer;
     }
 
     void LShape::refreshModel()
@@ -142,7 +136,7 @@ namespace LGraphics
         const auto proj = app->getProjectionMatrix();
         const auto view = app->getViewMatrix();
 
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
+        //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(app->lightSpaceMatrix));
 
         if (!app->drawingInShadow)
         {
@@ -153,21 +147,8 @@ namespace LGraphics
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-            // setting directed light
-            glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.position"), app->globalDirLight.position.x, 
-                app->globalDirLight.position.y, app->globalDirLight.position.z);
-            glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.direction"), app->globalDirLight.direction.x,
-                app->globalDirLight.direction.y, app->globalDirLight.direction.z);
-            glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.ambient"), app->globalDirLight.ambient.x,
-                app->globalDirLight.ambient.y, app->globalDirLight.ambient.z);
-            glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.diffuse"), app->globalDirLight.diffuse.x,
-                app->globalDirLight.diffuse.y, app->globalDirLight.diffuse.z);
-            glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.specular"), app->globalDirLight.specular.x,
-                app->globalDirLight.specular.y, app->globalDirLight.specular.z);
-
             glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
 
-            
             char res[32];
             // setting point light
             FOR(i,0, app->lights[L_POINT_LIGHT].size())
@@ -175,19 +156,23 @@ namespace LGraphics
                 sprintf(res, "pointSources[%i]", i);
 
                 const auto l = *(LPointLight*)app->lights[L_POINT_LIGHT][i];
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
-                    l.position.x, l.position.y, l.position.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
-                    l.ambient.x, l.ambient.y, l.ambient.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
-                    l.diffuse.x, l.diffuse.y, l.diffuse.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".specular").data()),
-                    l.specular.x, l.specular.y, l.specular.z);
-
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".constant").data()), l.constant);
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".linear").data()), l.linear);
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".quadratic").data()), l.quadratic);
                 glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
+
+                if (l.calculateShadow)
+                {
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
+                        l.position.x, l.position.y, l.position.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
+                        l.ambient.x, l.ambient.y, l.ambient.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
+                        l.diffuse.x, l.diffuse.y, l.diffuse.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".specular").data()),
+                        l.specular.x, l.specular.y, l.specular.z);
+
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".constant").data()), l.constant);
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".linear").data()), l.linear);
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".quadratic").data()), l.quadratic);
+                }
             }
 
             // setting spot light
@@ -196,23 +181,28 @@ namespace LGraphics
                 sprintf(res, "spotSources[%i]", i);
 
                 const auto l = *(LSpotLight*)app->lights[L_SPOT_LIGHT][i];
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
-                    l.position.x, l.position.y, l.position.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".direction").data()),
-                    l.direction.x, l.direction.y, l.direction.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
-                    l.ambient.x, l.ambient.y, l.ambient.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
-                    l.diffuse.x, l.diffuse.y, l.diffuse.z);
-                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".specular").data()),
-                    l.specular.x, l.specular.y, l.specular.z);
 
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".cutOff").data()), l.cutOff);
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".outerCutOff").data()), l.outerCutOff);
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".constant").data()), l.constant);
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".linear").data()), l.linear);
-                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".quadratic").data()), l.quadratic);
                 glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
+
+                if (l.calculateShadow)
+                {
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
+                        l.position.x, l.position.y, l.position.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".direction").data()),
+                        l.direction.x, l.direction.y, l.direction.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
+                        l.ambient.x, l.ambient.y, l.ambient.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
+                        l.diffuse.x, l.diffuse.y, l.diffuse.z);
+                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".specular").data()),
+                        l.specular.x, l.specular.y, l.specular.z);
+
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".cutOff").data()), l.cutOff);
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".outerCutOff").data()), l.outerCutOff);
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".constant").data()), l.constant);
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".linear").data()), l.linear);
+                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".quadratic").data()), l.quadratic);
+                }
             }
 
             glUniform1i(glGetUniformLocation(shaderProgram, "pointSourcesCount"), app->lights[L_POINT_LIGHT].size());

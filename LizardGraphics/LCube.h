@@ -11,7 +11,7 @@ namespace LGraphics
 
 		friend LApp;
 
-		LCube(LApp* app, const char* path);
+		LCube(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override{}
 		void draw() override;
 		static void drawInstanced();

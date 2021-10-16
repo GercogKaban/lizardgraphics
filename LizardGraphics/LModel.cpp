@@ -1,25 +1,23 @@
 #include "LModel.h"
-#include "LModelBuffer.h"
+//#include "LModelBuffer.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
+#include "LBuffer.h"
 
-LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath, 
-    const char* normalsPath, bool debugInfo)
-    :LShape(app,nullptr), modelPath(path)
+LGraphics::LModel::LModel(LApp* app, ModelResource modelResource)
+    :LShape(app)
 {
     LOG_CALL
-    // Base texture and normal map 
-    //textures.resize(2);
-    loadModel(path, debugInfo);
-
-    if (texturePath)
-    {
-        loadTexture(texturePath, BASE_TEXTURE);
-        this->texturePath = texturePath;
-    }
-    if (normalsPath)
-        loadTexture(normalsPath, NORMALS);
+    LResourceManager::loadModel(this, modelResource);
+    setShader(app->modelShader.get());
+    //if (texturePath)
+    //{
+    //    loadTexture(texturePath, BASE_TEXTURE);
+    //    this->textureName = texturePath;
+    //}
+    //if (normalsPath)
+    //    loadTexture(normalsPath, NORMALS);
 
     app->toCreate.push(this);
 #ifdef VULKAN
@@ -30,46 +28,39 @@ LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath,
 LGraphics::LModel::~LModel()
 {
     LOG_CALL
-    if (meshesToDraw)
-        delete[] meshesToDraw;
 }
 
-void LGraphics::LModel::loadTexture(const char* path, TextureType type)
+void LGraphics::LModel::draw()
 {
-    LOG_CALL
-    //auto texture = LResourceManager::loadTexture(path,mipLevels);
-    //auto m = LResourceManager::models[modelPath]->textures[type] = texture;
-    //this->texture = texture;
+    auto shader = (LShaders::OpenGLShader*)app->modelShader.get();
+    if (app->drawingInShadow)
+        shader = ((LShaders::OpenGLShader*)app->shadowMapModelShader.get());
+    GLuint shaderProgram = shader->getShaderProgram();
+    shader->use();
+    setGlobalUniforms(shaderProgram);
+    model = calculateModelMatrix();
+    //if (!app->drawingInShadow)
+    //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
+
+    FOR(i, 0, meshes.size())
+    {
+        //if (!app->drawingInShadow)
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
+        auto& diffuse = meshes[i].image->getDiffuse();
+        const auto castedDiff = TO_GL(diffuse);
+#ifdef MEGATEXTURE_LG
+        glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
+        glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
+#endif
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, castedDiff.id);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+        glBindVertexArray(meshes[i].buffer->getVaoNum());
+        glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
+        //glBindVertexArray(0);
+    }
 }
-
-void LGraphics::LModel::setMeshDrawing(size_t num, bool draw)
-{
-    LOG_CALL
-    meshesToDraw[num] = draw;
-}
-
-bool LGraphics::LModel::getMeshDrawing(size_t num) const
-{
-    LOG_CALL 
-    return meshesToDraw[num];
-}
-
-//LGraphics::LMaterial LGraphics::LModel::getMeshMaterial(size_t num) const
-//{
-//    LOG_CALL
-//    return materials[num];
-//}
-
-void LGraphics::LModel::loadModel(const char* modelPath, bool debugInfo)
-{
-    LOG_CALL
-    //LResourceManager::loadModel(this, modelPath, debugInfo);
-}
-
-//void LGraphics::LModel::setMeshMaterial(const LMaterial& material, size_t meshNum)
-//{
-//    updateUniforms();
-//}
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 //{

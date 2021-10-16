@@ -69,4 +69,26 @@ namespace LGraphics
         YELLOW_RUBBER,
     };
 
+    enum ModelLoading
+    {
+        FAST,
+        QUALITY,
+        MAX_QUALITY,
+    };
+
+    enum QualityLevels
+    {
+        AUTO,
+        LOW,
+        MEDIUM,
+        HIGH,
+        //MAXIMUM,
+    };
+
+    enum TextureTypes
+    {
+        DIFFUSE,
+        NORMAL,
+    };
+
 }

@@ -75,4 +75,9 @@ namespace LGraphics
             i <<= 2;
         return i;
     }
+
+    void findMeshTrianglesAdjacency(float* buff, size_t size, std::vector<float>& out)
+    {
+
+    }
 }

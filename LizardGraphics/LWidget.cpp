@@ -63,15 +63,8 @@ void LGraphics::LWidget::setUpdateUniformsFlag()
         changed = 1;
 }
 
-LGraphics::LWidget::LWidget(LApp* app, const char * path)
-    :LImage(path,app->info.api)
+LGraphics::LWidget::LWidget(LApp* app /*,ImageResource res*/)
 {
     this->app = app;
     setUpdateUniformsFlag();
-}
-
-void LGraphics::LWidget::init()
-{
-    this->LImage::init();
-    isInited_ = true;
 }

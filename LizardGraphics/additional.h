@@ -30,4 +30,6 @@ namespace LGraphics
     bool isExists(const std::string& path);
 
     size_t getPowerTwoAlign(size_t size);
+
+    void findMeshTrianglesAdjacency(float* buff, size_t size, std::vector<float>& out);
 }

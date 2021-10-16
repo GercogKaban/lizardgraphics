@@ -160,11 +160,11 @@ public:
                         //auto m = new LModel(app, modelPath_, texturePath_);
                         //m->setName(createObjName);
                     }
-                    else if (radioRectangle)
-                    {
-                        auto r = new LWRectangle(app, texturePath_);
-                        r->setName(createObjName);
-                    }
+                    //else if (radioRectangle)
+                    //{
+                    //    auto r = new LWRectangle(app, texturePath_);
+                    //    r->setName(createObjName);
+                    //}
                     else
                     {
 

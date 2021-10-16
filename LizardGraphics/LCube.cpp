@@ -13,8 +13,8 @@ std::vector<LGraphics::LCube*> LGraphics::LCube::objChanged;
 bool LGraphics::LCube::needToResetBuffer = false;
 GLuint LGraphics::LCube::vbo;
 
-LGraphics::LCube::LCube(LApp* app, const char* path)
-	:LRectangleShape(app,path)
+LGraphics::LCube::LCube(LApp* app, ImageResource res)
+	:LRectangleShape(app, res)
 {
     LOG_CALL
     objChanged.push_back(this);
@@ -22,40 +22,43 @@ LGraphics::LCube::LCube(LApp* app, const char* path)
        needToResetBuffer = true;
     uniforms.push_back(CubeUniforms());
 	setBuffer(app->standartCubeBuffer);
+    diffusePath = std::filesystem::current_path().generic_string() + '/' + app->texturesDirectories[app->info.texturesQuality] + "/diffuse/";
+    normalsPath = std::filesystem::current_path().generic_string() + '/' + app->texturesDirectories[app->info.texturesQuality] + "/normal/";
     //shader = app->getLightningShader().get();
     //projection = app->getProjectionMatrix();
     //app->toCreate.push(this);
 }
 
+// deprecated
 void LGraphics::LCube::draw()
 {
-    LOG_CALL
-    if (isHidden())
-        return;
+    //LOG_CALL
+    //if (isHidden())
+    //    return;
 
-    auto shader = (LShaders::OpenGLShader*)getShader();
-    if (app->drawingInShadow)
-        shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
-    GLuint shaderProgram = shader->getShaderProgram();
-    shader->use();
+    //auto shader = (LShaders::OpenGLShader*)getShader();
+    //if (app->drawingInShadow)
+    //    shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
+    //GLuint shaderProgram = shader->getShaderProgram();
+    //shader->use();
 
-    // unique for each object
-    const auto model = calculateModelMatrix();
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(glGetUniformLocation(shaderProgram, "objId"), id);
-    setGlobalUniforms(shaderProgram);
+    //// unique for each object
+    //const auto model = calculateModelMatrix();
+    //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    //glUniform1i(glGetUniformLocation(shaderProgram, "objId"), id);
+    //setGlobalUniforms(shaderProgram);
 
-    //glUniform3f(glGetUniformLocation(shader, "dirLight.direction"), 1000.0f, 3.0f, 200.0f);
-    //glUniform3f(glGetUniformLocation(shader, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
-    //glUniform3f(glGetUniformLocation(shader, "dirLight.diffuse"), 0.5f, 0.5f, 0.5f);
-    //glUniform3f(glGetUniformLocation(shader, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
-    
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, app->depthMap);
-    glBindVertexArray(buffer->getVaoNum());
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    ////glUniform3f(glGetUniformLocation(shader, "dirLight.direction"), 1000.0f, 3.0f, 200.0f);
+    ////glUniform3f(glGetUniformLocation(shader, "dirLight.ambient"), 0.2f, 0.2f, 0.2f);
+    ////glUniform3f(glGetUniformLocation(shader, "dirLight.diffuse"), 0.5f, 0.5f, 0.5f);
+    ////glUniform3f(glGetUniformLocation(shader, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
+    //
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
+    //glActiveTexture(GL_TEXTURE1);
+    //glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+    //glBindVertexArray(buffer->getVaoNum());
+    //glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void LGraphics::LCube::drawInstanced()
@@ -71,9 +74,9 @@ void LGraphics::LCube::drawInstanced()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, app->depthMap);
+    glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
     glBindVertexArray(app->standartCubeBuffer->getVaoNum());
-    glDrawArraysInstanced(GL_TRIANGLES, 0, app->standartCubeBuffer->getVerticesCount(), uniforms.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, app->standartCubeBuffer->getVertices().size(), uniforms.size());
 }
 
 void LGraphics::LCube::setModel(const glm::mat4& model)
@@ -96,7 +99,7 @@ void LGraphics::LCube::move(const float x, const float y, const float z)
 
 void LGraphics::LCube::setDiffuse(const char* path)
 {
-    texturePath = path;
+    imageResourceName = path;
     objChanged.push_back(this);
 }
 
@@ -156,8 +159,8 @@ void LGraphics::LCube::updateBuffer()
 
 void LGraphics::LCube::updateUniforms(LWidget::CubeUniforms* buffer, size_t id)
 {
-    auto p = ((LCube*)app->primitives[L_CUBE][id])->getTexturePath();
-    const auto subtexture = app->megatexture.subtextures[((LCube*)app->primitives[L_CUBE][id])->getTexturePath()];
+    auto path = ((LCube*)app->primitives[L_CUBE][id])->getDiffusePath();
+    const auto subtexture = app->megatexture.subtextures[path];
     auto& obj = buffer[id];
     obj.model = ((LCube*)app->primitives[L_CUBE][id])->calculateModelMatrix();
     obj.offset = subtexture.first;

@@ -4,68 +4,9 @@
 #include "include/glm/gtc/type_ptr.hpp"
 
 LGraphics::LSkyBoxBuffer::LSkyBoxBuffer(LApp* app)
+    :LCubeBuffer(app)
 {
     LOG_CALL
-    init(app);
-}
-
-void LGraphics::LSkyBoxBuffer::setBuffers()
-{
-    LOG_CALL
-    verticesCount = 36; indicesCount = 0, textureCoordsCount = 0, normalsCount = 0;
-
-    setVerts();
-    setInds();
-    genBuffers();
-}
-
-void LGraphics::LSkyBoxBuffer::setVerts()
-{
-    LOG_CALL
-        vertices = new float[/*(coordsCount + textureCoordsCount + normalsCount) * verticesCount*/]
-    {
-        -1.0f, 1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, -1.0f, 1.0f,
-
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, 1.0f,
-
-            -1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,
-
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f
-    };
 }
 
 void LGraphics::LSkyBoxBuffer::genBuffers()
@@ -80,12 +21,9 @@ void LGraphics::LSkyBoxBuffer::genBuffers()
             glBindVertexArray(VAO);
 
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferData(GL_ARRAY_BUFFER, getVertSize(), vertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, getVertSize(), vertices.data(), GL_STATIC_DRAW);
 
-            //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-            //glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndSize(), ebo, GL_STATIC_DRAW);
-
-            glVertexAttribPointer(0, coordsCount, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
             glEnableVertexAttribArray(0);
 
             glBindVertexArray(0);
@@ -97,17 +35,22 @@ void LGraphics::LSkyBoxBuffer::genBuffers()
 //}
 }
 
-LGraphics::LSkyBox::LSkyBox(LApp* app, const std::vector<std::string>& paths)
-	:LCube(app,nullptr)
+LGraphics::LSkyBox::LSkyBox(LApp* app, ImageSkyboxResource res)
+    :LCube(app, {res.name,false,false})
 {
     LOG_CALL
-	textures = LResourceManager::loadCubeTexture(paths,"skybox1");
+    //auto text = LResourceManager::loadImageSkyboxResource(res);`
+    textures = std::vector<TexturesData>{ LResourceManager::loadImageSkyboxResource(res) };
     this->buffer = app->standartSkyBoxBuffer;
     this->shader = app->skyBoxShader.get();
     if (app->skybox)
         app->toDelete.push(app->skybox);
     app->skybox = this;
     app->toCreate.pop();
+}
+
+LGraphics::LSkyBox::~LSkyBox()
+{
 }
 
 void LGraphics::LSkyBox::draw()
@@ -133,8 +76,8 @@ void LGraphics::LSkyBox::draw()
         glUniform1i(glGetUniformLocation(shader, "fog.isEnabled"), true);
     }
 
-
-    glBindTexture(GL_TEXTURE_CUBE_MAP, *(GLuint*)getTexture());
+    auto casted = getTextures()[0];
+    glBindTexture(GL_TEXTURE_CUBE_MAP, (TO_GL(casted)).id);
     glBindVertexArray(buffer->getVaoNum());
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }

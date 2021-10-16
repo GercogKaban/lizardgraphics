@@ -1,60 +1,138 @@
 #pragma once
+#include <climits>
 
 namespace LGraphics
 {
 	class LApp;
+	class LShape;
+
 	class LLight
 	{
 		friend LApp;
-	public:
-		LLight(LApp* app);
-		~LLight(){}
+		friend LShape;
 
-		virtual int getId() const { return id; }
+	public:
+		LLight(LApp* app, size_t shadowWidth = 1024, size_t shadowHeight = 1024);
+		virtual ~LLight();
+
+		int getId() const { return id; }
+		virtual void setLightSpaceMatrix() {}
+
+		void setPosition(glm::vec3 position);
+		void setAmbient(glm::vec3 ambient);
+		void setDiffuse(glm::vec3 diffuse);
+		void setSpecular(glm::vec3 specular);
+
+		void setNearPlane(float nearPlane);
+		void setFarPlane(float farPlane);
+
+		glm::vec3 getPosition() const { return position; }
+		glm::vec3 getAmbient() const { return ambient; }
+		glm::vec3 getDiffuse() const { return diffuse; }
+		glm::vec3 getSpecular() const { return specular; }
+
+		float getNearPlane() const { return nearPlane; }
+		float getFarPlane() const { return farPlane; }
+
+		bool getShadowCalculating() const { return calculateShadow; }
+		const auto& getLightspaceMatric() const { return lightSpaceMatrix; }
+
+		void turnOnShadowCalc();
+		void turnOffShadowCalc();
+		void switchShadowCalc();
+		void setShadowsCalculating(bool calculateShadows);
 
 	protected:
+		void init();
+
 		LApp* app;
 		int id;
+		uint32_t depthMap = UINT32_MAX;
+		uint32_t depthMapFBO = UINT32_MAX;
+		glm::mat4 lightSpaceMatrix;
+
+		glm::vec3 position;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+
+		float nearPlane, farPlane;
+		bool calculateShadow = true;
+		bool changed = true;
+
+		size_t shadowWidth, shadowHeight;
 	};
 
 	class LSpotLight : public LLight
 	{
 	public:
+
+		friend LShape;
+
 		LSpotLight(LApp* app);
 		~LSpotLight(){}
 
-		glm::vec3 position;
-		glm::vec3 direction;
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		void setRadius(float radiusDegrees);
 
+		void setCutOff(float cutOff);
+		void setOuterCutOff(float outerCutOff);
+		void setConstant(float constant);
+		void setLinear(float linear);
+		void setQuadratic(float quadratic);
+		void setDirection(glm::vec3 dir);
+
+		float getCutOff() const { return cutOff; }
+		float getOuterCutOff()  const { return outerCutOff; }
+		float getConstant() const { return constant; }
+		float getLinear() const { return linear; }
+		float getQuadratic() const { return quadratic; }
+		glm::vec3 getDirection() const { return direction; }
+
+		void setLightSpaceMatrix() override;
+
+	protected:
+		glm::vec3 direction;
 		float cutOff;
 		float outerCutOff;
 		float constant;
 		float linear;
 		float quadratic;
-
-		bool calculateShadow = true;
-
-		void setRadius(float radius);
 	};
 
 	class LPointLight : public LLight
 	{
 	public:
+
+		friend LShape;
+
 		LPointLight(LApp* app);
 		~LPointLight(){}
 
-		glm::vec3 position;
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		void setLightSpaceMatrix() override;
+		void setConstant(float constant);
+		void setLinear(float linear);
+		void setQuadratic(float quadratic);
 
+		float getConstant() const { return constant; }
+		float getLinear() const { return linear; }
+		float getQuadratic() const { return quadratic; }
+
+	protected:
 		float constant;
 		float linear;
 		float quadratic;
+	};
 
-		bool calculateShadow = false;
+	class LDirectionalLight : public LLight
+	{
+	public:
+		LDirectionalLight(LApp* app);
+		void setLightSpaceMatrix() override;
+		void setDirection(glm::vec3);
+
+		glm::vec3 getDirection() const { return direction; }
+
+	protected:
+		glm::vec3 direction;
 	};
 }

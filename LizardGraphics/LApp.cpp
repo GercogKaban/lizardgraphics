@@ -5,7 +5,7 @@
 #include "LApp.h"
 #include "LRectangleBuffer.h"
 #include "LModel.h"
-#include "LModelBuffer.h"
+//#include "LModelBuffer.h"
 #ifdef WIN32
 #include "CodeGen.h"
 #include "../codegen.h"
@@ -70,12 +70,53 @@ namespace LGraphics
     {
         LCube::drawInstanced();
         LWRectangle::drawInstanced();
+        for (auto& m : primitives[L_MODEL])
+            m->draw();
         if (!drawingInShadow)
         {
             glDepthFunc(GL_LEQUAL);
             if(skybox)
                 skybox->draw();
             glDepthFunc(GL_LESS);
+        }
+    }
+
+    void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl)
+    {
+        std::vector<std::string> textures;
+        for (auto& p : std::filesystem::recursive_directory_iterator(std::filesystem::path(texturesPath)))
+        {
+            auto fileEnd = p.path().generic_string().substr(p.path().generic_string().size() - 3);
+            if (fileEnd == "png" || fileEnd == "jpg" || fileEnd == "tga" || fileEnd == "bmp"
+                || fileEnd == "BMP")
+                textures.push_back(p.path().generic_string());
+        }
+        atl.makeAtlas(textures);
+        atl.saveAtlas();
+    }
+
+    void LApp::initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures, 
+        GLuint megatextureId, TextureTypes type)
+    {
+        for (size_t i = 0; i < atl.getAtlasData().texturePaths.size(); ++i)
+        {
+            const auto& atlData = atl.getAtlasData();
+            const auto& path = atlData.texturePaths[i];
+            const auto textureDims = atlData.atlasSize;
+
+            GLuint texture = NO_TEXTURE, normal = NO_TEXTURE;
+            if (type == DIFFUSE)
+                texture = megatextureId;
+            else if (type == NORMAL)
+                texture = megatextureId;
+
+            auto offset = glm::vec2((float)atlData.textureOffsets[i].first / (float)textureDims.first,
+                (float)atlData.textureOffsets[i].second / (float)textureDims.second);
+            auto size = glm::vec2((float)atlData.textureDims[i].first / (float)textureDims.first,
+                (float)atlData.textureDims[i].second / (float)textureDims.second);
+
+            LResourceManager::textures.insert(std::make_pair(path, TexturesData{ new TexturesData::OGLImageData{texture,offset,size}}));
+            subtextures.insert(std::make_pair(path, std::make_pair(offset, size)));
         }
     }
 
@@ -165,17 +206,42 @@ namespace LGraphics
                     if (info.redactorMode)
                         std::fill(objectsOnScreen, objectsOnScreen + screenSize / sizeof(int), -1);
                     //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
-                    setLightSpaceMatrix();
+
+                    // init depth maps
+                    for (auto& l : lightsToInit)
+                        l->init();
+                    lightsToInit.clear();
+
                     // рисуем в карту теней
                     glEnable(GL_DEPTH_TEST);
                     glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
                     drawingInShadow = true;
-                    glViewport(0, 0, shadowWidth, shadowHeight);
 
-                    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-                    glClear(GL_DEPTH_BUFFER_BIT);
-                    drawScene();
-                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                    FOR(i, 0, lights[L_SPOT_LIGHT].size())
+                    {
+                        auto& l = lights[L_SPOT_LIGHT][i];
+                        currentDepthMap = l->depthMap;
+                        // нужен фикс
+                        l->setLightSpaceMatrix();
+                        glViewport(0, 0, l->shadowWidth, l->shadowHeight);
+                        glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
+                        glClear(GL_DEPTH_BUFFER_BIT);
+                        drawScene();
+                        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                    }
+
+                    FOR(i, 0, lights[L_POINT_LIGHT].size())
+                    {
+                        auto& l = lights[L_POINT_LIGHT][i];
+                        currentDepthMap = l->depthMap;
+                        // нужен фикс
+                        l->setLightSpaceMatrix();
+                        glViewport(0, 0, l->shadowWidth, l->shadowHeight);
+                        glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
+                        glClear(GL_DEPTH_BUFFER_BIT);
+                        drawScene();
+                        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                    }
 
                     drawingInShadow = false;
                     glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
@@ -288,8 +354,8 @@ namespace LGraphics
         for (auto& v : primitives)
             for (auto& p : v)
                 p->setShader(getStandartShader());
-        for (auto& m : models)
-            m->setShader(getStandartShader());
+        //for (auto& m : models)
+        //    m->setShader(getStandartShader());
     }
 
     void LApp::updateBuffers()
@@ -557,49 +623,6 @@ namespace LGraphics
         userScrollCallback = func;
     }
 
-    void LApp::setDirLightPos(glm::vec3 lightPos)
-    {
-        globalDirLight.position = lightPos;
-    }
-
-    void LApp::setDirLightDirection(glm::vec3 direction)
-    {
-        globalDirLight.direction = direction;
-    }
-
-    void LApp::setDirLightAmbient(glm::vec3 ambient)
-    {
-        globalDirLight.ambient = ambient;
-    }
-
-    void LApp::setDirLightDiffuse(glm::vec3 diffuse)
-    {
-        globalDirLight.diffuse = diffuse;
-    }
-
-    void LApp::setDirLightSpecular(glm::vec3 specular)
-    {
-        globalDirLight.specular = specular;
-    }
-
-    void LApp::setLightSpaceMatrix()
-    {
-        LOG_CALL
-        const float near_plane = 0.1f, far_plane = 35.0f;
-        const float d = 12.0f;
-        glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-        glm::mat4 lightView = glm::lookAt(globalDirLight.position, globalDirLight.direction, glm::vec3(0.0, 1.0, 0.0));
-        lightSpaceMatrix = lightProjection * lightView;
-    }
-
-    void LApp::initTextures(std::vector<LWidget*>& objects)
-    {
-        LOG_CALL
-        for (auto& w : objects)
-            if (!w->isInited())
-                w->init();
-    }
-
     void LApp::setMatrices()
     {
         LOG_CALL
@@ -677,75 +700,76 @@ namespace LGraphics
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
 
-        lwRectPool.setCreationCallback([&]()
-        {
-            auto lwRect = new LWRectangle(this);
-            removeObject(lwRect);
-            return lwRect;
-        });
+        texturesDirectories.insert(std::make_pair(LOW, "textures/low"));
+        texturesDirectories.insert(std::make_pair(MEDIUM, "textures/medium"));
+        texturesDirectories.insert(std::make_pair(HIGH, "textures/high"));
 
-        lwRectPool.setReleaseFunction([&]()
-        {
-            //while (auto w = lwRectPool.pop())
-            //    deleteObject(w);
-        });
+        modelsDirectories.insert(std::make_pair(LOW, "models/low"));
+        modelsDirectories.insert(std::make_pair(MEDIUM, "models/medium"));
+        modelsDirectories.insert(std::make_pair(HIGH, "models/high"));
+
+        //lwRectPool.setCreationCallback([&]()
+        //{
+        //    auto lwRect = new LWRectangle(this);
+        //    removeObject(lwRect);
+        //    return lwRect;
+        //});
+
+        //lwRectPool.setReleaseFunction([&]()
+        //{
+        //});
 
         setMatrices();
-#ifdef WIN32
+
         if (info.loadObjects)
             genWidgets(this);
         LCube::initInstanceBuffer();
         LWRectangle::initInstanceBuffer();
         LResourceManager::setApp(this);
 
-        // Инициализация атласа 
-        // тут должна быть ещё проверка изменились ли файлы текстур
-        if (!isExists("textures/out.jpg") /*|| changed */)
+        if (info.texturesQuality == AUTO)
         {
-            std::vector<std::string> textures;
-            //using fs = std::filesystem;
-            for (auto& p : std::filesystem::recursive_directory_iterator(std::filesystem::path(std::filesystem::current_path().generic_string() +
-                "/textures")))
-            {
-                auto fileEnd = p.path().generic_string().substr(p.path().generic_string().size() - 3);
-                if (fileEnd == "png" || fileEnd == "jpg" || fileEnd == "tga" || fileEnd == "bmp"
-                    || fileEnd == "BMP")
-                    textures.push_back(p.path().generic_string());
-            }
-            megatexture.textureAtl.makeAtlas(textures);
-            megatexture.textureAtl.saveAtlas();
-
-            auto texturePaths = megatexture.textureAtl.getAtlasData().texturePaths;
+            GLint freeMemAmount[] = { 0,0,0,0 };
+            glGetIntegerv(GL_TEXTURE_FREE_MEMORY_ATI, freeMemAmount);
+            if (freeMemAmount[0] >= 4000000)
+                info.texturesQuality = HIGH;
+            else if (freeMemAmount[0] >= 2000000 && freeMemAmount[0] < 4000000)
+                info.texturesQuality = MEDIUM;
+            else
+                info.texturesQuality = LOW;
         }
+
+        const auto texturesPath = std::filesystem::current_path().generic_string() + '/' + texturesDirectories[info.texturesQuality];
+        megatexture.textureAtl.setFileName(texturesPath + "/diffuse/out.jpg");
+        megatexture.normalAtl.setFileName(texturesPath + "/normal/out.jpg");
+
+        // Инициализация текстурного атласа 
+        // тут должна быть ещё проверка изменились ли файлы текстур
+        if (!isExists(megatexture.textureAtl.getOutPath()) /*|| changed */)
+            generateMegatexture(texturesPath + "/diffuse/", megatexture.textureAtl);
         else  
             megatexture.textureAtl.loadAtlas("atlas_info");
 
+        // Инициализация атласа нормалей
+        // тут должна быть ещё проверка изменились ли файлы текстур
+        if (!isExists(megatexture.normalAtl.getOutPath()) /*|| changed */)
+            generateMegatexture(texturesPath + "/normal/", megatexture.normalAtl);
+        else
+            megatexture.normalAtl.loadAtlas("atlas_info1");
+
         size_t dummy;
-        megatexture.id = ((LResourceManager::OpenGLImage*)LResourceManager::loadTexture("textures/out.jpg", dummy))->diffuse;
+        megatexture.id = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.textureAtl.getOutPath().data(), dummy))->id;
+        megatexture.idNormal = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.normalAtl.getOutPath().data(), dummy))->id;
 
-        for (size_t i = 0; i < megatexture.textureAtl.getAtlasData().texturePaths.size();++i)
-        {
-            const auto& atlData = megatexture.textureAtl.getAtlasData();
-            const auto& path = atlData.texturePaths[i];
-            const auto textureDims = atlData.atlasSize;
+        initMegatextureData(megatexture.textureAtl, megatexture.subtextures, megatexture.id,DIFFUSE);
+        initMegatextureData(megatexture.normalAtl, megatexture.subtexturesNormal, megatexture.idNormal,NORMAL);
 
-            LResourceManager::textures.insert(std::make_pair(path, new GLuint(megatexture.id)));
-            megatexture.subtextures.insert(std::make_pair(
-                path, std::make_pair(
-                    glm::vec2((float)atlData.textureOffsets[i].first / (float)textureDims.first,
-                    (float)atlData.textureOffsets[i].second / (float)textureDims.second ),
-
-                    glm::vec2((float)atlData.textureDims[i].first / (float)textureDims.first,
-                    (float)atlData.textureDims[i].second / (float)textureDims.second ))
-            ));
-        }
-
-        globalDirLight.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        globalDirLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
-        globalDirLight.diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
-        globalDirLight.specular = glm::vec3(0.3f, 0.3f, 0.3f);
-        globalDirLight.direction = glm::vec3(7.5,0.0f,7.5f);
-#endif
+        if (info.loading == FAST)
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs;
+        else if (info.loading == QUALITY)
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs;
+        else if (info.loading == MAX_QUALITY)
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs;
     }
 
     void LApp::initRenderer()
@@ -859,6 +883,10 @@ namespace LGraphics
                  ,(std::string(LIB_PATH)+"//shaders//shadows.vs").data()
                 ,(std::string(LIB_PATH) + "//shaders//shadows.fs").data()));
 
+            modelShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//model.vs").data()
+                , (std::string(LIB_PATH) + "//shaders//shadows.fs").data()));
+
             skyBoxShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//skybox.vs").data()
                 , (std::string(LIB_PATH) + "//shaders//skybox.fs").data()));
@@ -870,29 +898,15 @@ namespace LGraphics
             shadowMapShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.vs").data()
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.fs").data()));
+
+            shadowMapModelShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vs").data()
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.fs").data()));
         }
         standartRectBuffer = new LRectangleBuffer(this);
         standartSkyBoxBuffer = new LSkyBoxBuffer(this);
         standartCubeBuffer = new LCubeBuffer(this);
         glViewport(0, 0, info.wndWidth, info.wndHeight);
-
-        glGenFramebuffers(1, &depthMapFBO);
-
-        glGenTextures(1, &depthMap);
-        glBindTexture(GL_TEXTURE_2D, depthMap);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        float borderColor_[] = { borderColor.x,borderColor.y,borderColor.z,borderColor.w };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void LApp::initVulkan()
@@ -2584,7 +2598,7 @@ namespace LGraphics
         {
             viewProj,
             cameraPos,
-            globalDirLight.position,
+            glm::vec3(0.0f),
             {0.9f,0.9f,0.9f},
             {0.5f,0.5f,0.5f},
             //info.lighting,
@@ -2612,7 +2626,7 @@ namespace LGraphics
 
         if (models.size())
         {
-            auto obj = models[0];
+            /*auto obj = models[0];
             auto shader = (LShaders::VulkanShader*)obj->getShader();
 
             vkCmdBindPipeline(fd->CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
@@ -2620,7 +2634,7 @@ namespace LGraphics
                 VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::ShaderConstants), &shaderCnst);
 
             for (size_t i = 0; i < models.size(); ++i)
-                models[i]->draw(fd->CommandBuffer, wd->FrameIndex);
+                models[i]->draw(fd->CommandBuffer, wd->FrameIndex);*/
         }
 
         // Record dear imgui primitives into command buffer
@@ -2669,13 +2683,6 @@ namespace LGraphics
         }
         check_vk_result(err);
         wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount;
-    }
-
-
-    void LApp::initTextures()
-    {
-        LOG_CALL
-        //initTextures(rectangles);
     }
 
     std::array<VkVertexInputAttributeDescription, 3> LApp::Vertex::getAttributeDescriptions()

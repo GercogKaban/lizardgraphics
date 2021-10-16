@@ -4,52 +4,19 @@
 #include "Lshaders.h"
 #include "LApp.h"
 #include "LLogger.h"
+#include "LResourceManager.h"
 
 namespace LGraphics
 {
-    LRectangleShape::LRectangleShape(LApp* app, const char* path, bool isInterfaceObj)
-        :LShape(app,path)
+    LRectangleShape::LRectangleShape(LApp* app, ImageResource res)
+        :LShape(app),LImage(res,app->info.api)
     {
-        init(app, isInterfaceObj);
+        init(app);
         shader = app->getLightningShader().get();
-        projection = app->getProjectionMatrix();
         app->toCreate.push(this);
     }
 
-//#ifdef OPENGL
-//    LRectangleShape::LRectangleShape(LApp* app, const unsigned char * bytes, size_t size, bool isInterfaceObj)
-//        :LShape(app,bytes,size)
-//    {
-//        init(app, isInterfaceObj);
-//    }
-//#endif 
-
-    float LRectangleShape::calculateWidgetLength()
-    {
-        return xGlCoordToScreenCoord(app->getWindowSize(), getTopRightCorner().x) - xGlCoordToScreenCoord(app->getWindowSize(), getTopLeftCorner().x);
-    }
-
-    glm::vec3 LRectangleShape::getTopLeftCorner() const
-    {
-        return ((LRectangleBuffer*)buffer)->getTopLeftCorner() * scale_ + move_;
-    }
-
-    glm::vec3 LRectangleShape::getTopRightCorner() const
-    {
-        return ((LRectangleBuffer*)buffer)->getTopRightCorner() * scale_ + move_;
-    }
-
-    glm::vec3 LRectangleShape::getBottomLeftCorner() const
-    {
-        return ((LRectangleBuffer*)buffer)->getBottomLeftCorner() * scale_ + move_;
-    }
-
-    glm::vec3 LRectangleShape::getBottomRightCorner() const
-    {
-        return ((LRectangleBuffer*)buffer)->getBottomRightCorner() * scale_ + move_;
-    }
-
-    void LRectangleShape::init(LApp* app, bool isInterfaceObj)
+    void LRectangleShape::init(LApp* app)
     {
         LOG_CALL
             this->app = app;
@@ -60,41 +27,22 @@ namespace LGraphics
             shader = app->lightShader.get();
     }
 
-    bool LRectangleShape::mouseOnIt()
-    {
-        //float x_[4], y_[4];
-        //float* vbo = buffer->getVertices();
-
-        //// getting rectangle coordinates 
-        //for (size_t i = 0; i < buffer->getVerticesCount(); ++i)
-        //{
-        //    x_[i] = vbo[i * 3] * getScale().x + getMove().x;
-        //    y_[i] = vbo[i * 3 + 1] * getScale().y + getMove().y;
-        //}
-
-        //double mouse_x, mouse_y;
-        //glfwGetCursorPos(app->getWindowHandler(), &mouse_x, &mouse_y);
-
-        //return isPointInPolygon((int)buffer->getVerticesCount(), x_, y_, pointOnScreenToGlCoords(app->getWindowSize(), { (float)mouse_x ,(float)mouse_y }));
-        return false;
-    }
-#ifdef OPENGL
+    // deprecated
     void LRectangleShape::draw()
     {
-        auto shader = (LShaders::OpenGLShader*)getShader();
-        shader->use();
-        if (isTextureTurnedOn()) 
-            glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
-        else 
-            glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 0);
-        glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTexture());
-        glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
-        glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
-        glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
-        //glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "rotate"), 1, GL_FALSE, glm::value_ptr(rotate_));
-
-        glBindVertexArray(buffer->getVaoNum());
-        glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
+        //auto shader = (LShaders::OpenGLShader*)getShader();
+        //shader->use();
+        //if (isTextureTurnedOn()) 
+        //    glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 1);
+        //else 
+        //    glUniform1i(glGetUniformLocation(shader->getShaderProgram(), "sampleTexture"), 0);
+        //auto texture = LResourceManager::toGl((LResourceManager::TexturesData*)getTextures()).id;
+        //glBindTexture(GL_TEXTURE_2D, *(GLuint*)getTextures());
+        //glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "move"), move_.x, move_.y, move_.z);
+        //glUniform3f(glGetUniformLocation(shader->getShaderProgram(), "scale"), scale_.x, scale_.y, scale_.z);
+        //glUniform4f(glGetUniformLocation(shader->getShaderProgram(), "color_"), color_.x, color_.y, color_.z, transparency_);
+        //glBindVertexArray(buffer->getVaoNum());
+        //glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_INT, 0);
         //glBindVertexArray(0);
         //if (label.text.size())
         //    LLine::display(label);
@@ -102,7 +50,6 @@ namespace LGraphics
             for (auto& i : *innerWidgets)
                 i->draw();*/
     }
-#endif OPENGL
 
     //LRectangleShape::LRectangleShape(LApp* app)
     //    :LShape()
