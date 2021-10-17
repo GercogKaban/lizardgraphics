@@ -74,6 +74,7 @@ namespace LGraphics
 
     class LApp;
     class LResourceManager;
+    class LModel;
     /*!
     @brief Класс изображения, привязывается к виджетом в качестве текстуры.
     */
@@ -82,6 +83,7 @@ namespace LGraphics
     public:
         
         friend LResourceManager;
+        friend LModel;
         struct ImageResource
         {
             std::string name;
@@ -100,7 +102,8 @@ namespace LGraphics
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
 #ifdef MEGATEXTURE_LG
-        virtual void setDiffuse(const char* path);
+        virtual void setDiffuse(const TexturesData& data);
+        virtual void setNormal(const TexturesData& data);
 #else
         void setDiffuse(GLuint id);
         void setDiffuse(VkImageView view);

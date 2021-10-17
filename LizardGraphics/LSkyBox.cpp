@@ -3,45 +3,13 @@
 #include "LApp.h"
 #include "include/glm/gtc/type_ptr.hpp"
 
-LGraphics::LSkyBoxBuffer::LSkyBoxBuffer(LApp* app)
-    :LCubeBuffer(app)
-{
-    LOG_CALL
-}
-
-void LGraphics::LSkyBoxBuffer::genBuffers()
-{
-    LOG_CALL
-        if (app->getAppInfo().api == L_OPENGL)
-        {
-            glGenVertexArrays(1, &VAO);
-            glGenBuffers(1, &VBO);
-            //glGenBuffers(1, &EBO);
-
-            glBindVertexArray(VAO);
-
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferData(GL_ARRAY_BUFFER, getVertSize(), vertices.data(), GL_STATIC_DRAW);
-
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
-            glEnableVertexAttribArray(0);
-
-            glBindVertexArray(0);
-        }
-    //else if (app->info.api == L_VULKAN)
-//{
-//    app->createBuffer(vertices, vertexBuffer, vertexBufferMemory, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, getVertSize());
-//    app->createBuffer(ebo, indexBuffer, indexBufferMemory, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, getIndSize());
-//}
-}
-
 LGraphics::LSkyBox::LSkyBox(LApp* app, ImageSkyboxResource res)
     :LCube(app, {res.name,false,false})
 {
     LOG_CALL
-    //auto text = LResourceManager::loadImageSkyboxResource(res);`
+    //auto text = LResourceManager::loadImageSkyboxResource(res);
     textures = std::vector<TexturesData>{ LResourceManager::loadImageSkyboxResource(res) };
-    this->buffer = app->standartSkyBoxBuffer;
+    this->buffer = app->cube->getMehes()[0].buffer;
     this->shader = app->skyBoxShader.get();
     if (app->skybox)
         app->toDelete.push(app->skybox);

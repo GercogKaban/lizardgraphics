@@ -5,32 +5,53 @@
 #include "LApp.h"
 //#include "LBuffer.h"
 
+void LGraphics::LModel::setDiffuse(const TexturesData& data, size_t meshNum)
+{
+    auto& diff = TO_GL(meshes[meshNum].image->textures[0]);
+    const auto& in = TO_GL(data);
+    diff.id = in.id;
+    diff.offset = in.offset;
+    diff.size = in.size;
+}
+
+void LGraphics::LModel::setNormal(const TexturesData& data, size_t meshNum)
+{
+    auto& norm = TO_GL(meshes[meshNum].image->textures[1]);
+    const auto& in = TO_GL(data);
+    norm.id = in.id;
+    norm.offset = in.offset;
+    norm.size = in.size;
+}
+
 LGraphics::LModel::LModel(LApp* app, ModelResource modelResource)
     :LShape(app)
 {
     LOG_CALL
     LResourceManager::loadModel(this, modelResource);
     setShader(app->modelShader.get());
-    //if (texturePath)
-    //{
-    //    loadTexture(texturePath, BASE_TEXTURE);
-    //    this->textureName = texturePath;
-    //}
-    //if (normalsPath)
-    //    loadTexture(normalsPath, NORMALS);
-
     app->toCreate.push(this);
 #ifdef VULKAN
     shader = app->lightShader.get();
 #endif
 }
 
-LGraphics::LModel::LModel(LApp* app, const std::vector<Vertex>& vertices)
+LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices)
     :LShape(app)
 {
+    res.normals = false;
     setShader(app->modelShader.get());
     std::vector<uint32_t> dummy;
-    meshes = { {new LBuffer(app, vertices, dummy), nullptr} };
+    meshes = { {new LBuffer(app, vertices, dummy), new LImage(res, app->info.api)}};
+    app->toCreate.push(this);
+}
+
+LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+    :LShape(app)
+{
+    res.normals = false;
+    setShader(app->modelShader.get());
+    std::vector<uint32_t> dummy;
+    meshes = { {new LBuffer(app, vertices, indices), new LImage(res, app->info.api)} };
     app->toCreate.push(this);
 }
 
@@ -52,34 +73,45 @@ void LGraphics::LModel::draw()
     if (app->drawingInShadow)
         shader = ((LShaders::OpenGLShader*)app->shadowMapModelShader.get());
     GLuint shaderProgram = shader->getShaderProgram();
-    shader->use();
-    setGlobalUniforms(shaderProgram);
-    model = calculateModelMatrix();
+    //shader->use();
+    //setGlobalUniforms(shaderProgram);
     //if (!app->drawingInShadow)
     //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
 
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
+    //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
+    shader->use();
+    setGlobalUniforms(shaderProgram);
+    model = calculateModelMatrix();
     FOR(i, 0, meshes.size())
     {
-        //if (!app->drawingInShadow)
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
         if (meshes[i].image)
         {
+#ifdef MEGATEXTURE_LG
             auto& diffuse = meshes[i].image->getDiffuse();
             const auto castedDiff = TO_GL(diffuse);
-#ifdef MEGATEXTURE_LG
+            auto& normal = meshes[i].image->getNormal();
+            const auto castedNorm = TO_GL(normal);
+
             glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
             glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
+            glUniform2f(glGetUniformLocation(shaderProgram, "offsetNormal"), castedNorm.offset.x, castedNorm.offset.y);
+            glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeNormal"), castedNorm.size.x, castedNorm.size.y);
 #endif
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, castedDiff.id);
         }
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
         glBindVertexArray(meshes[i].buffer->getVaoNum());
         if (meshes[i].buffer->getIndices().size())
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
         else
             glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
+        glBindVertexArray(0);
     }
 }
 

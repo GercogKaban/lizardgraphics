@@ -115,12 +115,6 @@ void LGraphics::LWRectangle::move(const float x, const float y, const float z)
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::setDiffuse(const char* path)
-{
-    imageResourceName = path;
-    objChanged.push_back(this);
-}
-
 void LGraphics::LWRectangle::rotateX(float angle)
 {
     LWidget::rotateX(angle);

@@ -26,8 +26,12 @@ namespace LGraphics
 
         const char* getObjectType() const { return "LModel"; }
 
+        void setDiffuse(const TexturesData& data, size_t meshNum = 0);
+        void setNormal(const TexturesData& data, size_t meshNum = 0);
+
         LModel(LApp* app, ModelResource res);
-        LModel(LApp* app, const std::vector<Vertex>& vertices);
+        LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices);
+        LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
         ~LModel();
         const auto& getMehes() const { return meshes; };
         void draw() override;

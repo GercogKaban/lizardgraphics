@@ -60,17 +60,24 @@ struct Fog
     bool isEnabled;
 };
 
-in vec3 Normal;
 in vec3 FragPos;
+in vec2 TexCoordsNormal;
 in vec2 TexCoords;
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
+in mat3 TBN;
+in vec3 Normal;
 
 vec3 Normal_;
+vec3 viewPos_;
+vec3 FragPos_;
+vec2 TexCoordsNormal_;
 
 in mat4 model;
 uniform sampler2D diffuseMap;
 uniform sampler2D shadowMap;
+uniform sampler2D normalMap;
+uniform int normalMapping;
 
 uniform vec3 viewPos;
 
@@ -92,7 +99,7 @@ uniform Fog fog;
 // function prototypes
 vec3 CalcDirLight(DirLight light, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 viewDir);
+vec3 CalcSpotLight(SpotLight light, vec3 viewDir);      
 
 float getFogFactor(float fogCoordinate)
 {
@@ -138,7 +145,7 @@ vec3 CalcDirLight(DirLight light, vec3 viewDir)
     float diff = max(dot(light.direction,Normal_), 0.0);
     vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));
     // specular shading
-    vec3 lightDir = normalize(light.position - FragPos);
+    vec3 lightDir = normalize(light.position - FragPos_);
     vec3 reflectDir = reflect(-lightDir, Normal_);
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
@@ -153,29 +160,29 @@ vec3 CalcDirLight(DirLight light, vec3 viewDir)
 // calculates the color when using a point light.
 vec3 CalcPointLight(PointLight light, vec3 viewDir)
 {
-    vec3 lightDir = normalize(light.position - FragPos);
+    vec3 lightDir = normalize(light.position - FragPos_);
     // diffuse shading
     float diff = max(dot(Normal_, viewDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
     // attenuation
-    float distance = length(light.position - FragPos);
+    float distance = length(light.position - FragPos_);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // combine results
-    vec3 ambient = light.ambient;// * vec3(texture(material.diffuse, TexCoords));
-    vec3 diffuse = light.diffuse;// * diff * vec3(texture(material.diffuse, TexCoords));
-    vec3 specular = light.specular;// * spec * vec3(texture(material.specular, TexCoords));
+    vec3 ambient = light.ambient;
+    vec3 diffuse = light.diffuse * diff;
+    vec3 specular = light.specular * spec;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    float shadow = ShadowCalculation(light.position); 
+    float shadow = 0.0f;//ShadowCalculation(light.position); 
     return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 {
-	vec3 lightDir = normalize(light.position - FragPos);
+	vec3 lightDir = normalize(light.position - FragPos_);
     float theta = dot(lightDir, normalize(-light.direction)); 
     vec3 result = vec3(0.0f);
     
@@ -197,7 +204,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
         vec3 specular = light.specular * spec;//* texture(1.0f, TexCoords).rgb;  
         
         // attenuation
-        float distance    = length(light.position - FragPos);
+        float distance    = length(light.position - FragPos_);
         float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
         // ambient  *= attenuation; // remove attenuation from ambient, as otherwise at large distances the light would be darker inside than outside the spotlight due the ambient term in the else branche
@@ -219,10 +226,25 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 void main()
 {    
     float fogCoordinate = abs(eyeSpacePosition.z / eyeSpacePosition.w);
-    if (!gl_FrontFacing)
-        Normal_ = -Normal;
+
+    vec3 Normal0;
+
+    if (normalMapping)
+    {
+        vec3 BumpMapNormal = texture(normalMap, TexCoordsNormal.xy).rgb;
+        BumpMapNormal = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0));   
+        Normal0 = normalize(TBN * BumpMapNormal);
+    }
     else
-        Normal_ = Normal;
+        Normal0 = Normal;
+
+    viewPos_ = viewPos;
+    FragPos_ = FragPos;
+
+    if (!gl_FrontFacing)
+        Normal_ = -Normal0;
+    else
+        Normal_ = Normal0;
 
     if(fog.isEnabled)
     {    
@@ -232,14 +254,12 @@ void main()
             return;
         }
     }
-    //if (objId == -1)
-    //    discard;
-    //data_SSBO[screenSize.x * int(gl_FragCoord.y) + int(gl_FragCoord.x)] = objId;
+
     const bool lighting = true;
     vec3 result = vec3(0.0f);
     if (lighting)
     {
-        vec3 viewDir = normalize(viewPos - FragPos);   
+        vec3 viewDir = normalize(viewPos_ - FragPos_);   
         result += CalcDirLight(dirLight, viewDir);
         for (int i = 0; i < pointSourcesCount; ++i)
         	result += CalcPointLight(pointSources[i],viewDir);
@@ -247,7 +267,7 @@ void main()
         	result += CalcSpotLight(spotSources[i],viewDir);
     }
 
-    color = vec4(result,1.0f) * texture(diffuseMap, TexCoords);
+    color = vec4(result,1.0f) * texture(diffuseMap, TexCoords.xy);
     if(fog.isEnabled)
        color = mix(color, vec4(fog.color, 1.0), getFogFactor(fogCoordinate));
     if (color.a - 0.1f < 0) discard;

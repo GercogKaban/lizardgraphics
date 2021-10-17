@@ -16,6 +16,8 @@ namespace LGraphics
         glm::vec3 Position;
         glm::vec3 Normal;
         glm::vec2 TexCoords;
+        glm::vec3 Tangent;
+        glm::vec3 Bitangent;
     };
 
     class LApp;
@@ -58,6 +60,7 @@ namespace LGraphics
         LBuffer(LApp* app, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
         void setGeometry(const std::vector<Vertex>& vertices);
+        void setGeometry(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
     protected:
 

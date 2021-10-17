@@ -21,6 +21,14 @@ namespace LGraphics
         glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), this->vertices.data(), GL_STATIC_DRAW);
     }
 
+    void LBuffer::setGeometry(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+    {
+        setGeometry(vertices);
+        this->ebo = indices;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ebo.size() * sizeof(decltype(*ebo.data())), ebo.data(), GL_STATIC_DRAW);
+    }
+
     
     void LBuffer::genBuffers()
     {
@@ -53,6 +61,14 @@ namespace LGraphics
             // texture coords
             glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(float)));
             glEnableVertexAttribArray(2);
+
+            // tangent
+            glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(8 * sizeof(float)));
+            glEnableVertexAttribArray(3);
+
+            // bitangent
+            glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(11 * sizeof(float)));
+            glEnableVertexAttribArray(4);
 
             glBindVertexArray(0);
         }

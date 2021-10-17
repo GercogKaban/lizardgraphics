@@ -140,9 +140,11 @@ namespace LGraphics
 
         if (!app->drawingInShadow)
         {
+            glUniform1i(glGetUniformLocation(shaderProgram, "normalMapping"), app->normalMapping);
             glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
             glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
             glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
+            glUniform1i(glGetUniformLocation(shaderProgram, "normalMap"), 2);
 
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));

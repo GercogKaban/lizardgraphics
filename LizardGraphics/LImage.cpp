@@ -8,9 +8,22 @@
 namespace LGraphics
 {
 #ifdef MEGATEXTURE_LG
-    void LImage::setDiffuse(const char* path)
+
+    void LImage::setDiffuse(const TexturesData& data)
     {
-        this->imageResourceName = std::filesystem::current_path().generic_string() + "/" + path;
+        auto& diff = TO_GL(textures[0]);
+        const auto& in = TO_GL(data);
+        diff.id = in.id;
+        diff.offset = in.offset;
+        diff.size = in.size;
+    }
+    void LImage::setNormal(const TexturesData& data)
+    {
+        auto& norm = TO_GL(textures[1]);
+        const auto& in = TO_GL(data);
+        norm.id = in.id;
+        norm.offset = in.offset;
+        norm.size = in.size;
     }
 #else
     void LImage::setDiffuse(GLuint id)
@@ -119,10 +132,8 @@ namespace LGraphics
     {
         if (textures)
         {
-            //if (app->info.api == L_OPENGL)
-                delete (OGLImageData*)textures;
-            //else if (app->info.api == L_VULKAN)
-            //    delete (VulkanImageData*)textures;
+            delete (OGLImageData*)textures;
+            textures = nullptr;
         }
     }
 }

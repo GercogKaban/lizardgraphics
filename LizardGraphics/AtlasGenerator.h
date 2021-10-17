@@ -193,7 +193,6 @@ private:
 			}
 
 			this->atlasInfoExtension = atlasInfoExtension;
-			auto p = fs::temp_directory_path().generic_string();
 		}
 
 		const std::vector<std::string>& getCacheAtlases() const { return atlases; }

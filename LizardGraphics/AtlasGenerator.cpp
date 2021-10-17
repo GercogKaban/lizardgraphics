@@ -59,10 +59,4 @@ void Atlas::AtlasManager::saveAtlas(const AtlasData& data,
 		out << o1 + ',' + o2 + ' ';
 	}
 	out.close();
-
-	std::ofstream atlasCacheOut(atlasCachePath, std::ios::app | std::ios::binary);
-	if (!atlasCacheOut.is_open())
-		throw std::runtime_error("error, can't open file " + atlasCachePath.generic_string());
-	atlasCacheOut << atlasInfoPathCopy << std::endl;
-	atlasCacheOut.close();
 }

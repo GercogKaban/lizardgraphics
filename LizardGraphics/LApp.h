@@ -162,16 +162,19 @@ namespace LGraphics
         const LAppCreateInfo& getAppInfo() const { return info; }
 
         const int* getObjectsOnScreen() const { return objectsOnScreen; }
+        void setNormalMapping(bool normalMapping) { this->normalMapping = normalMapping; }
+        bool getNormalMapping() const { return normalMapping; }
 
     protected:
-
         GLuint currentDepthMap;
         void* buff;
 
+        bool normalMapping = true;
+
         int* objectsOnScreen;
         uint32_t modelLoadingFlags = 0;
-        std::unordered_map<QualityLevels, std::string> texturesDirectories;
-        std::unordered_map<QualityLevels, std::string> modelsDirectories;
+        std::unordered_map<QualityLevels, std::string> qualityDirectories;
+        //std::unordered_map<QualityLevels, std::string> modelsDirectories;
         //LID<int> idManager;
 
         void loop_();
@@ -186,16 +189,18 @@ namespace LGraphics
         struct Megatexture
         {
             Atlas textureAtl = Atlas("textures/out.jpg");
-            Atlas normalAtl = Atlas("textures/out_n.jpg");
+            Atlas normalAtl = Atlas("textures/out.jpg");
             std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal;
             GLuint id, idNormal; 
         } megatexture;
 
     protected:
 
-        void generateMegatexture(const std::string& texturesPath, Atlas& atl);
+        void generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath);
         void initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures,
-            GLuint megatextureId, TextureTypes type);
+            GLuint megatextureId);
+
+        LModel* cube;
 
     public:
 
@@ -264,7 +269,6 @@ namespace LGraphics
         auto& getSpotLight() { return lights[L_SPOT_LIGHT]; }
         auto& getPointLights() { return lights[L_POINT_LIGHT]; }
         auto& getLights() {return lights;}
-        std::vector<LModel*>& getModels() { return models; }
 
         LShaders::Shader* getStandartShader() const;
 
@@ -688,15 +692,15 @@ namespace LGraphics
         std::vector<LWidget*> primitives[3];
         std::vector<LLight*> lights[2];
         //std::vector<LWidget*> primitives;
-        std::vector<LModel*> models;
+        //std::vector<LModel*> models;
 
         //int width, height;
 
         size_t sleepTime = 0;
 
-        LBuffer* standartSkyBoxBuffer;
+        //LBuffer* standartSkyBoxBuffer;
         LBuffer* standartRectBuffer;
-        LBuffer* standartCubeBuffer;
+        //LBuffer* standartCubeBuffer;
 
         std::unique_ptr<LShaders::Shader> openGLLightShader, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader,
             modelShader, shadowMapModelShader;

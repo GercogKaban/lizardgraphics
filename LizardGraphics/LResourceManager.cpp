@@ -83,10 +83,10 @@ namespace LGraphics
 
     std::vector<TexturesData> LResourceManager::loadImageResource(LImage::ImageResource res)
     {
-        const auto diffusePath = std::filesystem::current_path().generic_string() + '/' + 
-            app->texturesDirectories[app->info.texturesQuality] + "/diffuse/" + res.name;
-        const auto normalPath = std::filesystem::current_path().generic_string() + '/' +
-            app->texturesDirectories[app->info.texturesQuality] + "/normal/" + res.name;
+        const auto diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string()  +
+            "/textures/").generic_string() + '/' +  app->qualityDirectories[app->info.texturesQuality] +  "/diffuse/" + res.name;
+        const auto normalPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() +
+            "/textures/").generic_string() + '/' + app->qualityDirectories[app->info.texturesQuality] + "/normal/" + res.name;
 
         if (res.diffuse && textures.find(diffusePath) == textures.end())
             textures.emplace(std::make_pair(res.name, std::move(TexturesData())));
@@ -125,7 +125,7 @@ namespace LGraphics
             //auto it = textures.find("skybox/" + res.name);
             auto& td = TO_GL(it.first->second);
             const auto skyboxPath = std::filesystem::current_path().generic_string() + '/' +
-                app->texturesDirectories[app->info.texturesQuality] + "/skybox/";
+                app->qualityDirectories[app->info.texturesQuality] + "/skyboxes/";
             std::vector<std::string> paths = {
                 skyboxPath + "right" + res.extension,skyboxPath + "left" + res.extension,
                 skyboxPath + "top" + res.extension,skyboxPath + "bottom" + res.extension,
@@ -150,27 +150,18 @@ namespace LGraphics
     //    return *((LResourceManager::VulkanImage*)data.textures);
     //}
 
+    // утечка!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    void LResourceManager::clear()
+    {
+        LResourceManager::textures.clear();
+        //for (auto m : models)
+        //    delete m.second;
+        LResourceManager::models.clear();
+    }
+
     LResourceManager::~LResourceManager()
     {
-        std::vector<std::string> text;
-        text.reserve(textures.size());
-        for (const auto& t : textures)
-        {
-            if (dynamic_cast<AtlasData*>((AtlasData*)t.second.textures))
-            {
-                auto data = (AtlasData*)t.second.textures;
-                for (const auto& path : data->texturePaths)
-                    text.push_back(path);
-            }
-            else
-                text.push_back(t.first);
-        }
-
-        //Atlas atl("out.jpg");
-        //atl.setSizeThreshold(INT_MAX);
-        //atl.makeAtlas(text);
-        //atl.saveAtlas();
-        LResourceManager::textures.clear();
+       
     }
 
     void LResourceManager::genTexture(uint8_t* bytes, int width, int height, GLuint* texture)
@@ -199,22 +190,17 @@ namespace LGraphics
         }
 
         Assimp::Importer importer;
-        auto modelPath = std::filesystem::current_path().generic_string() + '/' +
-            app->modelsDirectories[app->info.texturesQuality] + '/' + res.name;
-        const aiScene* scene = importer.ReadFile(modelPath,app->modelLoadingFlags);
+        const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/"+
+            app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
 
+        const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-        {
+            throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
 
-            PRINTLN("ERROR::ASSIMP::", std::string(importer.GetErrorString()), '\n');
-            return;
-        }
-
-        auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
-        m_GlobalInverseTransform.Inverse();
-        std::vector<LModel::Mesh> meshes;
-        processNode(app, meshes, scene->mRootNode, scene);
-        model->meshes = meshes;
+        std::vector< LModel::Mesh> meshes;
+        //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
+        //m_GlobalInverseTransform.Inverse();
+        processNode(app, model->meshes, scene->mRootNode, scene, scene->mRootNode->mTransformation);
         models.insert(std::make_pair(res.name, model));
     }
 
@@ -251,35 +237,38 @@ namespace LGraphics
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view, miplevels);
     }
 
-    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene)
+    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene, aiMatrix4x4 transform)
     {
+        LOG_CALL
         // process all the node's meshes (if any)
         for (uint32_t i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(processMesh(app,mesh, scene));
+            meshes.push_back(processMesh(app,mesh, scene, transform));
         }
 
         // then do the same for each of its children
         for (uint32_t i = 0; i < node->mNumChildren; i++)
-            processNode(app,meshes, node->mChildren[i], scene);
+            processNode(app,meshes, node->mChildren[i], scene, node->mChildren[i]->mTransformation * node->mTransformation);
     }
 
-    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene)
+    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, aiMatrix4x4 transform)
     {
+        LOG_CALL
         LModel::Mesh out;
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
-
+        aiMatrix3x3 transform_(transform);
         for (size_t i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
-            glm::vec3 pos, normals;
+            glm::vec3 pos, normals, tangent, bitangent;
             glm::vec2 textureCoords;
 
-            pos.x = mesh->mVertices[i].x;
-            pos.y = mesh->mVertices[i].y;
-            pos.z = mesh->mVertices[i].z;
+            aiVector3D pos_ = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+
+            pos_ *= transform;
+            pos.x = pos_.x, pos.y = pos_.y, pos.z = pos_.z;
 
             normals.x = mesh->mNormals[i].x;
             normals.y = mesh->mNormals[i].y;
@@ -290,18 +279,31 @@ namespace LGraphics
                 textureCoords.y = mesh->mTextureCoords[0][i].y;
             }
             else
-                vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+                textureCoords = glm::vec2(0.0f, 0.0f);
+
+            if (!mesh->HasTangentsAndBitangents())
+                throw std::runtime_error("can't load tangents and bitangents!\n");
+            tangent.x = mesh->mTangents[i].x;
+            tangent.y = mesh->mTangents[i].y;
+            tangent.z = mesh->mTangents[i].z;
+
+            bitangent.x = mesh->mBitangents[i].x;
+            bitangent.y = mesh->mBitangents[i].y;
+            bitangent.z = mesh->mBitangents[i].z;
 
             vertex.Position = pos;
             vertex.Normal = normals;
             vertex.TexCoords = textureCoords;
+            vertex.Tangent = tangent;
+            vertex.Bitangent = bitangent;
             vertices.push_back(vertex);
         }
 
-        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+        for (size_t i = 0; i < mesh->mNumFaces; i++)
         {
             aiFace face = mesh->mFaces[i];
-            for (uint32_t j = 0; j < face.mNumIndices; j++)
+            assert(face.mNumIndices == 3);
+            for (size_t j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
 
@@ -328,8 +330,8 @@ namespace LGraphics
 
         out.buffer = b;
         out.image = new LImage(d,n);
-        out.image->diffusePath = std::filesystem::current_path().generic_string() + '/' + app->texturesDirectories[app->info.texturesQuality] + "/diffuse/";
-        out.image->normalsPath = std::filesystem::current_path().generic_string() + '/' + app->texturesDirectories[app->info.texturesQuality] + "/normal/";
+        out.image->diffusePath = std::filesystem::current_path().generic_string() + "/textures/" + app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
+        out.image->normalsPath = std::filesystem::current_path().generic_string() + "/textures/" + app->qualityDirectories[app->info.texturesQuality] + "/normal/";
         return out;
     }
 
@@ -340,11 +342,12 @@ namespace LGraphics
             aiString str;
             mat->GetTexture(type, i, &str);
             std::string strCpp = std::string(str.C_Str());
-            auto texturesPath = std::filesystem::current_path().generic_string() + '/' + app->texturesDirectories[app->info.texturesQuality];
+            auto texturesPath = std::filesystem::current_path().generic_string() + "/textures/" + app->qualityDirectories[app->info.texturesQuality];
             if (type == aiTextureType_DIFFUSE)
                 texturesPath += "/diffuse/";
             else if (type == aiTextureType_NORMALS)
                 texturesPath += "/normal/";
+            std::replace(strCpp.begin(), strCpp.end(), '\\', '/');
             strCpp = strCpp.rfind('/') ? texturesPath+ strCpp.substr(strCpp.rfind('/') + 1) : texturesPath + strCpp;
             if (auto it = textures.find(strCpp); it != textures.end())
                 return it->second;
@@ -357,7 +360,6 @@ namespace LGraphics
                     return textures.find("dummy")->second;
                 TexturesData d;
                 auto& td = TO_GL(d);
-                if (type == aiTextureType_DIFFUSE)
                     td.id = *texture;
                 delete texture;
                 return textures.insert(std::make_pair(strCpp, d)).first->second;

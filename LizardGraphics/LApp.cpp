@@ -81,10 +81,13 @@ namespace LGraphics
         }
     }
 
-    void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl)
+    void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath)
     {
         std::vector<std::string> textures;
-        for (auto& p : std::filesystem::recursive_directory_iterator(std::filesystem::path(texturesPath)))
+        auto path = std::filesystem::path(texturesPath);
+        //if (std::filesystem::is_symlink(std::filesystem::path(texturesPath)))
+        //    path = std::filesystem::read_symlink(path);
+        for (auto& p : std::filesystem::recursive_directory_iterator(path))
         {
             auto fileEnd = p.path().generic_string().substr(p.path().generic_string().size() - 3);
             if (fileEnd == "png" || fileEnd == "jpg" || fileEnd == "tga" || fileEnd == "bmp"
@@ -92,11 +95,11 @@ namespace LGraphics
                 textures.push_back(p.path().generic_string());
         }
         atl.makeAtlas(textures);
-        atl.saveAtlas();
+        atl.saveAtlas(atlPath);
     }
 
     void LApp::initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures, 
-        GLuint megatextureId, TextureTypes type)
+        GLuint megatextureId)
     {
         for (size_t i = 0; i < atl.getAtlasData().texturePaths.size(); ++i)
         {
@@ -104,12 +107,7 @@ namespace LGraphics
             const auto& path = atlData.texturePaths[i];
             const auto textureDims = atlData.atlasSize;
 
-            GLuint texture = NO_TEXTURE, normal = NO_TEXTURE;
-            if (type == DIFFUSE)
-                texture = megatextureId;
-            else if (type == NORMAL)
-                texture = megatextureId;
-
+            GLuint texture = megatextureId;
             auto offset = glm::vec2((float)atlData.textureOffsets[i].first / (float)textureDims.first,
                 (float)atlData.textureOffsets[i].second / (float)textureDims.second);
             auto size = glm::vec2((float)atlData.textureDims[i].first / (float)textureDims.first,
@@ -706,13 +704,9 @@ namespace LGraphics
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
 
-        texturesDirectories.insert(std::make_pair(LOW, "textures/low"));
-        texturesDirectories.insert(std::make_pair(MEDIUM, "textures/medium"));
-        texturesDirectories.insert(std::make_pair(HIGH, "textures/high"));
-
-        modelsDirectories.insert(std::make_pair(LOW, "models/low"));
-        modelsDirectories.insert(std::make_pair(MEDIUM, "models/medium"));
-        modelsDirectories.insert(std::make_pair(HIGH, "models/high"));
+        qualityDirectories.insert(std::make_pair(LOW, "low"));
+        qualityDirectories.insert(std::make_pair(MEDIUM, "medium"));
+        qualityDirectories.insert(std::make_pair(HIGH, "high"));
 
         LResourceManager::textures.insert(std::make_pair("dummy", TexturesData{ new TexturesData::OGLImageData }));
         //lwRectPool.setCreationCallback([&]()
@@ -746,30 +740,32 @@ namespace LGraphics
                 info.texturesQuality = LOW;
         }
 
-        const auto texturesPath = std::filesystem::current_path().generic_string() + '/' + texturesDirectories[info.texturesQuality];
-        megatexture.textureAtl.setFileName(texturesPath + "/diffuse/out.jpg");
-        megatexture.normalAtl.setFileName(texturesPath + "/normal/out.jpg");
-
-        // Инициализация текстурного атласа 
-        // тут должна быть ещё проверка изменились ли файлы текстур
-        if (!isExists(megatexture.textureAtl.getOutPath()) /*|| changed */)
-            generateMegatexture(texturesPath + "/diffuse/", megatexture.textureAtl);
-        else  
-            megatexture.textureAtl.loadAtlas("atlas_info");
-
-        // Инициализация атласа нормалей
-        // тут должна быть ещё проверка изменились ли файлы текстур
-        if (!isExists(megatexture.normalAtl.getOutPath()) /*|| changed */)
-            generateMegatexture(texturesPath + "/normal/", megatexture.normalAtl);
+        auto texturesPath = std::filesystem::current_path().generic_string() + "/textures"; //+ qualityDirectories[info.texturesQuality];
+        if (std::filesystem::is_symlink(std::filesystem::path(texturesPath)))
+            texturesPath = std::filesystem::read_symlink(std::filesystem::path(texturesPath)).generic_string();
         else
-            megatexture.normalAtl.loadAtlas("atlas_info1");
+            throw std::runtime_error("please, do symlinks!");
+        megatexture.textureAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/out.jpg");
+        megatexture.normalAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/out.jpg");
+
+        if (!isExists(megatexture.textureAtl.getOutPath()) /*|| changed */)
+            generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/", megatexture.textureAtl, 
+                texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
+        else  
+            megatexture.textureAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
+
+        if (!isExists(megatexture.normalAtl.getOutPath()) /*|| changed */)
+            generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/", megatexture.normalAtl, 
+                texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/atlas_info1");
+        else
+            megatexture.normalAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/atlas_info1");
 
         size_t dummy;
         megatexture.id = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.textureAtl.getOutPath().data(), dummy))->id;
         megatexture.idNormal = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.normalAtl.getOutPath().data(), dummy))->id;
 
-        initMegatextureData(megatexture.textureAtl, megatexture.subtextures, megatexture.id,DIFFUSE);
-        initMegatextureData(megatexture.normalAtl, megatexture.subtexturesNormal, megatexture.idNormal,NORMAL);
+        initMegatextureData(megatexture.textureAtl, megatexture.subtextures, megatexture.id);
+        initMegatextureData(megatexture.normalAtl, megatexture.subtexturesNormal, megatexture.idNormal);
 
         if (info.loading == FAST)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs;
@@ -777,6 +773,10 @@ namespace LGraphics
             modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs;
         else if (info.loading == MAX_QUALITY)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs;
+
+        cube = new LModel(this, { "cube.obj" });
+        toCreate.pop();
+        setCursorEnabling(!isCursorEnabled());
     }
 
     void LApp::initRenderer()
@@ -911,8 +911,8 @@ namespace LGraphics
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.fs").data()));
         }
         standartRectBuffer = new LRectangleBuffer(this);
-        standartSkyBoxBuffer = new LSkyBoxBuffer(this);
-        standartCubeBuffer = new LCubeBuffer(this);
+        //standartSkyBoxBuffer = new LSkyBoxBuffer(this);
+        //standartCubeBuffer = new LCubeBuffer(this);
         glViewport(0, 0, info.wndWidth, info.wndHeight);
     }
 
@@ -1152,7 +1152,8 @@ namespace LGraphics
         //}
         //LResourceManager::textures.clear();
         delete standartRectBuffer;
-        delete standartCubeBuffer;
+        //delete cube;
+        //delete standartCubeBuffer;
     }
 
     void LApp::releaseGlfwResources()
@@ -1167,6 +1168,7 @@ namespace LGraphics
         LOG_CALL
         glDeleteBuffers(1, &LCube::vbo);
         glDeleteBuffers(1, &LWRectangle::vbo);
+        LResourceManager::clear();
     }
 
     void LApp::releaseResources()
@@ -1180,13 +1182,9 @@ namespace LGraphics
         else if (info.api == L_OPENGL)
             releaseOpenGLResources();
 
-        for (auto objs : primitives)
-            for (auto o : objs)
-                delete o;
-
-        for (auto& m : models)
-            delete m;
-        models.clear();
+        //for (auto& m : models)
+        //    delete m;
+        //models.clear();
     }
 
 
@@ -2631,7 +2629,7 @@ namespace LGraphics
                 primitives[i]->draw(fd->CommandBuffer, wd->FrameIndex);*/
         }
 
-        if (models.size())
+        //if (models.size())
         {
             /*auto obj = models[0];
             auto shader = (LShaders::VulkanShader*)obj->getShader();

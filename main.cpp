@@ -34,6 +34,7 @@ int main(int argc, char** argv)
 #else
     info.texturesQuality = HIGH;
 #endif
+
     //info.freeThreads = 1;
 
     const auto spread = 5;
@@ -42,76 +43,35 @@ int main(int argc, char** argv)
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LModel* c;
+    LCube* c;
 
     app.fog.density = 0.02f;
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
     app.fog.isEnabled = true;
 
     auto s = new LPointLight(&app);
+    s->setAmbient({0.9f,0.9f,0.9f});
+   
     //s->turnOnShadowCalc();
     //s->setRadius(25);
-    const std::vector<LGraphics::Vertex> vert =
-    {
-                {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // bottom-left
-                {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // top-right
-                {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}}, // bottom-right         
-                {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // top-right
-                {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // bottom-left
-                {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}, // top-left
-                // front face
-                {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // bottom-left
-                {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}}, // bottom-right
-                {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}, // top-right
-                {{1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}, // top-right
-                {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}, // top-left
-                {{-1.0f, -1.0f, 1.0f},{ 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // bottom-left
-                // left face
-                {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // top-right
-                {{-1.0f, 1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // top-left
-                {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // bottom-left
-                {{-1.0f, -1.0f, -1.0f},{ -1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // bottom-left
-                {{-1.0f, -1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // bottom-right
-                {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // top-right
-                // right face
-                {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // top-left
-                {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // bottom-right
-                {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // top-right         
-                {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // bottom-right
-                {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // top-left
-                {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // bottom-left     
-               // bottom face
-                {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}}, // top-right
-                {{1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}}, // top-left
-                {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}}, // bottom-left
-                {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}}, // bottom-left
-                {{-1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}}, // bottom-right
-                {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}}, // top-right
-                // top face
-                {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}}, // top-left
-                {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}}, // bottom-right
-                {{1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}}, // top-right     
-                {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}}, // bottom-right
-                {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}}, // top-left
-                {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},  // bottom-left  
-    };
 
-    auto test = new LModel(&app, vert);
-    test->scale(1.0f, 1.0f, 1.0f);
     if (!info.loadObjects)
     {
-        auto m = new LModel(&app, {"Walking.fbx"});
-        m->scale(0.01f, 0.01f, 0.01f);
-        m->move(0.0, 0.0f, 0.0f);
-        m->rotateX(180.0f);
+        //auto m = new LModel(&app, {"Walking.fbx"});
+        //m->scale(0.01f, 0.01f, 0.01f);
+        //m->move(0.0, 0.0f, 0.0f);
+        //m->rotateX(180.0f);
         //m->rotateZ(90.0f);
-        for (size_t i = 0; i < poolSize - 1; ++i)
+        //for (size_t i = 0; i < 1; ++i)
         {   
-            c = new LModel(&app, { "CashRegister_01.gltf"});
-            c->move(rand() % spread, -0.2f, rand() % spread);
-            c->scale(1.0f, 1.0f, 1.0f);
-            c->rotateX(180.0f); 
+            new LCube(&app, {"red_bricks_04.jpg"});
+            //c->move(rand() % spread, -0.2f, rand() % spread);
+            //c->scale(1.0f, 1.0f, 1.0f);
+            //c->rotateX(180.0f); 
+            //c->move(0.0f, -1.0f, 0.0f);
         }
+
+            c = new LCube(&app, { "red_bricks_04.jpg" });
 
         
         //for (size_t i = 0; i < 20; ++i)
@@ -180,7 +140,7 @@ int main(int argc, char** argv)
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            if (flag)
+            //if (flag)
             {
                 //s->setDirection(cameraFront);
                 s->setPosition(cameraPos);
@@ -192,7 +152,7 @@ int main(int argc, char** argv)
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
             if (app.isPressed(GLFW_KEY_X))
-                flag = !flag;
+                app.setNormalMapping(!app.getNormalMapping());
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });
