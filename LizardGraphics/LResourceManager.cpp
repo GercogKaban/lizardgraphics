@@ -192,6 +192,7 @@ namespace LGraphics
         Assimp::Importer importer;
         const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/"+
             app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
+        PRINTLN(modelPath);
 
         const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -330,8 +331,10 @@ namespace LGraphics
 
         out.buffer = b;
         out.image = new LImage(d,n);
-        out.image->diffusePath = std::filesystem::current_path().generic_string() + "/textures/" + app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
-        out.image->normalsPath = std::filesystem::current_path().generic_string() + "/textures/" + app->qualityDirectories[app->info.texturesQuality] + "/normal/";
+        out.image->diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
+            + '/' + app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
+        out.image->normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
+            + '/' + app->qualityDirectories[app->info.texturesQuality] + "/normal/";
         return out;
     }
 
@@ -342,7 +345,8 @@ namespace LGraphics
             aiString str;
             mat->GetTexture(type, i, &str);
             std::string strCpp = std::string(str.C_Str());
-            auto texturesPath = std::filesystem::current_path().generic_string() + "/textures/" + app->qualityDirectories[app->info.texturesQuality];
+            auto texturesPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() +
+                '/' + app->qualityDirectories[app->info.texturesQuality];
             if (type == aiTextureType_DIFFUSE)
                 texturesPath += "/diffuse/";
             else if (type == aiTextureType_NORMALS)

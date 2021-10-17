@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     //s->setRadius(25);
 
     if (!info.loadObjects)
-    {
+    {   
         //auto m = new LModel(&app, {"Walking.fbx"});
         //m->scale(0.01f, 0.01f, 0.01f);
         //m->move(0.0, 0.0f, 0.0f);
