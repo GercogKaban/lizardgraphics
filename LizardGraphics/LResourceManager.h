@@ -42,6 +42,7 @@ namespace LGraphics
         friend LApp;
         friend LModel;
         friend LImage;
+        friend LCube;
         friend LRectangleMirror;
 
     public:

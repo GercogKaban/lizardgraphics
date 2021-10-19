@@ -87,17 +87,24 @@ namespace LGraphics
             "/textures/").generic_string() + '/' +  app->qualityDirectories[app->info.texturesQuality] +  "/diffuse/" + res.name;
         const auto normalPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() +
             "/textures/").generic_string() + '/' + app->qualityDirectories[app->info.texturesQuality] + "/normal/" + res.name;
+        const auto displacementPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() +
+            "/textures/").generic_string() + '/' + app->qualityDirectories[app->info.texturesQuality] + "/displacement/" + res.name;
 
         if (res.diffuse && textures.find(diffusePath) == textures.end())
-            textures.emplace(std::make_pair(res.name, std::move(TexturesData())));
+            textures.emplace(std::make_pair(diffusePath, std::move(TexturesData())));
         if (res.normals && textures.find(normalPath) == textures.end())
-            textures.emplace(std::make_pair(res.name, std::move(TexturesData())));
+            textures.emplace(std::make_pair(normalPath, std::move(TexturesData())));
+        if (res.parallax && textures.find(displacementPath) == textures.end())
+            textures.emplace(std::make_pair(displacementPath, std::move(TexturesData())));
 
         auto itd = textures.find(diffusePath);
         const auto& td = TO_GL(itd->second);
 
         auto itn = textures.find(normalPath);
         const auto& tn = TO_GL(itn->second);
+
+        auto itp = textures.find(displacementPath);
+        const auto& tp = TO_GL(itp->second);
 
         if (res.diffuse && td.id == NO_TEXTURE)
         {
@@ -113,7 +120,14 @@ namespace LGraphics
             setTexture(normalPath, itn->second, texture);
         }
 
-        return { itd->second,itn->second };
+        if (res.parallax && tp.id == NO_TEXTURE)
+        {
+            size_t dummy;
+            auto texture = loadTexture(displacementPath.data(), dummy);
+            setTexture(displacementPath, itp->second, texture);
+        }
+
+        return { itd->second,itn->second, itp->second };
     }
 
     TexturesData LResourceManager::loadImageSkyboxResource(LImage::ImageSkyboxResource res)
@@ -172,7 +186,8 @@ namespace LGraphics
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)app->info.anisotropy);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
@@ -182,27 +197,35 @@ namespace LGraphics
 
     void LResourceManager::loadModel(LModel* model, LModel::ModelResource res)
     {
-        LOG_CALL
-        if (auto it = models.find(res.name); it != models.end())
+        try
         {
-            model->meshes = it->second->meshes;
-            return;
+            LOG_CALL
+                if (auto it = models.find(res.name); it != models.end())
+                {
+                    model->meshes = it->second->meshes;
+                    return;
+                }
+
+            Assimp::Importer importer;
+            const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/" +
+                app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
+            PRINTLN(modelPath);
+
+            const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
+            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+                throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
+
+            std::vector< LModel::Mesh> meshes;
+            //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
+            //m_GlobalInverseTransform.Inverse();
+            processNode(app, model->meshes, scene->mRootNode, scene, scene->mRootNode->mTransformation);
+            models.insert(std::make_pair(res.name, model));
         }
 
-        Assimp::Importer importer;
-        const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/"+
-            app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
-        PRINTLN(modelPath);
-
-        const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-            throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
-
-        std::vector< LModel::Mesh> meshes;
-        //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
-        //m_GlobalInverseTransform.Inverse();
-        processNode(app, model->meshes, scene->mRootNode, scene, scene->mRootNode->mTransformation);
-        models.insert(std::make_pair(res.name, model));
+        catch(std::exception&)
+        {
+            
+        }
     }
 
     void LResourceManager::createImageView(uint8_t* pixels, int texWidth,
@@ -276,8 +299,9 @@ namespace LGraphics
             normals.z = mesh->mNormals[i].z;
             if (mesh->mTextureCoords[0])
             {
-                textureCoords.x = mesh->mTextureCoords[0][i].x;
-                textureCoords.y = mesh->mTextureCoords[0][i].y;
+                const auto crop = 0.009f;
+                textureCoords.x = mesh->mTextureCoords[0][i].x > 0? mesh->mTextureCoords[0][i].x - crop : mesh->mTextureCoords[0][i].x + crop;
+                textureCoords.y = mesh->mTextureCoords[0][i].y > 0 ? mesh->mTextureCoords[0][i].y - crop : mesh->mTextureCoords[0][i].y + crop;
             }
             else
                 textureCoords = glm::vec2(0.0f, 0.0f);
@@ -302,15 +326,16 @@ namespace LGraphics
 
         for (size_t i = 0; i < mesh->mNumFaces; i++)
         {
-            aiFace face = mesh->mFaces[i];
+            const aiFace& face = mesh->mFaces[i];
             assert(face.mNumIndices == 3);
             for (size_t j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
 
         LBuffer* b = new LBuffer(app, vertices, indices);
-        TexturesData d { new TexturesData::OGLImageData };
+        TexturesData d {new TexturesData::OGLImageData };
         TexturesData n{ new TexturesData::OGLImageData };
+        TexturesData p{ new TexturesData::OGLImageData };
         if (mesh->mMaterialIndex >= 0)
         {
             auto& gld = TO_GL(d);
@@ -327,14 +352,23 @@ namespace LGraphics
             gln.id = gldnorm.id;
             gln.offset = gldnorm.offset;
             gln.size = gldnorm.size;
+
+            auto& glp = TO_GL(p);
+            auto parallax = loadMaterialTextures(material, aiTextureType_HEIGHT);
+            const auto& gldPar = TO_GL(parallax);
+            glp.id = gldPar.id;
+            glp.offset = gldPar.offset;
+            glp.size = gldPar.size;
         }
 
         out.buffer = b;
-        out.image = new LImage(d,n);
+        out.image = new LImage(d,n,p);
         out.image->diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
             + '/' + app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
         out.image->normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
             + '/' + app->qualityDirectories[app->info.texturesQuality] + "/normal/";
+        out.image->normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
+            + '/' + app->qualityDirectories[app->info.texturesQuality] + "/displacement/";
         return out;
     }
 
@@ -351,6 +385,8 @@ namespace LGraphics
                 texturesPath += "/diffuse/";
             else if (type == aiTextureType_NORMALS)
                 texturesPath += "/normal/";
+            else if (type == aiTextureType_HEIGHT)
+                texturesPath += "/displacement/";
             std::replace(strCpp.begin(), strCpp.end(), '\\', '/');
             strCpp = strCpp.rfind('/') ? texturesPath+ strCpp.substr(strCpp.rfind('/') + 1) : texturesPath + strCpp;
             if (auto it = textures.find(strCpp); it != textures.end())

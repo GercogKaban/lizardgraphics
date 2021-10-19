@@ -1,5 +1,6 @@
 #include "LApp.h"
 #include "LLights.h"
+#include "LCube.h"
 
 LGraphics::LLight::LLight(LApp* app, size_t shadowWidth, size_t shadowHeight)
 {
@@ -19,7 +20,7 @@ LGraphics::LLight::LLight(LApp* app, size_t shadowWidth, size_t shadowHeight)
 LGraphics::LLight::~LLight()
 {
 	glDeleteTextures(1, &depthMap);
-	glDeleteBuffers(1, &depthMapFBO);
+	glDeleteFramebuffers(1, &depthMapFBO);
 }
 
 void LGraphics::LLight::setPosition(glm::vec3 position)

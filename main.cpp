@@ -5,6 +5,7 @@
 
 #include "interfaces.h"
 #include "LCube.h"
+#include "LPlane.h"
 #include "LSkyBox.h"
 #include "LRectangleMirror.h"
 
@@ -23,7 +24,7 @@ int main(int argc, char** argv)
     info.saveObjects = L_FALSE;
     info.loadObjects = L_FALSE;
     info.lighting = L_TRUE;
-    info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
+    info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | CONSOLE_RELEASE_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
     info.anisotropy = 16;
     info.MSAA = 4;
     info.vsync = L_FALSE;
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
     info.texturesQuality = HIGH;
 #endif
 
-    //info.freeThreads = 1;
+    info.loading = MAX_QUALITY;
 
     const auto spread = 5;
     LApp app(info);
@@ -43,7 +44,7 @@ int main(int argc, char** argv)
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LCube* c;
+    //LCube* c;
 
     app.fog.density = 0.02f;
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
@@ -64,14 +65,31 @@ int main(int argc, char** argv)
         //m->rotateZ(90.0f);
         //for (size_t i = 0; i < 1; ++i)
         {   
-            new LCube(&app, {"red_bricks_04.jpg"});
+            for (size_t i = 0; i < 100; ++i)
+                for (size_t j = 0; j < 100; ++j)
+                {
+#ifndef NDEBUG
+                    auto  p = new LPlane(&app, { "Rocks011.jpg" });
+#else
+                    auto  p = new LPlane(&app, { "Leather009.jpg" });
+#endif
+                    p->rotateX(90.0f);
+                    p->move((float)i, -0.3f, (float)j);
+                }
+            //auto test = new LModel(&app, { "Hajj_Man02.fbx" });
+            //test->scale(0.002f, 0.002f, 0.002f);
+            //test->rotateZ(180.0f);
+            //test->move(0.0f, -0.2f, 0.0f);
+            //p->rotateZ(90);
+            //p->rotateZ(45);
+            //p->scale(20.0f, 20.0f, 20.0f);
             //c->move(rand() % spread, -0.2f, rand() % spread);
             //c->scale(1.0f, 1.0f, 1.0f);
             //c->rotateX(180.0f); 
             //c->move(0.0f, -1.0f, 0.0f);
         }
 
-            c = new LCube(&app, { "red_bricks_04.jpg" });
+            //c = new LCube(&app, { "Leather009.jpg" });
 
         
         //for (size_t i = 0; i < 20; ++i)
@@ -95,12 +113,12 @@ int main(int argc, char** argv)
             if (app.isCursorEnabled())
                 return;
 
-            static auto cMove = c->getMove();
-            const auto move = c->getMove();
+            //static auto cMove = c->getMove();
+            //const auto move = c->getMove();
 
             const float radius = poolSize + 13.0f;
             const float shiftCoef = -1.05f;
-            glm::vec3 shift = glm::normalize(move - s->getPosition()) * shiftCoef;
+            //glm::vec3 shift = glm::normalize(move - s->getPosition()) * shiftCoef;
 
             int i = 0;
             //auto p = app.getPrimitives()[L_CUBE];
@@ -117,12 +135,12 @@ int main(int argc, char** argv)
             GLfloat camX = sin(glfwGetTime());
             GLfloat camZ = cos(glfwGetTime());
 
-            c->move(cMove.x + radius * camX, c->getMove().y, cMove.z + radius * camZ);
+            //c->move(cMove.x + radius * camX, c->getMove().y, cMove.z + radius * camZ);
 
             const float step = 0.01f;
             //c->rotateY(step);
 
-            const float cameraSpeed = 0.002f;
+            const float cameraSpeed = 2.0f / ImGui::GetIO().Framerate;
             glm::vec3 cameraPos = app.getCameraPos();
             const auto cameraFront = app.getCameraFront();
             const auto cameraUp = app.getCameraUp();
@@ -152,7 +170,13 @@ int main(int argc, char** argv)
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
             if (app.isPressed(GLFW_KEY_X))
-                app.setNormalMapping(!app.getNormalMapping());
+                app.setParallaxMapping(!app.getParallaxMapping());
+            if (app.isPressed(GLFW_KEY_E))
+                app.heightScale += 0.01f;
+            if (app.isPressed(GLFW_KEY_Q))
+                app.heightScale -= 0.01f;
+            if (app.isPressed(GLFW_KEY_C))
+                app.setParallaxSelfShading(!app.getParallaxSelfShading());
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });

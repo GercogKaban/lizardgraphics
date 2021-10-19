@@ -23,7 +23,7 @@ namespace LGraphics
 
     enum LGClasses : uint8_t
     {
-        L_RECTANGLE,
+        L_PLANE,
         L_CUBE,
         L_MODEL,
     };

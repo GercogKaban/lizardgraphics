@@ -47,8 +47,8 @@ namespace LGraphics
 
 		LApp* app;
 		int id;
-		uint32_t depthMap = UINT32_MAX;
-		uint32_t depthMapFBO = UINT32_MAX;
+		GLuint depthMap = UINT32_MAX;
+		GLuint depthMapFBO = UINT32_MAX;
 		glm::mat4 lightSpaceMatrix;
 
 		glm::vec3 position;

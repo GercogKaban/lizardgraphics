@@ -3,9 +3,8 @@
 #define VMA_IMPLEMENTATION
 #define VKB_VALIDATION_LAYERS
 #include "LApp.h"
-#include "LRectangleBuffer.h"
 #include "LModel.h"
-//#include "LModelBuffer.h"
+#include "LPlane.h"
 #ifdef WIN32
 #include "CodeGen.h"
 #include "../codegen.h"
@@ -69,7 +68,7 @@ namespace LGraphics
     void LApp::drawScene()
     {
         LCube::drawInstanced();
-        LWRectangle::drawInstanced();
+        LPlane::drawInstanced();
         for (auto& m : primitives[L_MODEL])
             m->draw();
         if (!drawingInShadow)
@@ -531,10 +530,10 @@ namespace LGraphics
             w->id = primitives[L_CUBE].size();
             primitives[L_CUBE].push_back(w);
         }
-        else if (dynamic_cast<LWRectangle*>(w))
+        else if (dynamic_cast<LPlane*>(w))
         {
-            w->id = primitives[L_RECTANGLE].size();
-            primitives[L_RECTANGLE].push_back(w);       
+            w->id = primitives[L_PLANE].size();
+            primitives[L_PLANE].push_back(w);
         }
         else if (dynamic_cast<LModel*>(w))
         {
@@ -552,12 +551,12 @@ namespace LGraphics
                 LCube::objChanged.push_back((LCube*)primitives[L_CUBE].back());
             fastErase(primitives[L_CUBE], w->id);
         }
-        else if (dynamic_cast<LWRectangle*>(w))   
+        else if (dynamic_cast<LPlane*>(w))   
         {
-            LWRectangle::uniforms.pop_back();
-            if (w != primitives[L_RECTANGLE].back())
-                LWRectangle::objChanged.push_back((LWRectangle*)primitives[L_RECTANGLE].back());
-            fastErase(primitives[L_RECTANGLE], w->id);
+            LPlane::uniforms.pop_back();
+            if (w != primitives[L_PLANE].back())
+                LPlane::objChanged.push_back((LPlane*)primitives[L_PLANE].back());
+            fastErase(primitives[L_PLANE], w->id);
         }
         else if (dynamic_cast<LModel*>(w)) fastErase(primitives[L_MODEL], w->id);
         else throw std::runtime_error("wrong object type");
@@ -568,8 +567,8 @@ namespace LGraphics
     void LApp::refreshObjectMatrices()
     {
         //for (auto& obj : nonInterfaceObjects)
-        //    if (dynamic_cast<LWRectangle*>(obj))
-        //        dynamic_cast<LWRectangle*>(obj)->setMatrices(this);
+        //    if (dynamic_cast<LPlane*>(obj))
+        //        dynamic_cast<LPlane*>(obj)->setMatrices(this);
     }
 
     LShaders::Shader* LApp::getStandartShader() const
@@ -711,7 +710,7 @@ namespace LGraphics
         LResourceManager::textures.insert(std::make_pair("dummy", TexturesData{ new TexturesData::OGLImageData }));
         //lwRectPool.setCreationCallback([&]()
         //{
-        //    auto lwRect = new LWRectangle(this);
+        //    auto lwRect = new LPlane(this);
         //    removeObject(lwRect);
         //    return lwRect;
         //});
@@ -725,7 +724,7 @@ namespace LGraphics
         if (info.loadObjects)
             genWidgets(this);
         LCube::initInstanceBuffer();
-        LWRectangle::initInstanceBuffer();
+        LPlane::initInstanceBuffer();
         LResourceManager::setApp(this);
 
         if (info.texturesQuality == AUTO)
@@ -745,12 +744,15 @@ namespace LGraphics
             texturesPath = std::filesystem::read_symlink(std::filesystem::path(texturesPath)).generic_string();
         else
             throw std::runtime_error("please, do symlinks!");
+
         megatexture.textureAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/out.jpg");
         megatexture.normalAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/out.jpg");
+        megatexture.parallaxAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/out.jpg");
+
 
         if (!isExists(megatexture.textureAtl.getOutPath()) /*|| changed */)
             generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/", megatexture.textureAtl, 
-                texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
+              texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
         else  
             megatexture.textureAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
 
@@ -760,12 +762,20 @@ namespace LGraphics
         else
             megatexture.normalAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/atlas_info1");
 
+        if (!isExists(megatexture.parallaxAtl.getOutPath()) /*|| changed */)
+            generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/", megatexture.parallaxAtl,
+                texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/atlas_info2");
+        else
+            megatexture.parallaxAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/atlas_info2");
+
         size_t dummy;
         megatexture.id = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.textureAtl.getOutPath().data(), dummy))->id;
         megatexture.idNormal = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.normalAtl.getOutPath().data(), dummy))->id;
+        megatexture.idParallax = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.parallaxAtl.getOutPath().data(), dummy))->id;
 
         initMegatextureData(megatexture.textureAtl, megatexture.subtextures, megatexture.id);
         initMegatextureData(megatexture.normalAtl, megatexture.subtexturesNormal, megatexture.idNormal);
+        initMegatextureData(megatexture.parallaxAtl, megatexture.subtexturesParallax, megatexture.idParallax);
 
         if (info.loading == FAST)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs;
@@ -774,7 +784,9 @@ namespace LGraphics
         else if (info.loading == MAX_QUALITY)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs;
 
+        plane = new LModel(this, { "plane.obj" });
         cube = new LModel(this, { "cube.obj" });
+        toCreate.pop();
         toCreate.pop();
         setCursorEnabling(!isCursorEnabled());
     }
@@ -910,7 +922,7 @@ namespace LGraphics
                 , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vs").data()
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.fs").data()));
         }
-        standartRectBuffer = new LRectangleBuffer(this);
+        //standartRectBuffer = new LRectangleBuffer(this);
         //standartSkyBoxBuffer = new LSkyBoxBuffer(this);
         //standartCubeBuffer = new LCubeBuffer(this);
         glViewport(0, 0, info.wndWidth, info.wndHeight);
@@ -1098,7 +1110,7 @@ namespace LGraphics
 
         vkDestroyDescriptorSetLayout(g_Device, descriptorSetLayout, nullptr);
 
-        delete standartRectBuffer;
+        //delete standartRectBuffer;
 
         //for (auto w : rectangles)
         //    delete w;
@@ -1151,7 +1163,7 @@ namespace LGraphics
         //    }
         //}
         //LResourceManager::textures.clear();
-        delete standartRectBuffer;
+        //delete standartRectBuffer;
         //delete cube;
         //delete standartCubeBuffer;
     }
@@ -1167,7 +1179,7 @@ namespace LGraphics
     {
         LOG_CALL
         glDeleteBuffers(1, &LCube::vbo);
-        glDeleteBuffers(1, &LWRectangle::vbo);
+        glDeleteBuffers(1, &LPlane::vbo);
         LResourceManager::clear();
     }
 
@@ -2129,7 +2141,7 @@ namespace LGraphics
         //    w->changed--;
         //    glm::mat4* modelMat = (glm::mat4*)(((char*)testStructV.model + (objectNum * dynamicAlignment)));
 
-        //    *modelMat = ((LWRectangle*)w)->calculateModelMatrix();
+        //    *modelMat = ((LPlane*)w)->calculateModelMatrix();
         //    glm::vec4* color = (glm::vec4*)((char*)modelMat + sizeof(glm::mat4));
         //    const auto col = w->getColor();
         //    *color = { col.x, col.y, col.z, w->getTransparency() };
@@ -2151,7 +2163,7 @@ namespace LGraphics
 //            //        const float t = sqrt(3);
 ////const glm::vec3 viewPos = app->getViewPoint() + app->getViewRadius() * glm::vec3(t, t, t);
 ////glUniform3f(glGetUniformLocation(shader, "viewPos"), viewPos.x, viewPos.y, viewPos.z);
-//   glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "model"), 1, GL_FALSE, glm::value_ptr(((LWRectangle*)w)->calculateModelMatrix()));
+//   glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "model"), 1, GL_FALSE, glm::value_ptr(((LPlane*)w)->calculateModelMatrix()));
 //   glUniformMatrix4fv(glGetUniformLocation(shader->getShaderProgram(), "projView"), 1, GL_FALSE, glm::value_ptr(projView));
 ////glUniform4f(glGetUniformLocation(shader, "color_"), color_.x, color_.y, color_.z, transparency_);
 //        }
@@ -2448,7 +2460,7 @@ namespace LGraphics
 
         createDescriptorPool();
         createDescriptorSets();
-        standartRectBuffer = new LRectangleBuffer(this);
+        //standartRectBuffer = new LRectangleBuffer(this);
 
         {
             VkDescriptorPoolSize pool_sizes[] =
@@ -2614,13 +2626,13 @@ namespace LGraphics
             /*auto obj = primitives[0];
             auto shader = (LShaders::VulkanShader*)obj->getShader();
 
-            VkBuffer vertexBuffers[] = { ((LWRectangle*)obj)->buffer->getVertBuffer() };
+            VkBuffer vertexBuffers[] = { ((LPlane*)obj)->buffer->getVertBuffer() };
             VkDeviceSize offsets[] = { 0 };
 
             vkCmdBindPipeline(fd->CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
 
             vkCmdBindVertexBuffers(fd->CommandBuffer, 0, 1, vertexBuffers, offsets);
-            vkCmdBindIndexBuffer(fd->CommandBuffer, ((LWRectangle*)obj)->buffer->getIndBuffer(), 0, VK_INDEX_TYPE_UINT16);
+            vkCmdBindIndexBuffer(fd->CommandBuffer, ((LPlane*)obj)->buffer->getIndBuffer(), 0, VK_INDEX_TYPE_UINT16);
 
             vkCmdPushConstants(fd->CommandBuffer, shader->getPipelineLayout(),
                 VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(LApp::ShaderConstants), &shaderCnst);

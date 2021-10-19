@@ -50,7 +50,6 @@ LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vecto
 {
     res.normals = false;
     setShader(app->modelShader.get());
-    std::vector<uint32_t> dummy;
     meshes = { {new LBuffer(app, vertices, indices), new LImage(res, app->info.api)} };
     app->toCreate.push(this);
 }
@@ -82,9 +81,9 @@ void LGraphics::LModel::draw()
     shader->use();
     setGlobalUniforms(shaderProgram);
     model = calculateModelMatrix();
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
     FOR(i, 0, meshes.size())
     {
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
         if (meshes[i].image)
         {
 #ifdef MEGATEXTURE_LG
@@ -92,11 +91,15 @@ void LGraphics::LModel::draw()
             const auto castedDiff = TO_GL(diffuse);
             auto& normal = meshes[i].image->getNormal();
             const auto castedNorm = TO_GL(normal);
+            auto& parallax = meshes[i].image->getParallax();
+            const auto castedParallax = TO_GL(parallax);
 
             glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
             glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
             glUniform2f(glGetUniformLocation(shaderProgram, "offsetNormal"), castedNorm.offset.x, castedNorm.offset.y);
             glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeNormal"), castedNorm.size.x, castedNorm.size.y);
+            glUniform2f(glGetUniformLocation(shaderProgram, "offsetParallax"), castedParallax.offset.x, castedParallax.offset.y);
+            glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeParallax"), castedParallax.size.x, castedParallax.size.y);
 #endif
         }
 
@@ -106,6 +109,8 @@ void LGraphics::LModel::draw()
         glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
         glBindVertexArray(meshes[i].buffer->getVaoNum());
         if (meshes[i].buffer->getIndices().size())
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);

@@ -14,6 +14,12 @@ namespace LGraphics
         init(app);
         shader = app->getLightningShader().get();
         app->toCreate.push(this);
+        diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() + '/' +
+            app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
+        normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() + '/' +
+            app->qualityDirectories[app->info.texturesQuality] + "/normal/";
+        displacementPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() + '/' +
+            app->qualityDirectories[app->info.texturesQuality] + "/displacement/";
     }
 
     void LRectangleShape::init(LApp* app)

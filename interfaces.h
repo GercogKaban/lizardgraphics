@@ -1,5 +1,5 @@
 #include "LizardGraphics/LApp.h"
-#include "LizardGraphics/LWRectangle.h"
+#include "LizardGraphics/LPlane.h"
 #include "LizardGraphics/LModel.h"
 #include "LizardGraphics/LTimer.h"
 #include "LizardGraphics/LLogger.h"

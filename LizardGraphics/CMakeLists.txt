@@ -15,7 +15,7 @@ add_compile_definitions(LIB_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}\")
 
 set (SOURCE_FILES textures.cpp LShape.cpp LRectangleShape.cpp LImage.cpp 
 LRectangleBuffer.cpp LLogger.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
-LTimer.cpp additional.cpp LWRectangle.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp
+LTimer.cpp additional.cpp LPlane.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp
 CodeGen.cpp FileSystemDialog.cpp imgui/imgui.cpp LCube.cpp LCubeBuffer.cpp LSkyBox.cpp
 AtlasGenerator.cpp LLights.cpp)
 
@@ -25,7 +25,7 @@ imgui/imgui_demo.cpp imgui/imgui_draw.cpp imgui/imgui_tables.cpp imgui/imgui_wid
 set (HEADER_FILES pch.h textures.h Lshaders.h vectors.h
 LShape.h LRectangleShape.h LRectangleBuffer.h 
 LImage.h LLogger.h LBuffer.h 
-LApp.h LWidget.h LTimer.h additional.h LWRectangle.h LResourceManager.h 
+LApp.h LWidget.h LTimer.h additional.h LPlane.h LResourceManager.h 
 ObjectPool.h LModel.h
 CodeGen.h FileSystemDialog.h LCube.h LCubeBuffer.h LSkyBox.h 
 AtlasGenerator.h LLights.h)

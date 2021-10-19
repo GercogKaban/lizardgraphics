@@ -1,28 +1,30 @@
 #include "pch.h"
-#include "LWRectangle.h"
-#include "LRectangleBuffer.h"
+#include "LPlane.h"
 #include "LApp.h"
-#include "additional.h"
+//#include "additional.h"
 #include "LLogger.h"
+#include "LBuffer.h"
+#include "LModel.h"
 
 #include "include/glm/gtc/type_ptr.hpp"
 
-std::vector<LGraphics::LWidget::RectangleUniforms> LGraphics::LWRectangle::uniforms;
-bool LGraphics::LWRectangle::needToResetBuffer;
-GLuint LGraphics::LWRectangle::vbo;
-std::vector<LGraphics::LWRectangle*> LGraphics::LWRectangle::objChanged;
+std::vector<LGraphics::LWidget::PrimitiveUniforms> LGraphics::LPlane::uniforms;
+std::vector<LGraphics::LPlane*> LGraphics::LPlane::objChanged;
+bool LGraphics::LPlane::needToResetBuffer = false;
+GLuint LGraphics::LPlane::vbo;
 
-LGraphics::LWRectangle::LWRectangle(LApp* app, ImageResource res)
+LGraphics::LPlane::LPlane(LApp* app, ImageResource res)
     :LRectangleShape(app, res)
 {
     LOG_CALL
     objChanged.push_back(this);
     if (uniforms.size() == uniforms.capacity())
         needToResetBuffer = true;
-    uniforms.push_back(RectangleUniforms());
+    uniforms.push_back(PrimitiveUniforms());
+    setBuffer(app->plane->getMehes()[0].buffer);
 }
 
-void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
+void LGraphics::LPlane::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 {
     LOG_CALL
     app->updateUniformBuffer(frameIndex, arrayIndex, this);
@@ -38,7 +40,7 @@ void LGraphics::LWRectangle::draw(VkCommandBuffer commandBuffer, uint32_t frameI
 }
 
 // deprecated
-void LGraphics::LWRectangle::draw()
+void LGraphics::LPlane::draw()
 {
     //if (isHidden())
     //    return;
@@ -78,7 +80,7 @@ void LGraphics::LWRectangle::draw()
     //glDrawElements(GL_TRIANGLES, buffer->getIndCount(), GL_UNSIGNED_SHORT, 0);
 }
 
-void LGraphics::LWRectangle::drawInstanced()
+void LGraphics::LPlane::drawInstanced()
 {
     if (!uniforms.size()) return;
     auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
@@ -88,52 +90,58 @@ void LGraphics::LWRectangle::drawInstanced()
     shader->use();
     setGlobalUniforms(shaderProgram);
     updateBuffer();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
-    glBindVertexArray(app->standartRectBuffer->getVaoNum());
-    glDrawElementsInstanced(GL_TRIANGLES, app->standartRectBuffer->getIndices().size(), GL_UNSIGNED_SHORT, 0, uniforms.size());
-    //glDrawArraysInstanced(GL_TRIANGLES, 0, 6, uniforms.size());
+    if (!app->drawingInShadow)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
+    }
+    glBindVertexArray(app->plane->getMehes()[0].buffer->getVaoNum());
+    glDrawElementsInstanced(GL_TRIANGLES, app->plane->getMehes()[0].buffer->getIndices().size(), GL_UNSIGNED_INT, 0, uniforms.size());
 }
 
-void LGraphics::LWRectangle::setModel(const glm::mat4& model)
+void LGraphics::LPlane::setModel(const glm::mat4& model)
 {
     LShape::setModel(model);
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::scale(const float x, const float y, const float z)
+void LGraphics::LPlane::scale(const float x, const float y, const float z)
 {
     LShape::scale(x, y, z);
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::move(const float x, const float y, const float z)
+void LGraphics::LPlane::move(const float x, const float y, const float z)
 {
     LShape::move(x, y, z);
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::rotateX(float angle)
+void LGraphics::LPlane::rotateX(float angle)
 {
     LWidget::rotateX(angle);
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::rotateY(float angle)
+void LGraphics::LPlane::rotateY(float angle)
 {
     LWidget::rotateY(angle);
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::rotateZ(float angle)
+void LGraphics::LPlane::rotateZ(float angle)
 {
     LWidget::rotateZ(angle);
     objChanged.push_back(this);
 }
 
-void LGraphics::LWRectangle::updateBuffer()
+void LGraphics::LPlane::updateBuffer()
 {
     if (objChanged.size())
     {
@@ -142,9 +150,11 @@ void LGraphics::LWRectangle::updateBuffer()
             resetInstanceBuffer();
             needToResetBuffer = false;
         }
-        LWidget::CubeUniforms* buffer = (LWidget::RectangleUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::RectangleUniforms) * uniforms.size(),
+        
+        LWidget::PrimitiveUniforms* buffer = (LWidget::PrimitiveUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::PrimitiveUniforms) * uniforms.size(),
             GL_MAP_WRITE_BIT);
-
+        if (!buffer)
+            throw std::runtime_error(LOG_HEADER + "buffer == NULL, error: " + std::to_string(glGetError()) + "\n\n");
 #ifdef PARALLEL_UPDATE
 
         if (objChanged.size() > 1000 && app->info.freeThreads > 1)
@@ -153,7 +163,7 @@ void LGraphics::LWRectangle::updateBuffer()
             for (size_t i = 0; i < app->info.freeThreads; ++i)
             {
                 const size_t interval = i * objChanged.size() / app->info.freeThreads;
-                threads[i] = std::thread(LWRectangle::updateBufferParallel, buffer, objChanged, interval, interval + objChanged.size() / app->info.freeThreads);
+                threads[i] = std::thread(LPlane::updateBufferParallel, buffer, objChanged, interval, interval + objChanged.size() / app->info.freeThreads);
             }
 
             for (size_t i = 0; i < app->info.freeThreads; ++i)
@@ -169,58 +179,82 @@ void LGraphics::LWRectangle::updateBuffer()
     }
 }
 
-void LGraphics::LWRectangle::updateUniforms(LWidget::RectangleUniforms* buffer, size_t id)
+void LGraphics::LPlane::updateUniforms(LWidget::PrimitiveUniforms* buffer, size_t id)
 {
-    auto p = ((LWRectangle*)app->primitives[L_RECTANGLE][id])->getImageResourceName();
-    const auto subtexture = app->megatexture.subtextures[((LWRectangle*)app->primitives[L_RECTANGLE][id])->getImageResourceName()];
+    auto path = ((LPlane*)app->primitives[L_PLANE][id])->getDiffusePath();
+    auto pathNormal = ((LPlane*)app->primitives[L_PLANE][id])->getNormalsPath();
+    auto pathDisplacement = ((LPlane*)app->primitives[L_PLANE][id])->getDisplacementPath();
+
+    const auto subtexture = app->megatexture.subtextures[path];
+    const auto subtextureNormal = app->megatexture.subtexturesNormal[pathNormal];
+    const auto subtextureParallax = app->megatexture.subtexturesParallax[pathDisplacement];
+
     auto& obj = buffer[id];
-    obj.model = ((LWRectangle*)app->primitives[L_RECTANGLE][id])->calculateModelMatrix();
+    obj.model = ((LPlane*)app->primitives[L_PLANE][id])->calculateModelMatrix();
     obj.offset = subtexture.first;
     obj.textureSize = subtexture.second;
+    obj.offsetNormal = subtextureNormal.first;
+    obj.textureSizeNormal = subtextureNormal.second;
+    obj.offsetParallax = subtextureParallax.first;
+    obj.textureSizeParallax = subtextureParallax.second;
 }
 
-void LGraphics::LWRectangle::initInstanceBuffer()
+void LGraphics::LPlane::initInstanceBuffer()
 {
     glGenBuffers(1, &vbo);
 }
 
-void LGraphics::LWRectangle::resetInstanceBuffer()
+void LGraphics::LPlane::resetInstanceBuffer()
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::RectangleUniforms) * uniforms.capacity(), uniforms.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::PrimitiveUniforms) * uniforms.capacity(), uniforms.data(), GL_STATIC_DRAW);
 
-    glBindVertexArray(app->standartRectBuffer->getVaoNum());
+    glBindVertexArray(app->plane->getMehes()[0].buffer->getVaoNum());
     const size_t vec4Size = sizeof(glm::vec4);
     const size_t vec2Size = sizeof(glm::vec2);
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::RectangleUniforms), (void*)0);
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::RectangleUniforms), (void*)(vec4Size));
     glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::RectangleUniforms), (void*)(2 * vec4Size));
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)0);
     glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::RectangleUniforms), (void*)(3 * vec4Size));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(vec4Size));
     glEnableVertexAttribArray(7);
-    glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::RectangleUniforms), (void*)(4 * vec4Size));
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(2 * vec4Size));
     glEnableVertexAttribArray(8);
-    glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::RectangleUniforms), (void*)((4 * vec4Size) + vec2Size));
+    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(3 * vec4Size));
+    glEnableVertexAttribArray(9);
+    glVertexAttribPointer(9, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(4 * vec4Size));
+    glEnableVertexAttribArray(10);
+    glVertexAttribPointer(10, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + vec2Size));
+    glEnableVertexAttribArray(11);
+    glVertexAttribPointer(11, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 2 * vec2Size));
+    glEnableVertexAttribArray(12);
+    glVertexAttribPointer(12, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 3 * vec2Size));
+    glEnableVertexAttribArray(13);
+    glVertexAttribPointer(13, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 4 * vec2Size));
+    glEnableVertexAttribArray(14);
+    glVertexAttribPointer(14, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 5 * vec2Size));
 
-    glVertexAttribDivisor(3, 1);
-    glVertexAttribDivisor(4, 1);
     glVertexAttribDivisor(5, 1);
     glVertexAttribDivisor(6, 1);
     glVertexAttribDivisor(7, 1);
     glVertexAttribDivisor(8, 1);
+    glVertexAttribDivisor(9, 1);
+    glVertexAttribDivisor(10, 1);
+    glVertexAttribDivisor(11, 1);
+    glVertexAttribDivisor(12, 1);
+    glVertexAttribDivisor(13, 1);
+    glVertexAttribDivisor(14, 1);
     glBindVertexArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void LGraphics::LWRectangle::updateBufferParallel(LWidget::RectangleUniforms* buffer, std::vector<LWRectangle*>& changed, size_t begin, size_t end)
+void LGraphics::LPlane::updateBufferParallel(LWidget::PrimitiveUniforms* buffer, std::vector<LPlane*>& changed, size_t begin, size_t end)
 {
     for (size_t i = begin; i < end; i++)
         updateUniforms(buffer, changed[i]->id);
 }
 
-//glm::mat4 LGraphics::LWRectangle::calculateModelMatrix() const
+//glm::mat4 LGraphics::LPlane::calculateModelMatrix() const
 //{
 //#if _DEBUG
 //#include "../Optimized/optimized.h"

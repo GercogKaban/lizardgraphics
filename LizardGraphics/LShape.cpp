@@ -140,24 +140,26 @@ namespace LGraphics
 
         if (!app->drawingInShadow)
         {
-            glUniform1i(glGetUniformLocation(shaderProgram, "normalMapping"), app->normalMapping);
+            glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), app->parallaxSelfShading);
+            glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMapping"), app->parallaxMapping);
             glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
             glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
             glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
             glUniform1i(glGetUniformLocation(shaderProgram, "normalMap"), 2);
+            glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMap"), 3);
 
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
             glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-
+            glUniform1f(glGetUniformLocation(shaderProgram, "heightScale"), app->heightScale);
             char res[32];
             // setting point light
             FOR(i,0, app->lights[L_POINT_LIGHT].size())
             {
                 sprintf(res, "pointSources[%i]", i);
 
-                const auto l = *(LPointLight*)app->lights[L_POINT_LIGHT][i];
+                const auto& l = *(LPointLight*)app->lights[L_POINT_LIGHT][i];
                 glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
 
                 if (l.calculateShadow)

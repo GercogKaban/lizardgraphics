@@ -69,7 +69,7 @@ namespace LGraphics
 
     class LNonWidget;
     class LResourceManager;
-    class LWRectangle;
+    class LPlane;
     class LShape;
     class LRectangleShape;
     class LBuffer;
@@ -118,7 +118,7 @@ namespace LGraphics
     {
         friend LShape;
         friend LRectangleShape;
-        friend LWRectangle;
+        friend LPlane;
         friend LShaders::Shader;
         friend LShaders::VulkanShader;
         friend LShaders::OpenGLShader;
@@ -162,14 +162,18 @@ namespace LGraphics
         const LAppCreateInfo& getAppInfo() const { return info; }
 
         const int* getObjectsOnScreen() const { return objectsOnScreen; }
-        void setNormalMapping(bool normalMapping) { this->normalMapping = normalMapping; }
-        bool getNormalMapping() const { return normalMapping; }
+        void setParallaxMapping(bool parallaxMapping) { this->parallaxMapping = parallaxMapping; }
+        bool getParallaxMapping() const { return parallaxMapping; }
+
+        void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
+        bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
     protected:
         GLuint currentDepthMap;
         void* buff;
 
-        bool normalMapping = true;
+        bool parallaxMapping = true;
+        bool parallaxSelfShading = true;
 
         int* objectsOnScreen;
         uint32_t modelLoadingFlags = 0;
@@ -190,8 +194,9 @@ namespace LGraphics
         {
             Atlas textureAtl = Atlas("textures/out.jpg");
             Atlas normalAtl = Atlas("textures/out.jpg");
-            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal;
-            GLuint id, idNormal; 
+            Atlas parallaxAtl = Atlas("textures/out.jpg");
+            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal, subtexturesParallax;
+            GLuint id, idNormal, idParallax; 
         } megatexture;
 
     protected:
@@ -200,10 +205,10 @@ namespace LGraphics
         void initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures,
             GLuint megatextureId);
 
-        LModel* cube;
+        LModel* cube, *plane;
 
     public:
-
+        float heightScale = 0.03f;
         struct LFog
         {
             glm::vec3 color;
@@ -316,7 +321,7 @@ namespace LGraphics
 
         glm::vec2 getMouseCoords() const { return mouseCoords; }
 
-        ObjectPool<LWRectangle*> lwRectPool;
+        ObjectPool<LPlane*> lwRectPool;
 
         std::vector<LNonWidget*> customObjects;
         size_t getPoolSize() const { return info.poolSize; }

@@ -17,6 +17,7 @@ namespace LGraphics
         diff.offset = in.offset;
         diff.size = in.size;
     }
+
     void LImage::setNormal(const TexturesData& data)
     {
         auto& norm = TO_GL(textures[1]);
@@ -24,6 +25,15 @@ namespace LGraphics
         norm.id = in.id;
         norm.offset = in.offset;
         norm.size = in.size;
+    }
+
+    void LImage::setDisplacement(const TexturesData& data)
+    {
+        auto& parallax = TO_GL(textures[2]);
+        const auto& in = TO_GL(data);
+        parallax.id = in.id;
+        parallax.offset = in.offset;
+        parallax.size = in.size;
     }
 #else
     void LImage::setDiffuse(GLuint id)
@@ -45,33 +55,37 @@ namespace LGraphics
         init(resource);
     }
 
-    LImage::LImage(TexturesData& diffuseData, TexturesData& normalData)
+    LImage::LImage(TexturesData& diffuseData, TexturesData& normalData, TexturesData& displacementData)
     {
         textures.push_back (new TexturesData(new TexturesData::OGLImageData));
         textures.push_back(new TexturesData(new TexturesData::OGLImageData));
+        textures.push_back(new TexturesData(new TexturesData::OGLImageData));
 
+        setDiffuse(diffuseData);
+        setNormal(normalData);
+        setDisplacement(displacementData);
         //LResourceManager::TexturesData& castedInDiffuse = *(LResourceManager::TexturesData*)diffuseData;
         //LResourceManager::TexturesData& castedInNormal = *(LResourceManager::TexturesData*)normalData;
 
         //TexturesData& castedDiffIn = *(TexturesData*)diffuseData;
         //TexturesData& castedNormIn = *(TexturesData*)diffuseData;
 
-        TexturesData& castedDiff = textures[0];
-        TexturesData& castedNorm = textures[1];
+        //TexturesData& castedDiff = textures[0];
+        //TexturesData& castedNorm = textures[1];
 
-        const auto& gldIn = TO_GL(diffuseData);
-        const auto& glnIn = TO_GL(normalData);
+        //const auto& gldIn = TO_GL(diffuseData);
+        //const auto& glnIn = TO_GL(normalData);
 
-        auto& gld = TO_GL(castedDiff);
-        auto& gln = TO_GL(castedNorm);
+        //auto& gld = TO_GL(castedDiff);
+        //auto& gln = TO_GL(castedNorm);
 
-        gld.id = gldIn.id;
-        gld.offset = gldIn.offset;
-        gld.size = gldIn.size;
+        //gld.id = gldIn.id;
+        //gld.offset = gldIn.offset;
+        //gld.size = gldIn.size;
 
-        gln.id = glnIn.id;
-        gln.offset = glnIn.offset;
-        gln.size = glnIn.size;
+        //gln.id = glnIn.id;
+        //gln.offset = glnIn.offset;
+        //gln.size = glnIn.size;
     }
 
     void LImage::bindDiffuse(const char* path)

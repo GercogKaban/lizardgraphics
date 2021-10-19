@@ -89,6 +89,7 @@ namespace LGraphics
             std::string name;
             bool diffuse = true;
             bool normals = true;
+            bool parallax = true;
         };
 
         struct ImageSkyboxResource
@@ -102,8 +103,9 @@ namespace LGraphics
         //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
 #ifdef MEGATEXTURE_LG
-        virtual void setDiffuse(const TexturesData& data);
-        virtual void setNormal(const TexturesData& data);
+        void setDiffuse(const TexturesData& data);
+        void setNormal(const TexturesData& data);
+        void setDisplacement(const TexturesData& data);
 #else
         void setDiffuse(GLuint id);
         void setDiffuse(VkImageView view);
@@ -112,6 +114,7 @@ namespace LGraphics
         const auto& getTextures() const { return textures; }
         const auto& getDiffuse() const { return textures[0]; }
         const auto& getNormal() const { return textures[1]; }
+        const auto& getParallax() const { return textures[2]; }
         /*!
         @brief Привязывает текстуру.
         @param path - путь к изображению.
@@ -157,6 +160,7 @@ namespace LGraphics
 
         std::string getNormalsPath() const { return normalsPath + imageResourceName; }
         std::string getDiffusePath() const { return diffusePath + imageResourceName; }
+        std::string getDisplacementPath() const { return displacementPath + imageResourceName; }
         const std::string& getImageResourceName() const { return imageResourceName; }
         void init(ImageResource resource);
         ~LImage();
@@ -169,7 +173,7 @@ namespace LGraphics
         @param path - путь к изображению.
         */
         LImage(ImageResource resource, RenderingAPI api);
-        LImage(TexturesData& diffuseData, TexturesData& normalData);
+        LImage(TexturesData& diffuseData, TexturesData& normalData, TexturesData& displacementData);
 
         /*!
         @brief Конструктор.
@@ -184,6 +188,7 @@ namespace LGraphics
 
         bool turnedOn = true; ///< Включена ли текстура.
 
+        ::std::string displacementPath;
         ::std::string diffusePath;
         ::std::string normalsPath;
         ::std::string imageResourceName;

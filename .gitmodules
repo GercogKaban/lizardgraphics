@@ -7,3 +7,6 @@
 [submodule "LizardGraphics/assimp"]
 	path = LizardGraphics/assimp
 	url = https://github.com/assimp/assimp
+[submodule "assimp"]
+	path = assimp
+	url = https://github.com/assimp/assimp

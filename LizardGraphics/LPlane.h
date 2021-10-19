@@ -5,13 +5,14 @@
 
 namespace LGraphics
 {
-    class LWRectangle : public LRectangleShape
+    class LApp;
+    class LPlane : public LRectangleShape
     {
     public:
 
         friend LApp;
 
-        LWRectangle(LApp* app, ImageResource res);
+        LPlane(LApp* app, ImageResource res);
         const char* getObjectType() const override { return "LWRectangle"; }
 
         //virtual glm::vec4 getScreenCoords() const;
@@ -32,17 +33,17 @@ namespace LGraphics
     protected:
 
         static void updateBuffer();
-        static void updateUniforms(LWidget::RectangleUniforms* buffer, size_t id);
+        static void updateUniforms(LWidget::PrimitiveUniforms* buffer, size_t id);
         static void initInstanceBuffer();
         static void resetInstanceBuffer();
 
-        static void updateBufferParallel(LWidget::RectangleUniforms* buffer, std::vector<LWRectangle*>& changed, size_t begin, size_t end);
+        static void updateBufferParallel(LWidget::PrimitiveUniforms* buffer, std::vector<LPlane*>& changed, size_t begin, size_t end);
             
         static bool needToResetBuffer;
         static GLuint vbo;
-        static std::vector<RectangleUniforms> uniforms;
 
-        static std::vector<LWRectangle*> objChanged;
+        static std::vector<PrimitiveUniforms> uniforms;
+        static std::vector<LPlane*> objChanged;
     };
 
 }

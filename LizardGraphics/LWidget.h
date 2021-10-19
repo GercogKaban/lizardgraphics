@@ -38,17 +38,19 @@ namespace LGraphics
             THREE_BUFFERS_TO_CHANGE,
         };
     
-        struct WidgetUniforms
+        struct PrimitiveUniforms
         {
             glm::mat4 model;
             glm::vec2 offset;
             glm::vec2 textureSize;
             glm::vec2 offsetNormal;
             glm::vec2 textureSizeNormal;
+            glm::vec2 offsetParallax;
+            glm::vec2 textureSizeParallax;
         };
 
-        using RectangleUniforms = WidgetUniforms;
-        using CubeUniforms = WidgetUniforms;
+        //using PlaneUniforms = WidgetUniforms;
+        //using CubeUniforms = WidgetUniforms;
 
         //struct WidgetUniformsRef
         //{
@@ -201,6 +203,6 @@ namespace LGraphics
         LWidget(LApp* app/*, ImageResource res*/);
 
     private:
-        static std::vector<WidgetUniforms> uniforms;
+        static std::vector<PrimitiveUniforms> uniforms;
     };
 }
