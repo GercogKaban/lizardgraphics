@@ -25,6 +25,11 @@ namespace LGraphics
     {
         L_PLANE,
         L_CUBE,
+        L_SPHERE,
+        L_ICOSPHERE,
+        L_CONE,
+        L_TORUS,
+        L_CYLINDER,
         L_MODEL,
     };
 

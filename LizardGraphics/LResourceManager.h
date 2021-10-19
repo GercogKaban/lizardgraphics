@@ -60,6 +60,7 @@ namespace LGraphics
     private:
 
         static void  loadModel(LModel* model, LModel::ModelResource res);
+        static void  loadModel(LModel* model, const std::string& path);
         static void* loadTexture(const char* path, size_t& mipLevels);
         static void* loadCubeTexture(const std::vector<std::string>& paths);
         static void setTexture(const std::string& texturePath, TexturesData& data, void* texture);

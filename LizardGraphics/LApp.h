@@ -70,8 +70,13 @@ namespace LGraphics
     class LNonWidget;
     class LResourceManager;
     class LPlane;
+    class LCone;
+    class LTorus;
+    class LSphere;
+    class LIcosphere;
+    class LCylinder;
     class LShape;
-    class LRectangleShape;
+    class LImagedShape;
     class LBuffer;
     class LModelBuffer;
     class LWidget;
@@ -117,8 +122,13 @@ namespace LGraphics
     class LApp : public LObject
     {
         friend LShape;
-        friend LRectangleShape;
+        friend LImagedShape;
         friend LPlane;
+        friend LCone;
+        friend LTorus;
+        friend LSphere;
+        friend LIcosphere;
+        friend LCylinder;
         friend LShaders::Shader;
         friend LShaders::VulkanShader;
         friend LShaders::OpenGLShader;
@@ -205,7 +215,7 @@ namespace LGraphics
         void initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures,
             GLuint megatextureId);
 
-        LModel* cube, *plane;
+        LModel* cube, *plane, *sphere, *icosphere, *cone, *cylinder, *torus;
 
     public:
         float heightScale = 0.03f;
@@ -694,7 +704,7 @@ namespace LGraphics
         glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
         float viewRadius = 10.0f;
 
-        std::vector<LWidget*> primitives[3];
+        std::vector<LImagedShape*> primitives[8];
         std::vector<LLight*> lights[2];
         //std::vector<LWidget*> primitives;
         //std::vector<LModel*> models;

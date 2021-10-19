@@ -13,22 +13,22 @@ set(API "OPENGL" CACHE STRING "RENDERING API")
 add_compile_definitions(${API})
 add_compile_definitions(LIB_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}\")
 
-set (SOURCE_FILES textures.cpp LShape.cpp LRectangleShape.cpp LImage.cpp 
+set (SOURCE_FILES textures.cpp LShape.cpp LImagedShape.cpp LImage.cpp 
 LRectangleBuffer.cpp LLogger.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
 LTimer.cpp additional.cpp LPlane.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp
 CodeGen.cpp FileSystemDialog.cpp imgui/imgui.cpp LCube.cpp LCubeBuffer.cpp LSkyBox.cpp
-AtlasGenerator.cpp LLights.cpp)
+AtlasGenerator.cpp LLights.cpp LCone.cpp LCylinder.cpp LIcosphere.cpp LSphere.cpp LTorus.cpp)
 
 set (IMGUI_SOURCE_FILES imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp imgui/backends/imgui_impl_vulkan.cpp imgui/imgui.cpp 
 imgui/imgui_demo.cpp imgui/imgui_draw.cpp imgui/imgui_tables.cpp imgui/imgui_widgets.cpp)
 
 set (HEADER_FILES pch.h textures.h Lshaders.h vectors.h
-LShape.h LRectangleShape.h LRectangleBuffer.h 
+LShape.h LImagedShape.h LRectangleBuffer.h 
 LImage.h LLogger.h LBuffer.h 
 LApp.h LWidget.h LTimer.h additional.h LPlane.h LResourceManager.h 
 ObjectPool.h LModel.h
 CodeGen.h FileSystemDialog.h LCube.h LCubeBuffer.h LSkyBox.h 
-AtlasGenerator.h LLights.h)
+AtlasGenerator.h LLights.h LCone.h LCylinder.h LIcosphere.h LSphere.h LTorus.h)
 
 set (IMGUI_HEADER_FILES imgui/imgui.h imgui/imconfig.h imgui/backends/imgui_impl_glfw.h 
 imgui/backends/imgui_impl_vulkan.h imgui/imgui_internal.h imgui/imstb_rectpack.h 

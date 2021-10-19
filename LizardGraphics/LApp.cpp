@@ -5,6 +5,12 @@
 #include "LApp.h"
 #include "LModel.h"
 #include "LPlane.h"
+#include "LSphere.h"
+#include "LIcosphere.h"
+#include "LCone.h"
+#include "LCylinder.h"
+#include "LTorus.h"
+
 #ifdef WIN32
 #include "CodeGen.h"
 #include "../codegen.h"
@@ -69,6 +75,11 @@ namespace LGraphics
     {
         LCube::drawInstanced();
         LPlane::drawInstanced();
+        LSphere::drawInstanced();
+        LIcosphere::drawInstanced();
+        LCone::drawInstanced();
+        LCylinder::drawInstanced();
+        LTorus::drawInstanced();
         for (auto& m : primitives[L_MODEL])
             m->draw();
         if (!drawingInShadow)
@@ -84,8 +95,6 @@ namespace LGraphics
     {
         std::vector<std::string> textures;
         auto path = std::filesystem::path(texturesPath);
-        //if (std::filesystem::is_symlink(std::filesystem::path(texturesPath)))
-        //    path = std::filesystem::read_symlink(path);
         for (auto& p : std::filesystem::recursive_directory_iterator(path))
         {
             auto fileEnd = p.path().generic_string().substr(p.path().generic_string().size() - 3);
@@ -528,17 +537,42 @@ namespace LGraphics
         if (dynamic_cast<LCube*>(w))
         {
             w->id = primitives[L_CUBE].size();
-            primitives[L_CUBE].push_back(w);
+            primitives[L_CUBE].push_back((LImagedShape*)w);
         }
         else if (dynamic_cast<LPlane*>(w))
         {
             w->id = primitives[L_PLANE].size();
-            primitives[L_PLANE].push_back(w);
+            primitives[L_PLANE].push_back((LImagedShape*)w);
         }
         else if (dynamic_cast<LModel*>(w))
         {
             w->id = primitives[L_MODEL].size();
-            primitives[L_MODEL].push_back(w);
+            primitives[L_MODEL].push_back((LImagedShape*)w);
+        }
+        else if (dynamic_cast<LSphere*>(w))
+        {
+            w->id = primitives[L_SPHERE].size();
+            primitives[L_SPHERE].push_back((LImagedShape*)w);
+        }
+        else if (dynamic_cast<LIcosphere*>(w))
+        {
+            w->id = primitives[L_ICOSPHERE].size();
+            primitives[L_ICOSPHERE].push_back((LImagedShape*)w);
+        }
+        else if (dynamic_cast<LTorus*>(w))
+        {
+            w->id = primitives[L_TORUS].size();
+            primitives[L_TORUS].push_back((LImagedShape*)w);
+        }
+        else if (dynamic_cast<LCone*>(w))
+        {
+            w->id = primitives[L_CONE].size();
+            primitives[L_CONE].push_back((LImagedShape*)w);
+        }
+        else if (dynamic_cast<LCylinder*>(w))
+        {
+            w->id = primitives[L_CYLINDER].size();
+            primitives[L_CYLINDER].push_back((LImagedShape*)w);
         }
     }
 
@@ -557,6 +591,41 @@ namespace LGraphics
             if (w != primitives[L_PLANE].back())
                 LPlane::objChanged.push_back((LPlane*)primitives[L_PLANE].back());
             fastErase(primitives[L_PLANE], w->id);
+        }
+        else if (dynamic_cast<LSphere*>(w))
+        {
+            LSphere::uniforms.pop_back();
+            if (w != primitives[L_SPHERE].back())
+                LSphere::objChanged.push_back((LPlane*)primitives[L_SPHERE].back());
+            fastErase(primitives[L_SPHERE], w->id);
+        }
+        else if (dynamic_cast<LIcosphere*>(w))
+        {
+            LIcosphere::uniforms.pop_back();
+            if (w != primitives[L_ICOSPHERE].back())
+                LIcosphere::objChanged.push_back((LPlane*)primitives[L_ICOSPHERE].back());
+            fastErase(primitives[L_ICOSPHERE], w->id);
+        }
+        else if (dynamic_cast<LCone*>(w))
+        {
+            LCone::uniforms.pop_back();
+            if (w != primitives[L_CONE].back())
+                LCone::objChanged.push_back((LPlane*)primitives[L_CONE].back());
+            fastErase(primitives[L_CONE], w->id);
+        }
+        else if (dynamic_cast<LTorus*>(w))
+        {
+            LTorus::uniforms.pop_back();
+            if (w != primitives[L_TORUS].back())
+                LTorus::objChanged.push_back((LTorus*)primitives[L_TORUS].back());
+            fastErase(primitives[L_TORUS], w->id);
+        }
+        else if (dynamic_cast<LCylinder*>(w))
+        {
+            LCylinder::uniforms.pop_back();
+            if (w != primitives[L_CYLINDER].back())
+                LCylinder::objChanged.push_back((LPlane*)primitives[L_CYLINDER].back());
+            fastErase(primitives[L_CYLINDER], w->id);
         }
         else if (dynamic_cast<LModel*>(w)) fastErase(primitives[L_MODEL], w->id);
         else throw std::runtime_error("wrong object type");
@@ -724,6 +793,11 @@ namespace LGraphics
         if (info.loadObjects)
             genWidgets(this);
         LCube::initInstanceBuffer();
+        LCone::initInstanceBuffer();
+        LSphere::initInstanceBuffer();
+        LIcosphere::initInstanceBuffer();
+        LCylinder::initInstanceBuffer();
+        LTorus::initInstanceBuffer();
         LPlane::initInstanceBuffer();
         LResourceManager::setApp(this);
 
@@ -784,10 +858,14 @@ namespace LGraphics
         else if (info.loading == MAX_QUALITY)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs;
 
-        plane = new LModel(this, { "plane.obj" });
-        cube = new LModel(this, { "cube.obj" });
-        toCreate.pop();
-        toCreate.pop();
+        plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj" );
+        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj");
+        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj");
+        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj");
+        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj");
+        cylinder = new LModel(this, std::string(LIB_PATH) + "/primitives/cylinder.obj");
+        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj");
+
         setCursorEnabling(!isCursorEnabled());
     }
 

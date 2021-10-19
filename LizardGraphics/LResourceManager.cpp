@@ -197,35 +197,29 @@ namespace LGraphics
 
     void LResourceManager::loadModel(LModel* model, LModel::ModelResource res)
     {
-        try
+        LOG_CALL
+        if (auto it = models.find(res.name); it != models.end())
         {
-            LOG_CALL
-                if (auto it = models.find(res.name); it != models.end())
-                {
-                    model->meshes = it->second->meshes;
-                    return;
-                }
-
-            Assimp::Importer importer;
-            const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/" +
-                app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
-            PRINTLN(modelPath);
-
-            const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
-            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-                throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
-
-            std::vector< LModel::Mesh> meshes;
-            //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
-            //m_GlobalInverseTransform.Inverse();
-            processNode(app, model->meshes, scene->mRootNode, scene, scene->mRootNode->mTransformation);
-            models.insert(std::make_pair(res.name, model));
+            model->meshes = it->second->meshes;
+            return;
         }
+        const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/" +
+            app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
+        PRINTLN(modelPath);
+        loadModel(model, modelPath);
+        models.insert(std::make_pair(res.name, model));
+    }
 
-        catch(std::exception&)
-        {
-            
-        }
+    void LResourceManager::loadModel(LModel* model, const std::string& modelPath)
+    {
+        Assimp::Importer importer;
+
+        const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+            throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
+        //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
+        //m_GlobalInverseTransform.Inverse();
+        processNode(app, model->meshes, scene->mRootNode, scene, scene->mRootNode->mTransformation);
     }
 
     void LResourceManager::createImageView(uint8_t* pixels, int texWidth,

@@ -2,7 +2,6 @@
 #include "LApp.h"
 #include "pch.h"
 
-std::vector<LGraphics::LWidget::PrimitiveUniforms> LGraphics::LWidget::uniforms;
 LGraphics::LApp* LGraphics::LWidget::app = nullptr;
 
 void LGraphics::LWidget::rotateX(float angleDegree)

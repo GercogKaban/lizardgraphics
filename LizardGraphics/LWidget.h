@@ -14,6 +14,9 @@
 namespace LGraphics
 {
     class LApp;
+    class LImagedShape;
+    class LPlane;
+    class LCube;
 
     /*!
     @brief Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.
@@ -22,7 +25,10 @@ namespace LGraphics
     {
     public:
 
+        friend LImagedShape;
         friend LApp;
+        friend LPlane;
+        friend LCube;
         /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 
         const char* getObjectType() const override { return "LWidget"; }
@@ -201,8 +207,5 @@ namespace LGraphics
         @param path - Путь к изображению.
         */
         LWidget(LApp* app/*, ImageResource res*/);
-
-    private:
-        static std::vector<PrimitiveUniforms> uniforms;
     };
 }

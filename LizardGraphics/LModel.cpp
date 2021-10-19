@@ -1,4 +1,5 @@
 #include "LModel.h"
+#include "LModel.h"
 //#include "LModelBuffer.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
@@ -118,6 +119,13 @@ void LGraphics::LModel::draw()
             glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
         glBindVertexArray(0);
     }
+}
+
+LGraphics::LModel::LModel(LApp* app, const std::string& path)
+    :LShape(app)
+{
+    LResourceManager::loadModel(this, path);
+    setShader(app->modelShader.get());
 }
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)

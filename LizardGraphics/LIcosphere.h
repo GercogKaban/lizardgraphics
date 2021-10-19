@@ -1,17 +1,17 @@
 #pragma once
 #include "LImagedShape.h"
-#include "LApp.h"
 
 namespace LGraphics
 {
-	class LCube : public LImagedShape
+	class LApp;
+	class LIcosphere : public LImagedShape
 	{
 	public:
 
 		friend LApp;
 
-		LCube(LApp* app, ImageResource res);
-		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override{}
+		LIcosphere(LApp* app, ImageResource res);
+		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
 		static void drawInstanced();
 
 		void setModel(const glm::mat4& model) override;

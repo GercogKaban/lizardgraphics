@@ -4,10 +4,15 @@
 */
 
 #include "interfaces.h"
+#include "LModel.h"
+#include "LCylinder.h"
 #include "LCube.h"
+#include "LCone.h"
+#include "LSphere.h"
+#include "LIcoSphere.h"
+#include "LTorus.h"
 #include "LPlane.h"
-#include "LSkyBox.h"
-#include "LRectangleMirror.h"
+#include "LCylinder.h"
 
 #include <ctime>
 
@@ -76,6 +81,24 @@ int main(int argc, char** argv)
                     p->rotateX(90.0f);
                     p->move((float)i, -0.3f, (float)j);
                 }
+
+            const float off = 1.0f;
+            const float startX = 1.0f;
+
+            auto cyl = new LCylinder(&app, { "Rocks011.jpg" });
+            cyl->move(startX + off, 0.25f, 0.0f);
+
+            auto cone = new LCone(&app, { "Rocks011.jpg" });
+            cone->move(startX + off * 2, 0.25f, 0.0f);
+
+            auto sphere = new LSphere(&app, { "Rocks011.jpg" });
+            sphere->move(startX + off * 3, 0.25f, 0.0f);
+
+            auto ico = new LIcosphere(&app, { "Rocks011.jpg" });
+            ico->move(startX + off * 4, 0.25f, 0.0f);
+
+            auto tor = new LTorus(&app, { "Rocks011.jpg" });
+            tor->move(startX + off * 5, 0.25f, 0.0f);
             //auto test = new LModel(&app, { "Hajj_Man02.fbx" });
             //test->scale(0.002f, 0.002f, 0.002f);
             //test->rotateZ(180.0f);
