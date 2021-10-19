@@ -852,11 +852,11 @@ namespace LGraphics
         initMegatextureData(megatexture.parallaxAtl, megatexture.subtexturesParallax, megatexture.idParallax);
 
         if (info.loading == FAST)
-            modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs;
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
         else if (info.loading == QUALITY)
-            modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs;
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
         else if (info.loading == MAX_QUALITY)
-            modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs;
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
 
         plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj" );
         cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj");

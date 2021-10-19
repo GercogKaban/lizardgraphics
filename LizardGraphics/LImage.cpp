@@ -55,37 +55,15 @@ namespace LGraphics
         init(resource);
     }
 
-    LImage::LImage(TexturesData& diffuseData, TexturesData& normalData, TexturesData& displacementData)
+    LImage::LImage(const TexturesData& diffuseData, const TexturesData& normalData, const TexturesData& displacementData)
     {
-        textures.push_back (new TexturesData(new TexturesData::OGLImageData));
-        textures.push_back(new TexturesData(new TexturesData::OGLImageData));
-        textures.push_back(new TexturesData(new TexturesData::OGLImageData));
+        textures.push_back (TexturesData(new TexturesData::OGLImageData));
+        textures.push_back(TexturesData(new TexturesData::OGLImageData));
+        textures.push_back(TexturesData(new TexturesData::OGLImageData));
 
         setDiffuse(diffuseData);
         setNormal(normalData);
         setDisplacement(displacementData);
-        //LResourceManager::TexturesData& castedInDiffuse = *(LResourceManager::TexturesData*)diffuseData;
-        //LResourceManager::TexturesData& castedInNormal = *(LResourceManager::TexturesData*)normalData;
-
-        //TexturesData& castedDiffIn = *(TexturesData*)diffuseData;
-        //TexturesData& castedNormIn = *(TexturesData*)diffuseData;
-
-        //TexturesData& castedDiff = textures[0];
-        //TexturesData& castedNorm = textures[1];
-
-        //const auto& gldIn = TO_GL(diffuseData);
-        //const auto& glnIn = TO_GL(normalData);
-
-        //auto& gld = TO_GL(castedDiff);
-        //auto& gln = TO_GL(castedNorm);
-
-        //gld.id = gldIn.id;
-        //gld.offset = gldIn.offset;
-        //gld.size = gldIn.size;
-
-        //gln.id = glnIn.id;
-        //gln.offset = glnIn.offset;
-        //gln.size = glnIn.size;
     }
 
     void LImage::bindDiffuse(const char* path)
@@ -144,10 +122,10 @@ namespace LGraphics
 
     TexturesData::~TexturesData()
     {
-        if (textures)
-        {
-            delete (OGLImageData*)textures;
-            textures = nullptr;
-        }
+        //if (textures)
+        //{
+        //    delete (OGLImageData*)textures;
+        //    textures = nullptr;
+        //}
     }
 }

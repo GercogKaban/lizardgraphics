@@ -71,8 +71,8 @@ namespace LGraphics
             int texHeight, int texChannels, const char* path, size_t& miplevels,
             VkImageView& texture, VkImage& image, VmaAllocation& textureImageMemory);
 
-        static void processNode(LApp* app, std::vector<LModel::Mesh>&, aiNode* node, const aiScene* scene, aiMatrix4x4 transform);
-        static LModel::Mesh processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, aiMatrix4x4 transform);
+        static void processNode(LApp* app, std::vector<LModel::Mesh>&, aiNode* node, const aiScene* scene);
+        static LModel::Mesh processMesh(LApp* app, aiMesh* mesh, const aiScene* scene);
         static const TexturesData& loadMaterialTextures(aiMaterial* mat, aiTextureType type);
 
         static LApp* app;

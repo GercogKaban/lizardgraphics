@@ -219,7 +219,7 @@ namespace LGraphics
             throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
         //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
         //m_GlobalInverseTransform.Inverse();
-        processNode(app, model->meshes, scene->mRootNode, scene, scene->mRootNode->mTransformation);
+        processNode(app, model->meshes, scene->mRootNode, scene);
     }
 
     void LResourceManager::createImageView(uint8_t* pixels, int texWidth,
@@ -255,38 +255,34 @@ namespace LGraphics
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view, miplevels);
     }
 
-    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene, aiMatrix4x4 transform)
+    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene)
     {
         LOG_CALL
         // process all the node's meshes (if any)
         for (uint32_t i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(processMesh(app,mesh, scene, transform));
+            meshes.push_back(processMesh(app,mesh, scene));
         }
 
         // then do the same for each of its children
         for (uint32_t i = 0; i < node->mNumChildren; i++)
-            processNode(app,meshes, node->mChildren[i], scene, node->mChildren[i]->mTransformation * node->mTransformation);
+            processNode(app,meshes, node->mChildren[i], scene);
     }
 
-    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, aiMatrix4x4 transform)
+    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene)
     {
         LOG_CALL
         LModel::Mesh out;
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
-        aiMatrix3x3 transform_(transform);
         for (size_t i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
             glm::vec3 pos, normals, tangent, bitangent;
             glm::vec2 textureCoords;
 
-            aiVector3D pos_ = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-
-            pos_ *= transform;
-            pos.x = pos_.x, pos.y = pos_.y, pos.z = pos_.z;
+            pos.x = mesh->mVertices[i].x, pos.y = mesh->mVertices[i].y, pos.z = mesh->mVertices[i].z;
 
             normals.x = mesh->mNormals[i].x;
             normals.y = mesh->mNormals[i].y;

@@ -22,7 +22,7 @@ namespace LGraphics
         {
             struct VulkanTextureData
             {
-                VkImageView imageView = nullptr;
+                VkImageView imageView = (VkImageView)nullptr;
                 VkImage image;
                 VmaAllocation allocData;
             };
@@ -173,7 +173,7 @@ namespace LGraphics
         @param path - путь к изображению.
         */
         LImage(ImageResource resource, RenderingAPI api);
-        LImage(TexturesData& diffuseData, TexturesData& normalData, TexturesData& displacementData);
+        LImage(const TexturesData& diffuseData, const TexturesData& normalData, const TexturesData& displacementData);
 
         /*!
         @brief Конструктор.
