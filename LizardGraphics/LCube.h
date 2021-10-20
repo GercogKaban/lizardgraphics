@@ -22,6 +22,9 @@ namespace LGraphics
 		void rotateY(float angle) override;
 		void rotateZ(float angle) override;
 
+		void setNormalMapping(bool normalMapping) override;
+		void setParallaxMapping(bool parallaxMapping) override;
+
 	protected:
 
 		static void updateBuffer();

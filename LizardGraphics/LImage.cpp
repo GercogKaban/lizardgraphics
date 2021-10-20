@@ -47,14 +47,6 @@ namespace LGraphics
     }
 #endif
 
-    LImage::LImage(ImageResource resource, RenderingAPI api)
-    {
-        texturesType = api;
-        imageResourceName = resource.name;
-        if (!imageResourceName.size()) turnOffTexture();
-        init(resource);
-    }
-
     LImage::LImage(const TexturesData& diffuseData, const TexturesData& normalData, const TexturesData& displacementData)
     {
         textures.push_back (TexturesData(new TexturesData::OGLImageData));
@@ -66,41 +58,11 @@ namespace LGraphics
         setDisplacement(displacementData);
     }
 
-    void LImage::bindDiffuse(const char* path)
+    LImage::LImage(ImageResource resource, RenderingAPI api)
     {
-        turnOnTexture();
-        //imageResourceName = path;
-        //textures = resManager.loadTexture(path,mipLevels);
-    }
-
-    //void LImage::bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel)
-    //{
-    //    turnOnTexture();
-    //    texture = resManager.loadTexture(bytes,size, name, mipLevels);
-    //}
-
-    void LImage::turnOffTexture()
-    {
-        turnedOn = false;
-    }
-
-    void LImage::turnOnTexture()
-    {
-        turnedOn = true;
-    }
-
-    void LImage::switchTexture(bool show)
-    {
-        turnedOn = show;
-    }
-
-    void LImage::switchTexture()
-    {
-        turnedOn = !turnedOn;
-    }
-    bool LImage::isTextureTurnedOn() const
-    {
-        return turnedOn;
+        texturesType = api;
+        imageResourceName = resource.name;
+        init(resource);
     }
 
     void LImage::init(ImageResource resource)

@@ -50,6 +50,17 @@ void LGraphics::LCylinder::rotateZ(float angle)
     LImagedShape::rotateZ(objChanged, this, angle);
 }
 
+void LGraphics::LCylinder::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LCylinder::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
+
 void LGraphics::LCylinder::updateBuffer()
 {
     LImagedShape::updateBuffer(L_CYLINDER, objChanged, needToResetBuffer, app->cylinder->getMehes()[0].buffer->getVaoNum(), vbo, uniforms);

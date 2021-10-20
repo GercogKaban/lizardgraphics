@@ -225,12 +225,12 @@ public:
                         ImGui::Text("Are you sure you want to delete this object?");
                         if (ImGui::Button("Yes"))
                         {
-                            sliderRanges[i].inited = false;
-                            if (obj->getObjectType() == std::string("LModel"))
-                                app->safeDelete(obj);
-                            else if (obj->getObjectType() == std::string("LWRectangle"))
-                                app->safeDelete(obj);
-                            deleteDialog = false;
+                            //sliderRanges[i].inited = false;
+                            //if (obj->getObjectType() == std::string("LModel"))
+                            //    app->safeDelete(obj);
+                            //else if (obj->getObjectType() == std::string("LWRectangle"))
+                            //    app->safeDelete(obj);
+                            //deleteDialog = false;
                         }
                         ImGui::SameLine();
                         if (ImGui::Button("No"))

@@ -50,6 +50,17 @@ void LGraphics::LTorus::rotateZ(float angle)
     LImagedShape::rotateZ(objChanged, this, angle);
 }
 
+void LGraphics::LTorus::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LTorus::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
+
 void LGraphics::LTorus::updateBuffer()
 {
     LImagedShape::updateBuffer(L_TORUS, objChanged, needToResetBuffer, app->torus->getMehes()[0].buffer->getVaoNum(), vbo, uniforms);

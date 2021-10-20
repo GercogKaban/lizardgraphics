@@ -50,6 +50,16 @@ void LGraphics::LCube::rotateZ(float angle)
     LImagedShape::rotateZ(objChanged, this, angle);
 }
 
+void LGraphics::LCube::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LCube::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
 void LGraphics::LCube::updateBuffer()
 {
     LImagedShape::updateBuffer(L_CUBE,objChanged, needToResetBuffer, app->cube->getMehes()[0].buffer->getVaoNum(), vbo, uniforms);

@@ -45,6 +45,16 @@ void LGraphics::LSphere::rotateY(float angle)
     LImagedShape::rotateY(objChanged, this, angle);
 }
 
+void LGraphics::LSphere::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LSphere::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
 void LGraphics::LSphere::rotateZ(float angle)
 {
     LImagedShape::rotateZ(objChanged, this, angle);

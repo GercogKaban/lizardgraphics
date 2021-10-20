@@ -64,6 +64,8 @@ in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
+in flat int normalMapping_;
+in flat int parallaxMapping_;
 
 out vec4 color;
 
@@ -76,7 +78,6 @@ uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
 uniform sampler2D parallaxMap;
 uniform int selfShading;
-uniform int parallaxMapping;
 uniform float heightScale;
 uniform ivec2 screenSize;
 
@@ -338,31 +339,37 @@ void main()
     }
 
     vec3 viewDir = normalize(viewPos_ - FragPos);
-    vec3 Normal0;
-    if (parallaxMapping)
+
+    if (parallaxMapping_)
     {
-    vec2 texCoords = ParallaxMapping(TexCoordsParallax, viewDir); 
+        vec2 texCoords = ParallaxMapping(TexCoordsParallax, viewDir); 
     
-    if(texCoords.x > maxParallax.x)
-         texCoords.x-= sz_.x;
-    else if (texCoords.x < off_.x)
-         texCoords.x += sz_.x;  
-    if(texCoords.y > maxParallax.y)
-        texCoords.y-= sz_.y;
-    else if (texCoords.y < off_.y)
-        texCoords.y+= sz_.y;
+        if(texCoords.x > maxParallax.x)
+             texCoords.x-= sz_.x;
+        else if (texCoords.x < off_.x)
+             texCoords.x += sz_.x;  
+        if(texCoords.y > maxParallax.y)
+            texCoords.y-= sz_.y;
+        else if (texCoords.y < off_.y)
+            texCoords.y+= sz_.y;
 
         TexCoordNormal = texCoords;
         TexCoord = texCoords;
     }
     else
     {
-       TexCoord = TexCoords;
-       TexCoordNormal = TexCoordsNormal;
+        TexCoord = TexCoords;
+        TexCoordNormal = TexCoordsNormal;
     }
 
-    vec3 BumpMapNormal = texture(normalMap, TexCoordNormal).rgb;
-    Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0));   
+    vec3 Normal0;
+    if (normalMapping_)
+    {
+        vec3 BumpMapNormal = texture(normalMap, TexCoordNormal).rgb;
+        Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0)); 
+    }  
+    else
+        Normal0 = Normal;
 
     if (!gl_FrontFacing)
         Normal_ = -Normal0;

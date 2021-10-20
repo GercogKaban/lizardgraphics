@@ -50,6 +50,17 @@ void LGraphics::LIcosphere::rotateZ(float angle)
     LImagedShape::rotateZ(objChanged, this, angle);
 }
 
+void LGraphics::LIcosphere::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LIcosphere::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
+
 void LGraphics::LIcosphere::updateBuffer()
 {
     LImagedShape::updateBuffer(L_ICOSPHERE, objChanged, needToResetBuffer, app->icosphere->getMehes()[0].buffer->getVaoNum(), vbo, uniforms);

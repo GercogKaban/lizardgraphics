@@ -50,6 +50,17 @@ void LGraphics::LCone::rotateZ(float angle)
     LImagedShape::rotateZ(objChanged, this, angle);
 }
 
+void LGraphics::LCone::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LCone::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
+
 void LGraphics::LCone::updateBuffer()
 {
     LImagedShape::updateBuffer(L_CONE, objChanged, needToResetBuffer, app->cone->getMehes()[0].buffer->getVaoNum(), vbo, uniforms);

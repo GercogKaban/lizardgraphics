@@ -9,7 +9,7 @@
 #include "LCube.h"
 #include "LCone.h"
 #include "LSphere.h"
-#include "LIcoSphere.h"
+#include "LIcosphere.h"
 #include "LTorus.h"
 #include "LPlane.h"
 #include "LCylinder.h"
@@ -37,11 +37,11 @@ int main(int argc, char** argv)
 
 #ifndef NDEBUG
     info.texturesQuality = LOW;
+    info.loading = FAST;
 #else
     info.texturesQuality = HIGH;
+    info.loading = QUALITY;
 #endif
-
-    info.loading = MAX_QUALITY;
 
     const auto spread = 5;
     LApp app(info);
@@ -61,6 +61,7 @@ int main(int argc, char** argv)
     //s->turnOnShadowCalc();
     //s->setRadius(25);
 
+    const float yOffset = -0.3f;
     if (!info.loadObjects)
     {   
         //auto m = new LModel(&app, {"Walking.fbx"});
@@ -79,7 +80,7 @@ int main(int argc, char** argv)
                     auto  p = new LPlane(&app, { "Leather009.jpg" });
 #endif
                     p->rotateX(90.0f);
-                    p->move((float)i, -0.3f, (float)j);
+                    p->move((float)i, yOffset, (float)j);
                 }
 
             const float off = 1.0f;
@@ -90,6 +91,7 @@ int main(int argc, char** argv)
 
             auto cone = new LCone(&app, { "Rocks011.jpg" });
             cone->move(startX + off * 2, 0.25f, 0.0f);
+            cone->setParallaxMapping(false);
 
             auto sphere = new LSphere(&app, { "Rocks011.jpg" });
             sphere->move(startX + off * 3, 0.25f, 0.0f);
@@ -100,18 +102,9 @@ int main(int argc, char** argv)
             auto tor = new LTorus(&app, { "Rocks011.jpg" });
             tor->move(startX + off * 5, 0.25f, 0.0f);
 
-            new LModel(&app, { "test" });
-            //auto test = new LModel(&app, { "Hajj_Man02.fbx" });
-            //test->scale(0.002f, 0.002f, 0.002f);
-            //test->rotateZ(180.0f);
-            //test->move(0.0f, -0.2f, 0.0f);
-            //p->rotateZ(90);
-            //p->rotateZ(45);
-            //p->scale(20.0f, 20.0f, 20.0f);
-            //c->move(rand() % spread, -0.2f, rand() % spread);
-            //c->scale(1.0f, 1.0f, 1.0f);
-            //c->rotateX(180.0f); 
-            //c->move(0.0f, -1.0f, 0.0f);
+            auto test = new LModel(&app, "Hajj_Man02.fbx","Hajj_Man02_Color.jpg", "","Hajj_Man02_Displacement.jpg");
+            test->scale(0.002f, 0.002f, 0.002f);
+            test->move(0.0f, yOffset, 0.0f);
         }
 
             //c = new LCube(&app, { "Leather009.jpg" });
@@ -194,14 +187,10 @@ int main(int argc, char** argv)
         {
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
-            if (app.isPressed(GLFW_KEY_X))
-                app.setParallaxMapping(!app.getParallaxMapping());
             if (app.isPressed(GLFW_KEY_E))
                 app.heightScale += 0.01f;
             if (app.isPressed(GLFW_KEY_Q))
                 app.heightScale -= 0.01f;
-            if (app.isPressed(GLFW_KEY_C))
-                app.setParallaxSelfShading(!app.getParallaxSelfShading());
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });

@@ -14,13 +14,11 @@ namespace LGraphics
         init(app);
         shader = app->getLightningShader().get();
         app->toCreate.push(this);
-        diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() + '/' +
-            app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
-        normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() + '/' +
-            app->qualityDirectories[app->info.texturesQuality] + "/normal/";
-        displacementPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() + '/' +
-            app->qualityDirectories[app->info.texturesQuality] + "/displacement/";
-        //changed.push_back(this);
+        diffusePath = app->getRealTexturesPath() + "diffuse/";
+        normalsPath = app->getRealTexturesPath() + "normal/";
+        displacementPath = app->getRealTexturesPath() + "displacement/";
+        setNormalMapping(changed,this,res.normals);
+        setParallaxMapping(changed, this, res.parallax);
         if (u.size() == u.capacity())
             needToResetBuffer = true;
         u.push_back(PrimitiveUniforms());
@@ -128,6 +126,7 @@ namespace LGraphics
         obj.textureSizeNormal = subtextureNormal.second;
         obj.offsetParallax = subtextureParallax.first;
         obj.textureSizeParallax = subtextureParallax.second;
+        obj.mapping = { app->primitives[primitive][id]->getNormalMapping(),app->primitives[primitive][id]->getParallaxMapping() };
     }
 
     void LGraphics::LImagedShape::resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms> uniforms)
@@ -158,6 +157,8 @@ namespace LGraphics
         glVertexAttribPointer(13, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 4 * vec2Size));
         glEnableVertexAttribArray(14);
         glVertexAttribPointer(14, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 5 * vec2Size));
+        glEnableVertexAttribArray(15);
+        glVertexAttribPointer(15, 2, GL_INT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 6 * vec2Size));
 
         glVertexAttribDivisor(5, 1);
         glVertexAttribDivisor(6, 1);
@@ -169,6 +170,7 @@ namespace LGraphics
         glVertexAttribDivisor(12, 1);
         glVertexAttribDivisor(13, 1);
         glVertexAttribDivisor(14, 1);
+        glVertexAttribDivisor(15, 1);
         glBindVertexArray(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -207,6 +209,18 @@ namespace LGraphics
     void LGraphics::LImagedShape::rotateZ(std::vector<LShape*>& changed, LShape* shape, float angle)
     {
         LWidget::rotateZ(angle);
+        changed.push_back(shape);
+    }
+
+    void LImagedShape::setNormalMapping(std::vector<LShape*>& changed, LShape* shape, bool normalMapping)
+    {
+        LImage::setNormalMapping(normalMapping);
+        changed.push_back(shape);
+    }
+
+    void LImagedShape::setParallaxMapping(std::vector<LShape*>& changed, LShape* shape, bool parallaxMapping)
+    {
+        LImage::setParallaxMapping(parallaxMapping);
         changed.push_back(shape);
     }
 }

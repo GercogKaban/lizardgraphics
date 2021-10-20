@@ -138,8 +138,8 @@ LGraphics::LPointLight::LPointLight(LApp* app)
 {
 	app->addLight(this);
 	constant = 1.0f;
-	linear = 0.75f;
-	quadratic = 0.74f;
+	linear = 0.14f;
+	quadratic = 0.07f;
 
 	ambient = glm::vec3(0.2f,0.2f,0.2f);
 	diffuse = glm::vec3(0.4f, 0.4f, 0.4f);

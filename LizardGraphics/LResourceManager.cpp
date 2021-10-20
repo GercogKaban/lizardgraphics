@@ -83,12 +83,9 @@ namespace LGraphics
 
     std::vector<TexturesData> LResourceManager::loadImageResource(LImage::ImageResource res)
     {
-        const auto diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string()  +
-            "/textures/").generic_string() + '/' +  app->qualityDirectories[app->info.texturesQuality] +  "/diffuse/" + res.name;
-        const auto normalPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() +
-            "/textures/").generic_string() + '/' + app->qualityDirectories[app->info.texturesQuality] + "/normal/" + res.name;
-        const auto displacementPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() +
-            "/textures/").generic_string() + '/' + app->qualityDirectories[app->info.texturesQuality] + "/displacement/" + res.name;
+        const auto diffusePath = app->getRealDiffusePath() + res.name;
+        const auto normalPath = app->getRealNormalPath() + res.name;
+        const auto displacementPath = app->getRealDisplacementPath() + res.name;
 
         if (res.diffuse && textures.find(diffusePath) == textures.end())
             textures.emplace(std::make_pair(diffusePath, std::move(TexturesData())));
@@ -138,8 +135,7 @@ namespace LGraphics
 
             //auto it = textures.find("skybox/" + res.name);
             auto& td = TO_GL(it.first->second);
-            const auto skyboxPath = std::filesystem::current_path().generic_string() + '/' +
-                app->qualityDirectories[app->info.texturesQuality] + "/skyboxes/";
+            const auto skyboxPath = app->getRealTexturesPath() + "/skyboxes/";
             std::vector<std::string> paths = {
                 skyboxPath + "right" + res.extension,skyboxPath + "left" + res.extension,
                 skyboxPath + "top" + res.extension,skyboxPath + "bottom" + res.extension,
@@ -203,8 +199,7 @@ namespace LGraphics
             model->meshes = it->second->meshes;
             return;
         }
-        const auto modelPath = std::filesystem::current_path().generic_string() + '/' + "models/" +
-            app->qualityDirectories[app->info.texturesQuality] + '/' + res.name;
+        const auto modelPath = app->getRealModelsPath() + res.name;
         PRINTLN(modelPath);
         loadModel(model, modelPath);
         models.insert(std::make_pair(res.name, model));
@@ -322,43 +317,28 @@ namespace LGraphics
                 indices.push_back(face.mIndices[j]);
         }
 
-        LBuffer* b = new LBuffer(app, vertices, indices);
-        TexturesData d {new TexturesData::OGLImageData };
-        TexturesData n{ new TexturesData::OGLImageData };
-        TexturesData p{ new TexturesData::OGLImageData };
+        out.buffer = new LBuffer(app, vertices, indices);
+        out.image = new LImage({ new TexturesData::OGLImageData }, { new TexturesData::OGLImageData }, { new TexturesData::OGLImageData });
         if (mesh->mMaterialIndex >= 0)
         {
-            auto& gld = TO_GL(d);
             aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            auto diff = loadMaterialTextures(material, aiTextureType_DIFFUSE);
-            const auto& gldiff = TO_GL(diff);
-            gld.id = gldiff.id;
-            gld.offset = gldiff.offset;
-            gld.size = gldiff.size;
-
-            auto& gln = TO_GL(n);
-            auto norm = loadMaterialTextures(material, aiTextureType_NORMALS);
-            const auto& gldnorm = TO_GL(norm);
-            gln.id = gldnorm.id;
-            gln.offset = gldnorm.offset;
-            gln.size = gldnorm.size;
-
-            auto& glp = TO_GL(p);
-            auto parallax = loadMaterialTextures(material, aiTextureType_HEIGHT);
-            const auto& gldPar = TO_GL(parallax);
-            glp.id = gldPar.id;
-            glp.offset = gldPar.offset;
-            glp.size = gldPar.size;
+            out.image->setDiffuse(loadMaterialTextures(material, aiTextureType_DIFFUSE));
+            out.image->setNormal(loadMaterialTextures(material, aiTextureType_NORMALS));
+            out.image->setDisplacement(loadMaterialTextures(material, aiTextureType_HEIGHT));
         }
 
-        out.buffer = b;
-        out.image = new LImage(d,n,p);
-        out.image->diffusePath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
-            + '/' + app->qualityDirectories[app->info.texturesQuality] + "/diffuse/";
-        out.image->normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
-            + '/' + app->qualityDirectories[app->info.texturesQuality] + "/normal/";
-        out.image->normalsPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string()
-            + '/' + app->qualityDirectories[app->info.texturesQuality] + "/displacement/";
+        const auto& normText = out.image->getNormal();
+        const auto& castedNorm = TO_GL(normText);
+        out.image->setNormalMapping(castedNorm.id != NO_TEXTURE);
+
+        const auto& displText = out.image->getParallax();
+        const auto& castedDispl = TO_GL(displText);
+        out.image->setParallaxMapping(castedDispl.id != NO_TEXTURE);
+
+        const auto qualityDir = app->getRealTexturesPath();
+        out.image->diffusePath = qualityDir + "diffuse/";
+        out.image->normalsPath = qualityDir + "normal/";
+        out.image->displacementPath = qualityDir + "displacement/";
         return out;
     }
 
@@ -369,32 +349,36 @@ namespace LGraphics
             aiString str;
             mat->GetTexture(type, i, &str);
             std::string strCpp = std::string(str.C_Str());
-            auto texturesPath = std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() +
-                '/' + app->qualityDirectories[app->info.texturesQuality];
+            auto texturesPath = app->getRealTexturesPath();
             if (type == aiTextureType_DIFFUSE)
-                texturesPath += "/diffuse/";
+                texturesPath += "diffuse/";
             else if (type == aiTextureType_NORMALS)
-                texturesPath += "/normal/";
+                texturesPath += "normal/";
             else if (type == aiTextureType_HEIGHT)
-                texturesPath += "/displacement/";
+                texturesPath += "displacement/";
             std::replace(strCpp.begin(), strCpp.end(), '\\', '/');
-            strCpp = strCpp.rfind('/') ? texturesPath+ strCpp.substr(strCpp.rfind('/') + 1) : texturesPath + strCpp;
-            if (auto it = textures.find(strCpp); it != textures.end())
-                return it->second;
-            // костыль!!!!
-            else
-            {
-                size_t dummy;
-                GLuint* texture = (GLuint*)loadTexture(texturesPath.data(), dummy);
-                if (!texture)
-                    return textures.find("dummy")->second;
-                TexturesData d;
-                auto& td = TO_GL(d);
-                    td.id = *texture;
-                delete texture;
-                return textures.insert(std::make_pair(strCpp, d)).first->second;
-                //return d;
-            }
+            strCpp = strCpp.rfind('/') ? texturesPath + strCpp.substr(strCpp.rfind('/') + 1) : texturesPath + strCpp;
+            return loadMaterialTextures(strCpp);
+        }
+        return loadMaterialTextures("");
+    }
+
+    const TexturesData& LResourceManager::loadMaterialTextures(const std::string& path)
+    {
+        if (auto it = textures.find(path); it != textures.end())
+            return it->second;
+        // костыль!!!!
+        else
+        {
+            size_t dummy;
+            GLuint* texture = (GLuint*)loadTexture(path.data(), dummy);
+            if (!texture)
+                return textures.find("dummy")->second;
+            TexturesData d;
+            auto& td = TO_GL(d);
+            td.id = *texture;
+            delete texture;
+            return textures.insert(std::make_pair(path, d)).first->second;
         }
         return textures.find("dummy")->second;
     }

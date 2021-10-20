@@ -95,6 +95,33 @@ namespace LGraphics
         out.close();
     }
 
+    std::string LApp::getRealDiffusePath() const
+    {
+        return getRealTexturesPath() + "diffuse/";
+    }
+
+    std::string LApp::getRealNormalPath() const
+    {
+        return getRealTexturesPath() + "normal/";
+    }
+
+    std::string LApp::getRealDisplacementPath() const
+    {
+        return getRealTexturesPath() + "displacement/";
+    }
+
+    std::string LApp::getRealTexturesPath() const
+    {
+        return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() +
+            '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
+    }
+
+    std::string LApp::getRealModelsPath() const
+    {
+        return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/models/").generic_string() +
+            '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
+    }
+
     void LApp::drawScene()
     {
         LCube::drawInstanced();
@@ -104,7 +131,8 @@ namespace LGraphics
         LCone::drawInstanced();
         LCylinder::drawInstanced();
         LTorus::drawInstanced();
-        for (auto& m : primitives[L_MODEL])
+
+        for (auto& m : models)
             m->draw();
         if (!drawingInShadow)
         {
@@ -192,6 +220,20 @@ namespace LGraphics
                     auto obj = toCreate.top();
                     addObject(obj);
                     toCreate.pop();
+                }
+
+                while (toDeleteM.size())
+                {
+                    auto obj = toDeleteM.top();
+                    deleteObject(obj);
+                    toDeleteM.pop();
+                }
+
+                while (toCreateM.size())
+                {
+                    auto obj = toCreateM.top();
+                    addObject(obj);
+                    toCreateM.pop();
                 }
 
                 beforeDrawingFunc();
@@ -561,51 +603,52 @@ namespace LGraphics
             fastErase(lights[L_SPOT_LIGHT], l->id);
     }
 
-    void LApp::addObject(LWidget* w)
+    void LApp::deleteLight(LLight* l)
+    {
+        removeLight(l);
+        delete l;
+    }
+
+    void LApp::addObject(LImagedShape* w)
     {
         if (dynamic_cast<LCube*>(w))
         {
             w->id = primitives[L_CUBE].size();
-            primitives[L_CUBE].push_back((LImagedShape*)w);
+            primitives[L_CUBE].push_back(w);
         }
         else if (dynamic_cast<LPlane*>(w))
         {
             w->id = primitives[L_PLANE].size();
-            primitives[L_PLANE].push_back((LImagedShape*)w);
-        }
-        else if (dynamic_cast<LModel*>(w))
-        {
-            w->id = primitives[L_MODEL].size();
-            primitives[L_MODEL].push_back((LImagedShape*)w);
+            primitives[L_PLANE].push_back(w);
         }
         else if (dynamic_cast<LSphere*>(w))
         {
             w->id = primitives[L_SPHERE].size();
-            primitives[L_SPHERE].push_back((LImagedShape*)w);
+            primitives[L_SPHERE].push_back(w);
         }
         else if (dynamic_cast<LIcosphere*>(w))
         {
             w->id = primitives[L_ICOSPHERE].size();
-            primitives[L_ICOSPHERE].push_back((LImagedShape*)w);
+            primitives[L_ICOSPHERE].push_back(w);
         }
         else if (dynamic_cast<LTorus*>(w))
         {
             w->id = primitives[L_TORUS].size();
-            primitives[L_TORUS].push_back((LImagedShape*)w);
+            primitives[L_TORUS].push_back(w);
         }
         else if (dynamic_cast<LCone*>(w))
         {
             w->id = primitives[L_CONE].size();
-            primitives[L_CONE].push_back((LImagedShape*)w);
+            primitives[L_CONE].push_back(w);
         }
         else if (dynamic_cast<LCylinder*>(w))
         {
             w->id = primitives[L_CYLINDER].size();
-            primitives[L_CYLINDER].push_back((LImagedShape*)w);
+            primitives[L_CYLINDER].push_back(w);
         }
     }
 
-    void LApp::removeObject(LWidget* w)
+    void LApp::removeObject(LImagedShape* w)
     {
         if (dynamic_cast<LCube*>(w))
         {
@@ -656,8 +699,30 @@ namespace LGraphics
                 LCylinder::objChanged.push_back((LPlane*)primitives[L_CYLINDER].back());
             fastErase(primitives[L_CYLINDER], w->id);
         }
-        else if (dynamic_cast<LModel*>(w)) fastErase(primitives[L_MODEL], w->id);
         else throw std::runtime_error("wrong object type");
+    }
+
+    void LApp::deleteObject(LImagedShape* w)
+    {
+        removeObject(w);
+        delete w;
+    }
+
+    void LApp::addObject(LModel* w)
+    {
+        w->id = models.size();
+        models.push_back(w);
+    }
+
+    void LApp::removeObject(LModel* w)
+    {
+        fastErase(models, w->id);
+    }
+
+    void LApp::deleteObject(LModel* w)
+    {
+        removeObject(w);
+        delete w;
     }
 
 
@@ -903,6 +968,9 @@ namespace LGraphics
             modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
         else if (info.loading == MAX_QUALITY)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
+
+        // выключаем флаг, который почему-то ломает подсчёт кассательных и бикасательных
+        modelLoadingFlags &= ~aiProcess_FindInvalidData;
 
         plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj", 0);
         cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj",0);

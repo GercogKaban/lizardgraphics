@@ -100,63 +100,21 @@ namespace LGraphics
 
         friend LApp;
         const char* getObjectType() const override { return "LImage"; }
-        //auto getTexture() const { return texture; } ///< Возвращает текстуру.
 
-#ifdef MEGATEXTURE_LG
         void setDiffuse(const TexturesData& data);
         void setNormal(const TexturesData& data);
         void setDisplacement(const TexturesData& data);
-#else
-        void setDiffuse(GLuint id);
-        void setDiffuse(VkImageView view);
-#endif 
 
         const auto& getTextures() const { return textures; }
         const auto& getDiffuse() const { return textures[0]; }
         const auto& getNormal() const { return textures[1]; }
         const auto& getParallax() const { return textures[2]; }
-        /*!
-        @brief Привязывает текстуру.
-        @param path - путь к изображению.
-        */
-        void bindDiffuse(const char* path);
 
-        /*!
-        @brief Привязывает текстуру.
-        @param bytes - массив байт (rgba).
-        @param size - размер массива bytes.
-        */
-        //void bindTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel = 4);
-        size_t getMipLevels() const { return mipLevels; }
+        virtual void setNormalMapping(bool normalMapping) { this->normalMapping = normalMapping; }
+        virtual void setParallaxMapping(bool parallaxMapping) { this->parallaxMapping = parallaxMapping; }
 
-        /*!
-        @brief Выключает текстуру.
-        */
-        void turnOffTexture();
-
-        /*!
-        @brief Включает текстуру.
-        */
-        void turnOnTexture();
-
-        /*!
-        @brief Включает/выключает текстуру.
-        @param show - true - включить текстуру, false - выключить.
-        */
-        void switchTexture(bool show);
-
-        /*!
-        @brief Включает/выключает текстуру.
-
-        Если была включена, то текстура выключается,
-        если была выключена, то текстура включается.
-        */
-        void switchTexture();
-
-        /*!
-        @brief Включена ли текстура
-        */
-        bool isTextureTurnedOn() const;
+        bool getNormalMapping() const { return normalMapping; }
+        bool getParallaxMapping() const { return parallaxMapping; }
 
         std::string getNormalsPath() const { return normalsPath + imageResourceName; }
         std::string getDiffusePath() const { return diffusePath + imageResourceName; }
@@ -167,23 +125,11 @@ namespace LGraphics
 
     protected:
 
-        //bool imageType;
-        /*!
-        @brief Конструктор.
-        @param path - путь к изображению.
-        */
         LImage(ImageResource resource, RenderingAPI api);
         LImage(const TexturesData& diffuseData, const TexturesData& normalData, const TexturesData& displacementData);
 
-        /*!
-        @brief Конструктор.
-        @param bytes - массив байт (rgba).
-        @param size - размер массива bytes.
-        */
-        //LImage(const unsigned char* bytes, size_t size);
         std::vector<TexturesData> textures;
 
-        //VkImageView texture = VkImageView();
         size_t mipLevels = 1;
 
         bool turnedOn = true; ///< Включена ли текстура.
@@ -195,6 +141,8 @@ namespace LGraphics
         RenderingAPI texturesType;
 
         static LResourceManager resManager;
+        bool normalMapping;
+        bool parallaxMapping;
     };
 }
 

@@ -141,7 +141,6 @@ namespace LGraphics
         if (!app->drawingInShadow)
         {
             glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), app->parallaxSelfShading);
-            glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMapping"), app->parallaxMapping);
             glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
             glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
             glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);

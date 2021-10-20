@@ -29,6 +29,9 @@ namespace LGraphics
         void rotateY(std::vector<LShape*>& changed, LShape* shape, float angle);
         void rotateZ(std::vector<LShape*>& changed, LShape* shape, float angle);
 
+        void setNormalMapping(std::vector<LShape*>& changed, LShape* shape, bool normalMapping);
+        void setParallaxMapping(std::vector<LShape*>& changed, LShape* shape, bool parallaxMapping);
+
     protected:
 
         static void updateBufferParallel(LGClasses type, LWidget::PrimitiveUniforms* buffer, std::vector<LShape*>& changed, size_t begin, size_t end);

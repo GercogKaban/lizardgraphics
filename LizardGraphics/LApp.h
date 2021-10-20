@@ -203,6 +203,13 @@ namespace LGraphics
         bool isDirectoryChanged(const std::string& path, const std::string& cacheFile) const;
         void saveDirectoryChangedTime(const std::string& path, const std::string& filePath) const;
 
+        std::string getRealDiffusePath() const;
+        std::string getRealNormalPath() const;
+        std::string getRealDisplacementPath() const;
+
+        std::string getRealTexturesPath() const;
+        std::string getRealModelsPath() const;
+
         std::time_t GetFileWriteTime(const std::filesystem::path& filename) const
         {
 #if defined ( _WIN32 )
@@ -275,20 +282,15 @@ namespace LGraphics
 
         void addLight(LLight* l);
         void removeLight(LLight* l);
-        void deleteLight(LLight* l)
-        {
-            removeLight(l);
-            delete l;
-        }
+        void deleteLight(LLight* l);
 
-        void addObject(LWidget* w);
-        void removeObject(LWidget* w);
-        void deleteObject(LWidget* w)
-        {
-            removeObject(w);
-            delete w;
-        }
+        void addObject(LImagedShape* w);
+        void removeObject(LImagedShape* w);
+        void deleteObject(LImagedShape* w);
 
+        void addObject(LModel* w);
+        void removeObject(LModel* w);
+        void deleteObject(LModel* w);
 
         //template <typename C>
         //void addObject(LWidget* w, std::vector<C*>& collection)
@@ -357,9 +359,7 @@ namespace LGraphics
         size_t getPoolSize() const { return info.poolSize; }
 
         void setImgui(std::function<void()> func) { imgui = func; }
-
-
-        void safeDelete(LWidget* w) { toDelete.push(w); }
+        void safeDelete(LImagedShape* w) { toDelete.push(w); }
 
         void setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
         void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
@@ -383,8 +383,11 @@ namespace LGraphics
 
         bool drawUI_ = true;
 
-        std::stack<LWidget*> toDelete;
-        std::stack<LWidget*> toCreate;
+        std::stack<LImagedShape*> toDelete;
+        std::stack<LImagedShape*> toCreate;
+
+        std::stack<LModel*> toDeleteM;
+        std::stack<LModel*> toCreateM;
 
         std::function<void()> imgui = []() {};
         glm::vec2 mouseCoords = glm::vec2(0.0f);
@@ -724,10 +727,11 @@ namespace LGraphics
         glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
         float viewRadius = 10.0f;
 
-        std::vector<LImagedShape*> primitives[8];
+        std::vector<LImagedShape*> primitives[7];
+
         std::vector<LLight*> lights[2];
         //std::vector<LWidget*> primitives;
-        //std::vector<LModel*> models;
+        std::vector<LModel*> models;
 
         //int width, height;
 

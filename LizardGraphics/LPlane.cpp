@@ -51,6 +51,16 @@ void LGraphics::LPlane::rotateZ(float angle)
     LImagedShape::rotateZ(objChanged, this, angle);
 }
 
+void LGraphics::LPlane::setNormalMapping(bool normalMapping)
+{
+    LImagedShape::setNormalMapping(objChanged, this, normalMapping);
+}
+
+void LGraphics::LPlane::setParallaxMapping(bool parallaxMapping)
+{
+    LImagedShape::setParallaxMapping(objChanged, this, parallaxMapping);
+}
+
 void LGraphics::LPlane::updateBuffer()
 {
     LImagedShape::updateBuffer(L_PLANE,objChanged, needToResetBuffer, app->plane->getMehes()[0].buffer->getVaoNum(), vbo, uniforms);

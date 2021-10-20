@@ -53,6 +53,7 @@ namespace LGraphics
             glm::vec2 textureSizeNormal;
             glm::vec2 offsetParallax;
             glm::vec2 textureSizeParallax;
+            glm::ivec2 mapping;
         };
 
         //using PlaneUniforms = WidgetUniforms;
