@@ -121,10 +121,11 @@ void LGraphics::LModel::draw()
     }
 }
 
-LGraphics::LModel::LModel(LApp* app, const std::string& path)
+LGraphics::LModel::LModel(LApp* app, const std::string& path, size_t dummy)
     :LShape(app)
 {
-    LResourceManager::loadModel(this, path);
+    std::string pathStr(path);
+    LResourceManager::loadModel(this, pathStr);
     setShader(app->modelShader.get());
 }
 

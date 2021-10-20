@@ -99,6 +99,8 @@ int main(int argc, char** argv)
 
             auto tor = new LTorus(&app, { "Rocks011.jpg" });
             tor->move(startX + off * 5, 0.25f, 0.0f);
+
+            new LModel(&app, { "test" });
             //auto test = new LModel(&app, { "Hajj_Man02.fbx" });
             //test->scale(0.002f, 0.002f, 0.002f);
             //test->rotateZ(180.0f);

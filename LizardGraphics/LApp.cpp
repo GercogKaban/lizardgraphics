@@ -71,6 +71,30 @@ namespace LGraphics
         releaseResources();
     }
 
+    bool LApp::isDirectoryChanged(const std::string& dirPath, const std::string& cacheFile) const
+    {
+        if (!std::filesystem::exists(cacheFile))
+            return true;
+
+        std::ifstream in(cacheFile);
+        std::string atlasChanged;
+        std::getline(in, atlasChanged);
+        in.close();
+
+        auto fileModifiedTime = GetFileWriteTime(dirPath);
+        std::string fileTime = asctime(localtime(&fileModifiedTime));
+        fileTime.pop_back();
+        return atlasChanged != fileTime;
+    }
+
+    void LApp::saveDirectoryChangedTime(const std::string& dirPath, const std::string& filePath) const
+    {
+        std::ofstream out(filePath);
+        auto time = GetFileWriteTime(dirPath);
+        out << asctime(localtime(&time));
+        out.close();
+    }
+
     void LApp::drawScene()
     {
         LCube::drawInstanced();
@@ -93,6 +117,11 @@ namespace LGraphics
 
     void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath)
     {
+        if (std::filesystem::exists(atl.getOutPath()))
+            std::filesystem::remove(atl.getOutPath());
+        if (std::filesystem::exists(atlPath))
+            std::filesystem::remove(atlPath);
+
         std::vector<std::string> textures;
         auto path = std::filesystem::path(texturesPath);
         for (auto& p : std::filesystem::recursive_directory_iterator(path))
@@ -818,27 +847,44 @@ namespace LGraphics
             texturesPath = std::filesystem::read_symlink(std::filesystem::path(texturesPath)).generic_string();
         else
             throw std::runtime_error("please, do symlinks!");
+        
+        const std::string cachefile = "cachedate";
+        const auto texturesQualityDir = texturesPath + '/' + qualityDirectories[info.texturesQuality];
+        megatexture.textureAtl.setFileName(texturesQualityDir + "/diffuse/out.jpg");
+        megatexture.normalAtl.setFileName(texturesQualityDir + "/normal/out.jpg");
+        megatexture.parallaxAtl.setFileName(texturesQualityDir + "/displacement/out.jpg");
 
-        megatexture.textureAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/out.jpg");
-        megatexture.normalAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/out.jpg");
-        megatexture.parallaxAtl.setFileName(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/out.jpg");
-
-
-        if (!isExists(megatexture.textureAtl.getOutPath()) /*|| changed */)
-            generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/", megatexture.textureAtl, 
-              texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
+        const auto texturesQualityDif = texturesQualityDir + "/diffuse/";
+        const auto difCache = texturesQualityDif + cachefile;
+        if (!isExists(megatexture.textureAtl.getOutPath()) || isDirectoryChanged(texturesQualityDif, difCache))
+        {
+            generateMegatexture(texturesQualityDif, megatexture.textureAtl,
+                texturesQualityDir + "/diffuse/atlas_info");
+            saveDirectoryChangedTime(texturesQualityDif, difCache);
+        }
         else  
-            megatexture.textureAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/diffuse/atlas_info");
+            megatexture.textureAtl.loadAtlas(texturesQualityDir + "/diffuse/atlas_info");
 
-        if (!isExists(megatexture.normalAtl.getOutPath()) /*|| changed */)
-            generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/", megatexture.normalAtl, 
-                texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/atlas_info1");
+        const auto texturesQualityNor = texturesQualityDir + "/normal/";
+        const auto norCache = texturesQualityNor + cachefile;
+        if (!isExists(megatexture.normalAtl.getOutPath()) || isDirectoryChanged(texturesQualityNor, norCache))
+        {
+            generateMegatexture(texturesQualityNor, megatexture.normalAtl,
+                texturesQualityDir + "/normal/atlas_info1");
+            saveDirectoryChangedTime(texturesQualityNor, norCache);
+        }
+
         else
-            megatexture.normalAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/normal/atlas_info1");
+            megatexture.normalAtl.loadAtlas(texturesQualityDir + "/normal/atlas_info1");
 
-        if (!isExists(megatexture.parallaxAtl.getOutPath()) /*|| changed */)
-            generateMegatexture(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/", megatexture.parallaxAtl,
-                texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/atlas_info2");
+        const auto texturesQualityDis = texturesQualityDir + "/displacement/";
+        const auto disCache = texturesQualityDis + cachefile;
+        if (!isExists(megatexture.parallaxAtl.getOutPath()) || isDirectoryChanged(texturesQualityDis, disCache))
+        {
+            generateMegatexture(texturesQualityDis, megatexture.parallaxAtl,
+                texturesQualityDir + "/displacement/atlas_info2");
+            saveDirectoryChangedTime(texturesQualityDis, disCache);
+        }
         else
             megatexture.parallaxAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/atlas_info2");
 
@@ -858,13 +904,13 @@ namespace LGraphics
         else if (info.loading == MAX_QUALITY)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
 
-        plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj" );
-        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj");
-        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj");
-        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj");
-        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj");
-        cylinder = new LModel(this, std::string(LIB_PATH) + "/primitives/cylinder.obj");
-        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj");
+        plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj", 0);
+        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj",0);
+        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj", 0);
+        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj", 0);
+        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj", 0);
+        cylinder = new LModel(this, std::string(LIB_PATH) + "/primitives/cylinder.obj", 0);
+        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj", 0);
 
         setCursorEnabling(!isCursorEnabled());
     }

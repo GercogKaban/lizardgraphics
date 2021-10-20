@@ -19,6 +19,8 @@ namespace LGraphics
 
         struct ModelResource
         {
+            ModelResource(const char* name)
+                :name(name){}
             std::string name;
         };
 
@@ -39,7 +41,7 @@ namespace LGraphics
 
     protected:
 
-        LModel(LApp* app, const std::string& path);
+        LModel(LApp* app, const std::string& path, size_t dummy);
         void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) override {}
         std::vector<Mesh> meshes;
     };

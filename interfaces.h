@@ -244,7 +244,7 @@ public:
 
                 if (pressed[i])
                 {
-                    auto& degrees = obj->getRotateDegrees();
+                    auto degrees = obj->getRotateDegrees();
                     auto ranges = sliderRanges[i];
 
                     //app->lockFrontViewCamera();

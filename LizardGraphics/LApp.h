@@ -199,6 +199,26 @@ namespace LGraphics
         void updateTextures();
 
         void drawScene();
+
+        bool isDirectoryChanged(const std::string& path, const std::string& cacheFile) const;
+        void saveDirectoryChangedTime(const std::string& path, const std::string& filePath) const;
+
+        std::time_t GetFileWriteTime(const std::filesystem::path& filename) const
+        {
+#if defined ( _WIN32 )
+            {
+                struct stat fileInfo;
+                if (stat(filename.generic_string().c_str(), &fileInfo) != 0)
+                    throw std::runtime_error("Failed to get last write time.");
+                return fileInfo.st_mtime;
+            }
+#else
+            {
+                auto fsTime = std::filesystem::last_write_time(filename);
+                return decltype (fsTime)::clock::to_time_t(fsTime);
+            }
+#endif
+        }
         
         struct Megatexture
         {
