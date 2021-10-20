@@ -102,11 +102,7 @@ int main(int argc, char** argv)
             auto tor = new LTorus(&app, { "Rocks011.jpg" });
             tor->move(startX + off * 5, 0.25f, 0.0f);
 
-            auto test = new LModel(&app, "Hajj_Man02.fbx","Hajj_Man02_Color.jpg", "","Hajj_Man02_Displacement.jpg");
-            test->scale(0.002f, 0.002f, 0.002f);
-            test->move(0.0f, yOffset, 0.0f);
         }
-
             //c = new LCube(&app, { "Leather009.jpg" });
 
         
@@ -125,7 +121,10 @@ int main(int argc, char** argv)
         //new LSkyBox(&app, {"red"});
     }
 
-    bool flag = true;
+    auto test = new LModel(&app, "Hajj_Man02.fbx", "Hajj_Man02_Color.jpg", "", "Hajj_Man02_Displacement.jpg");
+    test->scale(0.002f, 0.002f, 0.002f);
+    test->move(0.0f, yOffset, 0.0f);
+
     app.setBeforeDrawingFunc([&]()
         {
             if (app.isCursorEnabled())
@@ -173,6 +172,8 @@ int main(int argc, char** argv)
                 cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
             if (app.isPressed(GLFW_KEY_D))
                 cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            if (app.isPressed(GLFW_KEY_X))
+                test->setParallaxMappingAllMeshes(!test->getParallaxMapping());
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);

@@ -972,13 +972,13 @@ namespace LGraphics
         // выключаем флаг, который почему-то ломает подсчёт кассательных и бикасательных
         modelLoadingFlags &= ~aiProcess_FindInvalidData;
 
-        plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj", 0);
-        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj",0);
-        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj", 0);
-        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj", 0);
-        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj", 0);
-        cylinder = new LModel(this, std::string(LIB_PATH) + "/primitives/cylinder.obj", 0);
-        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj", 0);
+        plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj",true,0);
+        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj", true,0);
+        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj", true, 0);
+        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj", true, 0);
+        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj", true, 0);
+        cylinder = new LModel(this, std::string(LIB_PATH) + "/primitives/cylinder.obj", true, 0);
+        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj", true, 0);
 
         setCursorEnabling(!isCursorEnabled());
     }

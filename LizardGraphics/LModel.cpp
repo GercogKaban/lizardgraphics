@@ -57,11 +57,11 @@ void LGraphics::LModel::setParallaxMappingAllMeshes(bool parallaxMapping)
         meshes[i].image->setParallaxMapping(parallaxMapping);
 }
 
-LGraphics::LModel::LModel(LApp* app, ModelResource modelResource)
+LGraphics::LModel::LModel(LApp* app, ModelResource modelResource, bool cropTextureCoords)
     :LShape(app)
 {
     LOG_CALL
-    LResourceManager::loadModel(this, modelResource);
+    LResourceManager::loadModel(this, modelResource, cropTextureCoords);
     setShader(app->modelShader.get());
     app->toCreateM.push(this);
 #ifdef VULKAN
@@ -71,11 +71,11 @@ LGraphics::LModel::LModel(LApp* app, ModelResource modelResource)
 }
 
 LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::string& diffuseName, 
-    const std::string& normalsName, const std::string& displacementName)
+    const std::string& normalsName, const std::string& displacementName, bool cropTextureCoords)
     :LShape(app)
 {
     LOG_CALL
-    LResourceManager::loadModel(this, ModelResource{ modelName });
+    LResourceManager::loadModel(this, ModelResource{ modelName },cropTextureCoords);
 
     setDiffuse(LResourceManager::loadMaterialTextures(app->getRealDiffusePath() + diffuseName));
     setNormal(LResourceManager::loadMaterialTextures(app->getRealNormalPath() + normalsName));
@@ -93,11 +93,11 @@ LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::st
 }
 
 LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::vector<std::string>& diffuseNames, 
-    const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames)
+    const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames, bool cropTextureCoords)
     :LShape(app)
 {
     LOG_CALL
-    LResourceManager::loadModel(this, { modelName });
+    LResourceManager::loadModel(this, { modelName },cropTextureCoords);
 
     for (size_t i = 0; i < diffuseNames.size(); ++i)
     {
@@ -116,7 +116,7 @@ LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::ve
     rotateX(180.0f);
 }
 
-LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices)
+LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, bool cropTextureCoords)
     :LShape(app)
 {
     res.normals = false;
@@ -127,7 +127,8 @@ LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vecto
     rotateX(180.0f);
 }
 
-LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, 
+    const std::vector<uint32_t>& indices)
     :LShape(app)
 {
     res.normals = false;
@@ -203,11 +204,11 @@ void LGraphics::LModel::draw()
     }
 }
 
-LGraphics::LModel::LModel(LApp* app, const std::string& path, size_t dummy)
+LGraphics::LModel::LModel(LApp* app, const std::string& path, bool cropTextureCoords,size_t dummy)
     :LShape(app)
 {
     std::string pathStr(path);
-    LResourceManager::loadModel(this, pathStr);
+    LResourceManager::loadModel(this, pathStr, cropTextureCoords);
     setShader(app->modelShader.get());
 }
 

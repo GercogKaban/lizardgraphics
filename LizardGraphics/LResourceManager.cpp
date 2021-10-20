@@ -191,7 +191,7 @@ namespace LGraphics
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void LResourceManager::loadModel(LModel* model, LModel::ModelResource res)
+    void LResourceManager::loadModel(LModel* model, LModel::ModelResource res, bool cropTextureCoords)
     {
         LOG_CALL
         if (auto it = models.find(res.name); it != models.end())
@@ -201,11 +201,11 @@ namespace LGraphics
         }
         const auto modelPath = app->getRealModelsPath() + res.name;
         PRINTLN(modelPath);
-        loadModel(model, modelPath);
+        loadModel(model, modelPath, cropTextureCoords);
         models.insert(std::make_pair(res.name, model));
     }
 
-    void LResourceManager::loadModel(LModel* model, const std::string& modelPath)
+    void LResourceManager::loadModel(LModel* model, const std::string& modelPath, bool cropTextureCoords)
     {
         Assimp::Importer importer;
 
@@ -214,7 +214,7 @@ namespace LGraphics
             throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
         //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
         //m_GlobalInverseTransform.Inverse();
-        processNode(app, model->meshes, scene->mRootNode, scene);
+        processNode(app, model->meshes, scene->mRootNode, scene, cropTextureCoords);
     }
 
     void LResourceManager::createImageView(uint8_t* pixels, int texWidth,
@@ -250,22 +250,22 @@ namespace LGraphics
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view, miplevels);
     }
 
-    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene)
+    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene, bool cropTextureCoords)
     {
         LOG_CALL
         // process all the node's meshes (if any)
         for (uint32_t i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(processMesh(app,mesh, scene));
+            meshes.push_back(processMesh(app,mesh, scene, cropTextureCoords));
         }
 
         // then do the same for each of its children
         for (uint32_t i = 0; i < node->mNumChildren; i++)
-            processNode(app,meshes, node->mChildren[i], scene);
+            processNode(app,meshes, node->mChildren[i], scene, cropTextureCoords);
     }
 
-    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene)
+    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, bool cropTextureCoords)
     {
         LOG_CALL
         LModel::Mesh out;
@@ -284,7 +284,7 @@ namespace LGraphics
             normals.z = mesh->mNormals[i].z;
             if (mesh->mTextureCoords[0])
             {
-                const auto crop = 0.009f;
+                const auto crop = cropTextureCoords? 0.009f : 0.0f;
                 textureCoords.x = mesh->mTextureCoords[0][i].x > 0? mesh->mTextureCoords[0][i].x - crop : mesh->mTextureCoords[0][i].x + crop;
                 textureCoords.y = mesh->mTextureCoords[0][i].y > 0 ? mesh->mTextureCoords[0][i].y - crop : mesh->mTextureCoords[0][i].y + crop;
             }

@@ -103,7 +103,7 @@ void main()
         viewPos_ = TBN * viewPos;
     }
 
-    if (parallaxMapping)
+    if (parallaxMapping != 0)
     {
         TexCoordsParallax = vec2(
 		    textureCoords.x *textureSizeParallax.x + offsetParallax.x, 
@@ -114,7 +114,7 @@ void main()
         sz_ = textureSizeParallax;
     }
 
-    if (normalMapping)
+    if (normalMapping != 0)
     {
         TexCoordsNormal = vec2(
 		    textureCoords.x *textureSizeNormal.x + offsetNormal.x, 

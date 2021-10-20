@@ -59,8 +59,8 @@ namespace LGraphics
 
     private:
 
-        static void  loadModel(LModel* model, LModel::ModelResource res);
-        static void  loadModel(LModel* model, const std::string& path);
+        static void  loadModel(LModel* model, LModel::ModelResource res, bool cropTextureCoords);
+        static void  loadModel(LModel* model, const std::string& path, bool cropTextureCoords);
         static void* loadTexture(const char* path, size_t& mipLevels);
         static void* loadCubeTexture(const std::vector<std::string>& paths);
         static void setTexture(const std::string& texturePath, TexturesData& data, void* texture);
@@ -71,8 +71,8 @@ namespace LGraphics
             int texHeight, int texChannels, const char* path, size_t& miplevels,
             VkImageView& texture, VkImage& image, VmaAllocation& textureImageMemory);
 
-        static void processNode(LApp* app, std::vector<LModel::Mesh>&, aiNode* node, const aiScene* scene);
-        static LModel::Mesh processMesh(LApp* app, aiMesh* mesh, const aiScene* scene);
+        static void processNode(LApp* app, std::vector<LModel::Mesh>&, aiNode* node, const aiScene* scene, bool cropTextureCoords);
+        static LModel::Mesh processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, bool cropTextureCoords);
         static const TexturesData& loadMaterialTextures(aiMaterial* mat, aiTextureType type);
         static const TexturesData& LResourceManager::loadMaterialTextures(const std::string& path);
 
