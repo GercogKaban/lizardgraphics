@@ -54,13 +54,10 @@ int main(int argc, char** argv)
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
     app.fog.isEnabled = true;
 
-    //auto dirLight = new LDirectionalLight(&app);
-    //dirLight->setPosition(glm::vec3(-0.5, 0, 0));
-    //dirLight->setDirection(glm::vec3(6, 0, 0));
-    auto s = new LPointLight(&app);
-
-    // -0.5 0 0
-// 6 0 0
+    auto dirLight = new LDirectionalLight(&app);
+    dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
+    dirLight->setDirection(glm::vec3(6, 0, 0));
+    //auto s = new LPointLight(&app);
     //s->setRadius(25);
 
     const float yOffset = -0.3f;
@@ -87,7 +84,7 @@ int main(int argc, char** argv)
                     p->setNormalMapping(true);
                 }
 
-            const float off = 1.0f;
+            const float off = 1.5f;
             const float startX = 1.0f;
 
             auto cyl = new LCylinder(&app, { "Rocks011.jpg" });
@@ -143,7 +140,7 @@ int main(int argc, char** argv)
             //static auto cMove = c->getMove();
             //const auto move = c->getMove();
 
-            const float radius = poolSize + 13.0f;
+            const float radius = 10.0f;
             const float shiftCoef = -1.05f;
             //glm::vec3 shift = glm::normalize(move - s->getPosition()) * shiftCoef;
 
@@ -161,6 +158,10 @@ int main(int argc, char** argv)
 
             GLfloat camX = sin(glfwGetTime());
             GLfloat camZ = cos(glfwGetTime());
+
+            dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
+                camZ * radius));
+
 
             //c->move(cMove.x + radius * camX, c->getMove().y, cMove.z + radius * camZ);
 
@@ -185,7 +186,7 @@ int main(int argc, char** argv)
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            s->setPosition(cameraPos);
+            //s->setPosition(cameraPos);
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)

@@ -162,7 +162,7 @@ void LGraphics::LPointLight::setQuadratic(float quadratic)
 void LGraphics::LDirectionalLight::setLightSpaceMatrix()
 {
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-    glm::mat4 lightView = glm::lookAt(position, direction, glm::vec3(0.0, 1.0, 0.0));
+    glm::mat4 lightView = glm::lookAt(position, direction, app->getCameraUp());
     lightSpaceMatrix = lightProjection * lightView;
 }
 
@@ -172,11 +172,11 @@ LGraphics::LDirectionalLight::LDirectionalLight(LApp* app)
 	app->addLight(this);
 	position = glm::vec3(0.0f, 3.0f, 5.0f);
 	ambient = glm::vec3(0.1f, 0.1f, 0.1f);
-	diffuse = glm::vec3(0.4f, 0.4f, 0.4f);
+	diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
 	specular = glm::vec3(0.9f, 0.9f, 0.9f);
-	direction = glm::vec3(7.5, 0.0f, 7.5f);
+	direction = glm::vec3(0.0, 0.0f, 0.0f);
 	nearPlane = 0.1f;
-	farPlane = 35.0f;
+	farPlane = 100.0f;
 	changed = true;
 }
 

@@ -216,8 +216,6 @@ float ShadowCalculation(vec3 lightDir)
     // calculate bias (based on depth map resolution and slope)
     //vec3 lightDir = normalize(lightPos - FragPos);
     float bias = max(0.05 * (1.0 - dot(Normal_, lightDir)), 0.005);
-    // check whether current frag pos is in shadow
-    //float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -232,8 +230,8 @@ float ShadowCalculation(vec3 lightDir)
     shadow /= 9.0;
     
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    //if(projCoords.z > 1.0)
-        //shadow = 0.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
         
     return shadow;
 }
@@ -245,16 +243,16 @@ vec3 CalcDirLight(DirLight light, vec3 viewDir)
     vec3 lightDir = normalize(LightPos - FragPos);
     // diffuse shading
     float diff = max(dot(lightDir,Normal_), 0.0);
-    vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));
     // specular shading
     vec3 reflectDir = reflect(-lightDir, Normal_);
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
     // combine results
     vec3 ambient = light.ambient; //* vec3(texture(material.diffuse, TexCoords));
+    vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec; //* vec3(texture(material.specular, TexCoords));
-    float shadow = 0.0f;
-    if (light.calculateShadow)
+    float shadow = 0.0;
+    if (light.calculateShadow == true)
        shadow = ShadowCalculation(lightDir); 
     return (ambient + (1.0 - shadow) * (diffuse + specular));
 }

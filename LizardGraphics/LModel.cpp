@@ -186,6 +186,8 @@ void LGraphics::LModel::draw()
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
                 glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+                glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
                 glActiveTexture(GL_TEXTURE3);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
@@ -193,8 +195,6 @@ void LGraphics::LModel::draw()
             }
         }
 
-        glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
-        glActiveTexture(GL_TEXTURE2);
         glBindVertexArray(meshes[i].buffer->getVaoNum());
         if (meshes[i].buffer->getIndices().size())
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);

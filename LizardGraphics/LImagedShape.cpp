@@ -93,12 +93,12 @@ namespace LGraphics
         shader->use();
         setGlobalUniforms(shaderProgram);
         updateBuffer(type,changed,needToResetBuffer,vao,vbo,uniforms);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
         if (!app->drawingInShadow)
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
             glActiveTexture(GL_TEXTURE3);

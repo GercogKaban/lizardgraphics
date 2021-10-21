@@ -80,8 +80,8 @@ void main()
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
-    vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
-    projCoords = projCoords_ * 0.5 + 0.5;
+    //vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
+    projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
     TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 

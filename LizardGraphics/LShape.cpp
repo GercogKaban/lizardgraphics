@@ -124,7 +124,6 @@ namespace LGraphics
         return move_;
     }
 
-    // нужно проверить эту функцию
     void LShape::turnOffColor()
     {
         color_ = rgbToFloat(1, 1, 1);
@@ -134,11 +133,12 @@ namespace LGraphics
     {
         const auto proj = app->getProjectionMatrix();
         const auto view = app->getViewMatrix();
-
+        const auto lightSpaceMatrix = app->currentLight->getLightspaceMatrix();
+        
         if (app->currentLight)
-            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE, 
-                glm::value_ptr(app->currentLight->getLightspaceMatrix()));
-
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE,
+                glm::value_ptr(lightSpaceMatrix));
+ 
         if (!app->drawingInShadow)
         {
             glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), false);
@@ -161,23 +161,20 @@ namespace LGraphics
                 sprintf(res, "pointSources[%zu]", i);
 
                 const auto& l = *(LPointLight*)app->lights[L_POINT_LIGHT][i];
-                glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
 
-                //if (l.calculateShadow)
-                {
-                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
-                        l.position.x, l.position.y, l.position.z);
-                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
-                        l.ambient.x, l.ambient.y, l.ambient.z);
-                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
-                        l.diffuse.x, l.diffuse.y, l.diffuse.z);
-                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".specular").data()),
-                        l.specular.x, l.specular.y, l.specular.z);
+                 glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
+                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
+                    l.position.x, l.position.y, l.position.z);
+                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
+                    l.ambient.x, l.ambient.y, l.ambient.z);
+                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
+                    l.diffuse.x, l.diffuse.y, l.diffuse.z);
+                glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".specular").data()),
+                    l.specular.x, l.specular.y, l.specular.z);
 
-                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".constant").data()), l.constant);
-                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".linear").data()), l.linear);
-                    glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".quadratic").data()), l.quadratic);
-                }
+                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".constant").data()), l.constant);
+                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".linear").data()), l.linear);
+                glUniform1f(glGetUniformLocation(shaderProgram, (std::string(res) + ".quadratic").data()), l.quadratic);
             }
             
             // setting spot lights
@@ -215,7 +212,7 @@ namespace LGraphics
             {
                 sprintf(res, "dirSources[%zu]", i);
 
-                const auto& l = *(LSpotLight*)app->lights[L_DIRECTIONAL_LIGHT][i];
+                const auto& l = *(LDirectionalLight*)app->lights[L_DIRECTIONAL_LIGHT][i];
 
                 glUniform1i(glGetUniformLocation(shaderProgram, (std::string(res) + ".calculateShadow").data()), l.calculateShadow);
 
@@ -223,8 +220,8 @@ namespace LGraphics
                 {
                     glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".position").data()),
                         l.position.x, l.position.y, l.position.z);
-                    glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".direction").data()),
-                        l.direction.x, l.direction.y, l.direction.z);
+                    //glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".direction").data()),
+                        //l.direction.x, l.direction.y, l.direction.z);
                     glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".ambient").data()),
                         l.ambient.x, l.ambient.y, l.ambient.z);
                     glUniform3f(glGetUniformLocation(shaderProgram, (std::string(res) + ".diffuse").data()),
