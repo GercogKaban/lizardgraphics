@@ -53,7 +53,7 @@ void main()
         vec3 Bitangent = normalize(mat3(model_)*bitangent);
         Normal =         normalize(mat3(model_)*normals);
         Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);
-        TBN = transpose (mat3(Tangent, Bitangent, Normal));    
+        TBN = transpose(mat3(Tangent, Bitangent, Normal));    
 
         FragPos  = TBN * FragPos_;
         viewPos_ = TBN * viewPos;
@@ -80,6 +80,8 @@ void main()
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
+    vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
+    projCoords = projCoords_ * 0.5 + 0.5;
 
     TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
@@ -87,9 +89,6 @@ void main()
     model = model_;
     TexCoords_ = textureCoords;
 
-    // perform perspective divide
-    vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
-    projCoords = projCoords_ * 0.5 + 0.5;
 
     gl_Position = proj * eyeSpacePosition;
 }

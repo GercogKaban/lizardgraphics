@@ -59,21 +59,6 @@ void LGraphics::LLight::setFarPlane(float farPlane)
 	changed = true;
 }
 
-void LGraphics::LLight::turnOnShadowCalc()
-{
-	calculateShadow = true;
-}
-
-void LGraphics::LLight::turnOffShadowCalc()
-{
-	calculateShadow = false;
-}
-
-void LGraphics::LLight::switchShadowCalc()
-{
-	calculateShadow = !calculateShadow;
-}
-
 void LGraphics::LLight::setShadowsCalculating(bool calculateShadows)
 {
 	this->calculateShadow = calculateShadow;
@@ -124,6 +109,7 @@ LGraphics::LSpotLight::LSpotLight(LApp* app)
 
 	nearPlane = 0.1f;
 	farPlane = 35.0f;
+	calculateShadow = false;
 	changed = true;
 }
 
@@ -142,8 +128,9 @@ LGraphics::LPointLight::LPointLight(LApp* app)
 	quadratic = 0.07f;
 
 	ambient = glm::vec3(0.2f,0.2f,0.2f);
-	diffuse = glm::vec3(0.4f, 0.4f, 0.4f);
+	diffuse = glm::vec3(0.75f, 0.75f, 0.75f);
 	specular = glm::vec3(0.9f, 0.9f, 0.9f);
+	calculateShadow = false;
 }
 
 void LGraphics::LPointLight::setLightSpaceMatrix()
@@ -182,11 +169,14 @@ void LGraphics::LDirectionalLight::setLightSpaceMatrix()
 LGraphics::LDirectionalLight::LDirectionalLight(LApp* app)
 	:LLight(app)
 {
-	position = glm::vec3(0.0f, 0.0f, 0.0f);
-	ambient = glm::vec3(0.5f, 0.5f, 0.5f);
-	diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
-	specular = glm::vec3(0.3f, 0.3f, 0.3f);
+	app->addLight(this);
+	position = glm::vec3(0.0f, 3.0f, 5.0f);
+	ambient = glm::vec3(0.1f, 0.1f, 0.1f);
+	diffuse = glm::vec3(0.4f, 0.4f, 0.4f);
+	specular = glm::vec3(0.9f, 0.9f, 0.9f);
 	direction = glm::vec3(7.5, 0.0f, 7.5f);
+	nearPlane = 0.1f;
+	farPlane = 35.0f;
 	changed = true;
 }
 

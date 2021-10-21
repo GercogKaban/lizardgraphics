@@ -81,11 +81,14 @@ uniform int selfShading;
 uniform float heightScale;
 uniform ivec2 screenSize;
 
-uniform DirLight dirLight;
+
 uniform PointLight pointSources[MAX_LIGHTS];
 uniform SpotLight spotSources[MAX_LIGHTS];
+uniform DirLight dirSources[MAX_LIGHTS];
+
 uniform int pointSourcesCount = 0;
 uniform int spotSourcesCount = 0;
+uniform int dirSourcesCount = 0;
 uniform Fog fog;
 
 vec3 CalcDirLight(DirLight light, vec3 viewDir);
@@ -239,29 +242,32 @@ float ShadowCalculation(vec3 lightDir)
 vec3 CalcDirLight(DirLight light, vec3 viewDir)
 {
     vec3 LightPos = TBN * light.position;
+    vec3 lightDir = normalize(LightPos - FragPos);
     // diffuse shading
-    float diff = max(dot(light.direction,Normal_), 0.0);
+    float diff = max(dot(lightDir,Normal_), 0.0);
     vec3 diffuse = light.diffuse * diff; //* vec3(texture(material.diffuse, TexCoords));
     // specular shading
-    vec3 lightDir = normalize(LightPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, Normal_);
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
     // combine results
     vec3 ambient = light.ambient; //* vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec; //* vec3(texture(material.specular, TexCoords));
-    //float shadow = 0.0f;
-    float shadow = ShadowCalculation(lightDir); 
+    float shadow = 0.0f;
+    if (light.calculateShadow)
+       shadow = ShadowCalculation(lightDir); 
     return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 // calculates the color when using a point light.
 vec3 CalcPointLight(PointLight light, vec3 viewDir)
 {
-    vec3 LightPos = TBN* light.position;
+    vec3 LightPos = light.position;
+    if (parallaxMapping_ != 0 || normalMapping_ != 0)
+        LightPos = TBN* light.position;
     vec3 lightDir = normalize(LightPos - FragPos);
     // diffuse shading
-    float diff = max(dot(Normal_, viewDir), 0.0);
+    float diff = max(dot(Normal_, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
@@ -269,17 +275,15 @@ vec3 CalcPointLight(PointLight light, vec3 viewDir)
     float distance = length(LightPos - FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // combine results
-    vec3 ambient = light.ambient;
-    vec3 diffuse = light.diffuse * diff;
-    vec3 specular = light.specular * spec;
-    ambient *= attenuation;
-    diffuse *= attenuation;
-    specular *= attenuation;
-    float shadow = 0.0f;
-    if (selfShading)
-        shadow = parallaxSoftShadowMultiplier(lightDir, TexCoord, texture(parallaxMap, TexCoord).r);
-    //float shadow = 0.0f;//ShadowCalculation(light.position); 
-    return (ambient + pow((1.0 - shadow), 6.0) * diffuse + specular);
+    vec3 ambient = light.ambient * attenuation;
+    vec3 diffuse = light.diffuse * attenuation * diff;
+    vec3 specular = light.specular * attenuation * spec;
+    float shadow = 0.0;
+    //if (selfShading)
+        //shadow = parallaxSoftShadowMultiplier(lightDir, TexCoord, texture(parallaxMap, TexCoord).r);
+
+    //ShadowCalculation(light.position); 
+    return (ambient + diffuse + specular);
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
@@ -299,7 +303,6 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
         vec3 diffuse = light.diffuse * diff; //* texture(1.0f, TexCoords).rgb;  
         
         // specular
-
         vec3 halfwayDir = normalize(lightDir + viewDir); 
         float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
         //vec3 reflectDir = reflect(-lightDir, Normal_);  
@@ -314,13 +317,13 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
         diffuse   *= attenuation;
         specular *= attenuation;   
 
-        float shadow = ShadowCalculation(light.position); 
-            
+        float shadow = 0.0f;
+        if (light.calculateShadow)
+            shadow = ShadowCalculation(lightPos);      
         result = ambient + (1.0 - shadow) + diffuse + specular;
     }
     else 
     {
-        // else, use ambient light so scene isn't completely dark outside the spotlight.
         result = light.ambient;
     }
 	return result;
@@ -328,6 +331,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 
 void main()
 {    
+    float ambient = 0.2f;
     float fogCoordinate = abs(eyeSpacePosition.z / eyeSpacePosition.w);
     if(fog.isEnabled)
     {    
@@ -371,21 +375,19 @@ void main()
     else
         Normal0 = Normal;
 
-    if (!gl_FrontFacing)
-        Normal_ = -Normal0;
-    else
-        Normal_ = Normal0;
+    // need turning on for each object individually
+    //if (!gl_FrontFacing)
+        //Normal_ = -Normal0;
+    //else
+    Normal_ = Normal0;
 
-    const bool lighting = true;
     vec3 result = vec3(0.0);
-    if (lighting)
-    {
-        // result += CalcDirLight(dirLight, viewDir);
-        for (int i = 0; i < pointSourcesCount; ++i)
-        	result += CalcPointLight(pointSources[i],viewDir);
-        for (int i = 0; i < spotSourcesCount; ++i)
-        	result += CalcSpotLight(spotSources[i],viewDir);
-    }
+    for (int i = 0; i < pointSourcesCount; ++i)
+        result += CalcPointLight(pointSources[i],viewDir);
+    for (int i = 0; i < spotSourcesCount; ++i)
+        result += CalcSpotLight(spotSources[i],viewDir);
+    for (int i = 0; i < dirSourcesCount; ++i)
+        result += CalcDirLight(dirSources[i],viewDir);
 
     color = vec4(result,1.0) * texture(diffuseMap, TexCoord);
     if(fog.isEnabled)

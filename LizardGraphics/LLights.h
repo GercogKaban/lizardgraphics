@@ -35,11 +35,8 @@ namespace LGraphics
 		float getFarPlane() const { return farPlane; }
 
 		bool getShadowCalculating() const { return calculateShadow; }
-		const auto& getLightspaceMatric() const { return lightSpaceMatrix; }
+		const auto& getLightspaceMatrix() const { return lightSpaceMatrix; }
 
-		void turnOnShadowCalc();
-		void turnOffShadowCalc();
-		void switchShadowCalc();
 		void setShadowsCalculating(bool calculateShadows);
 
 	protected:

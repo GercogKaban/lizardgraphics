@@ -36,6 +36,7 @@ namespace LGraphics
     {
         L_POINT_LIGHT,
         L_SPOT_LIGHT,
+        L_DIRECTIONAL_LIGHT,
     };
 
     enum RenderingAPI : uint8_t

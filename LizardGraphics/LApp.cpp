@@ -143,6 +143,21 @@ namespace LGraphics
         }
     }
 
+    void LApp::drawSceneForLight(LLight* l)
+    {
+        if (l->calculateShadow)
+        {
+            currentLight = l;
+            currentDepthMap = l->depthMap;
+            l->setLightSpaceMatrix();
+            glViewport(0, 0, l->shadowWidth, l->shadowHeight);
+            glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            drawScene();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+    }
+
     void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath)
     {
         if (std::filesystem::exists(atl.getOutPath()))
@@ -298,30 +313,13 @@ namespace LGraphics
                     drawingInShadow = true;
 
                     FOR(i, 0, lights[L_SPOT_LIGHT].size())
-                    {
-                        auto& l = lights[L_SPOT_LIGHT][i];
-                        currentDepthMap = l->depthMap;
-                        // нужен фикс
-                        l->setLightSpaceMatrix();
-                        glViewport(0, 0, l->shadowWidth, l->shadowHeight);
-                        glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
-                        glClear(GL_DEPTH_BUFFER_BIT);
-                        drawScene();
-                        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                    }
+                        drawSceneForLight(lights[L_SPOT_LIGHT][i]);
 
                     FOR(i, 0, lights[L_POINT_LIGHT].size())
-                    {
-                        auto& l = lights[L_POINT_LIGHT][i];
-                        currentDepthMap = l->depthMap;
-                        // нужен фикс
-                        l->setLightSpaceMatrix();
-                        glViewport(0, 0, l->shadowWidth, l->shadowHeight);
-                        glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
-                        glClear(GL_DEPTH_BUFFER_BIT);
-                        drawScene();
-                        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                    }
+                        drawSceneForLight(lights[L_POINT_LIGHT][i]);
+
+                    FOR(i, 0, lights[L_DIRECTIONAL_LIGHT].size())
+                        drawSceneForLight(lights[L_DIRECTIONAL_LIGHT][i]);
 
                     drawingInShadow = false;
                     glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
@@ -593,6 +591,13 @@ namespace LGraphics
             l->id = lights[L_SPOT_LIGHT].size();
             lights[L_SPOT_LIGHT].push_back(l);
         }
+        else if (dynamic_cast<LDirectionalLight*>(l))
+        {
+            if (lights[L_DIRECTIONAL_LIGHT].size() + 1 > MAX_LIGHTS)
+                throw std::runtime_error("too many spotlight sources");
+            l->id = lights[L_DIRECTIONAL_LIGHT].size();
+            lights[L_DIRECTIONAL_LIGHT].push_back(l);
+        }
     }
 
     void LApp::removeLight(LLight* l)
@@ -601,6 +606,8 @@ namespace LGraphics
             fastErase(lights[L_POINT_LIGHT], l->id);
         else if (dynamic_cast<LSpotLight*>(l))
             fastErase(lights[L_SPOT_LIGHT], l->id);
+        else if (dynamic_cast<LDirectionalLight*>(l))
+            fastErase(lights[L_DIRECTIONAL_LIGHT], l->id);
     }
 
     void LApp::deleteLight(LLight* l)
@@ -973,12 +980,12 @@ namespace LGraphics
         modelLoadingFlags &= ~aiProcess_FindInvalidData;
 
         plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj",true,0);
-        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj", true,0);
-        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj", true, 0);
-        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj", true, 0);
-        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj", true, 0);
+        cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj", false,0);
+        sphere = new LModel(this, std::string(LIB_PATH) + "/primitives/sphere.obj", false, 0);
+        icosphere = new LModel(this, std::string(LIB_PATH) + "/primitives/icosphere.obj", false, 0);
+        cone = new LModel(this, std::string(LIB_PATH) + "/primitives/cone.obj", false, 0);
         cylinder = new LModel(this, std::string(LIB_PATH) + "/primitives/cylinder.obj", true, 0);
-        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj", true, 0);
+        torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj", false, 0);
 
         setCursorEnabling(!isCursorEnabled());
     }
@@ -1728,7 +1735,7 @@ namespace LGraphics
 
     void LApp::createUniformBuffers()
     {
-        LOG_CALL
+        /*LOG_CALL
         uniformBuffers.resize(wd->ImageCount);
         uniformBuffersMemory.resize(wd->ImageCount);
 
@@ -1744,29 +1751,29 @@ namespace LGraphics
 
         for (size_t i = 0; i < wd->ImageCount; i++)
             createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+                VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);*/
     }
 
     void LApp::createDescriptorPool()
     {
-        LOG_CALL
-        std::array<VkDescriptorPoolSize, 2> poolSizes{};
-        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
-        //poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        //LOG_CALL
+        //std::array<VkDescriptorPoolSize, 2> poolSizes{};
+        //poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        //poolSizes[0].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
+        ////poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        ////poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
+        //poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         //poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
-        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
 
-        VkDescriptorPoolCreateInfo poolInfo{};
-        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-        poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
+        //VkDescriptorPoolCreateInfo poolInfo{};
+        //poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        //poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        //poolInfo.pPoolSizes = poolSizes.data();
+        //poolInfo.maxSets = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
 
-        if (vkCreateDescriptorPool(g_Device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor pool!");
-        }
+        //if (vkCreateDescriptorPool(g_Device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+        //    throw std::runtime_error("failed to create descriptor pool!");
+        //}
     }
 
     void LApp::createImageViews()
@@ -1823,66 +1830,66 @@ namespace LGraphics
 
     void LApp::createDescriptorSets()
     {
-        LOG_CALL
-        std::vector<VkDescriptorSetLayout> layouts(info.poolSize * wd->ImageCount, descriptorSetLayout);
-        VkDescriptorSetAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
-        allocInfo.pSetLayouts = layouts.data();
+     //   LOG_CALL
+     //   std::vector<VkDescriptorSetLayout> layouts(info.poolSize * wd->ImageCount, descriptorSetLayout);
+     //   VkDescriptorSetAllocateInfo allocInfo{};
+     //   allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+     //   allocInfo.descriptorPool = descriptorPool;
+     //   allocInfo.descriptorSetCount = static_cast<uint32_t>(info.poolSize * wd->ImageCount);
+     //   allocInfo.pSetLayouts = layouts.data();
 
-        descriptorSets.resize(wd->ImageCount * info.poolSize);
-        if (vkAllocateDescriptorSets(g_Device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate descriptor sets!");
-        }
+     //   descriptorSets.resize(wd->ImageCount * info.poolSize);
+     //   if (vkAllocateDescriptorSets(g_Device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+     //       throw std::runtime_error("failed to allocate descriptor sets!");
+     //   }
 
 
-     for (size_t i = 0; i < info.poolSize; ++i)
-        for (size_t j = 0; j < wd->ImageCount; j++)
-        {
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffers[j];
-            bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(BaseVertexUBuffer);
+     //for (size_t i = 0; i < info.poolSize; ++i)
+     //   for (size_t j = 0; j < wd->ImageCount; j++)
+     //   {
+     //       VkDescriptorBufferInfo bufferInfo{};
+     //       bufferInfo.buffer = uniformBuffers[j];
+     //       bufferInfo.offset = 0;
+     //       bufferInfo.range = sizeof(BaseVertexUBuffer);
 
-            VkDescriptorBufferInfo bufferInfo2{};
-            bufferInfo2.buffer = uniformBuffers[j];
-            bufferInfo2.offset = bufferInfo.range;
-            bufferInfo2.range = sizeof(int);
+     //       VkDescriptorBufferInfo bufferInfo2{};
+     //       bufferInfo2.buffer = uniformBuffers[j];
+     //       bufferInfo2.offset = bufferInfo.range;
+     //       bufferInfo2.range = sizeof(int);
 
-            VkDescriptorImageInfo imageInfo{};
-            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = dummyTexture;
-            imageInfo.sampler = textureSamplers[0];
+     //       VkDescriptorImageInfo imageInfo{};
+     //       imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+     //       imageInfo.imageView = dummyTexture;
+     //       imageInfo.sampler = textureSamplers[0];
 
-            std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+     //       std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
-            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = descriptorSets[i* wd->ImageCount + j];
-            descriptorWrites[0].dstBinding = 0;
-            descriptorWrites[0].dstArrayElement = 0;
-            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-            descriptorWrites[0].descriptorCount = 1;
-            descriptorWrites[0].pBufferInfo = &bufferInfo;
+     //       descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+     //       descriptorWrites[0].dstSet = descriptorSets[i* wd->ImageCount + j];
+     //       descriptorWrites[0].dstBinding = 0;
+     //       descriptorWrites[0].dstArrayElement = 0;
+     //       descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+     //       descriptorWrites[0].descriptorCount = 1;
+     //       descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-            //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            //descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
-            //descriptorWrites[1].dstBinding = 1;
-            //descriptorWrites[1].dstArrayElement = 0;
-            //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-            //descriptorWrites[1].descriptorCount = 1;
-            //descriptorWrites[1].pBufferInfo = &bufferInfo2;
+     //       //descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+     //       //descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
+     //       //descriptorWrites[1].dstBinding = 1;
+     //       //descriptorWrites[1].dstArrayElement = 0;
+     //       //descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+     //       //descriptorWrites[1].descriptorCount = 1;
+     //       //descriptorWrites[1].pBufferInfo = &bufferInfo2;
 
-            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
-            descriptorWrites[1].dstBinding = 1;
-            descriptorWrites[1].dstArrayElement = 0;
-            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrites[1].descriptorCount = 1;
-            descriptorWrites[1].pImageInfo = &imageInfo;
+     //       descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+     //       descriptorWrites[1].dstSet = descriptorSets[i * wd->ImageCount + j];
+     //       descriptorWrites[1].dstBinding = 1;
+     //       descriptorWrites[1].dstArrayElement = 0;
+     //       descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+     //       descriptorWrites[1].descriptorCount = 1;
+     //       descriptorWrites[1].pImageInfo = &imageInfo;
 
-            vkUpdateDescriptorSets(g_Device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-        }
+     //       vkUpdateDescriptorSets(g_Device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+     //   }
     }
 
     void LApp::createDescriptorSetLayout()

@@ -271,6 +271,7 @@ namespace LGraphics
         LModel::Mesh out;
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
+        const auto crop = cropTextureCoords ? 0.01f : 0.0f;
         for (size_t i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
@@ -284,7 +285,6 @@ namespace LGraphics
             normals.z = mesh->mNormals[i].z;
             if (mesh->mTextureCoords[0])
             {
-                const auto crop = cropTextureCoords? 0.009f : 0.0f;
                 textureCoords.x = mesh->mTextureCoords[0][i].x > 0? mesh->mTextureCoords[0][i].x - crop : mesh->mTextureCoords[0][i].x + crop;
                 textureCoords.y = mesh->mTextureCoords[0][i].y > 0 ? mesh->mTextureCoords[0][i].y - crop : mesh->mTextureCoords[0][i].y + crop;
             }

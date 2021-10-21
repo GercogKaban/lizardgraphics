@@ -33,7 +33,6 @@ int main(int argc, char** argv)
     info.anisotropy = 16;
     info.MSAA = 4;
     info.vsync = L_FALSE;
-    info.poolSize = poolSize;
 
 #ifndef NDEBUG
     info.texturesQuality = LOW;
@@ -51,14 +50,17 @@ int main(int argc, char** argv)
     app.setImgui(f);
     //LCube* c;
 
-    app.fog.density = 0.02f;
+    app.fog.density = 0.2f;
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
     app.fog.isEnabled = true;
 
+    //auto dirLight = new LDirectionalLight(&app);
+    //dirLight->setPosition(glm::vec3(-0.5, 0, 0));
+    //dirLight->setDirection(glm::vec3(6, 0, 0));
     auto s = new LPointLight(&app);
-    s->setAmbient({0.9f,0.9f,0.9f});
-   
-    //s->turnOnShadowCalc();
+
+    // -0.5 0 0
+// 6 0 0
     //s->setRadius(25);
 
     const float yOffset = -0.3f;
@@ -79,8 +81,10 @@ int main(int argc, char** argv)
 #else
                     auto  p = new LPlane(&app, { "Leather009.jpg" });
 #endif
-                    p->rotateX(90.0f);
+                    p->rotateX(270.0f);              
                     p->move((float)i, yOffset, (float)j);
+                    p->setParallaxMapping(false);
+                    p->setNormalMapping(true);
                 }
 
             const float off = 1.0f;
@@ -88,19 +92,24 @@ int main(int argc, char** argv)
 
             auto cyl = new LCylinder(&app, { "Rocks011.jpg" });
             cyl->move(startX + off, 0.25f, 0.0f);
+            cyl->setParallaxMapping(false);
 
             auto cone = new LCone(&app, { "Rocks011.jpg" });
             cone->move(startX + off * 2, 0.25f, 0.0f);
             cone->setParallaxMapping(false);
+            cone->setParallaxMapping(false);
 
             auto sphere = new LSphere(&app, { "Rocks011.jpg" });
             sphere->move(startX + off * 3, 0.25f, 0.0f);
+            sphere->setParallaxMapping(false);
 
             auto ico = new LIcosphere(&app, { "Rocks011.jpg" });
             ico->move(startX + off * 4, 0.25f, 0.0f);
+            ico->setParallaxMapping(false);
 
             auto tor = new LTorus(&app, { "Rocks011.jpg" });
             tor->move(startX + off * 5, 0.25f, 0.0f);
+            tor->setParallaxMapping(false);
 
         }
             //c = new LCube(&app, { "Leather009.jpg" });
@@ -124,6 +133,7 @@ int main(int argc, char** argv)
     auto test = new LModel(&app, "Hajj_Man02.fbx", "Hajj_Man02_Color.jpg", "", "Hajj_Man02_Displacement.jpg");
     test->scale(0.002f, 0.002f, 0.002f);
     test->move(0.0f, yOffset, 0.0f);
+    test->setParallaxMappingAllMeshes(false);
 
     app.setBeforeDrawingFunc([&]()
         {
@@ -172,16 +182,10 @@ int main(int argc, char** argv)
                 cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
             if (app.isPressed(GLFW_KEY_D))
                 cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-            if (app.isPressed(GLFW_KEY_X))
-                test->setParallaxMappingAllMeshes(!test->getParallaxMapping());
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            //if (flag)
-            {
-                //s->setDirection(cameraFront);
-                s->setPosition(cameraPos);
-            }
+            s->setPosition(cameraPos);
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)

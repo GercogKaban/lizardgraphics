@@ -95,7 +95,6 @@ namespace LGraphics
     {
         RenderingAPI api = L_VULKAN;
         size_t wndWidth = 0, wndHeight = 0;
-        size_t poolSize = 100;
         size_t sleepThread = 0;
         LStates vsync = L_FALSE;
         LStates saveObjects = L_FALSE;
@@ -199,6 +198,7 @@ namespace LGraphics
         void updateTextures();
 
         void drawScene();
+        void drawSceneForLight(LLight* l);
 
         bool isDirectoryChanged(const std::string& path, const std::string& cacheFile) const;
         void saveDirectoryChangedTime(const std::string& path, const std::string& filePath) const;
@@ -301,10 +301,13 @@ namespace LGraphics
 
         void refreshObjectMatrices();
 
-        auto& getPrimitives() { return primitives; }
+        const auto& getPrimitives() const { return primitives; }
+        const auto& getModels() const { return models; }
 
-        auto& getSpotLight() { return lights[L_SPOT_LIGHT]; }
+
+        auto& getSpotLights() { return lights[L_SPOT_LIGHT]; }
         auto& getPointLights() { return lights[L_POINT_LIGHT]; }
+        auto& getDirectedLights() { return lights[L_DIRECTIONAL_LIGHT]; }
         auto& getLights() {return lights;}
 
         LShaders::Shader* getStandartShader() const;
@@ -356,7 +359,6 @@ namespace LGraphics
         ObjectPool<LPlane*> lwRectPool;
 
         std::vector<LNonWidget*> customObjects;
-        size_t getPoolSize() const { return info.poolSize; }
 
         void setImgui(std::function<void()> func) { imgui = func; }
         void safeDelete(LImagedShape* w) { toDelete.push(w); }
@@ -729,7 +731,8 @@ namespace LGraphics
 
         std::vector<LImagedShape*> primitives[7];
 
-        std::vector<LLight*> lights[2];
+        std::vector<LLight*> lights[3];
+        LLight* currentLight = nullptr;
         //std::vector<LWidget*> primitives;
         std::vector<LModel*> models;
 

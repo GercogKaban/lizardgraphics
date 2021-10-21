@@ -11,12 +11,11 @@ namespace LGraphics
     {
     public:
         ImGuiInterface(LApp* app)
-            :poolSize(app->info.poolSize)
         {
             this->app = app;
-            pressed = new bool[poolSize];
+            /*pressed = new bool[poolSize];
             sliderRanges = new SliderRanges[poolSize];
-            std::fill(pressed, pressed + poolSize, false);
+            std::fill(pressed, pressed + poolSize, false);*/
             currentPath = std::filesystem::current_path().generic_string();
             vectors.insert(std::make_pair(MOVE, "move_"));
             vectors.insert(std::make_pair(SCALE, "scale_"));
@@ -34,7 +33,7 @@ namespace LGraphics
 
         static const size_t pathSize = 128;
         static constexpr size_t coordsCount = 3;
-        const size_t poolSize;
+        //const size_t poolSize;
 
         std::unordered_map<uint8_t, std::string> vectors;
         enum VectorTypes : uint8_t
