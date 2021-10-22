@@ -61,6 +61,7 @@ int main(int argc, char** argv)
     auto dirLight = new LDirectionalLight(&app);
     dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
     dirLight->setDirection(glm::vec3(4, 0, 4));
+    dirLight->setShadowsCalculating(false);
     //auto s = new LPointLight(&app);
     //s->setRadius(25);
 
@@ -94,7 +95,6 @@ int main(int argc, char** argv)
             auto cone = new LCone(&app, { "Rocks011.jpg" });
             cone->move(startX + off * 2, 0.25f, 0.0f);
             cone->setParallaxMapping(false);
-            cone->setParallaxMapping(false);
 
             auto sphere = new LSphere(&app, { "Rocks011.jpg" });
             sphere->move(startX + off * 3, 0.25f, 0.0f);
@@ -127,10 +127,11 @@ int main(int argc, char** argv)
         //new LSkyBox(&app, {"red"});
     }
 
-    auto test = new LModel(&app, "Hajj_Man02.fbx", "Hajj_Man02_Color.jpg", "", "Hajj_Man02_Displacement.jpg");
-    test->scale(0.005f, 0.005f, 0.005f);
+    auto test = new LModel(&app, { "Walking.fbx" });
+    test->scale(0.0005f, 0.0005f, 0.0005f);
     test->move(0.0f, yOffset, 0.0f);
     test->setParallaxMappingAllMeshes(false);
+    test->rotateY(180.0f);
 
     app.setBeforeDrawingFunc([&]()
         {

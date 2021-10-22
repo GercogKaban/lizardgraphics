@@ -61,7 +61,8 @@ void LGraphics::LLight::setFarPlane(float farPlane)
 
 void LGraphics::LLight::setShadowsCalculating(bool calculateShadows)
 {
-	this->calculateShadow = calculateShadow;
+	this->calculateShadow = calculateShadows;
+	changed = true;
 }
 
 void LGraphics::LLight::init()
