@@ -16,6 +16,9 @@ namespace LGraphics
 		virtual ~LLight();
 
 		int getId() const { return id; }
+		auto getDepthMap() const{ return depthMap; }
+		auto getFBO() const { return depthMapFBO; }
+
 		virtual void setLightSpaceMatrix() {}
 
 		void setPosition(glm::vec3 position);

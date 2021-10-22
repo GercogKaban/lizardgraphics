@@ -87,6 +87,8 @@ void main()
     vec4 temp = model_ * vec4(position, 1.0);
     eyeSpacePosition = view*temp;
     vec3 FragPos_ = vec3(temp);
+    normalMapping_ = normalMapping;
+    parallaxMapping_ = parallaxMapping;
 
     FragPos = FragPos_;
     viewPos_ = viewPos;
@@ -123,17 +125,13 @@ void main()
     else
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
+    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
+    projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
     TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
 		textureCoords.y*textureSize.y + offset.y);
-
     model = model_;
     TexCoords_ = textureCoords;
-    vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
-    projCoords = projCoords_ * 0.5 + 0.5;
-    normalMapping_ = normalMapping;
-    parallaxMapping_ = parallaxMapping;
     gl_Position = proj * eyeSpacePosition;
 }

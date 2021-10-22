@@ -6,7 +6,7 @@ LGraphics::LLight::LLight(LApp* app, size_t shadowWidth, size_t shadowHeight)
 {
 	this->app = app;
 	app->lightsToInit.push_back(this);
-	lightSpaceMatrix = glm::mat4();
+	lightSpaceMatrix = glm::mat4(1.0f);
 
 	ambient = glm::vec3(0.1f, 0.1f, 0.1f);
 	diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -66,20 +66,28 @@ void LGraphics::LLight::setShadowsCalculating(bool calculateShadows)
 
 void LGraphics::LLight::init()
 {
+	shadowWidth = app->info.wndWidth;
+	shadowHeight = app->info.wndHeight;
 	glGenFramebuffers(1, &depthMapFBO);
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
 	float borderColor_[] = { app->borderColor.x,app->borderColor.y,app->borderColor.z,app->borderColor.w };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+		throw std::runtime_error("FB error, status: " + std::to_string(status) + '\n');
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -176,7 +184,7 @@ LGraphics::LDirectionalLight::LDirectionalLight(LApp* app)
 	specular = glm::vec3(0.9f, 0.9f, 0.9f);
 	direction = glm::vec3(0.0, 0.0f, 0.0f);
 	nearPlane = 0.1f;
-	farPlane = 100.0f;
+	farPlane = 35.0f;
 	changed = true;
 }
 

@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 
     auto dirLight = new LDirectionalLight(&app);
     dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
-    dirLight->setDirection(glm::vec3(6, 0, 0));
+    dirLight->setDirection(glm::vec3(4, 0, 4));
     //auto s = new LPointLight(&app);
     //s->setRadius(25);
 
@@ -73,11 +73,7 @@ int main(int argc, char** argv)
             for (size_t i = 0; i < 100; ++i)
                 for (size_t j = 0; j < 100; ++j)
                 {
-#ifndef NDEBUG
                     auto  p = new LPlane(&app, { "Rocks011.jpg" });
-#else
-                    auto  p = new LPlane(&app, { "Leather009.jpg" });
-#endif
                     p->rotateX(270.0f);              
                     p->move((float)i, yOffset, (float)j);
                     p->setParallaxMapping(false);
@@ -128,7 +124,7 @@ int main(int argc, char** argv)
     }
 
     auto test = new LModel(&app, "Hajj_Man02.fbx", "Hajj_Man02_Color.jpg", "", "Hajj_Man02_Displacement.jpg");
-    test->scale(0.002f, 0.002f, 0.002f);
+    test->scale(0.005f, 0.005f, 0.005f);
     test->move(0.0f, yOffset, 0.0f);
     test->setParallaxMappingAllMeshes(false);
 

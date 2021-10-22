@@ -79,8 +79,7 @@ void main()
     else
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
-    //vec3 projCoords_ = FragPosLightSpace.xyz / FragPosLightSpace.w;
+    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
     projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
     TexCoords = vec2(
@@ -88,7 +87,5 @@ void main()
 		textureCoords.y*textureSize.y + offset.y);
     model = model_;
     TexCoords_ = textureCoords;
-
-
     gl_Position = proj * eyeSpacePosition;
 }

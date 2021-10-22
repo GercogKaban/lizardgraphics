@@ -153,7 +153,9 @@ namespace LGraphics
             glViewport(0, 0, l->shadowWidth, l->shadowHeight);
             glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
             glClear(GL_DEPTH_BUFFER_BIT);
+            glCullFace(GL_FRONT);
             drawScene();
+            glCullFace(GL_BACK);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
     }
