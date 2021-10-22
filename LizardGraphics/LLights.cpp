@@ -66,8 +66,8 @@ void LGraphics::LLight::setShadowsCalculating(bool calculateShadows)
 
 void LGraphics::LLight::init()
 {
-	shadowWidth = app->info.wndWidth;
-	shadowHeight = app->info.wndHeight;
+	shadowWidth = app->info.shadowsWidth;
+	shadowHeight = app->info.shadowsHeight;
 	glGenFramebuffers(1, &depthMapFBO);
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);

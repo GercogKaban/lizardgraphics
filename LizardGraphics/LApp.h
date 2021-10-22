@@ -108,6 +108,7 @@ namespace LGraphics
         size_t freeThreads = std::max((int)std::thread::hardware_concurrency() - 2, 1);
         ModelLoading loading = LGraphics::ModelLoading::QUALITY;
         QualityLevels texturesQuality = LGraphics::QualityLevels::AUTO;
+        size_t shadowsWidth = 1024, shadowsHeight = 1024;
         //QualityLevels modelsQuality = LGraphics::QualityLevels::AUTO;
     };
 

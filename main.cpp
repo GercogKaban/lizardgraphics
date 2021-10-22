@@ -37,9 +37,13 @@ int main(int argc, char** argv)
 #ifndef NDEBUG
     info.texturesQuality = LOW;
     info.loading = FAST;
+    info.shadowsHeight = 2048;
+    info.shadowsWidth = 2048;
 #else
     info.texturesQuality = HIGH;
     info.loading = QUALITY;
+    info.shadowsHeight = 8192;
+    info.shadowsWidth = 8192;
 #endif
 
     const auto spread = 5;
