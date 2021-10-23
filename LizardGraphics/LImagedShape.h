@@ -16,8 +16,6 @@ namespace LGraphics
 
         void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum) {}
         void draw() {}
-        LImagedShape(LApp* app, ImageResource res, std::vector<LShape*>& changed, std::vector<LGraphics::LWidget::PrimitiveUniforms>& u,
-            bool& needToResetBuffer);
 
         const LBuffer* getBuffer() const { return buffer; }
         void setBuffer(LBuffer* buffer) { this->buffer = buffer; }
@@ -33,6 +31,9 @@ namespace LGraphics
         void setParallaxMapping(std::vector<LShape*>& changed, LShape* shape, bool parallaxMapping);
 
     protected:
+
+        LImagedShape(LApp* app, ImageResource res, std::vector<LShape*>& changed, std::vector<LGraphics::LWidget::PrimitiveUniforms>& u,
+            bool& needToResetBuffer);
 
         static void updateBufferParallel(LGClasses type, LWidget::PrimitiveUniforms* buffer, std::vector<LShape*>& changed, size_t begin, size_t end);
         static void updateBuffer(LGClasses type, std::vector<LGraphics::LShape*>& changed, bool needToResetBuffer

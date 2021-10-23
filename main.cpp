@@ -61,7 +61,9 @@ int main(int argc, char** argv)
     auto dirLight = new LDirectionalLight(&app);
     dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
     dirLight->setDirection(glm::vec3(4, 0, 4));
-    dirLight->setShadowsCalculating(false);
+    //dirLight->setShadowsCalculating(false);
+   
+    LPlane* last;
     //auto s = new LPointLight(&app);
     //s->setRadius(25);
 

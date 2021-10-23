@@ -19,18 +19,21 @@
 
 namespace LGraphics
 {
-    //class LApp;
     class LModel;
     class LModelBuffer;
     class LImage;
     class LRectangleMirror;
     class LRectangleShape;
     class LSkyBox;
+    class Animation;
+    class Animator;
 
     class LResourceManager
     {
         friend LRectangleShape;
         friend LSkyBox;
+        friend Animation;
+        friend Animator;
  
         struct ModelData
         {
@@ -76,11 +79,19 @@ namespace LGraphics
         static const TexturesData& loadMaterialTextures(aiMaterial* mat, aiTextureType type);
         static const TexturesData& LResourceManager::loadMaterialTextures(const std::string& path);
 
+        static void SetVertexBoneDataToDefault(Vertex& vertex);
+        static void SetVertexBoneData(Vertex& vertex, int boneID, float weight);
+        static void ExtractBoneWeightForVertices(LModel* model, std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
+
+        static void ReadMissingBones(const aiAnimation* assimpAnimation, LModel* model, Animation& animation);
+        static void ReadHeirarchyData(NodeData& dest, const aiNode* src);
+
         static LApp* app;
 
         static std::vector<AtlasData> atlasData;
         static std::unordered_map<std::string, TexturesData> textures;
         static std::unordered_map<std::string, LModel*> models;
+        static LModel* currentModel;
         //static std::hash_set<std::string> atlasTextures;
     };
 }

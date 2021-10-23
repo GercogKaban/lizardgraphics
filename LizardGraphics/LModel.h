@@ -2,13 +2,16 @@
 #include "LShape.h"
 #include "LImage.h"
 #include "LBuffer.h"
+#include "LAnimation.h"
 
 namespace LGraphics
 {
     class LResourceManager;
+
     class LModel : public LShape
     {
         friend LApp;
+        friend Animation;
     public:
 
         struct Mesh
@@ -53,10 +56,22 @@ namespace LGraphics
         const auto& getMehes() const { return meshes; };
         void draw() override;
 
+        const auto& getAnime() const { return animations;}
+
     protected:
 
         LModel(LApp* app, const std::string& path, bool cropTextureCoords, size_t dummy);
         void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) override {}
         std::vector<Mesh> meshes;
+
+        std::unordered_map<std::string, BoneInfo> m_BoneInfoMap;
+        int m_BoneCounter = 0;
+        auto& GetBoneInfoMap() { return m_BoneInfoMap; }
+        int& GetBoneCount() { return m_BoneCounter; }
+
+        std::vector<Animation> animations;
+        std::vector<Animator> animators;
+
+        void init();
     };
 }

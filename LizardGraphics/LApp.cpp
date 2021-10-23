@@ -219,6 +219,10 @@ namespace LGraphics
 
             while (!glfwWindowShouldClose(window_))
             {
+                float currentFrame = glfwGetTime();
+                deltaTime = currentFrame - lastFrame;
+                lastFrame = currentFrame;
+
                 refreshCamera();
                 glfwPollEvents();
 
@@ -980,6 +984,9 @@ namespace LGraphics
 
         // выключаем флаг, который почему-то ломает подсчёт кассательных и бикасательных
         modelLoadingFlags &= ~aiProcess_FindInvalidData;
+
+        // ломает скелетную анимацию?
+        modelLoadingFlags &= ~aiProcess_JoinIdenticalVertices;
 
         plane = new LModel(this, std::string(LIB_PATH) +"/primitives/plane.obj",true,0);
         cube = new LModel(this, std::string(LIB_PATH) + "/primitives/cube.obj", false,0);

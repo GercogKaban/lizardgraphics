@@ -1,11 +1,7 @@
 #include "LModel.h"
-#include "LModel.h"
-#include "LModel.h"
-//#include "LModelBuffer.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
-//#include "LBuffer.h"
 
 void LGraphics::LModel::setDiffuse(const TexturesData& data, size_t meshNum)
 {
@@ -62,12 +58,7 @@ LGraphics::LModel::LModel(LApp* app, ModelResource modelResource, bool cropTextu
 {
     LOG_CALL
     LResourceManager::loadModel(this, modelResource, cropTextureCoords);
-    setShader(app->modelShader.get());
-    app->toCreateM.push(this);
-#ifdef VULKAN
-    shader = app->lightShader.get();
-#endif
-    rotateX(180.0f);
+    init();
 }
 
 LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::string& diffuseName, 
@@ -83,13 +74,7 @@ LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::st
 
     setNormalMappingAllMeshes(normalsName.size());
     setParallaxMappingAllMeshes(displacementName.size());
-
-    setShader(app->modelShader.get());
-    app->toCreateM.push(this);
-#ifdef VULKAN
-    shader = app->lightShader.get();
-#endif
-    rotateX(180.0f);
+    init();
 }
 
 LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::vector<std::string>& diffuseNames, 
@@ -108,23 +93,16 @@ LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::ve
         if (i < displacementNames.size())
             setDisplacement(LResourceManager::loadMaterialTextures(app->getRealDisplacementPath() + displacementNames[i]), i);
     }
-    setShader(app->modelShader.get());
-    app->toCreateM.push(this);
-#ifdef VULKAN
-    shader = app->lightShader.get();
-#endif
-    rotateX(180.0f);
+    init();
 }
 
 LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, bool cropTextureCoords)
     :LShape(app)
 {
     res.normals = false;
-    setShader(app->modelShader.get());
     std::vector<uint32_t> dummy;
     meshes = { {new LBuffer(app, vertices, dummy), new LImage(res, app->info.api)}};
-    app->toCreateM.push(this);
-    rotateX(180.0f);
+    init();
 }
 
 LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, 
@@ -132,10 +110,8 @@ LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vecto
     :LShape(app)
 {
     res.normals = false;
-    setShader(app->modelShader.get());
     meshes = { {new LBuffer(app, vertices, indices), new LImage(res, app->info.api)} };
-    app->toCreateM.push(this);
-    rotateX(180.0f);
+    init();
 }
 
 LGraphics::LModel::~LModel()
@@ -209,7 +185,15 @@ LGraphics::LModel::LModel(LApp* app, const std::string& path, bool cropTextureCo
 {
     std::string pathStr(path);
     LResourceManager::loadModel(this, pathStr, cropTextureCoords);
+}
+
+void LGraphics::LModel::init()
+{
+    rotateX(180.0f);
     setShader(app->modelShader.get());
+    app->toCreateM.push(this);
+    for (auto a : animations)
+        animators.push_back({ &a });
 }
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)

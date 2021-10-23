@@ -1,5 +1,7 @@
 #version 430 core
 #define MAX_LIGHTS 128
+#define MAX_BONES 100
+#define MAX_BONE_INFLUENCE 4
 
 struct DirLight 
 {
@@ -48,6 +50,8 @@ layout (location = 1) in vec3 normals;
 layout (location = 2) in vec2 textureCoords;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec3 bitangent;
+layout(location = 5) in ivec4 boneIds; 
+layout(location = 6) in vec4 weights;
 
 out vec3 FragPos;
 out vec2 TexCoords;
@@ -82,16 +86,12 @@ uniform vec2 textureSizeParallax;
 uniform int parallaxMapping;
 uniform int normalMapping;
 
+uniform mat4 finalBonesMatrices[MAX_BONES];
+
 void main()
 {
-    vec4 temp = model_ * vec4(position, 1.0);
-    eyeSpacePosition = view*temp;
-    vec3 FragPos_ = vec3(temp);
     normalMapping_ = normalMapping;
     parallaxMapping_ = parallaxMapping;
-
-    FragPos = FragPos_;
-    viewPos_ = viewPos;
 
     if (normalMapping != 0 || parallaxMapping!= 0)
     {
@@ -100,9 +100,6 @@ void main()
         Normal =         normalize(mat3(model_)*normals);
         Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);
         TBN = transpose (mat3(Tangent, Bitangent, Normal));    
-
-        FragPos  = TBN * FragPos_;
-        viewPos_ = TBN * viewPos;
     }
 
     if (parallaxMapping != 0)
@@ -124,6 +121,38 @@ void main()
     }
     else
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
+
+
+    vec4 totalPosition = vec4(0.0f);
+    for(int i = 0 ; i < MAX_BONE_INFLUENCE; i++)
+    {
+        if(boneIds[i] == -1) 
+            continue;
+        if(boneIds[i] >= MAX_BONES) 
+        {
+            totalPosition = vec4(position,1.0f);
+            break;
+        }
+        vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(position,1.0f);
+        totalPosition += localPosition * weights[i];
+        //vec3 localNormal = mat3(finalBonesMatrices[boneIds[i]]) * Normal;
+    }
+
+    vec4 temp = model_ * vec4(vec3(totalPosition), 1.0);
+    eyeSpacePosition = view*temp;
+    vec3 FragPos_ = vec3(temp);
+    
+    if (normalMapping != 0 || parallaxMapping!= 0)
+    {
+        FragPos  = TBN * FragPos_;
+        viewPos_ = TBN * viewPos;
+    }
+
+    else 
+    {
+        FragPos = FragPos_;
+        viewPos_ = viewPos;
+    }
 
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
     projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;

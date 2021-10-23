@@ -9,12 +9,14 @@
 #include "LLogger.h"
 #include "textures.h"
 #include "LBuffer.h"
+#include "LAnimation.h"
 
 namespace LGraphics
 {
     std::unordered_map<std::string, TexturesData> LResourceManager::textures;
     std::unordered_map<std::string, LModel*> LResourceManager::models;
     std::vector<AtlasData> LResourceManager::atlasData;
+    LModel* LResourceManager::currentModel;
     LApp* LResourceManager::app;
 
     void* LResourceManager::loadTexture(const char* path, size_t& mipLevels)
@@ -214,6 +216,18 @@ namespace LGraphics
             throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
         //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
         //m_GlobalInverseTransform.Inverse();
+        currentModel = model;
+        auto& modelAnimations = model->animations;
+        for (size_t i = 0; scene->mNumAnimations; ++i)
+        {
+            Animation animation;
+            auto assimpAnimation = scene->mAnimations[i];
+            animation.m_Duration = assimpAnimation->mDuration;
+            animation.m_TicksPerSecond = assimpAnimation->mTicksPerSecond;
+            ReadHeirarchyData(animation.m_RootNode, scene->mRootNode);
+            ReadMissingBones(assimpAnimation, model, animation);
+            modelAnimations.push_back(animation);
+        }
         processNode(app, model->meshes, scene->mRootNode, scene, cropTextureCoords);
     }
 
@@ -272,42 +286,32 @@ namespace LGraphics
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         const auto crop = cropTextureCoords ? 0.01f : 0.0f;
+
         for (size_t i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
-            glm::vec3 pos, normals, tangent, bitangent;
             glm::vec2 textureCoords;
 
-            pos.x = mesh->mVertices[i].x, pos.y = mesh->mVertices[i].y, pos.z = mesh->mVertices[i].z;
+            if (!mesh->HasTangentsAndBitangents())
+                throw std::runtime_error("can't load tangents and bitangents!\n");
 
-            normals.x = mesh->mNormals[i].x;
-            normals.y = mesh->mNormals[i].y;
-            normals.z = mesh->mNormals[i].z;
             if (mesh->mTextureCoords[0])
             {
-                textureCoords.x = mesh->mTextureCoords[0][i].x > 0? mesh->mTextureCoords[0][i].x - crop : mesh->mTextureCoords[0][i].x + crop;
+                textureCoords.x = mesh->mTextureCoords[0][i].x > 0 ? mesh->mTextureCoords[0][i].x - crop : mesh->mTextureCoords[0][i].x + crop;
                 textureCoords.y = mesh->mTextureCoords[0][i].y > 0 ? mesh->mTextureCoords[0][i].y - crop : mesh->mTextureCoords[0][i].y + crop;
             }
             else
                 textureCoords = glm::vec2(0.0f, 0.0f);
 
-            if (!mesh->HasTangentsAndBitangents())
-                throw std::runtime_error("can't load tangents and bitangents!\n");
-            tangent.x = mesh->mTangents[i].x;
-            tangent.y = mesh->mTangents[i].y;
-            tangent.z = mesh->mTangents[i].z;
-
-            bitangent.x = mesh->mBitangents[i].x;
-            bitangent.y = mesh->mBitangents[i].y;
-            bitangent.z = mesh->mBitangents[i].z;
-
-            vertex.Position = pos;
-            vertex.Normal = normals;
+            vertex.Position = assimpToGLM(mesh->mVertices[i]);
+            vertex.Normal = assimpToGLM(mesh->mNormals[i]);
+            vertex.Tangent = assimpToGLM(mesh->mTangents[i]);
+            vertex.Bitangent = assimpToGLM(mesh->mBitangents[i]);
             vertex.TexCoords = textureCoords;
-            vertex.Tangent = tangent;
-            vertex.Bitangent = bitangent;
             vertices.push_back(vertex);
         }
+
+        ExtractBoneWeightForVertices(currentModel,vertices, mesh, scene);
 
         for (size_t i = 0; i < mesh->mNumFaces; i++)
         {
@@ -382,4 +386,100 @@ namespace LGraphics
         }
         return textures.find("dummy")->second;
     }
+
+    void LResourceManager::SetVertexBoneDataToDefault(Vertex& vertex)
+    {
+        for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+        {
+            vertex.BoneIDs[i] = -1;
+            vertex.BoneWeights[i] = 0.0f;
+        }
+    }
+
+    void LResourceManager::SetVertexBoneData(Vertex& vertex, int boneID, float weight)
+    {
+        for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+        {
+            if (vertex.BoneIDs[i] < 0)
+            {
+                vertex.BoneWeights[i] = weight;
+                vertex.BoneIDs[i] = boneID;
+                break;
+            }
+        }
+    }
+
+    void LResourceManager::ExtractBoneWeightForVertices(LModel* model, std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
+    {
+        for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+        {
+            int boneID = -1;
+            std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+            if (model->m_BoneInfoMap.find(boneName) == model->m_BoneInfoMap.end())
+            {
+                BoneInfo newBoneInfo;
+                newBoneInfo.id = model->m_BoneCounter;
+                newBoneInfo.offset = assimpToGLM(
+                    mesh->mBones[boneIndex]->mOffsetMatrix);
+                model->m_BoneInfoMap[boneName] = newBoneInfo;
+                boneID = model->m_BoneCounter;
+                model->m_BoneCounter++;
+            }
+            else
+                boneID = model->m_BoneInfoMap[boneName].id;
+            assert(boneID != -1);
+            auto weights = mesh->mBones[boneIndex]->mWeights;
+            int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+
+            for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+            {
+                int vertexId = weights[weightIndex].mVertexId;
+                float weight = weights[weightIndex].mWeight;
+                assert(vertexId <= vertices.size());
+                SetVertexBoneData(vertices[vertexId], boneID, weight);
+            }
+        }
+    }
+
+    void LResourceManager::ReadMissingBones(const aiAnimation* assimpAnimation, LModel* model, Animation& animation)
+    {
+        int size = assimpAnimation->mNumChannels;
+
+        auto& boneInfoMap = model->GetBoneInfoMap();//getting m_BoneInfoMap from Model class
+        int& boneCount = model->GetBoneCount();     //getting the m_BoneCounter from Model class
+
+        //reading channels(bones engaged in an animation and their keyframes)
+        for (int i = 0; i < size; i++)
+        {
+            auto channel = assimpAnimation->mChannels[i];
+            std::string boneName = channel->mNodeName.data;
+
+            if (boneInfoMap.find(boneName) == boneInfoMap.end())
+            {
+                boneInfoMap[boneName].id = boneCount;
+                boneCount++;
+            }
+            animation.m_Bones.push_back(Bone(channel->mNodeName.data,
+                boneInfoMap[channel->mNodeName.data].id, channel));
+        }
+
+        animation.m_BoneInfoMap = boneInfoMap;
+    }
+
+    void LResourceManager::ReadHeirarchyData(NodeData& dest, const aiNode* src)
+    {
+        assert(src);
+
+        dest.name = src->mName.data;
+        dest.transformation = assimpToGLM(src->mTransformation);
+        dest.childrenCount = src->mNumChildren;
+
+        for (int i = 0; i < src->mNumChildren; i++)
+        {
+            NodeData newData;
+            ReadHeirarchyData(newData, src->mChildren[i]);
+            dest.children.push_back(newData);
+        }
+    }
+
 }

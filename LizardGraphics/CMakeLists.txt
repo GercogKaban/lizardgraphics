@@ -17,7 +17,8 @@ set (SOURCE_FILES textures.cpp LShape.cpp LImagedShape.cpp LImage.cpp
 LRectangleBuffer.cpp LLogger.cpp LBuffer.cpp LApp.cpp LWidget.cpp 
 LTimer.cpp additional.cpp LPlane.cpp LResourceManager.cpp Lshaders.cpp LModel.cpp
 CodeGen.cpp FileSystemDialog.cpp imgui/imgui.cpp LCube.cpp LCubeBuffer.cpp LSkyBox.cpp
-AtlasGenerator.cpp LLights.cpp LCone.cpp LCylinder.cpp LIcosphere.cpp LSphere.cpp LTorus.cpp)
+AtlasGenerator.cpp LLights.cpp LCone.cpp LCylinder.cpp LIcosphere.cpp LSphere.cpp LTorus.cpp
+LAnimation.cpp)
 
 set (IMGUI_SOURCE_FILES imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp imgui/backends/imgui_impl_vulkan.cpp imgui/imgui.cpp 
 imgui/imgui_demo.cpp imgui/imgui_draw.cpp imgui/imgui_tables.cpp imgui/imgui_widgets.cpp)
@@ -28,7 +29,8 @@ LImage.h LLogger.h LBuffer.h
 LApp.h LWidget.h LTimer.h additional.h LPlane.h LResourceManager.h 
 ObjectPool.h LModel.h
 CodeGen.h FileSystemDialog.h LCube.h LCubeBuffer.h LSkyBox.h 
-AtlasGenerator.h LLights.h LCone.h LCylinder.h LIcosphere.h LSphere.h LTorus.h)
+AtlasGenerator.h LLights.h LCone.h LCylinder.h LIcosphere.h LSphere.h LTorus.h
+LAnimation.h constants.h)
 
 set (IMGUI_HEADER_FILES imgui/imgui.h imgui/imconfig.h imgui/backends/imgui_impl_glfw.h 
 imgui/backends/imgui_impl_vulkan.h imgui/imgui_internal.h imgui/imstb_rectpack.h 

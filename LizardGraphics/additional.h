@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include <tuple>
+#include <assimp/scene.h>
 #include "include/glm/glm.hpp"
+#include "include/glm/gtc/quaternion.hpp"
 
 #define FOR(var,j,n) for (size_t var = j; i < n; i++)
 
@@ -22,6 +24,12 @@ namespace LGraphics
 
     float xGlCoordToScreenCoord(glm::vec2 screenSize, float x);
     float yGlCoordToScreenCoord(glm::vec2 screenSize, float y);
+
+    glm::mat4 assimpToGLM(aiMatrix4x4 matrix);
+    glm::mat3 assimpToGLM(aiMatrix3x3 matrix);
+    glm::vec2 assimpToGLM(aiVector2D vec);
+    glm::vec3 assimpToGLM(aiVector3D vec);
+    glm::quat assimpToGLM(aiQuaternion quat);
     /*std::tuple<glm::vec2, glm::vec2> getMoveAndSizeByCoords(glm::vec2 topLeft, 
         glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft);*/
 

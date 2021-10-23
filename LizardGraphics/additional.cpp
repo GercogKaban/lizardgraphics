@@ -50,6 +50,38 @@ namespace LGraphics
         return ((y + 1.0f)*screenSize.y) / 2.0f;
     }
 
+    glm::mat4 assimpToGLM(aiMatrix4x4 matrix)
+    {
+        return glm::mat4(
+            { matrix.a1, matrix.a2, matrix.a3,matrix.a4 },
+            { matrix.b1, matrix.b2, matrix.b3, matrix.b4 },
+            { matrix.c1, matrix.c2, matrix.c3, matrix.c4 },
+            { matrix.d1, matrix.d2, matrix.d3, matrix.d4 });
+    }
+
+    glm::mat3 assimpToGLM(aiMatrix3x3 matrix)
+    {
+        return glm::mat3(
+            { matrix.a1, matrix.a2, matrix.a3},
+            { matrix.b1, matrix.b2, matrix.b3},
+            { matrix.c1, matrix.c2, matrix.c3});
+    }
+
+    glm::vec2 assimpToGLM(aiVector2D vec)
+    {
+        return glm::vec2(vec.x,vec.y);
+    }
+
+    glm::vec3 assimpToGLM(aiVector3D vec)
+    {
+        return glm::vec3(vec.x,vec.y,vec.z);
+    }
+
+    glm::quat assimpToGLM(aiQuaternion quat)
+    {
+        return glm::quat(quat.x, quat.y, quat.z, quat.w);
+    }
+
     //std::tuple<glm::vec2, glm::vec2> getMoveAndSizeByCoords(glm::vec2 topLeft,
     //    glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft)
     //{

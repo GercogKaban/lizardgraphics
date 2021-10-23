@@ -403,6 +403,9 @@ namespace LGraphics
         bool cursorEnabled = true;
         bool cameraFrontViewLock = false;
 
+        float deltaTime = 0.0f;
+        float lastFrame = 0.0f;
+
         bool prevCameraFrontDefined = false;
         glm::vec3 prevCameraFront = glm::vec3(0.0f);
 

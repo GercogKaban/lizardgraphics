@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "constants.h"
 #include "LObject.h"
 //#ifdef OPENGL
 #include "include/GLEW/glew.h"
@@ -18,6 +19,8 @@ namespace LGraphics
         glm::vec2 TexCoords;
         glm::vec3 Tangent;
         glm::vec3 Bitangent;
+        int BoneIDs[MAX_BONE_INFLUENCE];
+        float BoneWeights[MAX_BONE_INFLUENCE];
     };
 
     class LApp;
