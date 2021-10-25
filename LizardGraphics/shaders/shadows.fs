@@ -1,5 +1,5 @@
 #version 430 core
-#define MAX_LIGHTS 128
+#define MAX_LIGHTS 2
 
 struct DirLight 
 {
@@ -80,7 +80,6 @@ uniform sampler2D parallaxMap;
 uniform int selfShading;
 uniform float heightScale;
 uniform ivec2 screenSize;
-
 
 uniform PointLight pointSources[MAX_LIGHTS];
 uniform SpotLight spotSources[MAX_LIGHTS];

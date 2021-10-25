@@ -112,12 +112,14 @@ namespace LGraphics
 
     std::string LApp::getRealTexturesPath() const
     {
+        assert(std::filesystem::is_symlink(std::filesystem::current_path().generic_string() + "/textures/"));
         return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() +
             '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
     }
 
     std::string LApp::getRealModelsPath() const
     {
+        assert(std::filesystem::is_symlink(std::filesystem::current_path().generic_string() + "/textures/"));
         return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/models/").generic_string() +
             '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
     }
@@ -219,7 +221,7 @@ namespace LGraphics
 
             while (!glfwWindowShouldClose(window_))
             {
-                float currentFrame = glfwGetTime();
+                const float currentFrame = glfwGetTime();
                 deltaTime = currentFrame - lastFrame;
                 lastFrame = currentFrame;
 
@@ -920,51 +922,50 @@ namespace LGraphics
                 info.texturesQuality = LOW;
         }
 
-        auto texturesPath = std::filesystem::current_path().generic_string() + "/textures"; //+ qualityDirectories[info.texturesQuality];
-        if (std::filesystem::is_symlink(std::filesystem::path(texturesPath)))
-            texturesPath = std::filesystem::read_symlink(std::filesystem::path(texturesPath)).generic_string();
-        else
-            throw std::runtime_error("please, do symlinks!");
-        
-        const std::string cachefile = "cachedate";
-        const auto texturesQualityDir = texturesPath + '/' + qualityDirectories[info.texturesQuality];
-        megatexture.textureAtl.setFileName(texturesQualityDir + "/diffuse/out.jpg");
-        megatexture.normalAtl.setFileName(texturesQualityDir + "/normal/out.jpg");
-        megatexture.parallaxAtl.setFileName(texturesQualityDir + "/displacement/out.jpg");
+        //if (!std::filesystem::is_symlink(std::filesystem::path(texturesPath)))
+        //    throw std::runtime_error("please, do symlinks!");
 
-        const auto texturesQualityDif = texturesQualityDir + "/diffuse/";
+        auto texturesPath = getRealTexturesPath();
+
+        const std::string cachefile = "cachedate";
+        //const auto texturesQualityDir = texturesPath + '/' + qualityDirectories[info.texturesQuality];
+        megatexture.textureAtl.setFileName(texturesPath + "diffuse/out.jpg");
+        megatexture.normalAtl.setFileName(texturesPath + "normal/out.jpg");
+        megatexture.parallaxAtl.setFileName(texturesPath + "displacement/out.jpg");
+
+        const auto texturesQualityDif = texturesPath + "diffuse/";
         const auto difCache = texturesQualityDif + cachefile;
         if (!isExists(megatexture.textureAtl.getOutPath()) || isDirectoryChanged(texturesQualityDif, difCache))
         {
             generateMegatexture(texturesQualityDif, megatexture.textureAtl,
-                texturesQualityDir + "/diffuse/atlas_info");
+                texturesPath + "diffuse/atlas_info");
             saveDirectoryChangedTime(texturesQualityDif, difCache);
         }
         else  
-            megatexture.textureAtl.loadAtlas(texturesQualityDir + "/diffuse/atlas_info");
+            megatexture.textureAtl.loadAtlas(texturesPath + "diffuse/atlas_info");
 
-        const auto texturesQualityNor = texturesQualityDir + "/normal/";
+        const auto texturesQualityNor = texturesPath + "normal/";
         const auto norCache = texturesQualityNor + cachefile;
         if (!isExists(megatexture.normalAtl.getOutPath()) || isDirectoryChanged(texturesQualityNor, norCache))
         {
             generateMegatexture(texturesQualityNor, megatexture.normalAtl,
-                texturesQualityDir + "/normal/atlas_info1");
+                texturesPath + "normal/atlas_info1");
             saveDirectoryChangedTime(texturesQualityNor, norCache);
         }
 
         else
-            megatexture.normalAtl.loadAtlas(texturesQualityDir + "/normal/atlas_info1");
+            megatexture.normalAtl.loadAtlas(texturesPath + "normal/atlas_info1");
 
-        const auto texturesQualityDis = texturesQualityDir + "/displacement/";
+        const auto texturesQualityDis = texturesPath + "displacement/";
         const auto disCache = texturesQualityDis + cachefile;
         if (!isExists(megatexture.parallaxAtl.getOutPath()) || isDirectoryChanged(texturesQualityDis, disCache))
         {
             generateMegatexture(texturesQualityDis, megatexture.parallaxAtl,
-                texturesQualityDir + "/displacement/atlas_info2");
+                texturesPath + "displacement/atlas_info2");
             saveDirectoryChangedTime(texturesQualityDis, disCache);
         }
         else
-            megatexture.parallaxAtl.loadAtlas(texturesPath + '/' + qualityDirectories[info.texturesQuality] + "/displacement/atlas_info2");
+            megatexture.parallaxAtl.loadAtlas(texturesPath + "displacement/atlas_info2");
 
         size_t dummy;
         megatexture.id = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.textureAtl.getOutPath().data(), dummy))->id;
@@ -976,11 +977,11 @@ namespace LGraphics
         initMegatextureData(megatexture.parallaxAtl, megatexture.subtexturesParallax, megatexture.idParallax);
 
         if (info.loading == FAST)
-            modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs | aiProcess_PopulateArmatureData;
         else if (info.loading == QUALITY)
-            modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_Quality | aiProcess_FlipUVs | aiProcess_PopulateArmatureData;
         else if (info.loading == MAX_QUALITY)
-            modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs | aiProcess_PreTransformVertices;
+            modelLoadingFlags = aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs | aiProcess_PopulateArmatureData;
 
         // выключаем флаг, который почему-то ломает подсчёт кассательных и бикасательных
         modelLoadingFlags &= ~aiProcess_FindInvalidData;
@@ -1048,10 +1049,7 @@ namespace LGraphics
         glfwSetErrorCallback(glfw_error_callback);
         if (!glfwInit())
             throw std::runtime_error("can't init glfw.");
-        //info.poolSize = MAXSIZE_T;
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //                                              Window creation                                              //
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if (!info.wndHeight || !info.wndWidth)
         {

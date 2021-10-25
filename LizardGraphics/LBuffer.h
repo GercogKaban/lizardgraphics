@@ -2,13 +2,8 @@
 
 #include "constants.h"
 #include "LObject.h"
-//#ifdef OPENGL
 #include "include/GLEW/glew.h"
 #include "vulkan/vulkan.h"
-//#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
-//#endif
-
-//#include "LApp.h"
 
 namespace LGraphics
 {

@@ -35,6 +35,10 @@ namespace LGraphics
         LOG_CALL
         if (app->info.api == L_OPENGL)
         {
+            for (const auto& v : vertices)
+                for (size_t i = 0; i < MAX_BONE_INFLUENCE; ++i)
+                    assert(v.BoneIDs[i] < MAX_BONES);
+
             glGenVertexArrays(1, &VAO);
             glGenBuffers(1, &VBO);
             glGenBuffers(1, &EBO);

@@ -137,7 +137,7 @@ namespace LGraphics
         glBindVertexArray(vao);
         const size_t vec4Size = sizeof(glm::vec4);
         const size_t vec2Size = sizeof(glm::vec2);
-        glEnableVertexAttribArray(5);
+        glEnableVertexAttribArray(7);
         glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)0);
         glEnableVertexAttribArray(6);
         glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(vec4Size));

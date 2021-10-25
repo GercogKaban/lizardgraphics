@@ -50,45 +50,39 @@ namespace LGraphics
         return ((y + 1.0f)*screenSize.y) / 2.0f;
     }
 
-    glm::mat4 assimpToGLM(aiMatrix4x4 matrix)
+    glm::mat4 assimpToGLM(const aiMatrix4x4& from)
     {
-        return glm::mat4(
-            { matrix.a1, matrix.a2, matrix.a3,matrix.a4 },
-            { matrix.b1, matrix.b2, matrix.b3, matrix.b4 },
-            { matrix.c1, matrix.c2, matrix.c3, matrix.c4 },
-            { matrix.d1, matrix.d2, matrix.d3, matrix.d4 });
+        glm::mat4 to;
+        to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+        to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+        to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+        to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+        return to;
     }
 
-    glm::mat3 assimpToGLM(aiMatrix3x3 matrix)
+    glm::mat3 assimpToGLM(const aiMatrix3x3& from)
     {
-        return glm::mat3(
-            { matrix.a1, matrix.a2, matrix.a3},
-            { matrix.b1, matrix.b2, matrix.b3},
-            { matrix.c1, matrix.c2, matrix.c3});
+        glm::mat3 to;
+        to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3;
+        to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3;
+        to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3;
+        return to;
     }
 
-    glm::vec2 assimpToGLM(aiVector2D vec)
+    glm::vec2 assimpToGLM(const aiVector2D& vec)
     {
         return glm::vec2(vec.x,vec.y);
     }
 
-    glm::vec3 assimpToGLM(aiVector3D vec)
+    glm::vec3 assimpToGLM(const aiVector3D& vec)
     {
         return glm::vec3(vec.x,vec.y,vec.z);
     }
 
-    glm::quat assimpToGLM(aiQuaternion quat)
+    glm::quat assimpToGLM(const aiQuaternion& quat)
     {
-        return glm::quat(quat.x, quat.y, quat.z, quat.w);
+        return glm::quat(quat.w, quat.x, quat.y, quat.z);
     }
-
-    //std::tuple<glm::vec2, glm::vec2> getMoveAndSizeByCoords(glm::vec2 topLeft,
-    //    glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft)
-    //{
-    //    return std::tuple<glm::vec2, glm::vec2>(
-    //        { (topLeft.x - topRight.x) / 2.0f, (topLeft.y - bottomLeft.y) / 2.0f , 1.0f }, 
-    //        glm::vec3(topLeft.x, topLeft.y, 0.0f) - glm::vec3(-0.5f, 0.5f, 0.0f));
-    //}
 
     glm::vec3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b)
     {
@@ -106,10 +100,5 @@ namespace LGraphics
         while (size > i)
             i <<= 2;
         return i;
-    }
-
-    void findMeshTrianglesAdjacency(float* buff, size_t size, std::vector<float>& out)
-    {
-
     }
 }

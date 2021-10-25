@@ -20,6 +20,9 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
+    for (int i = 0; i < INT_MAX; ++i)
+        auto e = glGetError();
+    auto e = glGetError();
     const size_t poolSize = 20;
 
     LAppCreateInfo info;
@@ -40,8 +43,8 @@ int main(int argc, char** argv)
     info.shadowsHeight = 2048;
     info.shadowsWidth = 2048;
 #else
-    info.texturesQuality = HIGH;
-    info.loading = QUALITY;
+    info.texturesQuality = LOW;
+    info.loading = FAST;
     info.shadowsHeight = 8192;
     info.shadowsWidth = 8192;
 #endif
@@ -126,7 +129,7 @@ int main(int argc, char** argv)
         //c = new LCube(&app, "textures/gold.jpg");
         //c->scale(0.1f, 0.1f, 0.1f);
         //c->move(7.5f, 0.0f, 7.5f);
-        //new LSkyBox(&app, {"red"});
+        //new LSkyBox(&app, {"red"  });
     }
 
     auto test = new LModel(&app, { "Walking.fbx" });
@@ -159,8 +162,8 @@ int main(int argc, char** argv)
             //    i++;
             //}
 
-            GLfloat camX = sin(glfwGetTime());
-            GLfloat camZ = cos(glfwGetTime());
+            GLfloat camX = sin(app.getCurrentFrame());
+            GLfloat camZ = cos(app.getCurrentFrame());
 
             dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
                 camZ * radius));
@@ -200,6 +203,8 @@ int main(int argc, char** argv)
                 app.heightScale += 0.01f;
             if (app.isPressed(GLFW_KEY_Q))
                 app.heightScale -= 0.01f;
+            if (app.isPressed(GLFW_KEY_F))
+                app.flag__ = !app.flag__;
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });

@@ -34,7 +34,7 @@ namespace LGraphics
 
     struct NodeData
     {
-        glm::mat4 transformation;
+        glm::mat4 transformation = glm::mat4(1.0f);
         std::string name;
         int childrenCount;
         std::vector<NodeData> children;
@@ -64,7 +64,7 @@ namespace LGraphics
         tranformations*/
         void Update(float animationTime);
 
-        glm::mat4 GetLocalTransform() { return m_LocalTransform; }
+        const glm::mat4& GetLocalTransform() const { return m_LocalTransform; }
         const std::string& GetBoneName() const { return m_Name; }
         int GetBoneID() { return m_ID; }
 
@@ -104,6 +104,7 @@ namespace LGraphics
     public:
 
         friend LResourceManager;
+        Animation(const Animation& anime);
         Animation(){}
         ~Animation(){}
 
@@ -112,7 +113,7 @@ namespace LGraphics
         float GetTicksPerSecond() const { return m_TicksPerSecond; }
         float GetDuration() const { return m_Duration; }
         const NodeData& GetRootNode() const;
-        const std::unordered_map<std::string, BoneInfo>& GetBoneIDMap() const {return m_BoneInfoMap;}
+        std::unordered_map<std::string, BoneInfo>& GetBoneIDMap() {return m_BoneInfoMap;}
 
     private:
 
@@ -127,17 +128,21 @@ namespace LGraphics
     {
     public:
 
-        Animator::Animator(Animation* Animation);
+        Animator(){}
+        Animator(Animation Animation);
+        ~Animator();
 
         void Animator::UpdateAnimation(float dt);
-        void Animator::PlayAnimation(Animation* anime);
-        void Animator::CalculateBoneTransform(const NodeData* node, glm::mat4 parentTransform);
+        void Animator::PlayAnimation(Animation anime);
 
-        const std::vector<glm::mat4>& GetFinalBoneMatrices(){return m_FinalBoneMatrices;}
+        const std::vector<glm::mat4>& GetFinalBoneMatrices() const {return m_FinalBoneMatrices;}
 
     private:
+
+        void init();
+        void Animator::CalculateBoneTransform(const NodeData* node, glm::mat4 parentTransform);
         std::vector<glm::mat4> m_FinalBoneMatrices;
-        Animation* m_CurrentAnimation;
+        Animation m_CurrentAnimation;
         float m_CurrentTime;
         float m_DeltaTime;
     };

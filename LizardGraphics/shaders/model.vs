@@ -1,6 +1,6 @@
 #version 430 core
 #define MAX_LIGHTS 128
-#define MAX_BONES 100
+#define MAX_BONES 2
 #define MAX_BONE_INFLUENCE 4
 
 struct DirLight 
@@ -50,8 +50,8 @@ layout (location = 1) in vec3 normals;
 layout (location = 2) in vec2 textureCoords;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec3 bitangent;
-layout(location = 5) in ivec4 boneIds; 
-layout(location = 6) in vec4 weights;
+layout (location = 5) in ivec4 boneIds; 
+layout (location = 6) in vec4 weights;
 
 out vec3 FragPos;
 out vec2 TexCoords;
@@ -86,10 +86,16 @@ uniform vec2 textureSizeParallax;
 uniform int parallaxMapping;
 uniform int normalMapping;
 
-uniform mat4 finalBonesMatrices[MAX_BONES];
+uniform mat4 finalBonesTrans[MAX_BONES];
+
+layout(std430, binding = 3) buffer layoutName
+{
+    int flag;
+};
 
 void main()
 {
+    flag = -100;
     normalMapping_ = normalMapping;
     parallaxMapping_ = parallaxMapping;
 
@@ -122,20 +128,20 @@ void main()
     else
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
-
+    //bool flag = false;
     vec4 totalPosition = vec4(0.0f);
-    for(int i = 0 ; i < MAX_BONE_INFLUENCE; i++)
+    for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
     {
         if(boneIds[i] == -1) 
             continue;
         if(boneIds[i] >= MAX_BONES) 
         {
             totalPosition = vec4(position,1.0f);
+            if (flag == -100)
+                flag = i;
             break;
         }
-        vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(position,1.0f);
-        totalPosition += localPosition * weights[i];
-        //vec3 localNormal = mat3(finalBonesMatrices[boneIds[i]]) * Normal;
+        totalPosition += finalBonesTrans[boneIds[i]] * vec4(position,1.0f) * weights[i];
     }
 
     vec4 temp = model_ * vec4(vec3(totalPosition), 1.0);
@@ -157,9 +163,16 @@ void main()
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
     projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
-    TexCoords = vec2(
+    //if (flag == false)
+    {
+        TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
-		textureCoords.y*textureSize.y + offset.y);
+		textureCoords.y*textureSize.y + offset.y);   
+    }
+    //else
+    {
+        //TexCoords = vec2(0.0f,0.0f);
+    }
     model = model_;
     TexCoords_ = textureCoords;
     gl_Position = proj * eyeSpacePosition;

@@ -111,7 +111,7 @@ namespace LGraphics
             auto texture = loadTexture(diffusePath.data(), dummy);
             setTexture(diffusePath, itd->second, texture);
         }
-
+        
         if (res.normals && tn.id == NO_TEXTURE)
         {
             size_t dummy;
@@ -213,12 +213,14 @@ namespace LGraphics
 
         const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+        {
+            PRINTLN("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
             throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
-        //auto m_GlobalInverseTransform = scene->mRootNode->mTransformation;
-        //m_GlobalInverseTransform.Inverse();
-        currentModel = model;
+        }
+        currentModel = model;   
         auto& modelAnimations = model->animations;
-        for (size_t i = 0; scene->mNumAnimations; ++i)
+        processNode(app, model->meshes, scene->mRootNode, scene, cropTextureCoords, scene->mRootNode->mTransformation);
+        for (size_t i = 0; i < scene->mNumAnimations; ++i)
         {
             Animation animation;
             auto assimpAnimation = scene->mAnimations[i];
@@ -228,7 +230,6 @@ namespace LGraphics
             ReadMissingBones(assimpAnimation, model, animation);
             modelAnimations.push_back(animation);
         }
-        processNode(app, model->meshes, scene->mRootNode, scene, cropTextureCoords);
     }
 
     void LResourceManager::createImageView(uint8_t* pixels, int texWidth,
@@ -264,22 +265,24 @@ namespace LGraphics
         app->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, view, miplevels);
     }
 
-    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene, bool cropTextureCoords)
+    void LResourceManager::processNode(LApp* app, std::vector<LModel::Mesh>& meshes, aiNode* node, const aiScene* scene, bool cropTextureCoords,
+        aiMatrix4x4 transform)
     {
         LOG_CALL
         // process all the node's meshes (if any)
         for (uint32_t i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(processMesh(app,mesh, scene, cropTextureCoords));
+            meshes.push_back(processMesh(app,mesh, scene, cropTextureCoords, transform));
         }
 
         // then do the same for each of its children
         for (uint32_t i = 0; i < node->mNumChildren; i++)
-            processNode(app,meshes, node->mChildren[i], scene, cropTextureCoords);
+            processNode(app,meshes, node->mChildren[i], scene, cropTextureCoords, node->mChildren[i]->mTransformation);
     }
-
-    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, bool cropTextureCoords)
+    
+    LModel::Mesh LResourceManager::processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, bool cropTextureCoords,
+        aiMatrix4x4 transform)
     {
         LOG_CALL
         LModel::Mesh out;
@@ -290,6 +293,7 @@ namespace LGraphics
         for (size_t i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
+            SetVertexBoneDataToDefault(vertex);
             glm::vec2 textureCoords;
 
             if (!mesh->HasTangentsAndBitangents())
@@ -303,7 +307,11 @@ namespace LGraphics
             else
                 textureCoords = glm::vec2(0.0f, 0.0f);
 
-            vertex.Position = assimpToGLM(mesh->mVertices[i]);
+            aiVector3D pos_ = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+            aiMatrix3x3 transform_(transform);
+            pos_ *= transform_;
+
+            vertex.Position = assimpToGLM(pos_);
             vertex.Normal = assimpToGLM(mesh->mNormals[i]);
             vertex.Tangent = assimpToGLM(mesh->mTangents[i]);
             vertex.Bitangent = assimpToGLM(mesh->mBitangents[i]);
@@ -411,27 +419,29 @@ namespace LGraphics
 
     void LResourceManager::ExtractBoneWeightForVertices(LModel* model, std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
     {
-        for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+        auto& boneInfoMap = model->m_BoneInfoMap;
+        int& boneCount = model->m_BoneCounter;
+
+        for (size_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
         {
             int boneID = -1;
-            std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
-            if (model->m_BoneInfoMap.find(boneName) == model->m_BoneInfoMap.end())
+            const std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+            if (boneInfoMap.find(boneName) == boneInfoMap.end())
             {
                 BoneInfo newBoneInfo;
-                newBoneInfo.id = model->m_BoneCounter;
-                newBoneInfo.offset = assimpToGLM(
-                    mesh->mBones[boneIndex]->mOffsetMatrix);
-                model->m_BoneInfoMap[boneName] = newBoneInfo;
-                boneID = model->m_BoneCounter;
-                model->m_BoneCounter++;
+                newBoneInfo.id = boneCount;
+                newBoneInfo.offset = assimpToGLM(mesh->mBones[boneIndex]->mOffsetMatrix);
+                boneInfoMap[boneName] = newBoneInfo;
+                boneID = boneCount;
+                boneCount++;
             }
             else
-                boneID = model->m_BoneInfoMap[boneName].id;
+                boneID = boneInfoMap[boneName].id;
             assert(boneID != -1);
             auto weights = mesh->mBones[boneIndex]->mWeights;
-            int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+            const int numWeights = mesh->mBones[boneIndex]->mNumWeights;
 
-            for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+            for (size_t weightIndex = 0; weightIndex < numWeights; ++weightIndex)
             {
                 int vertexId = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
@@ -443,16 +453,16 @@ namespace LGraphics
 
     void LResourceManager::ReadMissingBones(const aiAnimation* assimpAnimation, LModel* model, Animation& animation)
     {
-        int size = assimpAnimation->mNumChannels;
+        uint32_t size = assimpAnimation->mNumChannels;
 
         auto& boneInfoMap = model->GetBoneInfoMap();//getting m_BoneInfoMap from Model class
         int& boneCount = model->GetBoneCount();     //getting the m_BoneCounter from Model class
 
         //reading channels(bones engaged in an animation and their keyframes)
-        for (int i = 0; i < size; i++)
+        for (size_t i = 0; i < size; i++)
         {
-            auto channel = assimpAnimation->mChannels[i];
-            std::string boneName = channel->mNodeName.data;
+            const auto channel = assimpAnimation->mChannels[i];
+            const std::string boneName = channel->mNodeName.data;
 
             if (boneInfoMap.find(boneName) == boneInfoMap.end())
             {

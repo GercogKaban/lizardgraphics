@@ -1,4 +1,4 @@
-#include "LModel.h"
+﻿#include "LModel.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
@@ -136,6 +136,37 @@ void LGraphics::LModel::draw()
     setGlobalUniforms(shaderProgram);
     model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
+    int a = INT_MIN;
+    //static GLuint ssbo = 0;
+    //if (!ssbo)
+    //    glGenBuffers(1, &ssbo);
+
+    //if (!app->drawingInShadow)
+        {
+            char res[32];
+            animator.UpdateAnimation(app->getDeltaTime());
+            const auto transforms = animator.GetFinalBoneMatrices();
+
+            //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+            //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int),&a, GL_DYNAMIC_DRAW);
+            //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
+
+            //if (app->flag__)
+            //{g
+                //for (size_t i = 0; i < 100; ++i)
+                //{
+                //    sprintf(res, "finalBonesMatrices[%zu]", i);
+                //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, res), 1, GL_FALSE,
+                //        glm::value_ptr(transforms[i]));
+                //}
+            //}
+            //else
+            {
+                glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), 100, GL_FALSE,
+                    glm::value_ptr(transforms[0]));
+            }
+        }
+
     FOR(i, 0, meshes.size())
     {
         if (meshes[i].image)
@@ -176,9 +207,12 @@ void LGraphics::LModel::draw()
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
         else
             glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
+        auto e = glGetError();
+        if (e != 0) throw std::runtime_error(std::to_string(e));
         glBindVertexArray(0);
     }
 }
+
 
 LGraphics::LModel::LModel(LApp* app, const std::string& path, bool cropTextureCoords,size_t dummy)
     :LShape(app)
@@ -192,8 +226,8 @@ void LGraphics::LModel::init()
     rotateX(180.0f);
     setShader(app->modelShader.get());
     app->toCreateM.push(this);
-    for (auto a : animations)
-        animators.push_back({ &a });
+    if (animations.size())
+        animator.PlayAnimation(animations[0]);
 }
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)

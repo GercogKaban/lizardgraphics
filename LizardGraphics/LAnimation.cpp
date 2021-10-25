@@ -137,6 +137,15 @@ namespace LGraphics
         return glm::scale(glm::mat4(1.0f), finalScale);
     }
 
+    Animation::Animation(const Animation& anime)
+    {
+        m_BoneInfoMap = anime.m_BoneInfoMap;
+        m_Bones = anime.m_Bones;
+        m_Duration = anime.m_Duration;
+        m_RootNode = anime.m_RootNode;
+        m_TicksPerSecond = anime.m_TicksPerSecond;
+    }
+
     Bone* Animation::FindBone(const std::string& name)
     {
         auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
@@ -154,40 +163,46 @@ namespace LGraphics
         return m_RootNode;
     }
 
-    Animator::Animator(Animation* anime)
+    Animator::Animator(Animation anime)
     {
-        m_CurrentTime = 0.0;
         m_CurrentAnimation = anime;
+        init();
+    }
 
-        m_FinalBoneMatrices.reserve(MAX_BONES);
-
-        for (int i = 0; i < MAX_BONES; i++)
-            m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+    Animator::~Animator()
+    {
     }
 
     void Animator::UpdateAnimation(float dt)
     {
         m_DeltaTime = dt;
-        if (m_CurrentAnimation)
-        {
-            m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
-            m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
-            CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
-        }
+        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
+        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
     }
 
-    void Animator::PlayAnimation(Animation* pAnimation)
+    void Animator::PlayAnimation(Animation Animation)
     {
-        m_CurrentAnimation = pAnimation;
-        m_CurrentTime = 0.0f;
+        if (!m_FinalBoneMatrices.capacity())
+            init();
+        m_CurrentAnimation = Animation;
+    }
+
+    void Animator::init()
+    {
+        m_CurrentTime = 0.0;
+        m_FinalBoneMatrices.reserve(MAX_BONES);
+
+        for (size_t i = 0; i < MAX_BONES; i++)
+            m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
     }
 
     void Animator::CalculateBoneTransform(const NodeData* node, glm::mat4 parentTransform)
     {
-        std::string nodeName = node->name;
+        const std::string nodeName = node->name;
         glm::mat4 nodeTransform = node->transformation;
 
-        Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
+        Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
 
         if (Bone)
         {
@@ -195,17 +210,17 @@ namespace LGraphics
             nodeTransform = Bone->GetLocalTransform();
         }
 
-        glm::mat4 globalTransformation = parentTransform * nodeTransform;
+        const glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-        auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+        auto& boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
         if (boneInfoMap.find(nodeName) != boneInfoMap.end())
         {
-            int index = boneInfoMap[nodeName].id;
-            glm::mat4 offset = boneInfoMap[nodeName].offset;
+            const int index = boneInfoMap[nodeName].id;
+            const glm::mat4 offset = boneInfoMap[nodeName].offset;
             m_FinalBoneMatrices[index] = globalTransformation * offset;
         }
 
-        for (int i = 0; i < node->childrenCount; i++)
+        for (size_t i = 0; i < node->childrenCount; i++)
             CalculateBoneTransform(&node->children[i], globalTransformation);
     }
 }

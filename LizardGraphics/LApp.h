@@ -178,7 +178,9 @@ namespace LGraphics
         void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
         bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
+        bool flag__ = true;
     protected:
+
         GLuint currentDepthMap;
         void* buff;
 
@@ -379,6 +381,10 @@ namespace LGraphics
         void setPitch(float pitch) { this->pitch = pitch; };
         float getPitch() const { return pitch; }
 
+
+        float getCurrentFrame() const { return lastFrame; }
+        float getDeltaTime() const { return deltaTime; }
+
     protected:
         static LAppCreateInfo info;
 
@@ -424,8 +430,6 @@ namespace LGraphics
         void initVulkan();
 
         void setWindowCallbacks();
-
-        void initTextures();
 
         void checkEvents();
 

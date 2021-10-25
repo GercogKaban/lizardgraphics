@@ -23,8 +23,8 @@ namespace LGraphics
 
         ~ImGuiInterface()
         {
-            delete[] pressed;
-            delete[] sliderRanges;
+            //delete[] pressed;
+            //delete[] sliderRanges;
         }
 
     private:

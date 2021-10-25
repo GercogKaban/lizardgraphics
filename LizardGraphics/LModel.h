@@ -70,7 +70,7 @@ namespace LGraphics
         int& GetBoneCount() { return m_BoneCounter; }
 
         std::vector<Animation> animations;
-        std::vector<Animator> animators;
+        Animator animator;
 
         void init();
     };
