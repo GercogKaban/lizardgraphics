@@ -136,36 +136,31 @@ void LGraphics::LModel::draw()
     setGlobalUniforms(shaderProgram);
     model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
-    int a = INT_MIN;
-    //static GLuint ssbo = 0;
-    //if (!ssbo)
-    //    glGenBuffers(1, &ssbo);
+    //int a = INT_MIN;
+    static GLuint ssbo = 0;
+    if (!ssbo)
+        glGenBuffers(1, &ssbo);
 
-    //if (!app->drawingInShadow)
+    if (app->drawingInShadow)
+    {
+        if (app->flag__)
         {
-            char res[32];
+            //const float scale = 0.0015f;
+            //const auto move_ = getMove();
+            //const auto vecToMove = glm::normalize(app->getCameraPos() - move_);
+
+            //move(move_.x + vecToMove.x * scale, move_.y, move_.z + vecToMove.z * scale);
             animator.UpdateAnimation(app->getDeltaTime());
-            const auto transforms = animator.GetFinalBoneMatrices();
-
-            //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-            //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int),&a, GL_DYNAMIC_DRAW);
-            //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
-
-            //if (app->flag__)
-            //{g
-                //for (size_t i = 0; i < 100; ++i)
-                //{
-                //    sprintf(res, "finalBonesMatrices[%zu]", i);
-                //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, res), 1, GL_FALSE,
-                //        glm::value_ptr(transforms[i]));
-                //}
-            //}
-            //else
-            {
-                glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), 100, GL_FALSE,
-                    glm::value_ptr(transforms[0]));
-            }
         }
+    }
+    const auto& transforms  = animator.GetFinalBoneMatrices();
+
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(transforms) * sizeof(glm::mat4), glm::value_ptr(transforms[0]), GL_DYNAMIC_COPY);
+    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
+
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), 100, GL_FALSE,
+        glm::value_ptr(transforms[0]));
 
     FOR(i, 0, meshes.size())
     {
@@ -207,8 +202,7 @@ void LGraphics::LModel::draw()
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
         else
             glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
-        auto e = glGetError();
-        if (e != 0) throw std::runtime_error(std::to_string(e));
+        //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
         glBindVertexArray(0);
     }
 }

@@ -37,7 +37,8 @@ namespace LGraphics
         {
             for (const auto& v : vertices)
                 for (size_t i = 0; i < MAX_BONE_INFLUENCE; ++i)
-                    assert(v.BoneIDs[i] < MAX_BONES);
+                    if (v.BoneIDs[i] >= MAX_BONES && v.BoneIDs[i] != -1 || v.BoneIDs[i] <= -2)
+                        throw std::runtime_error("bone id is incorrect!");
 
             glGenVertexArrays(1, &VAO);
             glGenBuffers(1, &VBO);
@@ -54,30 +55,25 @@ namespace LGraphics
                 glBufferData(GL_ELEMENT_ARRAY_BUFFER, ebo.size() * sizeof(decltype(*ebo.data())), ebo.data(), GL_STATIC_DRAW);
             }
 
-            // position
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Position));
             glEnableVertexAttribArray(0);
 
-            // normals
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Normal));
             glEnableVertexAttribArray(1);
 
-            // texture coords
             glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex,TexCoords));
             glEnableVertexAttribArray(2);
 
-            // tangent
             glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex,Tangent));
             glEnableVertexAttribArray(3);
 
-            // bitangent
             glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Bitangent));
             glEnableVertexAttribArray(4);
 
-            glVertexAttribPointer(5, MAX_BONE_INFLUENCE, GL_INT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, BoneIDs));
+            glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (GLvoid*)offsetof(Vertex, BoneIDs));
             glEnableVertexAttribArray(5);
 
-            glVertexAttribPointer(6, MAX_BONE_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, BoneWeights));
+            glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, BoneWeights));
             glEnableVertexAttribArray(6);
 
             glBindVertexArray(0);

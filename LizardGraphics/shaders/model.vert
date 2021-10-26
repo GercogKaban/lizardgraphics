@@ -1,6 +1,6 @@
 #version 430 core
 #define MAX_LIGHTS 128
-#define MAX_BONES 2
+#define MAX_BONES 100
 #define MAX_BONE_INFLUENCE 4
 
 struct DirLight 
@@ -53,6 +53,11 @@ layout (location = 4) in vec3 bitangent;
 layout (location = 5) in ivec4 boneIds; 
 layout (location = 6) in vec4 weights;
 
+//layout(std430, binding = 3) buffer Layout
+//{
+//    mat4 finalBonesTrans[MAX_BONES];
+//};
+
 out vec3 FragPos;
 out vec2 TexCoords;
 out vec2 TexCoordsNormal;
@@ -88,25 +93,11 @@ uniform int normalMapping;
 
 uniform mat4 finalBonesTrans[MAX_BONES];
 
-layout(std430, binding = 3) buffer layoutName
-{
-    int flag;
-};
-
 void main()
 {
-    flag = -100;
     normalMapping_ = normalMapping;
     parallaxMapping_ = parallaxMapping;
-
-    if (normalMapping != 0 || parallaxMapping!= 0)
-    {
-        vec3 Tangent =   normalize(mat3(model_)*tangent);
-        vec3 Bitangent = normalize(mat3(model_)*bitangent);
-        Normal =         normalize(mat3(model_)*normals);
-        Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);
-        TBN = transpose (mat3(Tangent, Bitangent, Normal));    
-    }
+    vec3 Tangent, Bitangent;
 
     if (parallaxMapping != 0)
     {
@@ -128,7 +119,6 @@ void main()
     else
         Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
-    //bool flag = false;
     vec4 totalPosition = vec4(0.0f);
     for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
     {
@@ -137,8 +127,6 @@ void main()
         if(boneIds[i] >= MAX_BONES) 
         {
             totalPosition = vec4(position,1.0f);
-            if (flag == -100)
-                flag = i;
             break;
         }
         totalPosition += finalBonesTrans[boneIds[i]] * vec4(position,1.0f) * weights[i];
@@ -147,7 +135,14 @@ void main()
     vec4 temp = model_ * vec4(vec3(totalPosition), 1.0);
     eyeSpacePosition = view*temp;
     vec3 FragPos_ = vec3(temp);
-    
+    if (normalMapping != 0 || parallaxMapping!= 0)
+    {
+        vec3 Tangent =   normalize(mat3(model_)*tangent);
+        vec3 Bitangent = normalize(mat3(model_)*bitangent);
+        Normal =         normalize(mat3(model_)*normals);
+        Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);  
+        TBN = transpose (mat3(Tangent, Bitangent, Normal));  
+    }
     if (normalMapping != 0 || parallaxMapping!= 0)
     {
         FragPos  = TBN * FragPos_;
@@ -162,17 +157,10 @@ void main()
 
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
     projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
-
-    //if (flag == false)
-    {
-        TexCoords = vec2(
+    
+    TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
 		textureCoords.y*textureSize.y + offset.y);   
-    }
-    //else
-    {
-        //TexCoords = vec2(0.0f,0.0f);
-    }
     model = model_;
     TexCoords_ = textureCoords;
     gl_Position = proj * eyeSpacePosition;

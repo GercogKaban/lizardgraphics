@@ -175,8 +175,9 @@ namespace LGraphics
 
     void Animator::UpdateAnimation(float dt)
     {
+        const float speed = 0.0f;
         m_DeltaTime = dt;
-        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
+        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt + speed;
         m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
         CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
     }

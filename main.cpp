@@ -20,9 +20,6 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    for (int i = 0; i < INT_MAX; ++i)
-        auto e = glGetError();
-    auto e = glGetError();
     const size_t poolSize = 20;
 
     LAppCreateInfo info;
@@ -57,7 +54,7 @@ int main(int argc, char** argv)
     app.setImgui(f);
     //LCube* c;
 
-    app.fog.density = 0.2f;
+    app.fog.density = 0.15f;
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
     app.fog.isEnabled = true;
 
@@ -67,6 +64,7 @@ int main(int argc, char** argv)
     //dirLight->setShadowsCalculating(false);
    
     LPlane* last;
+
     //auto s = new LPointLight(&app);
     //s->setRadius(25);
 
@@ -134,7 +132,7 @@ int main(int argc, char** argv)
 
     auto test = new LModel(&app, { "Walking.fbx" });
     test->scale(0.0005f, 0.0005f, 0.0005f);
-    test->move(0.0f, yOffset, 0.0f);
+    test->move(0.0f, yOffset - 0.0005f, 0.0f);
     test->setParallaxMappingAllMeshes(false);
     test->rotateY(180.0f);
 
@@ -203,7 +201,7 @@ int main(int argc, char** argv)
                 app.heightScale += 0.01f;
             if (app.isPressed(GLFW_KEY_Q))
                 app.heightScale -= 0.01f;
-            if (app.isPressed(GLFW_KEY_F))
+            if (app.isPressed(GLFW_KEY_G))
                 app.flag__ = !app.flag__;
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);

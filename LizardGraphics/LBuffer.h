@@ -14,8 +14,8 @@ namespace LGraphics
         glm::vec2 TexCoords;
         glm::vec3 Tangent;
         glm::vec3 Bitangent;
-        int BoneIDs[MAX_BONE_INFLUENCE];
-        float BoneWeights[MAX_BONE_INFLUENCE];
+        glm::ivec4 BoneIDs;
+        glm::vec4 BoneWeights;
     };
 
     class LApp;

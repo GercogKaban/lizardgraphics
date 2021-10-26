@@ -115,7 +115,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
  
  while(currentLayerDepth < currentDepthMapValue)
  {
-  // shift texture coordinates along direction of P
+   // shift texture coordinates along direction of P
   currentTexCoords -= deltaTexCoords;
   // get depthmap value at current texture coordinates
   currentDepthMapValue = 1.0 - texture(parallaxMap, currentTexCoords).r;
@@ -141,7 +141,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
 float parallaxSoftShadowMultiplier(in vec3 lightDir, in vec2 initialTexCoords, in float initialHeight)
 {
-    return 0.0;
+   return 0.0;
  // shadowMultiplier = 0.0, no shadow -> in light
  // shadowMultiplier = 1.0, shadow -> outside light
  float shadowMultiplier = 0.0;
@@ -190,7 +190,7 @@ float parallaxSoftShadowMultiplier(in vec3 lightDir, in vec2 initialTexCoords, i
    currentLayerHeight -= layerHeight;
    currentTexCoords += texStep;
    depthFromTexture = texture(parallaxMap, currentTexCoords).r;
-  }
+}
 
   // Shadowing factor should be 0 if there were no points under the surface
   if(numSamplesUnderSurface < 1)
@@ -209,8 +209,8 @@ float getFogFactor(float fogCoordinate)
 
 float ShadowCalculation(vec3 lightDir)
 {
-    if(projCoords.z > 1.0)
-       return 0.0;
+    //if(projCoords.z > 1.0)
+       //return 0.0;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float closestDepth = texture(shadowMap, projCoords.xy).r; 
     // get depth of current fragment from light's perspective
