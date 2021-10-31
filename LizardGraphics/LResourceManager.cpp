@@ -18,6 +18,7 @@ namespace LGraphics
     std::vector<AtlasData> LResourceManager::atlasData;
     LModel* LResourceManager::currentModel;
     LApp* LResourceManager::app;
+    aiMatrix4x4 LResourceManager::m_GlobalInverseTransform;
 
     void* LResourceManager::loadTexture(const char* path, size_t& mipLevels)
     {
@@ -217,18 +218,19 @@ namespace LGraphics
             PRINTLN("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
             throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
         }
+
         currentModel = model;   
         auto& modelAnimations = model->animations;
         processNode(app, model->meshes, scene->mRootNode, scene, cropTextureCoords, scene->mRootNode->mTransformation);
         for (size_t i = 0; i < scene->mNumAnimations; ++i)
         {
             Animation animation;
-            auto assimpAnimation = scene->mAnimations[i];
+            const auto assimpAnimation = scene->mAnimations[i];
             animation.m_Duration = assimpAnimation->mDuration;
             animation.m_TicksPerSecond = assimpAnimation->mTicksPerSecond;
             ReadHeirarchyData(animation.m_RootNode, scene->mRootNode);
             ReadMissingBones(assimpAnimation, model, animation);
-            modelAnimations.push_back(animation);
+            modelAnimations.insert(std::make_pair(assimpAnimation->mName.C_Str(),animation));
         }
     }
 
@@ -439,9 +441,8 @@ namespace LGraphics
                 boneID = boneInfoMap[boneName].id;
             assert(boneID != -1);
             auto weights = mesh->mBones[boneIndex]->mWeights;
-            const int numWeights = mesh->mBones[boneIndex]->mNumWeights;
 
-            for (size_t weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+            for (size_t weightIndex = 0; weightIndex < mesh->mBones[boneIndex]->mNumWeights; ++weightIndex)
             {
                 int vertexId = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
@@ -453,13 +454,11 @@ namespace LGraphics
 
     void LResourceManager::ReadMissingBones(const aiAnimation* assimpAnimation, LModel* model, Animation& animation)
     {
-        uint32_t size = assimpAnimation->mNumChannels;
-
         auto& boneInfoMap = model->GetBoneInfoMap();//getting m_BoneInfoMap from Model class
         int& boneCount = model->GetBoneCount();     //getting the m_BoneCounter from Model class
 
         //reading channels(bones engaged in an animation and their keyframes)
-        for (size_t i = 0; i < size; i++)
+        for (size_t i = 0; i < assimpAnimation->mNumChannels; i++)
         {
             const auto channel = assimpAnimation->mChannels[i];
             const std::string boneName = channel->mNodeName.data;
@@ -470,7 +469,7 @@ namespace LGraphics
                 boneCount++;
             }
             animation.m_Bones.push_back(Bone(channel->mNodeName.data,
-                boneInfoMap[channel->mNodeName.data].id, channel));
+                boneInfoMap[channel->mNodeName.data].id, channel)); 
         }
 
         animation.m_BoneInfoMap = boneInfoMap;

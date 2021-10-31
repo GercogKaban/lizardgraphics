@@ -93,6 +93,7 @@ uniform vec2 textureSizeParallax;
 
 uniform int parallaxMapping;
 uniform int normalMapping;
+uniform bool playAnimation;
 
 uniform mat4 finalBonesTrans[MAX_BONES];
 
@@ -123,8 +124,10 @@ void main()
         vs.Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
     vec4 totalPosition = vec4(0.0f);
-    for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
+    if (playAnimation == true)
     {
+        for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
+        {
         if(boneIds[i] == -1) 
             continue;
         if(boneIds[i] >= MAX_BONES) 
@@ -133,7 +136,10 @@ void main()
             break;
         }
         totalPosition += finalBonesTrans[boneIds[i]] * vec4(position,1.0f) * weights[i];
+        }
     }
+    else
+       totalPosition = vec4(position,1.0f);
 
     vec4 temp = model_ * vec4(vec3(totalPosition), 1.0);
     vs.eyeSpacePosition = view*temp;

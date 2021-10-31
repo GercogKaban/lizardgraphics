@@ -71,20 +71,19 @@ int main(int argc, char** argv)
     const float yOffset = -0.3f;
     if (!info.loadObjects)
     {   
-        //auto m = new LModel(&app, {"Walking.fbx"});
         //m->scale(0.01f, 0.01f, 0.01f);
         //m->move(0.0, 0.0f, 0.0f);
         //m->rotateX(180.0f);
         //m->rotateZ(90.0f);
         //for (size_t i = 0; i < 1; ++i)
         {   
-            //for (size_t i = 0; i < 100; ++i)
+            for (size_t i = 0; i < 2; ++i)
                 for (size_t j = 0; j < 2; ++j)
                 {
                     LPlane* p;
                     p = new LPlane(&app, { "Rocks011.jpg" });
                     p->rotateX(270.0f);              
-                    p->move(0.0f, yOffset, (float)j);
+                    p->move(i, yOffset, (float)j);
                     p->setParallaxMapping(false);
                     p->setNormalMapping(true);
                 }
@@ -115,11 +114,13 @@ int main(int argc, char** argv)
         }
     }
 
-    auto test = new LModel(&app, { "Walking.fbx" });
-    test->scale(0.0005f, 0.0005f, 0.0005f);
+    const float scale = 0.0025f;
+    auto test = new LModel(&app, {"girl.fbx"});
+    test->scale(scale, scale, scale);
     test->move(0.0f, yOffset - 0.0005f, 0.0f);
     test->setParallaxMappingAllMeshes(false);
     test->rotateY(180.0f);
+    test->playAnimation();
 
     app.setBeforeDrawingFunc([&]()
         {

@@ -58,6 +58,14 @@ namespace LGraphics
 
         const auto& getAnime() const { return animations;}
 
+        bool getSpeedModifier() const;
+        void setSpeedModifier(float speed);
+
+        void playAnimation();
+        void playAnimation(const std::string& name);
+        void stopAnimation();
+        void restartAnimation();
+
     protected:
 
         LModel(LApp* app, const std::string& path, bool cropTextureCoords, size_t dummy);
@@ -69,9 +77,11 @@ namespace LGraphics
         auto& GetBoneInfoMap() { return m_BoneInfoMap; }
         int& GetBoneCount() { return m_BoneCounter; }
 
-        std::vector<Animation> animations;
+        std::unordered_map<std::string,Animation> animations;
         Animator animator;
-
+        glm::mat4 mTransformation;
+ 
+        bool playAnimation_ = false;
         void init();
     };
 }

@@ -17,7 +17,7 @@ namespace LGraphics
     {
         m_NumPositions = channel->mNumPositionKeys;
 
-        for (int positionIndex = 0; positionIndex < m_NumPositions; ++positionIndex)
+        for (size_t positionIndex = 0; positionIndex < m_NumPositions; ++positionIndex)
         {
             aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
             float timeStamp = channel->mPositionKeys[positionIndex].mTime;
@@ -28,7 +28,7 @@ namespace LGraphics
         }
 
         m_NumRotations = channel->mNumRotationKeys;
-        for (int rotationIndex = 0; rotationIndex < m_NumRotations; ++rotationIndex)
+        for (size_t rotationIndex = 0; rotationIndex < m_NumRotations; ++rotationIndex)
         {
             aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
             float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
@@ -39,7 +39,7 @@ namespace LGraphics
         }
 
         m_NumScalings = channel->mNumScalingKeys;
-        for (int keyIndex = 0; keyIndex < m_NumScalings; ++keyIndex)
+        for (size_t keyIndex = 0; keyIndex < m_NumScalings; ++keyIndex)
         {
             aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
             float timeStamp = channel->mScalingKeys[keyIndex].mTime;
@@ -60,7 +60,7 @@ namespace LGraphics
 
     int Bone::GetPositionIndex(float animationTime)
     {
-        for (int index = 0; index < m_NumPositions - 1; ++index)
+        for (size_t index = 0; index < m_NumPositions - 1; ++index)
             if (animationTime < m_Positions[index + 1].timeStamp)
                 return index;
         assert(0);
@@ -68,7 +68,7 @@ namespace LGraphics
 
     int Bone::GetRotationIndex(float animationTime)
     {
-        for (int index = 0; index < m_NumRotations - 1; ++index)
+        for (size_t index = 0; index < m_NumRotations - 1; ++index)
             if (animationTime < m_Rotations[index + 1].timeStamp)
                 return index;
         assert(0);
@@ -76,7 +76,7 @@ namespace LGraphics
 
     int Bone::GetScaleIndex(float animationTime)
     {
-        for (int index = 0; index < m_NumScalings - 1; ++index)
+        for (size_t index = 0; index < m_NumScalings - 1; ++index)
             if (animationTime < m_Scales[index + 1].timeStamp)
                 return index;
         assert(0);
@@ -87,8 +87,7 @@ namespace LGraphics
         float scaleFactor = 0.0f;
         float midWayLength = animationTime - lastTimeStamp;
         float framesDiff = nextTimeStamp - lastTimeStamp;
-        scaleFactor = midWayLength / framesDiff;
-        return scaleFactor;
+        return midWayLength / framesDiff;
     }
 
     glm::mat4 Bone::InterpolatePosition(float animationTime)
@@ -175,9 +174,8 @@ namespace LGraphics
 
     void Animator::UpdateAnimation(float dt)
     {
-        const float speed = 0.0f;
-        m_DeltaTime = dt;
-        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt + speed;
+        m_DeltaTime = dt + speed * m_CurrentAnimation.GetDuration();
+        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * m_DeltaTime;
         m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
         CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));
     }
@@ -186,12 +184,13 @@ namespace LGraphics
     {
         if (!m_FinalBoneMatrices.capacity())
             init();
+        m_CurrentTime = 0.0;
         m_CurrentAnimation = Animation;
     }
 
     void Animator::init()
     {
-        m_CurrentTime = 0.0;
+        //m_CurrentTime = 0.0;
         m_FinalBoneMatrices.reserve(MAX_BONES);
 
         for (size_t i = 0; i < MAX_BONES; i++)
@@ -213,12 +212,11 @@ namespace LGraphics
 
         const glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-        auto& boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
+        const auto& boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
         if (boneInfoMap.find(nodeName) != boneInfoMap.end())
         {
-            const int index = boneInfoMap[nodeName].id;
-            const glm::mat4 offset = boneInfoMap[nodeName].offset;
-            m_FinalBoneMatrices[index] = globalTransformation * offset;
+            const int index = boneInfoMap.find(nodeName)->second.id;
+            m_FinalBoneMatrices[index] = globalTransformation * boneInfoMap.find(nodeName)->second.offset;
         }
 
         for (size_t i = 0; i < node->childrenCount; i++)

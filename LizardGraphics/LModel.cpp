@@ -1,4 +1,10 @@
 ﻿#include "LModel.h"
+#include "LModel.h"
+#include "LModel.h"
+#include "LModel.h"
+#include "LModel.h"
+#include "LModel.h"
+#include "LModel.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
@@ -136,29 +142,11 @@ void LGraphics::LModel::draw()
     setGlobalUniforms(shaderProgram);
     model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
-    //int a = INT_MIN;
-    static GLuint ssbo = 0;
-    if (!ssbo)
-        glGenBuffers(1, &ssbo);
+    glUniform1i(glGetUniformLocation(shaderProgram, "playAnimation"), playAnimation_);
+    if (playAnimation_ && app->drawingInShadow)
+        animator.UpdateAnimation(app->getDeltaTime());
 
-    if (app->drawingInShadow)
-    {
-        if (app->flag__)
-        {
-            const float scale = 0.0015f;
-            const auto move_ = getMove();
-            const auto vecToMove = glm::normalize(app->getCameraPos() - move_);
-
-            move(move_.x + vecToMove.x * scale, move_.y, move_.z + vecToMove.z * scale);
-            animator.UpdateAnimation(app->getDeltaTime());
-        }
-    }
-    const auto& transforms  = animator.GetFinalBoneMatrices();
-
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(transforms) * sizeof(glm::mat4), glm::value_ptr(transforms[0]), GL_DYNAMIC_COPY);
-    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
-
+    const auto& transforms = animator.GetFinalBoneMatrices();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), transforms.size(), GL_FALSE,
         glm::value_ptr(transforms[0]));
 
@@ -202,9 +190,38 @@ void LGraphics::LModel::draw()
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
         else
             glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
-        //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
         glBindVertexArray(0);
     }
+}
+
+bool LGraphics::LModel::getSpeedModifier() const
+{
+    return animator.speed;
+}
+
+void LGraphics::LModel::setSpeedModifier(float speed)
+{
+    animator.speed = speed;
+}
+
+void LGraphics::LModel::playAnimation()
+{
+    playAnimation_ = true;
+}
+
+void LGraphics::LModel::playAnimation(const std::string& name)
+{
+    animator.PlayAnimation(animations[name]);
+}
+
+void LGraphics::LModel::stopAnimation()
+{
+    playAnimation_ = false;
+}
+
+void LGraphics::LModel::restartAnimation()
+{
+    animator.m_CurrentTime = 0.0f;
 }
 
 
@@ -221,7 +238,7 @@ void LGraphics::LModel::init()
     setShader(app->modelShader.get());
     app->toCreateM.push(this);
     if (animations.size())
-        animator.PlayAnimation(animations[0]);
+        animator.PlayAnimation(animations.begin()->second);
 }
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
