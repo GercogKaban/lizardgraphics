@@ -86,7 +86,8 @@ namespace LGraphics
         GLuint vbo,std::vector<LWidget::PrimitiveUniforms>& uniforms, size_t indCount)
     {
         if (!uniforms.size()) return;
-        auto shader = (LShaders::OpenGLShader*)app->getStandartShader();
+        LShaders::OpenGLShader* shader;
+        shader = app->tesselation? (LShaders::OpenGLShader*)app->getStandartShaderTes() : (LShaders::OpenGLShader*)app->getStandartShader();
         if (app->drawingInShadow)
             shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
         GLuint shaderProgram = shader->getShaderProgram();
@@ -105,7 +106,13 @@ namespace LGraphics
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
         }
         glBindVertexArray(vao);
-        glDrawElementsInstanced(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, 0, uniforms.size());
+        if (app->tesselation)
+        {
+            glPatchParameteri(GL_PATCH_VERTICES, 3);
+            glDrawElementsInstanced(GL_PATCHES, indCount, GL_UNSIGNED_INT, 0, uniforms.size());
+        }
+        else
+            glDrawElementsInstanced(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, 0, uniforms.size());
     }
 
     void LImagedShape::updateUniforms(LApp* app, LGClasses primitive, LWidget::PrimitiveUniforms* buffer, size_t id)
@@ -137,7 +144,7 @@ namespace LGraphics
         glBindVertexArray(vao);
         const size_t vec4Size = sizeof(glm::vec4);
         const size_t vec2Size = sizeof(glm::vec2);
-        glEnableVertexAttribArray(7);
+        glEnableVertexAttribArray(5);
         glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)0);
         glEnableVertexAttribArray(6);
         glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(vec4Size));

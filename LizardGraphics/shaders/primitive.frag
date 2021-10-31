@@ -1,5 +1,5 @@
 #version 430 core
-#define MAX_LIGHTS 2
+#define MAX_LIGHTS 100
 
 struct DirLight 
 {
@@ -50,15 +50,18 @@ struct Fog
     bool isEnabled;
 };
 
-in vec3 FragPos;
+in VS_OUT
+{
+//in vec3 Position;
+in vec3 Normal;
 in vec2 TexCoords;
+in vec3 FragPos;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
 in mat4 model;
-in vec3 Normal;
 in vec3 viewPos_; 
 in vec2 TexCoords_;
 in vec2 off_;
@@ -66,6 +69,7 @@ in vec2 sz_;
 in vec2 maxParallax;
 in flat int normalMapping_;
 in flat int parallaxMapping_;
+} vs;
 
 out vec4 color;
 
@@ -212,9 +216,9 @@ float ShadowCalculation(vec3 lightDir)
     //if(projCoords.z > 1.0)
        //return 0.0;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float closestDepth = texture(shadowMap, vs.projCoords.xy).r; 
     // get depth of current fragment from light's perspective
-    float currentDepth = projCoords.z;
+    float currentDepth = vs.projCoords.z;
     float bias = max(0.05 * (1.0 - dot(Normal_, lightDir)), 0.005);
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -222,7 +226,7 @@ float ShadowCalculation(vec3 lightDir)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            float pcfDepth = texture(shadowMap, vs.projCoords.xy + vec2(x, y) * texelSize).r;
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
@@ -233,8 +237,8 @@ float ShadowCalculation(vec3 lightDir)
 // calculates the color when using a directional light.
 vec3 CalcDirLight(DirLight light, vec3 viewDir)
 {
-    vec3 LightPos = TBN * light.position;
-    vec3 lightDir = normalize(LightPos - FragPos);
+    vec3 LightPos = vs.TBN * light.position;
+    vec3 lightDir = normalize(LightPos - vs.FragPos);
     // diffuse shading
     float diff = max(dot(lightDir,Normal_), 0.0);
     // specular shading
@@ -255,16 +259,16 @@ vec3 CalcDirLight(DirLight light, vec3 viewDir)
 vec3 CalcPointLight(PointLight light, vec3 viewDir)
 {
     vec3 LightPos = light.position;
-    if (parallaxMapping_ != 0 || normalMapping_ != 0)
-        LightPos = TBN* light.position;
-    vec3 lightDir = normalize(LightPos - FragPos);
+    if (vs.parallaxMapping_ != 0 || vs.normalMapping_ != 0)
+        LightPos = vs.TBN* light.position;
+    vec3 lightDir = normalize(LightPos - vs.FragPos);
     // diffuse shading
     float diff = max(dot(Normal_, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
     // attenuation
-    float distance = length(LightPos - FragPos);
+    float distance = length(LightPos - vs.FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // combine results
     vec3 ambient = light.ambient * attenuation;
@@ -280,8 +284,8 @@ vec3 CalcPointLight(PointLight light, vec3 viewDir)
 
 vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 {
-    vec3 lightPos = TBN * light.position;
-	vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 lightPos = vs.TBN * light.position;
+	vec3 lightDir = normalize(lightPos - vs.FragPos);
     float theta = dot(lightDir, normalize(-light.direction)); 
     vec3 result = vec3(0.0f);
     
@@ -302,7 +306,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
         vec3 specular = light.specular * spec;//* texture(1.0f, TexCoords).rgb;  
         
         // attenuation
-        float distance    = length(lightPos - FragPos);
+        float distance    = length(lightPos - vs.FragPos);
         float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
         // ambient  *= attenuation; // remove attenuation from ambient, as otherwise at large distances the light would be darker inside than outside the spotlight due the ambient term in the else branche
@@ -324,7 +328,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 void main()
 {    
     float ambient = 0.2f;
-    float fogCoordinate = abs(eyeSpacePosition.z / eyeSpacePosition.w);
+    float fogCoordinate = abs(vs.eyeSpacePosition.z / vs.eyeSpacePosition.w);
     if(fog.isEnabled)
     {    
         if (fogCoordinate == 1.0)
@@ -334,38 +338,38 @@ void main()
         }
     }
 
-    vec3 viewDir = normalize(viewPos_ - FragPos);
+    vec3 viewDir = normalize(vs.viewPos_ - vs.FragPos);
 
-    if (parallaxMapping_)
+    if (vs.parallaxMapping_)
     {
-        vec2 texCoords = ParallaxMapping(TexCoordsParallax, viewDir); 
+        vec2 texCoords = ParallaxMapping(vs.TexCoordsParallax, viewDir); 
     
-        if(texCoords.x > maxParallax.x)
-             texCoords.x-= sz_.x;
-        else if (texCoords.x < off_.x)
-             texCoords.x += sz_.x;  
-        if(texCoords.y > maxParallax.y)
-            texCoords.y-= sz_.y;
-        else if (texCoords.y < off_.y)
-            texCoords.y+= sz_.y;
+        if(texCoords.x > vs.maxParallax.x)
+             texCoords.x-= vs.sz_.x;
+        else if (texCoords.x < vs.off_.x)
+             texCoords.x += vs.sz_.x;  
+        if(texCoords.y > vs.maxParallax.y)
+            texCoords.y-= vs.sz_.y;
+        else if (texCoords.y < vs.off_.y)
+            texCoords.y+= vs.sz_.y;
 
         TexCoordNormal = texCoords;
         TexCoord = texCoords;
     }
     else
     {
-        TexCoord = TexCoords;
-        TexCoordNormal = TexCoordsNormal;
+        TexCoord = vs.TexCoords;
+        TexCoordNormal = vs.TexCoordsNormal;
     }
 
     vec3 Normal0;
-    if (normalMapping_)
+    if (vs.normalMapping_)
     {
         vec3 BumpMapNormal = texture(normalMap, TexCoordNormal).rgb;
         Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0)); 
     }  
     else
-        Normal0 = Normal;
+        Normal0 = vs.Normal;
 
     // need turning on for each object individually
     //if (!gl_FrontFacing)

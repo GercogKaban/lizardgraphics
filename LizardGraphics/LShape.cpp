@@ -137,6 +137,7 @@ namespace LGraphics
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE,
                     glm::value_ptr(app->currentLight->getLightspaceMatrix()));
  
+        glUniform1f(glGetUniformLocation(shaderProgram, "tessellationLevel"),app->tesselationLevel);
         if (!app->drawingInShadow)
         {
             glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), false);

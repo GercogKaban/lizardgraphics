@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     info.shadowsHeight = 2048;
     info.shadowsWidth = 2048;
 #else
-    info.texturesQuality = LOW;
+    info.texturesQuality = HIGH;
     info.loading = FAST;
     info.shadowsHeight = 8192;
     info.shadowsWidth = 8192;
@@ -78,12 +78,13 @@ int main(int argc, char** argv)
         //m->rotateZ(90.0f);
         //for (size_t i = 0; i < 1; ++i)
         {   
-            for (size_t i = 0; i < 100; ++i)
-                for (size_t j = 0; j < 100; ++j)
+            //for (size_t i = 0; i < 100; ++i)
+                for (size_t j = 0; j < 2; ++j)
                 {
-                    auto  p = new LPlane(&app, { "Rocks011.jpg" });
+                    LPlane* p;
+                    p = new LPlane(&app, { "Rocks011.jpg" });
                     p->rotateX(270.0f);              
-                    p->move((float)i, yOffset, (float)j);
+                    p->move(0.0f, yOffset, (float)j);
                     p->setParallaxMapping(false);
                     p->setNormalMapping(true);
                 }
@@ -112,22 +113,6 @@ int main(int argc, char** argv)
             tor->setParallaxMapping(false);
 
         }
-            //c = new LCube(&app, { "Leather009.jpg" });
-
-        
-        //for (size_t i = 0; i < 20; ++i)
-        //    for (size_t j = 0; j < 20; ++j)
-        //{
-        //    auto c = new LWRectangle(&app, "textures/image1.bmp");
-        //    c->move(i, -0.5f, j);
-        //    c->rotateX(90.0f);
-        //    c->scale(1.0f, 1.0f, 1.0f);
-        //}
-
-        //c = new LCube(&app, "textures/gold.jpg");
-        //c->scale(0.1f, 0.1f, 0.1f);
-        //c->move(7.5f, 0.0f, 7.5f);
-        //new LSkyBox(&app, {"red"  });
     }
 
     auto test = new LModel(&app, { "Walking.fbx" });
@@ -190,7 +175,6 @@ int main(int argc, char** argv)
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            //s->setPosition(cameraPos);
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)
@@ -198,11 +182,13 @@ int main(int argc, char** argv)
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
             if (app.isPressed(GLFW_KEY_E))
-                app.heightScale += 0.01f;
+                app.tesselationLevel += 1.0f;
             if (app.isPressed(GLFW_KEY_Q))
-                app.heightScale -= 0.01f;
+                app.tesselationLevel -= 1.0f;
             if (app.isPressed(GLFW_KEY_G))
                 app.flag__ = !app.flag__;
+            if (app.isPressed(GLFW_KEY_T))
+                app.setTesselation(!app.getTesselation());
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });

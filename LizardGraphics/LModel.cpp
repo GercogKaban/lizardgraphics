@@ -145,11 +145,11 @@ void LGraphics::LModel::draw()
     {
         if (app->flag__)
         {
-            //const float scale = 0.0015f;
-            //const auto move_ = getMove();
-            //const auto vecToMove = glm::normalize(app->getCameraPos() - move_);
+            const float scale = 0.0015f;
+            const auto move_ = getMove();
+            const auto vecToMove = glm::normalize(app->getCameraPos() - move_);
 
-            //move(move_.x + vecToMove.x * scale, move_.y, move_.z + vecToMove.z * scale);
+            move(move_.x + vecToMove.x * scale, move_.y, move_.z + vecToMove.z * scale);
             animator.UpdateAnimation(app->getDeltaTime());
         }
     }
@@ -159,7 +159,7 @@ void LGraphics::LModel::draw()
     //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(transforms) * sizeof(glm::mat4), glm::value_ptr(transforms[0]), GL_DYNAMIC_COPY);
     //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
 
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), 100, GL_FALSE,
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), transforms.size(), GL_FALSE,
         glm::value_ptr(transforms[0]));
 
     FOR(i, 0, meshes.size())

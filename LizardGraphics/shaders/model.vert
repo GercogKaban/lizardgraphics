@@ -58,15 +58,17 @@ layout (location = 6) in vec4 weights;
 //    mat4 finalBonesTrans[MAX_BONES];
 //};
 
-out vec3 FragPos;
+out VS_OUT
+{
+out vec3 Normal;
 out vec2 TexCoords;
+out vec3 FragPos;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 Normal;
 out vec3 viewPos_; 
 out vec2 TexCoords_;
 out vec2 off_;
@@ -74,6 +76,7 @@ out vec2 sz_;
 out vec2 maxParallax;
 out flat int normalMapping_;
 out flat int parallaxMapping_;
+} vs;
 
 uniform mat4 view;
 uniform mat4 proj;
@@ -95,29 +98,29 @@ uniform mat4 finalBonesTrans[MAX_BONES];
 
 void main()
 {
-    normalMapping_ = normalMapping;
-    parallaxMapping_ = parallaxMapping;
+    vs.normalMapping_ = normalMapping;
+    vs.parallaxMapping_ = parallaxMapping;
     vec3 Tangent, Bitangent;
 
     if (parallaxMapping != 0)
     {
-        TexCoordsParallax = vec2(
+        vs.TexCoordsParallax = vec2(
 		    textureCoords.x *textureSizeParallax.x + offsetParallax.x, 
 		    textureCoords.y *textureSizeParallax.y + offsetParallax.y);
 
-        maxParallax = vec2(offsetParallax.x + textureSizeParallax.x, offsetParallax.y + textureSizeParallax.y);
-        off_ = offsetParallax;
-        sz_ = textureSizeParallax;
+        vs.maxParallax = vec2(offsetParallax.x + textureSizeParallax.x, offsetParallax.y + textureSizeParallax.y);
+        vs.off_ = offsetParallax;
+        vs.sz_ = textureSizeParallax;
     }
 
     if (normalMapping != 0)
     {
-        TexCoordsNormal = vec2(
+        vs.TexCoordsNormal = vec2(
 		    textureCoords.x *textureSizeNormal.x + offsetNormal.x, 
 		    textureCoords.y*textureSizeNormal.y + offsetNormal.y);
     }
     else
-        Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
+        vs.Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
     vec4 totalPosition = vec4(0.0f);
     for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
@@ -133,35 +136,35 @@ void main()
     }
 
     vec4 temp = model_ * vec4(vec3(totalPosition), 1.0);
-    eyeSpacePosition = view*temp;
+    vs.eyeSpacePosition = view*temp;
     vec3 FragPos_ = vec3(temp);
     if (normalMapping != 0 || parallaxMapping!= 0)
     {
         vec3 Tangent =   normalize(mat3(model_)*tangent);
         vec3 Bitangent = normalize(mat3(model_)*bitangent);
-        Normal =         normalize(mat3(model_)*normals);
-        Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);  
-        TBN = transpose (mat3(Tangent, Bitangent, Normal));  
+        vs.Normal =         normalize(mat3(model_)*normals);
+        Tangent =        normalize(Tangent - dot(Tangent, vs.Normal) * vs.Normal);  
+        vs.TBN = transpose (mat3(Tangent, Bitangent, vs.Normal));  
     }
     if (normalMapping != 0 || parallaxMapping!= 0)
     {
-        FragPos  = TBN * FragPos_;
-        viewPos_ = TBN * viewPos;
+        vs.FragPos  = vs.TBN * FragPos_;
+        vs.viewPos_ = vs.TBN * viewPos;
     }
 
     else 
     {
-        FragPos = FragPos_;
-        viewPos_ = viewPos;
+        vs.FragPos = FragPos_;
+        vs.viewPos_ = viewPos;
     }
 
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
-    projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
+    vs.projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
     
-    TexCoords = vec2(
+    vs.TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
 		textureCoords.y*textureSize.y + offset.y);   
-    model = model_;
-    TexCoords_ = textureCoords;
-    gl_Position = proj * eyeSpacePosition;
+    vs.model = model_;
+    vs.TexCoords_ = textureCoords;
+    gl_Position = proj * vs.eyeSpacePosition;
 }

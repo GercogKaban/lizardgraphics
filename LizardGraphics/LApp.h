@@ -178,6 +178,8 @@ namespace LGraphics
         void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
         bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
+        float tesselationLevel = 2.0f;
+
         bool flag__ = false;
     protected:
 
@@ -269,7 +271,7 @@ namespace LGraphics
         @brief Возвращает дескриптор GLFW окна.
 
         */
-        GLFWwindow* getWindowHandler() { return window_; }
+        static GLFWwindow* getWindowHandler() { return window_; }
 
         //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
@@ -310,6 +312,8 @@ namespace LGraphics
         const auto& getPrimitives() const { return primitives; }
         const auto& getModels() const { return models; }
 
+        void setTesselation(bool tesselation) { this->tesselation = tesselation; }
+        bool getTesselation() const { return tesselation; }
 
         auto& getSpotLights() { return lights[L_SPOT_LIGHT]; }
         auto& getPointLights() { return lights[L_POINT_LIGHT]; }
@@ -317,6 +321,7 @@ namespace LGraphics
         auto& getLights() {return lights;}
 
         LShaders::Shader* getStandartShader() const;
+        LShaders::Shader* getStandartShaderTes() const;
 
         bool isPressed(int key);
 
@@ -355,6 +360,7 @@ namespace LGraphics
         glm::vec3 getCameraUp() const { return cameraUp; }
         float getViewRadius() const { return viewRadius; }
 
+        const std::unique_ptr<LShaders::Shader>& getLightningShaderTes() { return info.api == L_OPENGL ? openGLLightShaderTes : lightShader; }
         const std::unique_ptr<LShaders::Shader>& getLightningShader() { return info.api == L_OPENGL ? openGLLightShader : lightShader; }
         //LShaders::Shader* getLightningShader() { return experimentalLightShader; }
 
@@ -389,11 +395,14 @@ namespace LGraphics
         float getDeltaTime() const { return deltaTime; }
 
     protected:
+
+        std::string loadingText;
         static LAppCreateInfo info;
 
         LSkyBox* skybox = nullptr;
 
         bool drawUI_ = true;
+        bool tesselation = false;
 
         std::stack<LImagedShape*> toDelete;
         std::stack<LImagedShape*> toCreate;
@@ -731,7 +740,7 @@ namespace LGraphics
         void handleSEH(const size_t& code);
         void handleCppException(std::exception& err);
 
-        GLFWwindow* window_;
+        static GLFWwindow* window_;
 
         glm::mat4 view, projection;
 
@@ -755,7 +764,7 @@ namespace LGraphics
         LBuffer* standartRectBuffer;
         //LBuffer* standartCubeBuffer;
 
-        std::unique_ptr<LShaders::Shader> openGLLightShader, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader,
+        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader,
             modelShader, shadowMapModelShader;
 
         std::mutex drawingMutex;
@@ -768,7 +777,10 @@ namespace LGraphics
         std::function<void()> beforeDrawingFunc = []() {};
         std::function<void()> afterDrawingFunc = []() {};
         std::function<void()> afterSwitchingFunc = []() {};
+        std::function<void()> loadingScreenFunc = customLoadingScreen;
 
+        static void customLoadingScreen();
+        std::thread* loadingScreen;
         GLuint ssbo;
 
         bool drawingInShadow;

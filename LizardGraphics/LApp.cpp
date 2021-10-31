@@ -23,6 +23,7 @@
 
 namespace LGraphics
 {
+    GLFWwindow* LApp::window_;
     LAppCreateInfo LApp::info;
 
     LApp::LApp(const LAppCreateInfo& info)
@@ -754,6 +755,11 @@ namespace LGraphics
         return info.api == L_VULKAN? lightShader.get() : openGLLightShader.get();
     }
 
+    LShaders::Shader* LApp::getStandartShaderTes() const
+    {
+        return openGLLightShaderTes.get();
+    }
+
     bool LApp::isPressed(int key)
     {
         return pressedKeys[key];
@@ -877,6 +883,7 @@ namespace LGraphics
     void LApp::initLEngine()
     {
         LOG_CALL
+
         LLogger::initErrors(info.logFlags);
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
@@ -922,9 +929,6 @@ namespace LGraphics
                 info.texturesQuality = LOW;
         }
 
-        //if (!std::filesystem::is_symlink(std::filesystem::path(texturesPath)))
-        //    throw std::runtime_error("please, do symlinks!");
-
         auto texturesPath = getRealTexturesPath();
 
         const std::string cachefile = "cachedate";
@@ -935,6 +939,7 @@ namespace LGraphics
 
         const auto texturesQualityDif = texturesPath + "diffuse/";
         const auto difCache = texturesQualityDif + cachefile;
+        loadingText = "Initializing " + difCache;
         if (!isExists(megatexture.textureAtl.getOutPath()) || isDirectoryChanged(texturesQualityDif, difCache))
         {
             generateMegatexture(texturesQualityDif, megatexture.textureAtl,
@@ -946,6 +951,7 @@ namespace LGraphics
 
         const auto texturesQualityNor = texturesPath + "normal/";
         const auto norCache = texturesQualityNor + cachefile;
+        loadingText = "Initializing " + norCache;
         if (!isExists(megatexture.normalAtl.getOutPath()) || isDirectoryChanged(texturesQualityNor, norCache))
         {
             generateMegatexture(texturesQualityNor, megatexture.normalAtl,
@@ -958,6 +964,7 @@ namespace LGraphics
 
         const auto texturesQualityDis = texturesPath + "displacement/";
         const auto disCache = texturesQualityDis + cachefile;
+        loadingText = "Initializing " + disCache;
         if (!isExists(megatexture.parallaxAtl.getOutPath()) || isDirectoryChanged(texturesQualityDis, disCache))
         {
             generateMegatexture(texturesQualityDis, megatexture.parallaxAtl,
@@ -1002,7 +1009,6 @@ namespace LGraphics
 
     void LApp::initRenderer()
     {
-        glfwInit();
         initOpenGL();
     }
 
@@ -1046,7 +1052,8 @@ namespace LGraphics
     void LApp::initOpenGL()
     {
         LOG_CALL
-        glfwSetErrorCallback(glfw_error_callback);
+        glfwInit();
+        //glfwSetErrorCallback(glfw_error_callback);
         if (!glfwInit())
             throw std::runtime_error("can't init glfw.");
 
@@ -1102,31 +1109,50 @@ namespace LGraphics
 
         ImGui_ImplGlfw_InitForOpenGL(window_, true);
         ImGui_ImplOpenGL3_Init(glsl_version);
+
+        customLoadingScreen();
+        //customLoadingScreen();
         if (info.api == L_OPENGL)
         {
+            openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
+                 ,(std::string(LIB_PATH)+"//shaders//primitive.vert").data()
+                ,(std::string(LIB_PATH) + "//shaders//primitive.frag").data(),
+                (std::string(LIB_PATH) + "//shaders//primitive.tesc").data(),
+                (std::string(LIB_PATH) + "//shaders//primitive.tese").data()));
+
             openGLLightShader.reset(new LShaders::OpenGLShader(this
-                 ,(std::string(LIB_PATH)+"//shaders//shadows.vert").data()
-                ,(std::string(LIB_PATH) + "//shaders//shadows.frag").data()));
+                , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(),"",""));
 
             modelShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//model.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadows.frag").data()));
+                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(),
+                "",
+                ""));
 
             skyBoxShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//skybox.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//skybox.frag").data()));
+                , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(),
+                "",
+                ""));
 
             skyBoxMirrorShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//baseMirror.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//baseMirror.frag").data()));
+                , (std::string(LIB_PATH) + "//shaders//baseMirror.frag").data(),
+                "",
+                ""));
 
             shadowMapShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data()));
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),
+                "",
+                ""));
 
             shadowMapModelShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data()));
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),
+                "",
+                ""));
         }
         //standartRectBuffer = new LRectangleBuffer(this);
         //standartSkyBoxBuffer = new LSkyBoxBuffer(this);
@@ -2626,6 +2652,50 @@ namespace LGraphics
         }
 
         throw std::runtime_error("failed to find suitable memory type!");
+    }
+
+    void LApp::customLoadingScreen()
+    {
+        //int i = 0;
+        //while (i++ < 2)
+        //{
+        //    ImGui_ImplOpenGL3_NewFrame();
+        //    ImGui_ImplGlfw_NewFrame();
+        //    ImGui::NewFrame();
+        //    bool act = true;
+        //    // Create a window called "My First Tool", with a menu bar.
+        //    ImGui::Begin("My First Tool", &act, ImGuiWindowFlags_MenuBar);
+        //    if (ImGui::BeginMenuBar())
+        //    {
+        //        if (ImGui::BeginMenu("File"))
+        //        {
+        //            if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+        //            if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+        //            if (ImGui::MenuItem("Close", "Ctrl+W")) { act = false; }
+        //            ImGui::EndMenu();
+        //        }
+        //        ImGui::EndMenuBar();
+        //    }
+
+        //    float color;
+        //    // Edit a color (stored as ~4 floats)
+        //    ImGui::ColorEdit4("Color", &color);
+
+        //    // Plot some values
+        //    const float my_values[] = { 0.2f, 0.1f, 1.0f, 0.5f, 0.9f, 2.2f };
+        //    ImGui::PlotLines("Frame Times", my_values, IM_ARRAYSIZE(my_values));
+
+        //    // Display contents in a scrolling region
+        //    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
+        //    ImGui::BeginChild("Scrolling");
+        //    for (int n = 0; n < 50; n++)
+        //        ImGui::Text("%04d: Some text", n);
+        //    ImGui::EndChild();
+        //    ImGui::End();
+        //    ImGui::Render();
+        //    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //    glfwSwapBuffers(window_);
+        //}
     }
 
     void LApp::setupVulkan()

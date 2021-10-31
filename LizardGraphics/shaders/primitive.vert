@@ -14,15 +14,20 @@ layout (location = 13) in vec2 offsetParallax;
 layout (location = 14) in vec2 textureSizeParallax;
 layout (location = 15) in ivec2 mapping;
 
-out vec3 FragPos;
+layout (location = 0) out vec3 position_;
+layout (location = 1) out vec3 normals_;
+
+out VS_OUT
+{
+out vec3 Normal;
 out vec2 TexCoords;
+out vec3 FragPos;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 Normal;
 out vec3 viewPos_; 
 out vec2 TexCoords_;
 out vec2 off_;
@@ -30,6 +35,7 @@ out vec2 sz_;
 out vec2 maxParallax;
 out flat int normalMapping_;
 out flat int parallaxMapping_;
+} vs;
 
 uniform vec3 viewPos;
 uniform mat4 view;
@@ -39,53 +45,47 @@ uniform mat4 lightSpaceMatrix;
 void main()
 {
     vec4 temp = model_ * vec4(position, 1.0);
-    eyeSpacePosition = view*temp;
-    vec3 FragPos_ = vec3(temp);
-    normalMapping_ = mapping[0];
-    parallaxMapping_ = mapping[1];
+    normals_ = normalize(mat3(transpose(inverse(model_))) * normals); 
+    position_ = temp.xyz;
+    vs.eyeSpacePosition = view*temp;
+    vs.normalMapping_ = mapping[0];
+    vs.parallaxMapping_ = mapping[1];
 
-    FragPos = FragPos_;
-    viewPos_ = viewPos;
+    vec3 FragPos_ = temp.xyz;
 
-    if (normalMapping_!=0 || parallaxMapping_!=0)
+    vs.FragPos = FragPos_;
+    vs.viewPos_ = viewPos;
+
+    if (vs.normalMapping_!=0 || vs.parallaxMapping_!=0)
     {
         vec3 Tangent =   normalize(mat3(model_)*tangent);
         vec3 Bitangent = normalize(mat3(model_)*bitangent);
-        Normal =         normalize(mat3(model_)*normals);
-        Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);
-        TBN = transpose(mat3(Tangent, Bitangent, Normal));    
+        Tangent =        normalize(Tangent - dot(Tangent, normals_) * normals_);
+        vs.TBN = transpose(mat3(Tangent, Bitangent, normals_));    
 
-        FragPos  = TBN * FragPos_;
-        viewPos_ = TBN * viewPos;
+        vs.FragPos  = vs.TBN * FragPos_;
+        vs.viewPos_ = vs.TBN * viewPos;
     }
 
-    if (parallaxMapping_)
-    {
-        TexCoordsParallax = vec2(
+        vs.TexCoordsParallax = vec2(
 		    textureCoords.x *textureSizeParallax.x + offsetParallax.x, 
 		    textureCoords.y *textureSizeParallax.y + offsetParallax.y);
 
-        maxParallax = vec2(offsetParallax.x + textureSizeParallax.x, offsetParallax.y + textureSizeParallax.y);
-        off_ = offsetParallax;
-        sz_ = textureSizeParallax;
-    }
+        vs.maxParallax = vec2(offsetParallax.x + textureSizeParallax.x, offsetParallax.y + textureSizeParallax.y);
+        vs.off_ = offsetParallax;
+        vs.sz_ = textureSizeParallax;
 
-    if (normalMapping_)
-    {
-        TexCoordsNormal = vec2(
+        vs.TexCoordsNormal = vec2(
 		    textureCoords.x *textureSizeNormal.x + offsetNormal.x, 
 		    textureCoords.y*textureSizeNormal.y + offsetNormal.y);
-    }
-    else
-        Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
 
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
-    projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
+    vs.projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
-    TexCoords = vec2(
+    vs.TexCoords = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
 		textureCoords.y*textureSize.y + offset.y);
-    model = model_;
-    TexCoords_ = textureCoords;
-    gl_Position = proj * eyeSpacePosition;
+    vs.model = model_;
+    vs.TexCoords_ = textureCoords;
+    gl_Position = proj * vs.eyeSpacePosition;
 }

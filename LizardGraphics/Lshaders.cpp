@@ -32,18 +32,27 @@ LShaders::VulkanShader::VulkanShader(LGraphics::LApp* app, const char* vertPath,
     initShaders(vertexShader, framgentShader, vSize, fSize);
 }
 
-LShaders::OpenGLShader::OpenGLShader(LGraphics::LApp* app, const char* v_shader, const char* f_shader)
+LShaders::OpenGLShader::OpenGLShader(LGraphics::LApp* app, const char* vShader, const char* fShader, const char* tessControlShader,
+    const char* tessEvalShader)
     :Shader(app)
 {
     LOG_CALL
     size_t size;
-    auto vertexShader = loadShader(v_shader, size);
+    auto vertexShader = loadShader(vShader, size);
     if (!size)
-        std::runtime_error("can't load vertex shader by " + std::string(v_shader) + " path!");
-    auto framgentShader = loadShader(f_shader, size);
+        std::runtime_error("can't load vertex shader by " + std::string(vShader) + " path!");
+    auto framgentShader = loadShader(fShader, size);
     if (!size)
-        std::runtime_error("can't load fragment shader by " + std::string(f_shader) + " path!");
-    initShaders(vertexShader, framgentShader);
+        std::runtime_error("can't load fragment shader by " + std::string(fShader) + " path!");
+    auto tcShader = loadShader(tessControlShader, size);
+    if (!size && strlen(tcShader))
+        std::runtime_error("can't load tesselation control shader by " + std::string(tessControlShader) + " path!");
+    auto tesShader = loadShader(tessEvalShader, size);
+    if (!size && strlen(tesShader))
+        std::runtime_error("can't load tesselation evaluation by " + std::string(tessEvalShader) + " path!");
+
+
+    initShaders(vertexShader, framgentShader, tcShader, tesShader);
 }
 
 LShaders::VulkanShader::~VulkanShader()
@@ -220,72 +229,92 @@ void LShaders::VulkanShader::initShaders(const char* v_shader, const char* f_sha
     vkDestroyShaderModule(app->g_Device, fragShader, nullptr);
 }
 
-void LShaders::OpenGLShader::initShaders(const char* v_shader, const char* f_shader)
+void LShaders::OpenGLShader::initShaders(const char* vShader, const char* fShader, const char* tessControlShader,
+    const char* tessEvalShader)
 {
     LOG_CALL
     char infoLog[512];
     GLint success;
-    const GLchar* vert = (GLchar*)v_shader;
-    const GLchar* frag = (GLchar*)f_shader;
-    GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vert, NULL);
-    glCompileShader(vertex);
-    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-        PRINTLN(infoLog);
-        throw std::runtime_error("vertex shader compilation failed!\n");
-    }
+    const GLchar* vert = (GLchar*)vShader;
+    const GLchar* frag = (GLchar*)fShader;
+    const GLchar* tc = (GLchar*)tessControlShader;
+    const GLchar* tes = (GLchar*)tessEvalShader;
 
-    GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &frag, NULL);
-    glCompileShader(fragment);
-
-    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        GLint maxLength = 0;
-        glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
-        std::vector<GLchar> errorLog(maxLength);
-        glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
-        PRINTLN("fragment shader compilation failed!\n", &errorLog[0]);
-    }
+    auto vertexProg = compileShader(vert,GL_VERTEX_SHADER);
+    auto fragmentProg = compileShader(frag, GL_FRAGMENT_SHADER);
+    auto tcProg = compileShader(tc, GL_TESS_CONTROL_SHADER);
+    auto tesProg = compileShader(tes, GL_TESS_EVALUATION_SHADER);
 
     this->program = glCreateProgram();
-    glAttachShader(this->program, vertex);
-    glAttachShader(this->program, fragment);
+    glAttachShader(this->program, vertexProg);
+    glAttachShader(this->program, fragmentProg);
+    if (tcProg != -1) 
+        glAttachShader(this->program, tcProg);
+    if (tesProg != -1) 
+        glAttachShader(this->program, tesProg);
+
     glLinkProgram(this->program);
     glGetProgramiv(this->program, GL_LINK_STATUS, &success);
     if (!success)
     {
         glGetProgramInfoLog(this->program, 512, NULL, infoLog);
-        PRINTLN("shader program linking failed!\n", infoLog);
+        throw std::runtime_error("shader program linking failed!\n" + std::string(infoLog));
     }
 
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
+    glDetachShader(this->program,vertexProg);
+    glDetachShader(this->program, fragmentProg);
+    if (tcProg != -1)
+        glDetachShader(this->program, tcProg);
+    if (tesProg != -1)
+        glDetachShader(this->program, tesProg);
+}
+
+void LShaders::OpenGLShader::checkCreation(GLuint shader, const std::string& shaderType) const
+{
+    GLint success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        char infoLog[512];
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        PRINTLN(infoLog);
+        throw std::runtime_error(shaderType + " shader compilation failed!\n");
+    }
+}
+
+GLuint LShaders::OpenGLShader::compileShader(const GLchar* source, int shaderType) const
+{
+    if (!source || !strlen(source))
+        return -1;
+    GLuint shader = glCreateShader(shaderType);
+    glShaderSource(shader, 1, &source, NULL);
+    glCompileShader(shader);
+    switch (shaderType)
+    {
+    case GL_VERTEX_SHADER:
+        checkCreation(shader,"vertex");
+        break;
+    case GL_FRAGMENT_SHADER:
+        checkCreation(shader, "fragment");
+        break;
+    case GL_TESS_CONTROL_SHADER:
+        checkCreation(shader, "tesselation control");
+        break;
+    case GL_TESS_EVALUATION_SHADER:
+        checkCreation(shader, "tesselation evaluation");
+        break;
+    }
+    return shader;
 }
 
 const char* LShaders::Shader::loadShader(const char* shader, size_t& shaderSize)
 {
     LOG_CALL
-    //std::ifstream in(shader,std::ios::binary);
-
-    //if (!in.is_open())
-    //    throw std::runtime_error("failed to open file!");
-
-    //std::stringstream stream;
-    //stream << in.rdbuf();
-    //shaderSize = stream.str().size();
-    //char* shaderSource = new char[shaderSize + app->info.api == LGraphics::L_VULKAN ? 0 : 1];
-    //memcpy(shaderSource, stream.str().data(), shaderSize);
-    //if (app->info.api == LGraphics::L_OPENGL)
-    //    shaderSource[shaderSize] = '\0';
-    //in.close();
-    //return shaderSource;
-
-
+    if (!shader || !strlen(shader))
+    {
+        shaderSize = 0;
+        return "";
+    }
     std::ifstream in(shader, std::ios::ate | std::ios::binary);
 
     if (!in.is_open())
