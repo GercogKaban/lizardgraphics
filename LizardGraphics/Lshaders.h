@@ -60,9 +60,9 @@ namespace LShaders
 
         const char* getObjectType() const override { return "OGLShader"; }
         OpenGLShader(LGraphics::LApp* app, const char* vShader, const char* fShader, const char* tessControlShader,
-            const char* tessEvalShader);
+            const char* tessEvalShader, const char* geometryShader);
         void initShaders(const char* vShader, const char* fShader, const char* tessControlShader,
-            const char* tessEvalShader);
+            const char* tessEvalShader, const char* geometryShader);
         /*!
         @brief Возвращает шейдерную программу.
         */

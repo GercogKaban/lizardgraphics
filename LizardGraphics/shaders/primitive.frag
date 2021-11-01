@@ -52,12 +52,13 @@ struct Fog
 
 in VS_OUT
 {
-//in vec3 Position;
 in vec3 Normal;
 in vec2 TexCoords;
 in vec3 FragPos;
+in vec3 FragPos_;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
+in vec2 TexCoordsReflex;  
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
@@ -67,20 +68,27 @@ in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
-in flat int normalMapping_;
-in flat int parallaxMapping_;
+in flat ivec3 mapping;
 } vs;
 
 out vec4 color;
 
 vec2 TexCoord;
 vec2 TexCoordNormal;
+vec2 TexCoordReflex;
 vec3 Normal_;
+
+uniform vec3 viewPos;
+uniform mat4 view;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
 uniform sampler2D parallaxMap;
+uniform sampler2D reflexMap;
+
+uniform samplerCube environment;
+
 uniform int selfShading;
 uniform float heightScale;
 uniform ivec2 screenSize;
@@ -93,6 +101,7 @@ uniform int pointSourcesCount = 0;
 uniform int spotSourcesCount = 0;
 uniform int dirSourcesCount = 0;
 uniform Fog fog;
+uniform bool drawingReflex;
 
 vec3 CalcDirLight(DirLight light, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 viewDir);
@@ -259,7 +268,7 @@ vec3 CalcDirLight(DirLight light, vec3 viewDir)
 vec3 CalcPointLight(PointLight light, vec3 viewDir)
 {
     vec3 LightPos = light.position;
-    if (vs.parallaxMapping_ != 0 || vs.normalMapping_ != 0)
+    if (vs.mapping[1] != 0 || vs.mapping[0] != 0)
         LightPos = vs.TBN* light.position;
     vec3 lightDir = normalize(LightPos - vs.FragPos);
     // diffuse shading
@@ -340,7 +349,7 @@ void main()
 
     vec3 viewDir = normalize(vs.viewPos_ - vs.FragPos);
 
-    if (vs.parallaxMapping_)
+    if (vs.mapping[1])
     {
         vec2 texCoords = ParallaxMapping(vs.TexCoordsParallax, viewDir); 
     
@@ -355,15 +364,17 @@ void main()
 
         TexCoordNormal = texCoords;
         TexCoord = texCoords;
+        TexCoordReflex = texCoords;
     }
     else
     {
         TexCoord = vs.TexCoords;
         TexCoordNormal = vs.TexCoordsNormal;
+        TexCoordReflex = vs.TexCoordsReflex;
     }
 
     vec3 Normal0;
-    if (vs.normalMapping_)
+    if (vs.mapping[0])
     {
         vec3 BumpMapNormal = texture(normalMap, TexCoordNormal).rgb;
         Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0)); 
@@ -378,14 +389,26 @@ void main()
     Normal_ = Normal0;
 
     vec3 result = vec3(0.0);
+    if (!drawingReflex)
+    {
     for (int i = 0; i < pointSourcesCount; ++i)
         result += CalcPointLight(pointSources[i],viewDir);
     for (int i = 0; i < spotSourcesCount; ++i)
         result += CalcSpotLight(spotSources[i],viewDir);
     for (int i = 0; i < dirSourcesCount; ++i)
         result += CalcDirLight(dirSources[i],viewDir);
-
-    color = vec4(result,1.0) * texture(diffuseMap, TexCoord);
+    }
+    else
+        result =  vec3(1.0f);
+    vec4 reflex = texture(reflexMap, TexCoordReflex);
+    if (!drawingReflex && vs.mapping[2] != 0 && (reflex.r != 0 || reflex.g != 0 || reflex.b != 0))
+    {
+        vec3 I = normalize(vs.FragPos_ - viewPos);
+        vec3 R = reflect(I, vs.Normal);
+        color = vec4(texture(environment, R).rgb, 1.0);
+    }
+    else
+        color = vec4(result,1.0) * texture(diffuseMap, TexCoord);
     if(fog.isEnabled)
        color = mix(color, vec4(fog.color, 1.0), getFogFactor(fogCoordinate));
     if (color.a - 0.1 < 0) discard;

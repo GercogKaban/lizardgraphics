@@ -155,7 +155,6 @@ namespace LGraphics
         LApp(const LAppCreateInfo& info);
         ~LApp();
 
-        LWidget* findByLID(int id);
         /*!
         @brief Бесконечный цикл
 
@@ -167,36 +166,27 @@ namespace LGraphics
         void emergencyStop(unsigned long code);
         void emergencyStop(std::exception& exception);
 
-        void switchRendererTo(RenderingAPI api);
-        void setAfterSwitchingFunc(std::function<void()> func) { afterSwitchingFunc = func; }
         const LAppCreateInfo& getAppInfo() const { return info; }
 
-        const int* getObjectsOnScreen() const { return objectsOnScreen; }
-        void setParallaxMapping(bool parallaxMapping) { this->parallaxMapping = parallaxMapping; }
-        bool getParallaxMapping() const { return parallaxMapping; }
+        // нужен фикс
+        float tesselationLevel = 2.0f;
+        bool flag__ = false;
 
+    protected:
         void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
         bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
-        float tesselationLevel = 2.0f;
-
-        bool flag__ = false;
-    protected:
+        void switchRendererTo(RenderingAPI api);
+        void setAfterSwitchingFunc(std::function<void()> func) { afterSwitchingFunc = func; }
 
         static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
             std::cout << "[OpenGL Error](" << type << ") " << message << std::endl;
         }
         GLuint currentDepthMap;
-        void* buff;
 
-        bool parallaxMapping = true;
         bool parallaxSelfShading = true;
-
-        int* objectsOnScreen;
         uint32_t modelLoadingFlags = 0;
         std::unordered_map<QualityLevels, std::string> qualityDirectories;
-        //std::unordered_map<QualityLevels, std::string> modelsDirectories;
-        //LID<int> idManager;
 
         void loop_();
         void initApp_(const LAppCreateInfo& info);
@@ -207,6 +197,11 @@ namespace LGraphics
 
         void drawScene();
         void drawSceneForLight(LLight* l);
+        void drawSceneForReflex(GLuint reflexFBO, size_t width, size_t height, glm::vec3 position);
+
+        void clearColor();
+        void clearDepth();
+        void clearColorDepth();
 
         bool isDirectoryChanged(const std::string& path, const std::string& cacheFile) const;
         void saveDirectoryChangedTime(const std::string& path, const std::string& filePath) const;
@@ -214,6 +209,7 @@ namespace LGraphics
         std::string getRealDiffusePath() const;
         std::string getRealNormalPath() const;
         std::string getRealDisplacementPath() const;
+        std::string getRealReflexPath() const;
 
         std::string getRealTexturesPath() const;
         std::string getRealModelsPath() const;
@@ -240,11 +236,11 @@ namespace LGraphics
             Atlas textureAtl = Atlas("textures/out.jpg");
             Atlas normalAtl = Atlas("textures/out.jpg");
             Atlas parallaxAtl = Atlas("textures/out.jpg");
-            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal, subtexturesParallax;
-            GLuint id, idNormal, idParallax; 
+            Atlas reflexAtl = Atlas("textures/out.jpg");
+            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal, subtexturesParallax,
+                subtexturesReflex;
+            GLuint id, idNormal, idParallax, idReflex; 
         } megatexture;
-
-    protected:
 
         void generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath);
         void initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures,
@@ -253,6 +249,8 @@ namespace LGraphics
         LModel* cube, *plane, *sphere, *icosphere, *cone, *cylinder, *torus;
 
     public:
+
+        // нужен фикс
         float heightScale = 0.03f;
         struct LFog
         {
@@ -260,6 +258,8 @@ namespace LGraphics
             float density;
             bool isEnabled = false;
         }fog;
+
+        void initReflex();
 
         /*!
         @brief Возвращает размеры окна (в пикселях).
@@ -269,11 +269,9 @@ namespace LGraphics
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
-
         */
         static GLFWwindow* getWindowHandler() { return window_; }
 
-        //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
         
         template<typename T>
@@ -300,39 +298,29 @@ namespace LGraphics
         void removeObject(LModel* w);
         void deleteObject(LModel* w);
 
-        //template <typename C>
-        //void addObject(LWidget* w, std::vector<C*>& collection)
-        //{
-        //    assert(collection.size() + 1 <= getPoolSize() && "error, pool overflowed!\n");
-        //    collection.push_back(((C*)w));
-        //}
-
-        void refreshObjectMatrices();
-
         const auto& getPrimitives() const { return primitives; }
         const auto& getModels() const { return models; }
 
         void setTesselation(bool tesselation) { this->tesselation = tesselation; }
         bool getTesselation() const { return tesselation; }
 
-        auto& getSpotLights() { return lights[L_SPOT_LIGHT]; }
-        auto& getPointLights() { return lights[L_POINT_LIGHT]; }
-        auto& getDirectedLights() { return lights[L_DIRECTIONAL_LIGHT]; }
-        auto& getLights() {return lights;}
+        const auto& getSpotLights() const { return lights[L_SPOT_LIGHT]; }
+        const auto& getPointLights() const { return lights[L_POINT_LIGHT]; }
+        const auto& getDirectedLights() const { return lights[L_DIRECTIONAL_LIGHT]; }
+        const auto& getLights() const {return lights;}
 
         LShaders::Shader* getStandartShader() const;
         LShaders::Shader* getStandartShaderTes() const;
 
         bool isPressed(int key);
 
-        glm::mat4 getViewMatrix() const { return view; }
-        glm::mat4 getProjectionMatrix() const { return projection; }
+        const glm::mat4& getViewMatrix() const { return view; }
+        const glm::mat4& getProjectionMatrix() const { return projection; }
 
         std::mutex& getDrawingMutex() { return drawingMutex; }
 
         void setSleepTime(size_t milliseconds) { sleepTime = milliseconds; }
         size_t getSleepTime() const { return sleepTime; }
-
 
         void lockFrontViewCamera() { cameraFrontViewLock = true; }
         void unlockFrontViewCamera() { cameraFrontViewLock = false; }
@@ -362,15 +350,11 @@ namespace LGraphics
 
         const std::unique_ptr<LShaders::Shader>& getLightningShaderTes() { return info.api == L_OPENGL ? openGLLightShaderTes : lightShader; }
         const std::unique_ptr<LShaders::Shader>& getLightningShader() { return info.api == L_OPENGL ? openGLLightShader : lightShader; }
-        //LShaders::Shader* getLightningShader() { return experimentalLightShader; }
-
-        void setLighting(LStates state) { info.lighting = state; }
 
         glm::vec2 getMouseCoords() const { return mouseCoords; }
 
-        ObjectPool<LPlane*> lwRectPool;
-
-        std::vector<LNonWidget*> customObjects;
+        //ObjectPool<LPlane*> lwRectPool;
+        //std::vector<LNonWidget*> customObjects;
 
         void setImgui(std::function<void()> func) { imgui = func; }
         void safeDelete(LImagedShape* w) { toDelete.push(w); }
@@ -389,7 +373,6 @@ namespace LGraphics
 
         void setPitch(float pitch) { this->pitch = pitch; };
         float getPitch() const { return pitch; }
-
 
         float getCurrentFrame() const { return lastFrame; }
         float getDeltaTime() const { return deltaTime; }
@@ -415,6 +398,8 @@ namespace LGraphics
         glm::vec2 prevCoords = glm::vec2(0.0f);
         float yaw = -20.0f;
         float pitch = 10.0f;
+
+        std::array<std::pair<float, float>, 3> lastLoadedRanges;
 
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -444,6 +429,8 @@ namespace LGraphics
         void setWindowCallbacks();
 
         void checkEvents();
+        void checkError() const;
+        void checkFramebufferError() const;
 
         void releaseVulkanResources();
         void releaseOpenGLResources();
@@ -753,19 +740,13 @@ namespace LGraphics
 
         std::vector<LLight*> lights[3];
         LLight* currentLight = nullptr;
-        //std::vector<LWidget*> primitives;
         std::vector<LModel*> models;
 
-        //int width, height;
-
         size_t sleepTime = 0;
-
-        //LBuffer* standartSkyBoxBuffer;
         LBuffer* standartRectBuffer;
-        //LBuffer* standartCubeBuffer;
 
         std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader,
-            modelShader, shadowMapModelShader;
+            modelShader, shadowMapModelShader, reflexPrimitiveShader, reflexModelShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -783,7 +764,8 @@ namespace LGraphics
         std::thread* loadingScreen;
         GLuint ssbo;
 
-        bool drawingInShadow;
+        bool drawingInShadow, drawingReflex;
+        glm::vec3 reflexPos;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
         VkAllocationCallbacks* g_Allocator = NULL;

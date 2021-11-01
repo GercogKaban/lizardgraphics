@@ -94,7 +94,6 @@ namespace LGraphics
         static std::unordered_map<std::string, TexturesData> textures;
         static std::unordered_map<std::string, LModel*> models;
         static LModel* currentModel;
-        static aiMatrix4x4 m_GlobalInverseTransform;
     };
 }
 

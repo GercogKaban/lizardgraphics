@@ -35,6 +35,15 @@ namespace LGraphics
         parallax.offset = in.offset;
         parallax.size = in.size;
     }
+
+    void LImage::setReflex(const TexturesData& data)
+    {
+        auto& reflex = TO_GL(textures[3]);
+        const auto& in = TO_GL(data);
+        reflex.id = in.id;
+        reflex.offset = in.offset;
+        reflex.size = in.size;
+    }
 #else
     void LImage::setDiffuse(GLuint id)
     { 
@@ -50,6 +59,7 @@ namespace LGraphics
     LImage::LImage(const TexturesData& diffuseData, const TexturesData& normalData, const TexturesData& displacementData)
     {
         textures.push_back (TexturesData(new TexturesData::OGLImageData));
+        textures.push_back(TexturesData(new TexturesData::OGLImageData));
         textures.push_back(TexturesData(new TexturesData::OGLImageData));
         textures.push_back(TexturesData(new TexturesData::OGLImageData));
 

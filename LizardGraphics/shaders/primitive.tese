@@ -14,8 +14,10 @@ in VS_OUT
 in vec3 Normal;
 in vec2 TexCoords;
 in vec3 FragPos;
+in vec3 FragPos_;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
+in vec2 TexCoordsReflex;
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
@@ -25,8 +27,7 @@ in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
-in flat int normalMapping_;
-in flat int parallaxMapping_;
+in flat ivec3 mapping;
 } vs[];
 
 out VS_OUT
@@ -35,8 +36,10 @@ out VS_OUT
 out vec3 Normal;
 out vec2 TexCoords;
 out vec3 FragPos;
+out vec3 FragPos_;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
+out vec2 TexCoordsReflex;
 out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
@@ -46,8 +49,7 @@ out vec2 TexCoords_;
 out vec2 off_;
 out vec2 sz_;
 out vec2 maxParallax;
-out flat int normalMapping_;
-out flat int parallaxMapping_;
+out flat ivec3 mapping;
 } tes_out;
 
  
@@ -80,6 +82,7 @@ void main()
     tes_out.FragPos = vs[0].FragPos;
     tes_out.TexCoordsNormal = vs[0].TexCoordsNormal;
     tes_out.TexCoordsParallax = vs[0].TexCoordsParallax;
+    tes_out.TexCoordsReflex = vs[0].TexCoordsReflex;
     tes_out.projCoords = vs[0].projCoords;
     tes_out.eyeSpacePosition = vs[0].eyeSpacePosition;
     tes_out.TBN = vs[0].TBN;
@@ -88,8 +91,9 @@ void main()
     tes_out.off_ = vs[0].off_;
     tes_out.sz_ = vs[0].sz_;
     tes_out.maxParallax = vs[0].maxParallax;
-    tes_out.normalMapping_ = vs[0].normalMapping_;
-    tes_out.parallaxMapping_ = vs[0].parallaxMapping_;
+    tes_out.mapping[0] = vs[0].mapping[0];
+    tes_out.mapping[1] = vs[0].mapping[1];
+    tes_out.mapping[2] = vs[0].mapping[2];
 
 
  vec3 uvwSquared = uvw*uvw;

@@ -62,8 +62,10 @@ void LGraphics::LWidget::setUpdateUniformsFlag()
         changed = 1;
 }
 
-LGraphics::LWidget::LWidget(LApp* app /*,ImageResource res*/)
+LGraphics::LWidget::LWidget(LApp* app)
 {
     this->app = app;
+    auto ranges = app->lastLoadedRanges;
+    rangeX = ranges[0]; rangeY = ranges[1]; rangeZ = ranges[2];
     setUpdateUniformsFlag();
 }

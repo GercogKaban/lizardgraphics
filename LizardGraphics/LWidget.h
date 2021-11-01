@@ -47,13 +47,11 @@ namespace LGraphics
         struct PrimitiveUniforms
         {
             glm::mat4 model;
-            glm::vec2 offset;
-            glm::vec2 textureSize;
-            glm::vec2 offsetNormal;
-            glm::vec2 textureSizeNormal;
-            glm::vec2 offsetParallax;
-            glm::vec2 textureSizeParallax;
-            glm::ivec2 mapping;
+            glm::vec4 diffuseCoords;
+            glm::vec4 normalCoords;
+            glm::vec4 heightCoords;
+            glm::vec4 reflexCoords;
+            glm::ivec3 mapping;
         };
 
         //using PlaneUniforms = WidgetUniforms;
@@ -175,11 +173,11 @@ namespace LGraphics
         bool isChanged() const { return changed != UNMODIFIED; }
         //virtual int getId() const { return id; }
         
-
         virtual ~LWidget();
 
     protected:
 
+        std::pair<float, float> rangeX, rangeY, rangeZ;
         uint64_t id = 0;
         int material = 0;
 

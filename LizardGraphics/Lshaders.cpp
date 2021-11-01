@@ -3,6 +3,7 @@
 #include "Lshaders.h"
 #include "LApp.h"
 #include "LLogger.h"
+#include "constants.h"
 
 VkShaderModule LShaders::VulkanShader::genShaderModule(const char* shader, size_t size)
 {
@@ -33,7 +34,7 @@ LShaders::VulkanShader::VulkanShader(LGraphics::LApp* app, const char* vertPath,
 }
 
 LShaders::OpenGLShader::OpenGLShader(LGraphics::LApp* app, const char* vShader, const char* fShader, const char* tessControlShader,
-    const char* tessEvalShader)
+    const char* tessEvalShader, const char* geometryShader)
     :Shader(app)
 {
     LOG_CALL
@@ -50,9 +51,12 @@ LShaders::OpenGLShader::OpenGLShader(LGraphics::LApp* app, const char* vShader, 
     auto tesShader = loadShader(tessEvalShader, size);
     if (!size && strlen(tesShader))
         std::runtime_error("can't load tesselation evaluation by " + std::string(tessEvalShader) + " path!");
+    auto geomShader = loadShader(geometryShader, size);
+    if (!size && strlen(geometryShader))
+        std::runtime_error("can't load geometry shader by " + std::string(geometryShader) + " path!");
 
 
-    initShaders(vertexShader, framgentShader, tcShader, tesShader);
+    initShaders(vertexShader, framgentShader, tcShader, tesShader, geomShader);
 }
 
 LShaders::VulkanShader::~VulkanShader()
@@ -230,7 +234,7 @@ void LShaders::VulkanShader::initShaders(const char* v_shader, const char* f_sha
 }
 
 void LShaders::OpenGLShader::initShaders(const char* vShader, const char* fShader, const char* tessControlShader,
-    const char* tessEvalShader)
+    const char* tessEvalShader, const char* geometryShader)
 {
     LOG_CALL
     char infoLog[512];
@@ -239,19 +243,23 @@ void LShaders::OpenGLShader::initShaders(const char* vShader, const char* fShade
     const GLchar* frag = (GLchar*)fShader;
     const GLchar* tc = (GLchar*)tessControlShader;
     const GLchar* tes = (GLchar*)tessEvalShader;
+    const GLchar* geom = (GLchar*)geometryShader;
 
     auto vertexProg = compileShader(vert,GL_VERTEX_SHADER);
     auto fragmentProg = compileShader(frag, GL_FRAGMENT_SHADER);
     auto tcProg = compileShader(tc, GL_TESS_CONTROL_SHADER);
     auto tesProg = compileShader(tes, GL_TESS_EVALUATION_SHADER);
+    auto geomProg = compileShader(geom, GL_GEOMETRY_SHADER);
 
     this->program = glCreateProgram();
     glAttachShader(this->program, vertexProg);
     glAttachShader(this->program, fragmentProg);
-    if (tcProg != -1) 
+    if (tcProg != UNINITIALIZED)
         glAttachShader(this->program, tcProg);
-    if (tesProg != -1) 
+    if (tesProg != UNINITIALIZED)
         glAttachShader(this->program, tesProg);
+    if (geomProg != UNINITIALIZED)
+        glAttachShader(this->program, geomProg);
 
     glLinkProgram(this->program);
     glGetProgramiv(this->program, GL_LINK_STATUS, &success);
@@ -263,10 +271,12 @@ void LShaders::OpenGLShader::initShaders(const char* vShader, const char* fShade
 
     glDetachShader(this->program,vertexProg);
     glDetachShader(this->program, fragmentProg);
-    if (tcProg != -1)
+    if (tcProg != UNINITIALIZED)
         glDetachShader(this->program, tcProg);
-    if (tesProg != -1)
+    if (tesProg != UNINITIALIZED)
         glDetachShader(this->program, tesProg);
+    if (geomProg != UNINITIALIZED)
+        glDetachShader(this->program, geomProg);
 }
 
 void LShaders::OpenGLShader::checkCreation(GLuint shader, const std::string& shaderType) const

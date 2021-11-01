@@ -5,6 +5,9 @@
 #include "include/glm/gtc/quaternion.hpp"
 #include <assimp/scene.h>
 
+#include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+
 #include "constants.h"
 
 namespace LGraphics
@@ -174,7 +177,7 @@ namespace LGraphics
 
     void Animator::UpdateAnimation(float dt)
     {
-        m_DeltaTime = dt + speed * m_CurrentAnimation.GetDuration();
+        m_DeltaTime = dt + speed / ImGui::GetIO().Framerate * m_CurrentAnimation.GetDuration();
         m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * m_DeltaTime;
         m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
         CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.0f));

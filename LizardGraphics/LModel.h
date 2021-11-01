@@ -8,6 +8,12 @@ namespace LGraphics
 {
     class LResourceManager;
 
+#define CTOR_PATH_VARS const std::string& modelName, const std::string& diffuseName, \
+     const std::string& normalName, const std::string& displacementName, const std::string& reflexName
+
+#define CTOR_PATH_VARS_VEC const std::string& modelName, const std::vector<std::string>& diffuseNames, \
+     const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames, const std::vector<std::string>& reflexNames
+
     class LModel : public LShape
     {
         friend LApp;
@@ -33,21 +39,23 @@ namespace LGraphics
         void setDiffuse(const TexturesData& data, size_t meshNum = 0);
         void setNormal(const TexturesData& data, size_t meshNum = 0);
         void setDisplacement(const TexturesData& data, size_t meshNum = 0);
+        void setReflex(const TexturesData& data, size_t meshNum = 0);
 
         void setNormalMapping(bool normalMapping, size_t meshNum = 0);
         void setParallaxMapping(bool parallaxMapping, size_t meshNum = 0);
+        void setReflexMapping(bool reflexMapping, size_t meshNum = 0);
 
         void setNormalMappingAllMeshes(bool normalMapping);
         void setParallaxMappingAllMeshes(bool parallaxMapping);
+        void setReflexMappingAllMeshes(bool reflexMapping);
 
         bool getNormalMapping(size_t meshNum = 0)   const { return meshes[meshNum].image->getNormalMapping(); };
         bool getParallaxMapping(size_t meshNum = 0) const { return meshes[meshNum].image->getParallaxMapping(); };
+        bool getReflexMapping(size_t meshNum = 0) const { return meshes[meshNum].image->getReflexMapping(); };
 
         LModel(LApp* app, ModelResource res, bool cropTextureCoords = false);
-        LModel(LApp* app, const std::string& modelPath, const std::string& diffusePath,
-            const std::string& normalPath, const std::string& displacementPath, bool cropTextureCoords = false);
-        LModel(LApp* app, const std::string& modelPath, const std::vector<std::string>& diffuseNames,
-            const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames, bool cropTextureCoords = false);
+        LModel(LApp* app, CTOR_PATH_VARS, bool cropTextureCoords = false);
+        LModel(LApp* app, CTOR_PATH_VARS_VEC, bool cropTextureCoords = false);
 
         LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, bool cropTextureCoords = false);
         LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, 
@@ -66,6 +74,9 @@ namespace LGraphics
         void stopAnimation();
         void restartAnimation();
 
+        void setReflexSize(const std::pair<size_t, size_t> size);
+        std::pair<size_t, size_t> getReflexSize() const;
+
     protected:
 
         LModel(LApp* app, const std::string& path, bool cropTextureCoords, size_t dummy);
@@ -83,5 +94,9 @@ namespace LGraphics
  
         bool playAnimation_ = false;
         void init();
+
+        size_t reflexWidth = 1024, reflexHeight= 1024;
+        GLuint reflexCubeMap = UNINITIALIZED;
+        GLuint reflexFBO = UNINITIALIZED;
     };
 }

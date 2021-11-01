@@ -17,8 +17,10 @@ namespace LGraphics
         diffusePath = app->getRealTexturesPath() + "diffuse/";
         normalsPath = app->getRealTexturesPath() + "normal/";
         displacementPath = app->getRealTexturesPath() + "displacement/";
+        reflexPath = app->getRealReflexPath() + "reflex/";
         setNormalMapping(changed,this,res.normals);
         setParallaxMapping(changed, this, res.parallax);
+        setReflexMapping(changed, this, res.reflex);
         if (u.size() == u.capacity())
             needToResetBuffer = true;
         u.push_back(PrimitiveUniforms());
@@ -90,6 +92,8 @@ namespace LGraphics
         shader = app->tesselation? (LShaders::OpenGLShader*)app->getStandartShaderTes() : (LShaders::OpenGLShader*)app->getStandartShader();
         if (app->drawingInShadow)
             shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
+        else if (app->drawingReflex)
+            shader = ((LShaders::OpenGLShader*)app->reflexPrimitiveShader.get());
         GLuint shaderProgram = shader->getShaderProgram();
         shader->use();
         setGlobalUniforms(shaderProgram);
@@ -104,6 +108,8 @@ namespace LGraphics
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
             glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
         }
         glBindVertexArray(vao);
         if (app->tesselation)
@@ -120,20 +126,23 @@ namespace LGraphics
         auto path = app->primitives[primitive][id]->getDiffusePath();
         auto pathNormal = app->primitives[primitive][id]->getNormalsPath();
         auto pathDisplacement = app->primitives[primitive][id]->getDisplacementPath();
+        auto pathReflex = app->primitives[primitive][id]->getReflexPath();
 
         const auto subtexture = app->megatexture.subtextures[path];
         const auto subtextureNormal = app->megatexture.subtexturesNormal[pathNormal];
         const auto subtextureParallax = app->megatexture.subtexturesParallax[pathDisplacement];
+        const auto subtextureReflex = app->megatexture.subtexturesReflex[pathReflex];
 
         auto& obj = buffer[id];
         obj.model = app->primitives[primitive][id]->calculateModelMatrix();
-        obj.offset = subtexture.first;
-        obj.textureSize = subtexture.second;
-        obj.offsetNormal = subtextureNormal.first;
-        obj.textureSizeNormal = subtextureNormal.second;
-        obj.offsetParallax = subtextureParallax.first;
-        obj.textureSizeParallax = subtextureParallax.second;
-        obj.mapping = { app->primitives[primitive][id]->getNormalMapping(),app->primitives[primitive][id]->getParallaxMapping() };
+
+        obj.diffuseCoords = { subtexture.first,subtexture.second };
+        obj.normalCoords = { subtextureNormal.first,subtextureNormal.second };
+        obj.heightCoords = { subtextureParallax.first,subtextureParallax.second };
+        obj.reflexCoords = { subtextureReflex.first,subtextureReflex.second };
+
+        obj.mapping = { app->primitives[primitive][id]->getNormalMapping(),app->primitives[primitive][id]->getParallaxMapping(),
+        app->primitives[primitive][id]->getReflexMapping() };
     }
 
     void LGraphics::LImagedShape::resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms> uniforms)
@@ -153,19 +162,16 @@ namespace LGraphics
         glEnableVertexAttribArray(8);
         glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(3 * vec4Size));
         glEnableVertexAttribArray(9);
-        glVertexAttribPointer(9, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)(4 * vec4Size));
+        glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, diffuseCoords));
         glEnableVertexAttribArray(10);
-        glVertexAttribPointer(10, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + vec2Size));
+        glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, normalCoords));
         glEnableVertexAttribArray(11);
-        glVertexAttribPointer(11, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 2 * vec2Size));
+        glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, heightCoords));
         glEnableVertexAttribArray(12);
-        glVertexAttribPointer(12, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 3 * vec2Size));
+        glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, reflexCoords));
         glEnableVertexAttribArray(13);
-        glVertexAttribPointer(13, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 4 * vec2Size));
-        glEnableVertexAttribArray(14);
-        glVertexAttribPointer(14, 2, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 5 * vec2Size));
-        glEnableVertexAttribArray(15);
-        glVertexAttribPointer(15, 2, GL_INT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)((4 * vec4Size) + 6 * vec2Size));
+        //glVertexAttribPointer(13, 2, GL_INT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, mapping));
+        glVertexAttribIPointer(13, 3, GL_INT, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, mapping));
 
         glVertexAttribDivisor(5, 1);
         glVertexAttribDivisor(6, 1);
@@ -176,8 +182,6 @@ namespace LGraphics
         glVertexAttribDivisor(11, 1);
         glVertexAttribDivisor(12, 1);
         glVertexAttribDivisor(13, 1);
-        glVertexAttribDivisor(14, 1);
-        glVertexAttribDivisor(15, 1);
         glBindVertexArray(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -228,6 +232,12 @@ namespace LGraphics
     void LImagedShape::setParallaxMapping(std::vector<LShape*>& changed, LShape* shape, bool parallaxMapping)
     {
         LImage::setParallaxMapping(parallaxMapping);
+        changed.push_back(shape);
+    }
+
+    void LImagedShape::setReflexMapping(std::vector<LShape*>& changed, LShape* shape, bool reflexMapping)
+    {
+        LImage::setReflexMapping(reflexMapping);
         changed.push_back(shape);
     }
 }

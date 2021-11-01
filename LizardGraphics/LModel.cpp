@@ -1,13 +1,8 @@
 ﻿#include "LModel.h"
-#include "LModel.h"
-#include "LModel.h"
-#include "LModel.h"
-#include "LModel.h"
-#include "LModel.h"
-#include "LModel.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
+#include "constants.h"
 
 void LGraphics::LModel::setDiffuse(const TexturesData& data, size_t meshNum)
 {
@@ -36,6 +31,14 @@ void LGraphics::LModel::setDisplacement(const TexturesData& data, size_t meshNum
     disp.size = in.size;
 }
 
+void LGraphics::LModel::setReflex(const TexturesData& data, size_t meshNum)
+{
+    auto& refl = TO_GL(meshes[meshNum].image->textures[3]);
+    const auto& in = TO_GL(data);
+    refl.id = in.id;
+    refl.offset = in.offset;
+    refl.size = in.size;
+}
 
 void LGraphics::LModel::setNormalMapping(bool normalMapping, size_t meshNum)
 {
@@ -45,6 +48,11 @@ void LGraphics::LModel::setNormalMapping(bool normalMapping, size_t meshNum)
 void LGraphics::LModel::setParallaxMapping(bool parallaxMapping, size_t meshNum)
 {
     meshes[meshNum].image->setParallaxMapping(parallaxMapping);
+}
+
+void LGraphics::LModel::setReflexMapping(bool reflexMapping, size_t meshNum)
+{
+    meshes[meshNum].image->setReflexMapping(reflexMapping);
 }
 
 void LGraphics::LModel::setNormalMappingAllMeshes(bool normalMapping)
@@ -59,6 +67,12 @@ void LGraphics::LModel::setParallaxMappingAllMeshes(bool parallaxMapping)
         meshes[i].image->setParallaxMapping(parallaxMapping);
 }
 
+void LGraphics::LModel::setReflexMappingAllMeshes(bool reflexMapping)
+{
+    for (size_t i = 0; i < meshes.size(); ++i)
+        meshes[i].image->setReflexMapping(reflexMapping);
+}
+
 LGraphics::LModel::LModel(LApp* app, ModelResource modelResource, bool cropTextureCoords)
     :LShape(app)
 {
@@ -67,24 +81,24 @@ LGraphics::LModel::LModel(LApp* app, ModelResource modelResource, bool cropTextu
     init();
 }
 
-LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::string& diffuseName, 
-    const std::string& normalsName, const std::string& displacementName, bool cropTextureCoords)
+LGraphics::LModel::LModel(LApp* app, CTOR_PATH_VARS, bool cropTextureCoords)
     :LShape(app)
 {
     LOG_CALL
     LResourceManager::loadModel(this, ModelResource{ modelName },cropTextureCoords);
 
     setDiffuse(LResourceManager::loadMaterialTextures(app->getRealDiffusePath() + diffuseName));
-    setNormal(LResourceManager::loadMaterialTextures(app->getRealNormalPath() + normalsName));
+    setNormal(LResourceManager::loadMaterialTextures(app->getRealNormalPath() + normalName));
     setDisplacement(LResourceManager::loadMaterialTextures(app->getRealDisplacementPath() + displacementName));
+    setReflex(LResourceManager::loadMaterialTextures(app->getRealReflexPath() + reflexName));
 
-    setNormalMappingAllMeshes(normalsName.size());
+    setNormalMappingAllMeshes(normalName.size());
     setParallaxMappingAllMeshes(displacementName.size());
+    setReflexMappingAllMeshes(reflexName.size());
     init();
 }
 
-LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::vector<std::string>& diffuseNames, 
-    const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames, bool cropTextureCoords)
+LGraphics::LModel::LModel(LApp* app, CTOR_PATH_VARS_VEC, bool cropTextureCoords)
     :LShape(app)
 {
     LOG_CALL
@@ -98,6 +112,8 @@ LGraphics::LModel::LModel(LApp* app, const std::string& modelName, const std::ve
             setNormal(LResourceManager::loadMaterialTextures(app->getRealNormalPath() + normalNames[i]), i);
         if (i < displacementNames.size())
             setDisplacement(LResourceManager::loadMaterialTextures(app->getRealDisplacementPath() + displacementNames[i]), i);
+        if (i < reflexNames.size())
+            setReflex(LResourceManager::loadMaterialTextures(app->getRealReflexPath() + reflexNames[i]), i);
     }
     init();
 }
@@ -130,6 +146,10 @@ LGraphics::LModel::~LModel()
         if (m.image)
             delete m.image;
     }
+    if (reflexCubeMap != UNINITIALIZED)
+        glDeleteTextures(1, &reflexCubeMap);
+    if (reflexFBO != UNINITIALIZED)
+        glDeleteFramebuffers(1, &reflexFBO);
 }
 
 void LGraphics::LModel::draw()
@@ -137,6 +157,8 @@ void LGraphics::LModel::draw()
     auto shader = (LShaders::OpenGLShader*)app->modelShader.get();
     if (app->drawingInShadow)
         shader = ((LShaders::OpenGLShader*)app->shadowMapModelShader.get());
+    else if (app->drawingReflex)
+        shader = ((LShaders::OpenGLShader*)app->reflexModelShader.get());
     GLuint shaderProgram = shader->getShaderProgram();
     shader->use();
     setGlobalUniforms(shaderProgram);
@@ -147,8 +169,9 @@ void LGraphics::LModel::draw()
         animator.UpdateAnimation(app->getDeltaTime());
 
     const auto& transforms = animator.GetFinalBoneMatrices();
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), transforms.size(), GL_FALSE,
-        glm::value_ptr(transforms[0]));
+    if (transforms.size())
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), transforms.size(), GL_FALSE,
+            glm::value_ptr(transforms[0]));
 
     FOR(i, 0, meshes.size())
     {
@@ -163,6 +186,8 @@ void LGraphics::LModel::draw()
                 const auto castedNorm = TO_GL(normal);
                 auto& parallax = meshes[i].image->getParallax();
                 const auto castedParallax = TO_GL(parallax);
+                auto& reflex = meshes[i].image->getReflex();
+                const auto castedReflex = TO_GL(reflex);
 
                 glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
                 glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
@@ -170,8 +195,11 @@ void LGraphics::LModel::draw()
                 glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeNormal"), castedNorm.size.x, castedNorm.size.y);
                 glUniform2f(glGetUniformLocation(shaderProgram, "offsetParallax"), castedParallax.offset.x, castedParallax.offset.y);
                 glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeParallax"), castedParallax.size.x, castedParallax.size.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "offsetReflex"), castedReflex.offset.x, castedReflex.offset.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeReflex"), castedReflex.size.x, castedReflex.size.y);
                 glUniform1i(glGetUniformLocation(shaderProgram, "normalMapping"), getNormalMapping(i));
                 glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMapping"), getParallaxMapping(i));
+                glUniform1i(glGetUniformLocation(shaderProgram, "reflexMapping"), getReflexMapping(i));
 
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
@@ -181,10 +209,16 @@ void LGraphics::LModel::draw()
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
                 glActiveTexture(GL_TEXTURE3);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
+                glActiveTexture(GL_TEXTURE4);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
+                if (!app->drawingReflex)
+                {
+                    glActiveTexture(GL_TEXTURE5);
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, reflexCubeMap);
+                }
 #endif
             }
         }
-
         glBindVertexArray(meshes[i].buffer->getVaoNum());
         if (meshes[i].buffer->getIndices().size())
             glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
@@ -224,6 +258,17 @@ void LGraphics::LModel::restartAnimation()
     animator.m_CurrentTime = 0.0f;
 }
 
+void LGraphics::LModel::setReflexSize(const std::pair<size_t, size_t> size)
+{
+    reflexWidth = size.first;
+    reflexHeight = size.second;
+}
+
+std::pair<size_t, size_t> LGraphics::LModel::getReflexSize() const
+{
+    return std::pair<size_t, size_t>(reflexWidth,reflexHeight);
+}
+
 
 LGraphics::LModel::LModel(LApp* app, const std::string& path, bool cropTextureCoords,size_t dummy)
     :LShape(app)
@@ -239,6 +284,8 @@ void LGraphics::LModel::init()
     app->toCreateM.push(this);
     if (animations.size())
         animator.PlayAnimation(animations.begin()->second);
+    //reflexWidth = app->getWindowSize().x;
+    //reflexHeight = app->getWindowSize().y;
 }
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)

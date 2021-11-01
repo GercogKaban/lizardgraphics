@@ -20,8 +20,6 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 20;
-
     LAppCreateInfo info;
 
     info.api = L_OPENGL;
@@ -32,7 +30,7 @@ int main(int argc, char** argv)
     info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | CONSOLE_RELEASE_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
     info.anisotropy = 16;
     info.MSAA = 4;
-    info.vsync = L_FALSE;
+    info.vsync = L_TRUE;
 
 #ifndef NDEBUG
     info.texturesQuality = LOW;
@@ -47,12 +45,11 @@ int main(int argc, char** argv)
 #endif
 
     const auto spread = 5;
-    LApp app(info);
+    LApp app(info); 
     srand(time(0));
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    //LCube* c;
 
     app.fog.density = 0.15f;
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
@@ -68,14 +65,9 @@ int main(int argc, char** argv)
     //auto s = new LPointLight(&app);
     //s->setRadius(25);
 
-    const float yOffset = -0.3f;
+    float yOffset = -0.3f;
     if (!info.loadObjects)
     {   
-        //m->scale(0.01f, 0.01f, 0.01f);
-        //m->move(0.0, 0.0f, 0.0f);
-        //m->rotateX(180.0f);
-        //m->rotateZ(90.0f);
-        //for (size_t i = 0; i < 1; ++i)
         {   
             for (size_t i = 0; i < 2; ++i)
                 for (size_t j = 0; j < 2; ++j)
@@ -88,10 +80,21 @@ int main(int argc, char** argv)
                     p->setNormalMapping(true);
                 }
 
+            for (size_t i = 0; i < 2; ++i)
+                for (size_t j = 0; j < 2; ++j)
+                {
+                    LPlane* p;
+                    p = new LPlane(&app, { "Rocks011.jpg" });
+                    p->rotateX(270.0f);
+                    p->move(i, yOffset + 1, (float)j);
+                    p->setParallaxMapping(false);
+                    p->setNormalMapping(true);
+                }
+
             const float off = 1.5f;
             const float startX = 1.0f;
 
-            auto cyl = new LCylinder(&app, { "Rocks011.jpg" });
+            auto cyl = new LCylinder(&app, { "aerial_rocks_02.jpg" });
             cyl->move(startX + off, 0.25f, 0.0f);
             cyl->setParallaxMapping(false);
 
@@ -110,17 +113,19 @@ int main(int argc, char** argv)
             auto tor = new LTorus(&app, { "Rocks011.jpg" });
             tor->move(startX + off * 5, 0.25f, 0.0f);
             tor->setParallaxMapping(false);
-
         }
     }
 
+    //const float scale = 0.3f;
     const float scale = 0.0025f;
-    auto test = new LModel(&app, {"girl.fbx"});
+    auto test = new LModel(&app, "girl.fbx","Kachujin_diffuse.png","Kachujin_normal.png","", "refl_map.jpg");
+    //auto test = new LModel(&app, "cube228.obj","Rocks011.jpg","Rocks011.jpg","",
+    //    "refl_map.jpg");
     test->scale(scale, scale, scale);
-    test->move(0.0f, yOffset - 0.0005f, 0.0f);
+    test->move(0.0f, yOffset, 0.0f);
     test->setParallaxMappingAllMeshes(false);
     test->rotateY(180.0f);
-    test->playAnimation();
+    //test->playAnimation();
 
     app.setBeforeDrawingFunc([&]()
         {
@@ -128,7 +133,7 @@ int main(int argc, char** argv)
                 return;
 
             //static auto cMove = c->getMove();
-            //const auto move = c->getMove();
+            //const auto move = c->getMove();   
 
             const float radius = 10.0f;
             const float shiftCoef = -1.05f;

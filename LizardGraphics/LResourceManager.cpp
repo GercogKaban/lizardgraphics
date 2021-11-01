@@ -18,7 +18,6 @@ namespace LGraphics
     std::vector<AtlasData> LResourceManager::atlasData;
     LModel* LResourceManager::currentModel;
     LApp* LResourceManager::app;
-    aiMatrix4x4 LResourceManager::m_GlobalInverseTransform;
 
     void* LResourceManager::loadTexture(const char* path, size_t& mipLevels)
     {
@@ -89,45 +88,52 @@ namespace LGraphics
         const auto diffusePath = app->getRealDiffusePath() + res.name;
         const auto normalPath = app->getRealNormalPath() + res.name;
         const auto displacementPath = app->getRealDisplacementPath() + res.name;
+        const auto reflexPath = app->getRealReflexPath() + res.name;
 
         if (res.diffuse && textures.find(diffusePath) == textures.end())
-            textures.emplace(std::make_pair(diffusePath, std::move(TexturesData())));
+            textures.insert(std::make_pair(diffusePath, TexturesData()));
         if (res.normals && textures.find(normalPath) == textures.end())
-            textures.emplace(std::make_pair(normalPath, std::move(TexturesData())));
+            textures.insert(std::make_pair(normalPath, TexturesData()));
         if (res.parallax && textures.find(displacementPath) == textures.end())
-            textures.emplace(std::make_pair(displacementPath, std::move(TexturesData())));
+            textures.insert(std::make_pair(displacementPath, TexturesData()));
+        if (res.reflex && textures.find(reflexPath) == textures.end())
+            textures.insert(std::make_pair(reflexPath, TexturesData()));
 
         auto itd = textures.find(diffusePath);
-        const auto& td = TO_GL(itd->second);
-
         auto itn = textures.find(normalPath);
-        const auto& tn = TO_GL(itn->second);
-
         auto itp = textures.find(displacementPath);
-        const auto& tp = TO_GL(itp->second);
+        auto itr = textures.find(reflexPath);
 
-        if (res.diffuse && td.id == NO_TEXTURE)
+        size_t dummy;
+        if (res.diffuse && !itd->second.textures)
         {
-            size_t dummy;
+            itd->second.textures = new TexturesData::OGLImageData();
             auto texture = loadTexture(diffusePath.data(), dummy);
             setTexture(diffusePath, itd->second, texture);
         }
         
-        if (res.normals && tn.id == NO_TEXTURE)
+        if (res.normals && !itn->second.textures)
         {
-            size_t dummy;
+            itn->second.textures = new TexturesData::OGLImageData();
             auto texture = loadTexture(normalPath.data(), dummy);
             setTexture(normalPath, itn->second, texture);
         }
 
-        if (res.parallax && tp.id == NO_TEXTURE)
+        if (res.parallax && !itp->second.textures)
         {
-            size_t dummy;
+            itp->second.textures = new TexturesData::OGLImageData();
             auto texture = loadTexture(displacementPath.data(), dummy);
             setTexture(displacementPath, itp->second, texture);
         }
 
-        return { itd->second,itn->second, itp->second };
+        if (res.reflex && !itr->second.textures)
+        {
+            itr->second.textures = new TexturesData::OGLImageData();
+            auto texture = loadTexture(reflexPath.data(), dummy);
+            setTexture(reflexPath, itr->second, texture);
+        }
+
+        return { itd->second,itn->second, itp->second, itr->second };
     }
 
     TexturesData LResourceManager::loadImageSkyboxResource(LImage::ImageSkyboxResource res)
@@ -292,6 +298,10 @@ namespace LGraphics
         std::vector<uint32_t> indices;
         const auto crop = cropTextureCoords ? 0.01f : 0.0f;
 
+        std::pair<float, float> rangeX, rangeY, rangeZ;
+        rangeX.first = std::numeric_limits<float>::max(); rangeX.second = std::numeric_limits<float>::min();
+        rangeY.first = std::numeric_limits<float>::max(); rangeY.second = std::numeric_limits<float>::min();
+        rangeZ.first = std::numeric_limits<float>::max(); rangeZ.second = std::numeric_limits<float>::min();
         for (size_t i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
@@ -319,7 +329,16 @@ namespace LGraphics
             vertex.Bitangent = assimpToGLM(mesh->mBitangents[i]);
             vertex.TexCoords = textureCoords;
             vertices.push_back(vertex);
+            if (pos_.x < rangeX.first) rangeX.first = pos_.x;
+            if (pos_.x > rangeX.second) rangeX.second = pos_.x;
+
+            if (pos_.y < rangeY.first) rangeY.first = pos_.y;
+            if (pos_.y > rangeY.second) rangeY.second = pos_.y;
+
+            if (pos_.z < rangeZ.first) rangeZ.first = pos_.z;
+            if (pos_.z > rangeZ.second) rangeZ.second = pos_.z;
         }
+        app->lastLoadedRanges = { rangeX ,rangeY ,rangeZ };
 
         ExtractBoneWeightForVertices(currentModel,vertices, mesh, scene);
 
@@ -339,6 +358,7 @@ namespace LGraphics
             out.image->setDiffuse(loadMaterialTextures(material, aiTextureType_DIFFUSE));
             out.image->setNormal(loadMaterialTextures(material, aiTextureType_NORMALS));
             out.image->setDisplacement(loadMaterialTextures(material, aiTextureType_HEIGHT));
+            out.image->setReflex(loadMaterialTextures(material, aiTextureType_REFLECTION));
         }
 
         const auto& normText = out.image->getNormal();
@@ -349,10 +369,15 @@ namespace LGraphics
         const auto& castedDispl = TO_GL(displText);
         out.image->setParallaxMapping(castedDispl.id != NO_TEXTURE);
 
+        const auto& refText = out.image->getReflex();
+        const auto& castedRef = TO_GL(refText);
+        out.image->setReflexMapping(castedRef.id != NO_TEXTURE);
+
         const auto qualityDir = app->getRealTexturesPath();
         out.image->diffusePath = qualityDir + "diffuse/";
         out.image->normalsPath = qualityDir + "normal/";
         out.image->displacementPath = qualityDir + "displacement/";
+        out.image->reflexPath = qualityDir + "reflex/";
         return out;
     }
 
@@ -370,6 +395,8 @@ namespace LGraphics
                 texturesPath += "normal/";
             else if (type == aiTextureType_HEIGHT)
                 texturesPath += "displacement/";
+            else if (type == aiTextureType_REFLECTION)
+                texturesPath += "reflex/";
             std::replace(strCpp.begin(), strCpp.end(), '\\', '/');
             strCpp = strCpp.rfind('/') ? texturesPath + strCpp.substr(strCpp.rfind('/') + 1) : texturesPath + strCpp;
             return loadMaterialTextures(strCpp);
@@ -389,6 +416,7 @@ namespace LGraphics
             if (!texture)
                 return textures.find("dummy")->second;
             TexturesData d;
+            d.textures = new TexturesData::OGLImageData();
             auto& td = TO_GL(d);
             td.id = *texture;
             delete texture;

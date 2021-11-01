@@ -6,9 +6,9 @@
 #include "vulkan/vulkan.h"
 #include "VulkanMemory/Allocator/include/vk_mem_alloc.h"
 #include "include/GLEW/glew.h"
+#include "constants.h"
 #include "enums.h"
 
-#define NO_TEXTURE _UI32_MAX
 #define TO_GL(TEXTURES_DATA) *((TexturesData::OGLImageData*)TEXTURES_DATA.textures)
 
 namespace LGraphics
@@ -90,6 +90,7 @@ namespace LGraphics
             bool diffuse = true;
             bool normals = true;
             bool parallax = true;
+            bool reflex = true;
         };
 
         struct ImageSkyboxResource
@@ -104,21 +105,26 @@ namespace LGraphics
         void setDiffuse(const TexturesData& data);
         void setNormal(const TexturesData& data);
         void setDisplacement(const TexturesData& data);
+        void setReflex(const TexturesData& data);
 
         const auto& getTextures() const { return textures; }
         const auto& getDiffuse() const { return textures[0]; }
         const auto& getNormal() const { return textures[1]; }
         const auto& getParallax() const { return textures[2]; }
+        const auto& getReflex() const { return textures[3]; }
 
         virtual void setNormalMapping(bool normalMapping) { this->normalMapping = normalMapping; }
         virtual void setParallaxMapping(bool parallaxMapping) { this->parallaxMapping = parallaxMapping; }
+        virtual void setReflexMapping(bool reflexMapping) { this->reflexMapping = reflexMapping; }
 
         bool getNormalMapping() const { return normalMapping; }
         bool getParallaxMapping() const { return parallaxMapping; }
+        bool getReflexMapping() const { return reflexMapping; }
 
         std::string getNormalsPath() const { return normalsPath + imageResourceName; }
         std::string getDiffusePath() const { return diffusePath + imageResourceName; }
         std::string getDisplacementPath() const { return displacementPath + imageResourceName; }
+        std::string getReflexPath() const { return reflexPath + imageResourceName; }
         const std::string& getImageResourceName() const { return imageResourceName; }
         void init(ImageResource resource);
         ~LImage();
@@ -137,12 +143,14 @@ namespace LGraphics
         ::std::string displacementPath;
         ::std::string diffusePath;
         ::std::string normalsPath;
+        ::std::string reflexPath;
         ::std::string imageResourceName;
         RenderingAPI texturesType;
 
         static LResourceManager resManager;
         bool normalMapping;
         bool parallaxMapping;
+        bool reflexMapping;
     };
 }
 

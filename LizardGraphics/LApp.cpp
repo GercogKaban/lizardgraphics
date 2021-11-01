@@ -69,11 +69,13 @@ namespace LGraphics
 
     LApp::~LApp()
     {
+        LOG_CALL
         releaseResources();
     }
 
     bool LApp::isDirectoryChanged(const std::string& dirPath, const std::string& cacheFile) const
     {
+        LOG_CALL
         if (!std::filesystem::exists(cacheFile))
             return true;
 
@@ -90,6 +92,7 @@ namespace LGraphics
 
     void LApp::saveDirectoryChangedTime(const std::string& dirPath, const std::string& filePath) const
     {
+        LOG_CALL
         std::ofstream out(filePath);
         auto time = GetFileWriteTime(dirPath);
         out << asctime(localtime(&time));
@@ -98,21 +101,57 @@ namespace LGraphics
 
     std::string LApp::getRealDiffusePath() const
     {
+        LOG_CALL
         return getRealTexturesPath() + "diffuse/";
     }
 
     std::string LApp::getRealNormalPath() const
     {
+        LOG_CALL
         return getRealTexturesPath() + "normal/";
+    }
+
+    void LApp::clearColor()
+    {
+        LOG_CALL
+        if (fog.isEnabled)
+            glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
+        else
+            glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    void LApp::clearDepth()
+    {
+        LOG_CALL
+        glClear(GL_DEPTH_BUFFER_BIT);
+    }
+
+    void LApp::clearColorDepth()
+    {
+        LOG_CALL
+        if (fog.isEnabled)
+            glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
+        else
+            glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     std::string LApp::getRealDisplacementPath() const
     {
+        LOG_CALL
         return getRealTexturesPath() + "displacement/";
+    }
+
+    std::string LApp::getRealReflexPath() const
+    {
+        LOG_CALL
+        return getRealTexturesPath() + "reflex/";
     }
 
     std::string LApp::getRealTexturesPath() const
     {
+        LOG_CALL
         assert(std::filesystem::is_symlink(std::filesystem::current_path().generic_string() + "/textures/"));
         return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() +
             '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
@@ -120,6 +159,7 @@ namespace LGraphics
 
     std::string LApp::getRealModelsPath() const
     {
+        LOG_CALL
         assert(std::filesystem::is_symlink(std::filesystem::current_path().generic_string() + "/textures/"));
         return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/models/").generic_string() +
             '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
@@ -127,6 +167,7 @@ namespace LGraphics
 
     void LApp::drawScene()
     {
+        LOG_CALL
         LCube::drawInstanced();
         LPlane::drawInstanced();
         LSphere::drawInstanced();
@@ -148,6 +189,7 @@ namespace LGraphics
 
     void LApp::drawSceneForLight(LLight* l)
     {
+        LOG_CALL
         if (l->calculateShadow)
         {
             currentLight = l;
@@ -155,7 +197,7 @@ namespace LGraphics
             l->setLightSpaceMatrix();
             glViewport(0, 0, l->shadowWidth, l->shadowHeight);
             glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
-            glClear(GL_DEPTH_BUFFER_BIT);
+            clearDepth();
             glCullFace(GL_FRONT);
             drawScene();
             glCullFace(GL_BACK);
@@ -163,8 +205,27 @@ namespace LGraphics
         }
     }
 
+
+    void LApp::drawSceneForReflex(GLuint reflexFBO, size_t width, size_t height, glm::vec3 position)
+    {
+        LOG_CALL
+        assert(reflexFBO != UNINITIALIZED);
+        drawingReflex = true;
+        reflexPos = position;
+        glViewport(0, 0, width, height);
+        checkError();
+        glBindFramebuffer(GL_FRAMEBUFFER, reflexFBO);
+        checkError();
+        clearColorDepth();
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        drawScene();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        drawingReflex = false;
+    }
+
     void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath)
     {
+        LOG_CALL
         if (std::filesystem::exists(atl.getOutPath()))
             std::filesystem::remove(atl.getOutPath());
         if (std::filesystem::exists(atlPath))
@@ -186,6 +247,7 @@ namespace LGraphics
     void LApp::initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures, 
         GLuint megatextureId)
     {
+        LOG_CALL
         for (size_t i = 0; i < atl.getAtlasData().texturePaths.size(); ++i)
         {
             const auto& atlData = atl.getAtlasData();
@@ -207,19 +269,7 @@ namespace LGraphics
     {
         LOG_CALL
         try
-        {
-            const size_t screenSize = info.wndWidth * info.wndHeight * sizeof(int);
-            if (info.redactorMode)
-            {
-                glGenBuffers(1, &ssbo);
-                objectsOnScreen = new int[screenSize / sizeof(int)];
-                glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-                glBufferData(GL_SHADER_STORAGE_BUFFER, screenSize, objectsOnScreen, GL_DYNAMIC_COPY);
-                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
-            }
-            
-            //buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-
+        {         
             while (!glfwWindowShouldClose(window_))
             {
                 const float currentFrame = glfwGetTime();
@@ -304,22 +354,18 @@ namespace LGraphics
                 }
                 else if (info.api == L_OPENGL)
                 {
-                    if (info.redactorMode)
-                        std::fill(objectsOnScreen, objectsOnScreen + screenSize / sizeof(int), -1);
-                    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, ssbo);
-
                     // init depth maps
                     for (auto& l : lightsToInit)
                         l->init();
                     lightsToInit.clear();
 
+                    initReflex();
+
                     // рисуем в карту теней
-                    glEnable(GL_DEPTH_TEST);
-                    if (fog.isEnabled)
-                        glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
-                    else
-                        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+                    clearColor();
                     drawingInShadow = true;
+
+                    glEnable(GL_DEPTH_TEST);
 
                     FOR(i, 0, lights[L_SPOT_LIGHT].size())
                         drawSceneForLight(lights[L_SPOT_LIGHT][i]);
@@ -332,22 +378,18 @@ namespace LGraphics
 
                     drawingInShadow = false;
                     glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
+
+                    // рисуем отражения
+                    FOR(i, 0, models.size())
+                        drawSceneForReflex(models[i]->reflexFBO, models[i]->reflexWidth, models[i]->reflexHeight, 
+                            models[i]->getMiddlePoint());
+
                     glViewport(0, 0, info.wndWidth, info.wndHeight);
 
                     // рисуем сцену
-                    if (fog.isEnabled)
-                        glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
-                    else
-                        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    clearColorDepth();
                     drawScene();
                     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-                    if (info.redactorMode == L_TRUE)
-                    {
-                        buff = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-                        memcpy(objectsOnScreen, buff, screenSize);
-                        glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-                    }
                 }
                 afterDrawingFunc();
                 glfwSwapBuffers(window_);
@@ -357,12 +399,6 @@ namespace LGraphics
                 std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
 #endif
             }
-            if (info.redactorMode)
-            {
-                glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-                delete[] objectsOnScreen;
-            }
-            //glDeleteFramebuffers(1, &fbo);
             if (info.saveObjects == L_TRUE)
                 CodeGen::generateCode("codegen.h", this, "app");
         }
@@ -383,6 +419,7 @@ namespace LGraphics
 
     void LApp::switchRendererTo(RenderingAPI api)
     {
+        LOG_CALL
         if (info.api == api)
             return;
 
@@ -741,15 +778,6 @@ namespace LGraphics
         delete w;
     }
 
-
-
-    void LApp::refreshObjectMatrices()
-    {
-        //for (auto& obj : nonInterfaceObjects)
-        //    if (dynamic_cast<LPlane*>(obj))
-        //        dynamic_cast<LPlane*>(obj)->setMatrices(this);
-    }
-
     LShaders::Shader* LApp::getStandartShader() const
     {
         return info.api == L_VULKAN? lightShader.get() : openGLLightShader.get();
@@ -808,6 +836,18 @@ namespace LGraphics
     {
         LOG_CALL
         userScrollCallback = func;
+    }
+
+    void LApp::checkError() const
+    {
+        if (auto er = glGetError(); er)
+            throw std::runtime_error("error: " + std::to_string(er) + '\n');
+    }
+
+    void LApp::checkFramebufferError() const
+    {
+        if (GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); status != GL_FRAMEBUFFER_COMPLETE)
+            throw std::runtime_error("FB error, status: " + std::to_string(status) + '\n');
     }
 
     void LApp::setMatrices()
@@ -932,10 +972,11 @@ namespace LGraphics
         auto texturesPath = getRealTexturesPath();
 
         const std::string cachefile = "cachedate";
-        //const auto texturesQualityDir = texturesPath + '/' + qualityDirectories[info.texturesQuality];
+
         megatexture.textureAtl.setFileName(texturesPath + "diffuse/out.jpg");
         megatexture.normalAtl.setFileName(texturesPath + "normal/out.jpg");
         megatexture.parallaxAtl.setFileName(texturesPath + "displacement/out.jpg");
+        megatexture.reflexAtl.setFileName(texturesPath + "reflex/out.jpg");
 
         const auto texturesQualityDif = texturesPath + "diffuse/";
         const auto difCache = texturesQualityDif + cachefile;
@@ -974,14 +1015,28 @@ namespace LGraphics
         else
             megatexture.parallaxAtl.loadAtlas(texturesPath + "displacement/atlas_info2");
 
+        const auto texturesQualityRef = texturesPath + "reflex/";
+        const auto refCache = texturesQualityRef + cachefile;
+        loadingText = "Initializing " + refCache;
+        if (!isExists(megatexture.reflexAtl.getOutPath()) || isDirectoryChanged(texturesQualityRef, refCache))
+        {
+            generateMegatexture(texturesQualityRef, megatexture.reflexAtl,
+                texturesPath + "reflex/atlas_info3");
+            saveDirectoryChangedTime(texturesQualityRef, refCache);
+        }
+        else
+            megatexture.reflexAtl.loadAtlas(texturesPath + "reflex/atlas_info3");
+
         size_t dummy;
         megatexture.id = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.textureAtl.getOutPath().data(), dummy))->id;
         megatexture.idNormal = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.normalAtl.getOutPath().data(), dummy))->id;
         megatexture.idParallax = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.parallaxAtl.getOutPath().data(), dummy))->id;
+        megatexture.idReflex = ((OpenGLImage*)LResourceManager::loadTexture(megatexture.reflexAtl.getOutPath().data(), dummy))->id;
 
         initMegatextureData(megatexture.textureAtl, megatexture.subtextures, megatexture.id);
         initMegatextureData(megatexture.normalAtl, megatexture.subtexturesNormal, megatexture.idNormal);
         initMegatextureData(megatexture.parallaxAtl, megatexture.subtexturesParallax, megatexture.idParallax);
+        initMegatextureData(megatexture.reflexAtl, megatexture.subtexturesReflex, megatexture.idReflex);
 
         if (info.loading == FAST)
             modelLoadingFlags = aiProcessPreset_TargetRealtime_Fast | aiProcess_FlipUVs | aiProcess_PopulateArmatureData;
@@ -1111,52 +1166,49 @@ namespace LGraphics
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         customLoadingScreen();
-        //customLoadingScreen();
         if (info.api == L_OPENGL)
         {
             openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
                  ,(std::string(LIB_PATH)+"//shaders//primitive.vert").data()
                 ,(std::string(LIB_PATH) + "//shaders//primitive.frag").data(),
                 (std::string(LIB_PATH) + "//shaders//primitive.tesc").data(),
-                (std::string(LIB_PATH) + "//shaders//primitive.tese").data()));
+                (std::string(LIB_PATH) + "//shaders//primitive.tese").data()
+            ,""));
 
             openGLLightShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(),"",""));
+                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(),"","", ""));
 
             modelShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//model.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(),
-                "",
-                ""));
+                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(), "","", ""));
 
             skyBoxShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//skybox.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(),
-                "",
-                ""));
+                , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(),"","", ""));
 
             skyBoxMirrorShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//baseMirror.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//baseMirror.frag").data(),
-                "",
-                ""));
+                , (std::string(LIB_PATH) + "//shaders//baseMirror.frag").data(),"","", ""));
 
             shadowMapShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),
-                "",
-                ""));
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),"","", ""));
 
             shadowMapModelShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),
-                "",
-                ""));
+                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),"", "", ""));
+
+            reflexPrimitiveShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//reflex_primitive.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//reflex.frag").data(), "", "", 
+                  (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
+
+            reflexModelShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//reflex_model.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//reflex_model.frag").data(), "", "", 
+                  (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
         }
-        //standartRectBuffer = new LRectangleBuffer(this);
-        //standartSkyBoxBuffer = new LSkyBoxBuffer(this);
-        //standartCubeBuffer = new LCubeBuffer(this);
         glViewport(0, 0, info.wndWidth, info.wndHeight);
     }
 
@@ -1464,6 +1516,55 @@ namespace LGraphics
     {
         LOG_CALL
         userScrollCallback(window, xoffset, yoffset);
+    }
+
+    void LApp::initReflex()
+    {
+        LOG_CALL
+        // нужно добавить вектор toInit
+        for (const auto& m : models)
+        {
+            if (m->reflexCubeMap == UNINITIALIZED)
+            {
+                const uint32_t width = m->getReflexSize().first, height = m->getReflexSize().second;
+                assert(width && height);
+
+                //uint32_t depth;
+                //glGenTextures(1, &depth);
+                //glBindTexture(GL_TEXTURE_CUBE_MAP, depth);
+
+                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                //for (size_t face = 0; face < 6; ++face)
+                //    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_DEPTH_COMPONENT, width, width, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+                glGenTextures(1, &m->reflexCubeMap);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, m->reflexCubeMap);
+
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                
+                for (size_t face = 0; face < 6; ++face)
+                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, width, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+                glGenFramebuffers(1, &m->reflexFBO);
+                glBindFramebuffer(GL_FRAMEBUFFER, m->reflexFBO);
+                //glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, tDepthCubeMap, 0);
+                glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m->reflexCubeMap, 0);
+                //glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth, 0);
+
+                glDrawBuffer(GL_COLOR_ATTACHMENT0);
+                //glReadBuffer(GL_NONE);
+                checkFramebufferError();
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
+        }
     }
 
 

@@ -98,7 +98,7 @@ namespace LGraphics
         void turnOffColor() override;
 
         LShaders::Shader* getShader() const { return shader; }  ///< Возвращает шейдер.
-           
+        glm::vec3 getMiddlePoint() const;
         virtual ~LShape();
     protected:
 

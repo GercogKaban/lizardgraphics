@@ -147,6 +147,6 @@ namespace LGraphics
         Animation m_CurrentAnimation;
         float m_CurrentTime;
         float m_DeltaTime;
-        float speed = 0.00001f;
+        float speed = 0.002f;
     };
 }

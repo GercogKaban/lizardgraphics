@@ -86,9 +86,7 @@ void LGraphics::LLight::init()
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
-	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE)
-		throw std::runtime_error("FB error, status: " + std::to_string(status) + '\n');
+	app->checkFramebufferError();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

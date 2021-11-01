@@ -29,6 +29,7 @@ namespace LGraphics
 
         void setNormalMapping(std::vector<LShape*>& changed, LShape* shape, bool normalMapping);
         void setParallaxMapping(std::vector<LShape*>& changed, LShape* shape, bool parallaxMapping);
+        void setReflexMapping(std::vector<LShape*>& changed, LShape* shape, bool reflexMapping);
 
     protected:
 
