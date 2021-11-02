@@ -52,6 +52,7 @@ namespace LGraphics
             glm::vec4 heightCoords;
             glm::vec4 reflexCoords;
             glm::ivec3 mapping;
+            glm::mat3 inverseModel;
         };
 
         //using PlaneUniforms = WidgetUniforms;

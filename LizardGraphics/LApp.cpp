@@ -375,10 +375,8 @@ namespace LGraphics
 
                     FOR(i, 0, lights[L_DIRECTIONAL_LIGHT].size())
                         drawSceneForLight(lights[L_DIRECTIONAL_LIGHT][i]);
-
                     drawingInShadow = false;
                     glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
-
                     // рисуем отражения
                     FOR(i, 0, models.size())
                         drawSceneForReflex(models[i]->reflexFBO, models[i]->reflexSize, models[i]->getMiddlePoint());
@@ -1153,6 +1151,12 @@ namespace LGraphics
         glEnable(GL_BLEND);
         glEnable(GL_MULTISAMPLE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        int maxLocations;
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxLocations);
+        if (maxLocations < 17)
+            throw std::runtime_error("error: \"Sorry, your hardware doesn't supporting Lizard Graphics :(");
+
         if (info.vsync == L_TRUE)
            glfwSwapInterval(1);
 
@@ -1165,30 +1169,27 @@ namespace LGraphics
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         customLoadingScreen();
+
         if (info.api == L_OPENGL)
         {
             openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
                  ,(std::string(LIB_PATH)+"//shaders//primitive.vert").data()
-                ,(std::string(LIB_PATH) + "//shaders//primitive.frag").data(),
-                (std::string(LIB_PATH) + "//shaders//primitive.tesc").data(),
-                (std::string(LIB_PATH) + "//shaders//primitive.tese").data()
+                ,(std::string(LIB_PATH) + "//shaders//base.frag").data(),
+                (std::string(LIB_PATH) + "//shaders//base.tesc").data(),
+                (std::string(LIB_PATH) + "//shaders//base.tese").data()
             ,""));
 
             openGLLightShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(),"","", ""));
+                , (std::string(LIB_PATH) + "//shaders//base.frag").data(),"","", ""));
 
             modelShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//model.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//primitive.frag").data(), "","", ""));
+                , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "","", ""));
 
             skyBoxShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//skybox.vert").data()
                 , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(),"","", ""));
-
-            skyBoxMirrorShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//baseMirror.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//baseMirror.frag").data(),"","", ""));
 
             shadowMapShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.vert").data()

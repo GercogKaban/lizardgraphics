@@ -204,6 +204,9 @@ void LGraphics::LModel::draw()
                 glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMapping"), getParallaxMapping(i));
                 glUniform1i(glGetUniformLocation(shaderProgram, "reflexMapping"), getReflexMapping(i));
 
+                glUniformMatrix3fv(glGetUniformLocation(shaderProgram, "inverseModel"), 1, GL_FALSE,
+                    glm::value_ptr(glm::mat3(glm::transpose(glm::inverse(model)))));
+
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
                 glActiveTexture(GL_TEXTURE1);
@@ -261,16 +264,10 @@ void LGraphics::LModel::restartAnimation()
     animator.m_CurrentTime = 0.0f;
 }
 
-//void LGraphics::LModel::setReflexSize(size_t reflexSize)
-//{
-//    this->reflexSize = reflexSize;
-//}
-
 size_t LGraphics::LModel::getReflexSize() const
 {
     return reflexSize;
 }
-
 
 LGraphics::LModel::LModel(LApp* app, const std::string& path, bool cropTextureCoords,size_t dummy)
     :LShape(app)

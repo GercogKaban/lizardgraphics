@@ -187,10 +187,10 @@ int main(int argc, char** argv)
         {
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
-            if (app.isPressed(GLFW_KEY_E))
-                test->setReflexSize(test->getReflexSize() * 2);
-            if (app.isPressed(GLFW_KEY_Q))
-                test->setReflexSize(test->getReflexSize() / 2);
+            //if (app.isPressed(GLFW_KEY_E))
+            //    test->setReflexSize(test->getReflexSize() * 2);
+            //if (app.isPressed(GLFW_KEY_Q))
+            //    test->setReflexSize(test->getReflexSize() / 2);
             //if (app.isPressed(GLFW_KEY_G))
             //    app.flag__ = !app.flag__;
             //if (app.isPressed(GLFW_KEY_T))

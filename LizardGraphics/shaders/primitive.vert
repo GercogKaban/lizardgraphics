@@ -11,6 +11,7 @@ layout (location = 10) in vec4 normalCoords;
 layout (location = 11) in vec4 heightCoords;
 layout (location = 12) in vec4 reflexCoords;
 layout (location = 13) in ivec3 mapping;
+layout (location = 14) in mat3 inverseModel;
 
 layout (location = 0) out vec3 position_;
 layout (location = 1) out vec3 normals_;
@@ -46,7 +47,7 @@ void main()
 {
     outModel = model_;
     vec4 temp = model_ * vec4(position, 1.0);
-    normals_ = normalize(mat3(transpose(inverse(model_))) * normals); 
+    normals_ = normalize(inverseModel * normals); 
     vs.Normal = normals_;
     position_ = temp.xyz;
     vs.eyeSpacePosition = view*temp;

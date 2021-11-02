@@ -745,7 +745,7 @@ namespace LGraphics
         size_t sleepTime = 0;
         LBuffer* standartRectBuffer;
 
-        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader,
+        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, shadowMapShader,
             modelShader, shadowMapModelShader, reflexPrimitiveShader, reflexModelShader;
 
         std::mutex drawingMutex;

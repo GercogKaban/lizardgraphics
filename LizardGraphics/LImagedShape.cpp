@@ -143,16 +143,19 @@ namespace LGraphics
 
         obj.mapping = { app->primitives[primitive][id]->getNormalMapping(),app->primitives[primitive][id]->getParallaxMapping(),
         app->primitives[primitive][id]->getReflexMapping() };
+        obj.inverseModel = glm::mat3(glm::transpose(glm::inverse(obj.model)));
     }
 
     void LGraphics::LImagedShape::resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms> uniforms)
     {
+        const size_t vec4Size = sizeof(glm::vec4);
+        const size_t vec3Size = sizeof(glm::vec3);
+        const size_t vec2Size = sizeof(glm::vec2);
+
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::PrimitiveUniforms) * uniforms.capacity(), uniforms.data(), GL_STATIC_DRAW);
-
         glBindVertexArray(vao);
-        const size_t vec4Size = sizeof(glm::vec4);
-        const size_t vec2Size = sizeof(glm::vec2);
+
         glEnableVertexAttribArray(5);
         glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)0);
         glEnableVertexAttribArray(6);
@@ -170,9 +173,16 @@ namespace LGraphics
         glEnableVertexAttribArray(12);
         glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, reflexCoords));
         glEnableVertexAttribArray(13);
-        //glVertexAttribPointer(13, 2, GL_INT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, mapping));
         glVertexAttribIPointer(13, 3, GL_INT, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, mapping));
-
+        glEnableVertexAttribArray(14);
+        glVertexAttribPointer(14, 3, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms), 
+            (void*)offsetof(LWidget::PrimitiveUniforms, inverseModel));
+        glEnableVertexAttribArray(15);
+        glVertexAttribPointer(15, 3, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms),
+            (void*)(offsetof(LWidget::PrimitiveUniforms, inverseModel) + vec3Size));
+        glEnableVertexAttribArray(16);
+        glVertexAttribPointer(16, 3, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms),
+            (void*)(offsetof(LWidget::PrimitiveUniforms, inverseModel) + 2 * vec3Size));
         glVertexAttribDivisor(5, 1);
         glVertexAttribDivisor(6, 1);
         glVertexAttribDivisor(7, 1);
@@ -182,8 +192,11 @@ namespace LGraphics
         glVertexAttribDivisor(11, 1);
         glVertexAttribDivisor(12, 1);
         glVertexAttribDivisor(13, 1);
+        glVertexAttribDivisor(14, 1);
+        glVertexAttribDivisor(15, 1);
+        glVertexAttribDivisor(16, 1);
         glBindVertexArray(0);
-
+        app->checkError();
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 

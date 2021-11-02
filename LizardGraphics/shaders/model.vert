@@ -85,6 +85,7 @@ uniform mat4 view;
 uniform mat4 proj;
 uniform mat4 lightSpaceMatrix;
 uniform vec3 viewPos;
+uniform mat3 inverseModel;
 
 uniform mat4 model_;
 uniform vec2 offset;
@@ -187,6 +188,7 @@ void main()
 		textureCoords.y*textureSize.y + offset.y);   
     vs.model = model_;
     vs.TexCoords_ = textureCoords;
-    vs.Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
+    //vs.Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
+    vs.Normal = normalize(inverseModel * normals); 
     gl_Position = proj * vs.eyeSpacePosition;
 }
