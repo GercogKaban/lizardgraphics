@@ -147,7 +147,10 @@ LGraphics::LModel::~LModel()
             delete m.image;
     }
     if (reflexCubeMap != UNINITIALIZED)
+    {
         glDeleteTextures(1, &reflexCubeMap);
+        glDeleteTextures(1, &depthMap);
+    }
     if (reflexFBO != UNINITIALIZED)
         glDeleteFramebuffers(1, &reflexFBO);
 }
@@ -258,15 +261,14 @@ void LGraphics::LModel::restartAnimation()
     animator.m_CurrentTime = 0.0f;
 }
 
-void LGraphics::LModel::setReflexSize(const std::pair<size_t, size_t> size)
-{
-    reflexWidth = size.first;
-    reflexHeight = size.second;
-}
+//void LGraphics::LModel::setReflexSize(size_t reflexSize)
+//{
+//    this->reflexSize = reflexSize;
+//}
 
-std::pair<size_t, size_t> LGraphics::LModel::getReflexSize() const
+size_t LGraphics::LModel::getReflexSize() const
 {
-    return std::pair<size_t, size_t>(reflexWidth,reflexHeight);
+    return reflexSize;
 }
 
 

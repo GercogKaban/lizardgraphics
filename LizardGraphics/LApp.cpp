@@ -206,13 +206,13 @@ namespace LGraphics
     }
 
 
-    void LApp::drawSceneForReflex(GLuint reflexFBO, size_t width, size_t height, glm::vec3 position)
+    void LApp::drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position)
     {
         LOG_CALL
         assert(reflexFBO != UNINITIALIZED);
         drawingReflex = true;
         reflexPos = position;
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, reflexSize, reflexSize);
         checkError();
         glBindFramebuffer(GL_FRAMEBUFFER, reflexFBO);
         checkError();
@@ -381,8 +381,7 @@ namespace LGraphics
 
                     // рисуем отражения
                     FOR(i, 0, models.size())
-                        drawSceneForReflex(models[i]->reflexFBO, models[i]->reflexWidth, models[i]->reflexHeight, 
-                            models[i]->getMiddlePoint());
+                        drawSceneForReflex(models[i]->reflexFBO, models[i]->reflexSize, models[i]->getMiddlePoint());
 
                     glViewport(0, 0, info.wndWidth, info.wndHeight);
 
@@ -1526,20 +1525,20 @@ namespace LGraphics
         {
             if (m->reflexCubeMap == UNINITIALIZED)
             {
-                const uint32_t width = m->getReflexSize().first, height = m->getReflexSize().second;
-                assert(width && height);
+                const size_t reflexSize = m->getReflexSize();
+                assert(reflexSize);
 
-                //uint32_t depth;
-                //glGenTextures(1, &depth);
-                //glBindTexture(GL_TEXTURE_CUBE_MAP, depth);
+                glGenTextures(1, &m->depthMap);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, m->depthMap);
 
-                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                //for (size_t face = 0; face < 6; ++face)
-                //    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_DEPTH_COMPONENT, width, width, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                for (size_t face = 0; face < 6; ++face)
+                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_DEPTH_COMPONENT, reflexSize, reflexSize, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 
                 glGenTextures(1, &m->reflexCubeMap);
                 glBindTexture(GL_TEXTURE_CUBE_MAP, m->reflexCubeMap);
@@ -1547,20 +1546,19 @@ namespace LGraphics
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 
                 for (size_t face = 0; face < 6; ++face)
-                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, width, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, reflexSize, reflexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
                 glGenFramebuffers(1, &m->reflexFBO);
                 glBindFramebuffer(GL_FRAMEBUFFER, m->reflexFBO);
-                //glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, tDepthCubeMap, 0);
                 glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m->reflexCubeMap, 0);
-                //glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth, 0);
+                glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m->depthMap, 0);
 
                 glDrawBuffer(GL_COLOR_ATTACHMENT0);
-                //glReadBuffer(GL_NONE);
+                glReadBuffer(GL_NONE);
                 checkFramebufferError();
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }

@@ -197,7 +197,7 @@ namespace LGraphics
 
         void drawScene();
         void drawSceneForLight(LLight* l);
-        void drawSceneForReflex(GLuint reflexFBO, size_t width, size_t height, glm::vec3 position);
+        void drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position);
 
         void clearColor();
         void clearDepth();

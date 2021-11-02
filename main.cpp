@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | CONSOLE_RELEASE_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
     info.anisotropy = 16;
     info.MSAA = 4;
-    info.vsync = L_TRUE;
+    info.vsync = L_FALSE;
 
 #ifndef NDEBUG
     info.texturesQuality = LOW;
@@ -188,13 +188,13 @@ int main(int argc, char** argv)
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
             if (app.isPressed(GLFW_KEY_E))
-                app.tesselationLevel += 1.0f;
+                test->setReflexSize(test->getReflexSize() * 2);
             if (app.isPressed(GLFW_KEY_Q))
-                app.tesselationLevel -= 1.0f;
-            if (app.isPressed(GLFW_KEY_G))
-                app.flag__ = !app.flag__;
-            if (app.isPressed(GLFW_KEY_T))
-                app.setTesselation(!app.getTesselation());
+                test->setReflexSize(test->getReflexSize() / 2);
+            //if (app.isPressed(GLFW_KEY_G))
+            //    app.flag__ = !app.flag__;
+            //if (app.isPressed(GLFW_KEY_T))
+            //    app.setTesselation(!app.getTesselation());
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });

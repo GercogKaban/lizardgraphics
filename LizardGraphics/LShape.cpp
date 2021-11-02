@@ -275,12 +275,12 @@ namespace LGraphics
             glm::mat4 Proj = app->getProjectionMatrix();//glm::perspective(glm::radians(90.0f), aspect, near_, far_);
 
             const std::array<glm::mat4, 6> faceTransforms = {
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
             (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))),
             (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)))
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)))
             };
             //const std::array<glm::mat4, 6> faceTransforms = 
             //{

@@ -74,8 +74,8 @@ namespace LGraphics
         void stopAnimation();
         void restartAnimation();
 
-        void setReflexSize(const std::pair<size_t, size_t> size);
-        std::pair<size_t, size_t> getReflexSize() const;
+        //void setReflexSize(size_t reflexSize);
+        size_t getReflexSize() const;
 
     protected:
 
@@ -95,8 +95,7 @@ namespace LGraphics
         bool playAnimation_ = false;
         void init();
 
-        size_t reflexWidth = 1024, reflexHeight= 1024;
-        GLuint reflexCubeMap = UNINITIALIZED;
-        GLuint reflexFBO = UNINITIALIZED;
+        size_t reflexSize = 1024;
+        GLuint reflexCubeMap = UNINITIALIZED, depthMap = UNINITIALIZED, reflexFBO = UNINITIALIZED;
     };
 }
