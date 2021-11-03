@@ -4,9 +4,15 @@
 */
 
 #include "interfaces.h"
+#include "LModel.h"
+#include "LCylinder.h"
 #include "LCube.h"
-#include "LSkyBox.h"
-#include "LRectangleMirror.h"
+#include "LCone.h"
+#include "LSphere.h"
+#include "LIcosphere.h"
+#include "LTorus.h"
+#include "LPlane.h"
+#include "LCylinder.h"
 
 #include <ctime>
 
@@ -14,79 +20,127 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    const size_t poolSize = 2;
-
-    LAppCreateInfo info;
+    LAppInitialCreateInfo info;
 
     info.api = L_OPENGL;
     info.projection = L_PERSPECTIVE;
     info.saveObjects = L_FALSE;
     info.loadObjects = L_FALSE;
     info.lighting = L_TRUE;
-    info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
+    info.logFlags = ASYNC_LOG | CONSOLE_DEBUG_LOG | CONSOLE_RELEASE_LOG | FILE_DEBUG_LOG | FILE_RELEASE_LOG;
     info.anisotropy = 16;
     info.MSAA = 4;
     info.vsync = L_FALSE;
-    info.poolSize = poolSize;
-    //info.freeThreads = 1;
 
-    const auto spread = 1;
-    LApp app(info);
+#ifndef NDEBUG
+    info.texturesQuality = LOW;
+    info.loading = FAST;
+    info.shadowsHeight = 2048;
+    info.shadowsWidth = 2048;
+#else
+    info.texturesQuality = HIGH;
+    info.loading = FAST;
+    info.shadowsHeight = 8192;
+    info.shadowsWidth = 8192;
+#endif
+
+    const auto spread = 5;
+    LApp app(info); 
     srand(time(0));
     ImGuiInterface interface_(&app);
     auto f = std::bind(&ImGuiInterface::imguiInterface, &interface_);
     app.setImgui(f);
-    LWRectangle* c;
+
+    app.fog.density = 0.15f;
+    app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
+    app.fog.isEnabled = true;
+
+    auto dirLight = new LDirectionalLight(&app);
+    dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
+    dirLight->setDirection(glm::vec3(4, 0, 4));
+    //dirLight->setShadowsCalculating(false);
+   
+    LPlane* last;
+
+    //auto s = new LPointLight(&app);
+    //s->setRadius(25);
+
+    float yOffset = -0.3f;
     if (!info.loadObjects)
-    {
-        auto t = new LWRectangle(&app, "textures/gold2.jpg");
-        t->move(5.0f, 0, 0);
-        new LWRectangle(&app, "textures/gold.jpg");
-        c = new LWRectangle(&app, "textures/gold2.jpg");
-        for (size_t i = 0; i < poolSize; ++i)
+    {   
         {   
-            //c = new LCube(&app, "textures/gold2.jpg");
-            //c->move(rand() % 5, rand() % spread, rand() % spread);
-            //c->rotateX(rand() % spread);
-            //c->rotateY(rand() % spread);
-            //c->rotateZ(rand() % spread);
+            for (size_t i = 0; i < 2; ++i)
+                for (size_t j = 0; j < 2; ++j)
+                {
+                    LPlane* p;
+                    p = new LPlane(&app, { "Rocks011.jpg" });
+                    p->rotateX(270.0f);              
+                    p->move(i, yOffset, (float)j);
+                    p->setParallaxMapping(false);
+                    p->setNormalMapping(true);
+                }
+
+            for (size_t i = 0; i < 2; ++i)
+                for (size_t j = 0; j < 2; ++j)
+                {
+                    LPlane* p;
+                    p = new LPlane(&app, { "Rocks011.jpg" });
+                    p->rotateX(270.0f);
+                    p->move(i, yOffset + 1, (float)j);
+                    p->setParallaxMapping(false);
+                    p->setNormalMapping(true);
+                }
+
+            const float off = 1.5f;
+            const float startX = 1.0f;
+
+            auto cyl = new LCylinder(&app, { "aerial_rocks_02.jpg" });
+            cyl->move(startX + off, 0.25f, 0.0f);
+            cyl->setParallaxMapping(false);
+
+            auto cone = new LCone(&app, { "Rocks011.jpg" });
+            cone->move(startX + off * 2, 0.25f, 0.0f);
+            cone->setParallaxMapping(false);
+
+            auto sphere = new LSphere(&app, { "Rocks011.jpg" });
+            sphere->move(startX + off * 3, 0.25f, 0.0f);
+            sphere->setParallaxMapping(false);
+
+            auto ico = new LIcosphere(&app, { "Rocks011.jpg" });
+            ico->move(startX + off * 4, 0.25f, 0.0f);
+            ico->setParallaxMapping(false);
+
+            auto tor = new LTorus(&app, { "Rocks011.jpg" });
+            tor->move(startX + off * 5, 0.25f, 0.0f);
+            tor->setParallaxMapping(false);
         }
-
-        //for (size_t i = 0; i < 20; ++i)
-        //    for (size_t j = 0; j < 20; ++j)
-        //{
-        //    auto c = new LWRectangle(&app, "textures/image1.bmp");
-        //    c->move(i, -0.5f, j);
-        //    c->rotateX(90.0f);
-        //    c->scale(1.0f, 1.0f, 1.0f);
-        //}
-
-        //c = new LCube(&app, "textures/gold.jpg");
-        //c->scale(0.1f, 0.1f, 0.1f);
-        //c->move(7.5f, 0.0f, 7.5f);
-        //new LSkyBox(&app, {
-        //    "textures/skyboxes/Spacebox4/_right.png",
-        //    "textures/skyboxes/Spacebox4/_left.png",
-        //    "textures/skyboxes/Spacebox4/_top.png",
-        //    "textures/skyboxes/Spacebox4/_bottom.png",
-        //    "textures/skyboxes/Spacebox4/_front.png",
-        //    "textures/skyboxes/Spacebox4/_back.png", });
     }
+
+    //const float scale = 0.3f;
+    const float scale = 0.0025f;
+    auto test = new LModel(&app, "girl.fbx","Kachujin_diffuse.png","Kachujin_normal.png","", "refl_map.jpg");
+    //auto test = new LModel(&app, "cube228.obj","Rocks011.jpg","Rocks011.jpg","",
+    //    "refl_map.jpg");
+    test->scale(scale, scale, scale);
+    test->move(0.0f, yOffset, 0.0f);
+    test->setParallaxMappingAllMeshes(false);
+    test->rotateY(180.0f);
+    //test->playAnimation();
 
     app.setBeforeDrawingFunc([&]()
         {
             if (app.isCursorEnabled())
                 return;
 
-            static auto cMove = c->getMove();
-            const auto move = c->getMove();
+            //static auto cMove = c->getMove();
+            //const auto move = c->getMove();   
 
-            const float radius = poolSize + 13.0f;
-            const float shiftCoef = -1.5f;
-            glm::vec3 shift = glm::normalize(move - glm::vec3(7.5f, 0.0f, 7.5f)) * shiftCoef;
+            const float radius = 10.0f;
+            const float shiftCoef = -1.05f;
+            //glm::vec3 shift = glm::normalize(move - s->getPosition()) * shiftCoef;
 
             int i = 0;
-            auto p = app.getPrimitives()[L_CUBE];
+            //auto p = app.getPrimitives()[L_CUBE];
             //while (i < poolSize)
             //{
             //    p[i]->rotateX(1.0f);
@@ -97,15 +151,19 @@ int main(int argc, char** argv)
             //    i++;
             //}
 
-            GLfloat camX = sin(glfwGetTime());
-            GLfloat camZ = cos(glfwGetTime());
+            GLfloat camX = sin(app.getCurrentFrame());
+            GLfloat camZ = cos(app.getCurrentFrame());
 
-            c->move(cMove.x + radius * camX, c->getMove().y, cMove.z + radius * camZ);
+            dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
+                camZ * radius));
+
+
+            //c->move(cMove.x + radius * camX, c->getMove().y, cMove.z + radius * camZ);
 
             const float step = 0.01f;
             //c->rotateY(step);
 
-            const float cameraSpeed = 0.002f;
+            const float cameraSpeed = 2.0f / ImGui::GetIO().Framerate;
             glm::vec3 cameraPos = app.getCameraPos();
             const auto cameraFront = app.getCameraFront();
             const auto cameraUp = app.getCameraUp();
@@ -123,13 +181,20 @@ int main(int argc, char** argv)
 
             cameraPos.y = 0.0f;
             app.setCameraPos(cameraPos);
-            app.setLightPos(glm::vec3(move.x + shift.x, move.y + 2.5f, move.z + shift.z));
         });
 
     app.setUserKeyCallback([&](auto w, auto key, auto scancode, auto action, auto mods)
         {
             if (app.isPressed(GLFW_KEY_LEFT_CONTROL))
                 app.setCursorEnabling(!app.isCursorEnabled());
+            //if (app.isPressed(GLFW_KEY_E))
+            //    test->setReflexSize(test->getReflexSize() * 2);
+            //if (app.isPressed(GLFW_KEY_Q))
+            //    test->setReflexSize(test->getReflexSize() / 2);
+            //if (app.isPressed(GLFW_KEY_G))
+            //    app.flag__ = !app.flag__;
+            //if (app.isPressed(GLFW_KEY_T))
+            //    app.setTesselation(!app.getTesselation());
             //if (app.isPressed(GLFW_KEY_G))
             //    app.switchRendererTo(app.getAppInfo().api == L_VULKAN ? L_OPENGL : L_VULKAN);
         });
@@ -186,7 +251,7 @@ int main(int argc, char** argv)
         }
     });
 
-    app.setLightPos(app.getCameraPos());
+    //app.setDirLightPos(app.getCameraPos());
     app.loop();
     return 0;
 }

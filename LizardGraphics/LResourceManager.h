@@ -3,139 +3,100 @@
 #include <unordered_map>
 #include <variant>
 #include <memory>
+#include <vector>
 
 //#include "include/stb/stb_image.h"
-#include "include/tinyobjloader/tiny_obj_loader.h"
+//#include "include/tinyobjloader/tiny_obj_loader.h"
 //#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 #include "include/GLEW/glew.h"
 #include "LApp.h"
 #include "AtlasGenerator.h"
+#include "LImage.h"
+#include "LModel.h"
 
-//#define OGL_IMG LResourceManager::OpenGLImage
-//#define VK_IMG LResourceManager::OpenGLImage
-//
-
-#define GET_DIFFUSE(name) ((LResourceManager::OpenGLImage*)LResourceManager::textures[name].textures.get())->diffuse.texture
-#define GET_NORMALS(name)  ((LResourceManager::OpenGLImage*)LResourceManager::textures[name].textures.get())->normals.texture
-//#define GET_DIFFUSE_PTR(name) &GET_DIFFUSE(name)
-//#define GET_NORMALS_PTR(name) &GET_NORMALS(name)
-
-//#define GET_DIFFUSE_VK(name) ((LResourceManager::VulkanImage*)LResourceManager::textures[name].textures)->diffuse
-//#define GET_NORMALS_VK(name)  ((LResourceManager::VulkanImage*)LResourceManager::textures[name].textures)->normals
-//#define GET_DIFFUSE_PTR_VK(name) &GET_DIFFUSE_VK(name)
-//#define GET_NORMALS_PTR_VK(name) &GET_NORMALS_VK(name)
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
 
 namespace LGraphics
 {
-    //class LApp;
     class LModel;
     class LModelBuffer;
     class LImage;
     class LRectangleMirror;
+    class LRectangleShape;
+    class LSkyBox;
+    class Animation;
+    class Animator;
 
     class LResourceManager
     {
-
-        struct TexturesData
-        {
-            struct VulkanImageData
-            {
-                struct VulkanTextureData
-                {
-                    VkImageView texture = nullptr;
-                    VkImage image;
-                    VmaAllocation allocData;
-                };
-                VulkanTextureData diffuse, normals;
-            };
-
-            struct OGLImageData
-            {
-                //struct OGLTextureData
-                //{
-                //    std::shared_ptr<GLuint> texture = nullptr;
-                //};
-                GLuint diffuse, normals;
-            };
-
-            void* textures = nullptr;
-
-            TexturesData(void* t)
-            {
-                textures = t;
-            }
-
-            TexturesData(){}
-
-            TexturesData(TexturesData&& d) noexcept
-                : textures(std::move(d.textures))
-            {
-                d.textures = nullptr;
-            }
-
-            ~TexturesData()
-            {
-                if (textures)
-                {
-                    if (app->info.api == L_OPENGL)
-                        delete (OGLImageData*)textures;
-                    else if (app->info.api == L_VULKAN)
-                        delete (VulkanImageData*)textures;
-                }
-            }
-        };
-
+        friend LRectangleShape;
+        friend LSkyBox;
+        friend Animation;
+        friend Animator;
+ 
         struct ModelData
         {
             LModelBuffer* buffer;
-            void** textures;
-            size_t meshesToDraw = 0;
+            TexturesData** textures;
+            //size_t meshesToDraw = 0;
         };
-
-        //using OpenGLTexture = TexturesData::OGLImageData::OGLTextureData;
-        using OpenGLImage = TexturesData::OGLImageData;
-        using VulkanTexture = TexturesData::VulkanImageData::VulkanTextureData;
-        using VulkanImage = TexturesData::VulkanImageData;
 
         friend LApp;
         friend LModel;
         friend LImage;
+        friend LCube;
         friend LRectangleMirror;
 
     public:
 
-        static void  loadCacheAtlases();
-        static void* loadTexture(const char* path, size_t& mipLevels);
-        static void* loadCubeTexture(const std::vector<std::string>& paths, const char* name);
+        static std::vector<TexturesData> loadImageResource(LImage::ImageResource res);
+        static TexturesData loadImageSkyboxResource(LImage::ImageSkyboxResource res);
 
-        //static void* loadTexture(unsigned char* bytes, size_t size, const char* name, int desiredChannel = 4);
-        //static void loadModel(LModel* model, const char* modelPath, bool debugInfo = false);
+        //static TexturesData::OGLImageData& toGl(TexturesData& data);
+        //static TexturesData::VulkanImageData& toVk(TexturesData& data);
 
         static void setApp(LApp* app) { LResourceManager::app = app; }
-
+        static void clear();
         ~LResourceManager();
 
     private:
 
-        //static void* loadNormals(const char* path, int desiredChannel = 4);
-        //static void* loadNormals(unsigned char* bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel = 4);
-        //static void* loadNormals(unsigned char* bytes, int width, int height, const char* path);
+        static void  loadModel(LModel* model, LModel::ModelResource res, bool cropTextureCoords);
+        static void  loadModel(LModel* model, const std::string& path, bool cropTextureCoords);
+        static void* loadTexture(const char* path, size_t& mipLevels);
+        static void* loadCubeTexture(const std::vector<std::string>& paths);
+        static void setTexture(const std::string& texturePath, TexturesData& data, void* texture);
 
-        //static void* loadTexture(const char* path, size_t& mipLevels, int desiredChannel = 4);
-        //static void* loadTexture(unsigned char* bytes, size_t size, const char* name, size_t& mipLevels, int desiredChannel = 4);
         static void genTexture(uint8_t* bytes, int width, int height, GLuint* texture);
 
         static void createImageView(uint8_t* pixels, int texWidth,
             int texHeight, int texChannels, const char* path, size_t& miplevels,
             VkImageView& texture, VkImage& image, VmaAllocation& textureImageMemory);
 
+        static void processNode(LApp* app, std::vector<LModel::Mesh>&, aiNode* node, const aiScene* scene, bool cropTextureCoords, 
+            aiMatrix4x4 transform);
+        static LModel::Mesh processMesh(LApp* app, aiMesh* mesh, const aiScene* scene, bool cropTextureCoords, 
+            aiMatrix4x4 transform);
+        static const TexturesData& loadMaterialTextures(aiMaterial* mat, aiTextureType type);
+        static const TexturesData& LResourceManager::loadMaterialTextures(const std::string& path);
+
+        static void SetVertexBoneDataToDefault(Vertex& vertex);
+        static void SetVertexBoneData(Vertex& vertex, int boneID, float weight);
+        static void ExtractBoneWeightForVertices(LModel* model, std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
+
+        static void ReadMissingBones(const aiAnimation* assimpAnimation, LModel* model, Animation& animation);
+        static void ReadHeirarchyData(NodeData& dest, const aiNode* src);
+
+        static std::string tryToFindFile(const std::string& path);
+        static const aiScene* tryToLoadScene(const std::string& path, Assimp::Importer& importer, size_t it = 0);
 
         static LApp* app;
 
         static std::vector<AtlasData> atlasData;
         static std::unordered_map<std::string, TexturesData> textures;
-        static std::unordered_map<std::string, ModelData> models;
-        //static std::hash_set<std::string> atlasTextures;
+        static std::unordered_map<std::string, LModel*> models;
+        static LModel* currentModel;
     };
 }
 

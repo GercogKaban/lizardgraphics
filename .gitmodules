@@ -4,3 +4,9 @@
 [submodule "LizardGraphics/imgui"]
 	path = LizardGraphics/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "LizardGraphics/assimp"]
+	path = LizardGraphics/assimp
+	url = https://github.com/assimp/assimp
+[submodule "assimp"]
+	path = assimp
+	url = https://github.com/assimp/assimp

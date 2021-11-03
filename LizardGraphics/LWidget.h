@@ -9,20 +9,26 @@
 
 //#include "vectors.h"
 #include "Lshaders.h"
-#include "LImage.h"
+#include "LObject.h"
 
 namespace LGraphics
 {
     class LApp;
+    class LImagedShape;
+    class LPlane;
+    class LCube;
 
     /*!
     @brief Абстрактный класс виджета. От него наследуются все виджеты Lizard Graphics.
     */
-    class LWidget : public LImage
+    class LWidget : public LObject
     {
     public:
 
+        friend LImagedShape;
         friend LApp;
+        friend LPlane;
+        friend LCube;
         /*void setApp(LApp* app_) { this->app = app_; }  ///< Устанавливает приложение (окно) виджета.*/
 
         const char* getObjectType() const override { return "LWidget"; }
@@ -38,15 +44,19 @@ namespace LGraphics
             THREE_BUFFERS_TO_CHANGE,
         };
     
-        struct WidgetUniforms
+        struct PrimitiveUniforms
         {
             glm::mat4 model;
-            glm::vec2 offset;
-            glm::vec2 textureSize;
+            glm::vec4 diffuseCoords;
+            glm::vec4 normalCoords;
+            glm::vec4 heightCoords;
+            glm::vec4 reflexCoords;
+            glm::ivec3 mapping;
+            glm::mat3 inverseModel;
         };
 
-        using RectangleUniforms = WidgetUniforms;
-        using CubeUniforms = WidgetUniforms;
+        //using PlaneUniforms = WidgetUniforms;
+        //using CubeUniforms = WidgetUniforms;
 
         //struct WidgetUniformsRef
         //{
@@ -120,10 +130,6 @@ namespace LGraphics
         virtual void move(const glm::vec<2, size_t> v) = 0;
 
         virtual void setModel(const glm::mat4& model) = 0;
-        /*!
-        @brief устанавливает функцию, которая будет срабатывать при наведении мышки на виджет.
-        */
-        void setMouseOnItEventFunction(::std::function<void()> fun) { mouseOnItFunction = fun; }
 
         virtual void setMaterial(int material) { this->material = material; setUpdateUniformsFlag();}
         virtual int getMaterial() const { return material; }
@@ -160,8 +166,6 @@ namespace LGraphics
         LShaders::Shader* getShader() { return shader; }
         void setShader(LShaders::Shader* s) { shader = s; }
 
-        virtual bool mouseOnIt() = 0;  ///< Возвращает находится ли мышка на виджете.
-
         void show() { isHidden_ = false; }   ///< Показать виджет.
         void hide() { isHidden_ = true; }    ///< Скрыть виджет.
         void setHidden(bool hide) { isHidden_ = hide; }   ///< Установить видимость виджета.
@@ -170,11 +174,11 @@ namespace LGraphics
         bool isChanged() const { return changed != UNMODIFIED; }
         //virtual int getId() const { return id; }
         
-
         virtual ~LWidget();
 
     protected:
 
+        std::pair<float, float> rangeX, rangeY, rangeZ;
         uint64_t id = 0;
         int material = 0;
 
@@ -184,10 +188,6 @@ namespace LGraphics
 
         static LApp* app;    ///< Указатель на приложение.
         bool isHidden_ = false; ///< Видимость виджета.
-        ::std::function<void()> mouseOnItFunction;  ///< Функция, срабатывающая при наведении мышки на виджет.
-        ::std::function<void()> animation = ::std::function<void()>([](){});
-        ::std::function<void()> breakingAnimation = ::std::function<void()>([]() {});
-
         bool isInited_ = false;
         LShaders::Shader* shader = nullptr; ///< Шейдер.
 
@@ -206,11 +206,6 @@ namespace LGraphics
         @brief Конструктор.
         @param path - Путь к изображению.
         */
-        LWidget(LApp* app, const char* path);
-
-        virtual void init();
-
-    private:
-        static std::vector<WidgetUniforms> uniforms;
+        LWidget(LApp* app/*, ImageResource res*/);
     };
 }

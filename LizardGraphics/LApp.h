@@ -1,5 +1,6 @@
 ﻿#pragma once
 #define PARALLEL_UPDATE
+#define MAX_LIGHTS 128
 
 #include <mutex>
 #include <optional>
@@ -51,6 +52,7 @@ void handle_cmd(android_app* app, int32_t cmd);
 
 #include "AtlasGenerator.h"
 #include "LObject.h"
+#include "LLights.h"
 
 namespace LShaders
 {
@@ -67,9 +69,14 @@ namespace LGraphics
 
     class LNonWidget;
     class LResourceManager;
-    class LWRectangle;
+    class LPlane;
+    class LCone;
+    class LTorus;
+    class LSphere;
+    class LIcosphere;
+    class LCylinder;
     class LShape;
-    class LRectangleShape;
+    class LImagedShape;
     class LBuffer;
     class LModelBuffer;
     class LWidget;
@@ -84,11 +91,10 @@ namespace LGraphics
     class LRectangleMirror;
     class InstantPoolCubes;
 
-    struct LAppCreateInfo
+    struct LAppInitialCreateInfo
     {
         RenderingAPI api = L_VULKAN;
         size_t wndWidth = 0, wndHeight = 0;
-        size_t poolSize = 100;
         size_t sleepThread = 0;
         LStates vsync = L_FALSE;
         LStates saveObjects = L_FALSE;
@@ -100,6 +106,10 @@ namespace LGraphics
         uint8_t logFlags = 0;
         LStates redactorMode = L_FALSE;
         size_t freeThreads = std::max((int)std::thread::hardware_concurrency() - 2, 1);
+        ModelLoading loading = LGraphics::ModelLoading::QUALITY;
+        QualityLevels texturesQuality = LGraphics::QualityLevels::AUTO;
+        size_t shadowsWidth = 1024, shadowsHeight = 1024;
+        std::filesystem::path resourceDir = "";
     };
 
     /*!
@@ -112,8 +122,13 @@ namespace LGraphics
     class LApp : public LObject
     {
         friend LShape;
-        friend LRectangleShape;
-        friend LWRectangle;
+        friend LImagedShape;
+        friend LPlane;
+        friend LCone;
+        friend LTorus;
+        friend LSphere;
+        friend LIcosphere;
+        friend LCylinder;
         friend LShaders::Shader;
         friend LShaders::VulkanShader;
         friend LShaders::OpenGLShader;
@@ -131,13 +146,15 @@ namespace LGraphics
         friend LSkyBox;
         friend LRectangleMirror;
         friend InstantPoolCubes;
+        friend LLight;
+        friend LSpotLight;
+        friend LPointLight;
 
     public:
 
-        LApp(const LAppCreateInfo& info);
+        LApp(const LAppInitialCreateInfo& info);
         ~LApp();
 
-        LWidget* findByLID(int id);
         /*!
         @brief Бесконечный цикл
 
@@ -149,91 +166,100 @@ namespace LGraphics
         void emergencyStop(unsigned long code);
         void emergencyStop(std::exception& exception);
 
-        void switchRendererTo(RenderingAPI api);
-        void setAfterSwitchingFunc(std::function<void()> func) { afterSwitchingFunc = func; }
-        const LAppCreateInfo& getAppInfo() const { return info; }
+        const LAppInitialCreateInfo& getAppInfo() const { return info; }
 
-        const int* getObjectsOnScreen() const { return objectsOnScreen; }
+        // нужен фикс
+        float tesselationLevel = 2.0f;
+        bool flag__ = false;
 
     protected:
+        void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
+        bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
-        void* buff;
+        void switchRendererTo(RenderingAPI api);
+        void setAfterSwitchingFunc(std::function<void()> func) { afterSwitchingFunc = func; }
 
-        //template <typename T>
-        //class LID
-        //{
-        //public:
-        //    LID() {}
-        //    T getNewID()
-        //    {
-        //        T ret;
-        //        if (gaps.size())
-        //        {
-        //            ret = gaps.front();
-        //            gaps.pop();
-        //        }
-        //        else
-        //            ret = lastId++;
-        //        return ret;
-        //    }
-        //    void releaseID(T id)
-        //    {
-        //        gaps.push(id);
-        //    }
-        //private:
-        //    std::queue<T> gaps;
-        //    T lastId = 0;
-        //};
+        static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+            std::cout << "[OpenGL Error](" << type << ") " << message << std::endl;
+        }
+        GLuint currentDepthMap;
 
-        class InstantPoolCubes
-        {
-            friend LCube;
-            friend LSkyBox;
-
-            LApp* app;
-            GLuint vbo;
-            LWidget::WidgetUniforms* uniformBuffers;
-            LCube** objs;
-            size_t uniformBuffersSize;
-            //std::vector<LWidget::WidgetUniforms> uniformBuffers;
-            //std::vector<LCube*> objs;
-
-        public:
-
-            InstantPoolCubes(){}
-            ~InstantPoolCubes();
-
-            void setApp(LApp* app);
-            void draw();
-            void makeInstantObj(LCube* cube);
-            void updateBuffer();
-            void initPool();
-
-        }cubeInstantPool;
-
-        int* objectsOnScreen;
-        //LID<int> idManager;
+        bool parallaxSelfShading = true;
+        uint32_t modelLoadingFlags = 0;
+        std::unordered_map<QualityLevels, std::string> qualityDirectories;
 
         void loop_();
-        void initApp_(const LAppCreateInfo& info);
+        void initApp_(const LAppInitialCreateInfo& info);
         void initErrorRecovering();
         void updateShaders();
         void updateBuffers();
         void updateTextures();
 
         void drawScene();
+        void drawSceneForLight(LLight* l);
+        void drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position);
 
+        void clearColor();
+        void clearDepth();
+        void clearColorDepth();
+
+        bool isDirectoryChanged(const std::string& path, const std::string& cacheFile) const;
+        void saveDirectoryChangedTime(const std::string& path, const std::string& filePath) const;
+
+        std::string getRealDiffusePath() const;
+        std::string getRealNormalPath() const;
+        std::string getRealDisplacementPath() const;
+        std::string getRealReflexPath() const;
+
+        std::string getRealTexturesPath() const;
+        std::string getRealModelsPath() const;
+
+        std::time_t GetFileWriteTime(const std::filesystem::path& filename) const
+        {
+#if defined ( _WIN32 )
+            {
+                struct stat fileInfo;
+                if (stat(filename.generic_string().c_str(), &fileInfo) != 0)
+                    throw std::runtime_error("Failed to get last write time.");
+                return fileInfo.st_mtime;
+            }
+#else
+            {
+                auto fsTime = std::filesystem::last_write_time(filename);
+                return decltype (fsTime)::clock::to_time_t(fsTime);
+            }
+#endif
+        }
+        
         struct Megatexture
         {
             Atlas textureAtl = Atlas("textures/out.jpg");
-            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures;
-            GLuint id; 
+            Atlas normalAtl = Atlas("textures/out.jpg");
+            Atlas parallaxAtl = Atlas("textures/out.jpg");
+            Atlas reflexAtl = Atlas("textures/out.jpg");
+            std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>> subtextures, subtexturesNormal, subtexturesParallax,
+                subtexturesReflex;
+            GLuint id, idNormal, idParallax, idReflex; 
         } megatexture;
+
+        void generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath);
+        void initMegatextureData(const Atlas& atl, std::unordered_map<std::string, std::pair<glm::vec2, glm::vec2>>& subtextures,
+            GLuint megatextureId);
+
+        LModel* cube, *plane, *sphere, *icosphere, *cone, *cylinder, *torus;
 
     public:
 
-        unsigned int cubeTexture;
-        bool renderingToCube = false;
+        // нужен фикс
+        float heightScale = 0.03f;
+        struct LFog
+        {
+            glm::vec3 color;
+            float density;
+            bool isEnabled = false;
+        }fog;
+
+        void initReflex();
 
         /*!
         @brief Возвращает размеры окна (в пикселях).
@@ -243,11 +269,9 @@ namespace LGraphics
 
         /*!
         @brief Возвращает дескриптор GLFW окна.
-
         */
-        GLFWwindow* getWindowHandler() { return window_; }
+        static GLFWwindow* getWindowHandler() { return window_; }
 
-        //void setResolution(size_t resolutionX, size_t resolutionY) { glfwSetWindowSize(window_, resolutionX, resolutionY); }
         void setMatrices(glm::mat4 view, glm::mat4 projection);
         
         template<typename T>
@@ -262,39 +286,41 @@ namespace LGraphics
             collection.pop_back();
         }
 
-        void addObject(LWidget* w);
-        void removeObject(LWidget* w);
-        void deleteObject(LWidget* w)
-        {
-            removeObject(w);
-            delete w;
-        }
+        void addLight(LLight* l);
+        void removeLight(LLight* l);
+        void deleteLight(LLight* l);
 
+        void addObject(LImagedShape* w);
+        void removeObject(LImagedShape* w);
+        void deleteObject(LImagedShape* w);
 
-        //template <typename C>
-        //void addObject(LWidget* w, std::vector<C*>& collection)
-        //{
-        //    assert(collection.size() + 1 <= getPoolSize() && "error, pool overflowed!\n");
-        //    collection.push_back(((C*)w));
-        //}
+        void addObject(LModel* w);
+        void removeObject(LModel* w);
+        void deleteObject(LModel* w);
 
-        void refreshObjectMatrices();
+        const auto& getPrimitives() const { return primitives; }
+        const auto& getModels() const { return models; }
 
-        auto& getPrimitives() { return primitives; }
-        std::vector<LModel*>& getModels() { return models; }
+        void setTesselation(bool tesselation) { this->tesselation = tesselation; }
+        bool getTesselation() const { return tesselation; }
+
+        const auto& getSpotLights() const { return lights[L_SPOT_LIGHT]; }
+        const auto& getPointLights() const { return lights[L_POINT_LIGHT]; }
+        const auto& getDirectedLights() const { return lights[L_DIRECTIONAL_LIGHT]; }
+        const auto& getLights() const {return lights;}
 
         LShaders::Shader* getStandartShader() const;
+        LShaders::Shader* getStandartShaderTes() const;
 
         bool isPressed(int key);
 
-        glm::mat4 getViewMatrix() const { return view; }
-        glm::mat4 getProjectionMatrix() const { return projection; }
+        const glm::mat4& getViewMatrix() const { return view; }
+        const glm::mat4& getProjectionMatrix() const { return projection; }
 
         std::mutex& getDrawingMutex() { return drawingMutex; }
 
         void setSleepTime(size_t milliseconds) { sleepTime = milliseconds; }
         size_t getSleepTime() const { return sleepTime; }
-
 
         void lockFrontViewCamera() { cameraFrontViewLock = true; }
         void unlockFrontViewCamera() { cameraFrontViewLock = false; }
@@ -322,32 +348,16 @@ namespace LGraphics
         glm::vec3 getCameraUp() const { return cameraUp; }
         float getViewRadius() const { return viewRadius; }
 
+        const std::unique_ptr<LShaders::Shader>& getLightningShaderTes() { return info.api == L_OPENGL ? openGLLightShaderTes : lightShader; }
         const std::unique_ptr<LShaders::Shader>& getLightningShader() { return info.api == L_OPENGL ? openGLLightShader : lightShader; }
-        //LShaders::Shader* getLightningShader() { return experimentalLightShader; }
-
-        unsigned int getDepthMap() const { return depthMap; }
-
-        void setLighting(LStates state) { info.lighting = state; }
-        void setLightPos(glm::vec3 lightPos);
-        glm::vec3 getLightPos() const { return lightPos; }
-        glm::mat4 getLightSpaceMatrix() const { return lightSpaceMatrix; }
-
-        bool lightIsInited() const { return lightIsInited_; }
-        void initLight() { lightIsInited_ = true; }
 
         glm::vec2 getMouseCoords() const { return mouseCoords; }
 
-        ObjectPool<LWRectangle*> lwRectPool;
-
-        std::vector<LNonWidget*> customObjects;
-        glm::vec3 lightPos; //lightDir;
-
-        size_t getPoolSize() const { return info.poolSize; }
+        //ObjectPool<LPlane*> lwRectPool;
+        //std::vector<LNonWidget*> customObjects;
 
         void setImgui(std::function<void()> func) { imgui = func; }
-
-
-        void safeDelete(LWidget* w) { toDelete.push(w); }
+        void safeDelete(LImagedShape* w) { toDelete.push(w); }
 
         void setUserMouseButtonCallback(std::function<void(GLFWwindow* window, int button, int action, int mods)> func);
         void setUserCursorCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)> func);
@@ -364,15 +374,24 @@ namespace LGraphics
         void setPitch(float pitch) { this->pitch = pitch; };
         float getPitch() const { return pitch; }
 
+        float getCurrentFrame() const { return lastFrame; }
+        float getDeltaTime() const { return deltaTime; }
+
     protected:
-        static LAppCreateInfo info;
+
+        std::string loadingText;
+        static LAppInitialCreateInfo info;
 
         LSkyBox* skybox = nullptr;
 
         bool drawUI_ = true;
+        bool tesselation = false;
 
-        std::stack<LWidget*> toDelete;
-        std::stack<LWidget*> toCreate;
+        std::stack<LImagedShape*> toDelete;
+        std::stack<LImagedShape*> toCreate;
+
+        std::stack<LModel*> toDeleteM;
+        std::stack<LModel*> toCreateM;
 
         std::function<void()> imgui = []() {};
         glm::vec2 mouseCoords = glm::vec2(0.0f);
@@ -380,19 +399,21 @@ namespace LGraphics
         float yaw = -20.0f;
         float pitch = 10.0f;
 
+        std::array<std::pair<float, float>, 3> lastLoadedRanges;
+
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         bool cursorEnabled = true;
         bool cameraFrontViewLock = false;
-        bool lightIsInited_ = false;
+
+        float deltaTime = 0.0f;
+        float lastFrame = 0.0f;
 
         bool prevCameraFrontDefined = false;
         glm::vec3 prevCameraFront = glm::vec3(0.0f);
-        glm::mat4 lightSpaceMatrix;
 
-        void setLightSpaceMatrix();
+        std::deque<LLight*> lightsToInit;
 
-        void initTextures(std::vector<LWidget*>& objects);
         void setMatrices();
 
         void refreshCamera();
@@ -407,9 +428,9 @@ namespace LGraphics
 
         void setWindowCallbacks();
 
-        void initTextures();
-
         void checkEvents();
+        void checkError() const;
+        void checkFramebufferError() const;
 
         void releaseVulkanResources();
         void releaseOpenGLResources();
@@ -436,24 +457,13 @@ namespace LGraphics
 
     public:
         VkDevice getDevice() const { return g_Device; }
-    protected:
 
-        struct DirLight
-        {
-            glm::vec3 direction;
-            glm::vec3 ambient;
-            glm::vec3 diffuse;
-            glm::vec3 specular;
-        };
+    protected:
 
         struct UboDataDynamicV
         {
             glm::mat4* model = nullptr;
         };
-
-        /*struct VulkanStruct
-        {*/
-        std::deque<size_t> indexGaps;
 
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
@@ -717,7 +727,7 @@ namespace LGraphics
         void handleSEH(const size_t& code);
         void handleCppException(std::exception& err);
 
-        GLFWwindow* window_;
+        static GLFWwindow* window_;
 
         glm::mat4 view, projection;
 
@@ -726,19 +736,17 @@ namespace LGraphics
         glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
         float viewRadius = 10.0f;
 
-        std::vector<LWidget*> primitives[3];
-        //std::vector<LWidget*> primitives;
+        std::vector<LImagedShape*> primitives[7];
+
+        std::vector<LLight*> lights[3];
+        LLight* currentLight = nullptr;
         std::vector<LModel*> models;
 
-        //int width, height;
-
         size_t sleepTime = 0;
-
-        LBuffer* standartSkyBoxBuffer;
         LBuffer* standartRectBuffer;
-        LBuffer* standartCubeBuffer;
 
-        std::unique_ptr<LShaders::Shader> openGLLightShader, lightShader, skyBoxShader, skyBoxMirrorShader, shadowMapShader;
+        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, shadowMapShader,
+            modelShader, shadowMapModelShader, reflexPrimitiveShader, reflexModelShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -750,12 +758,14 @@ namespace LGraphics
         std::function<void()> beforeDrawingFunc = []() {};
         std::function<void()> afterDrawingFunc = []() {};
         std::function<void()> afterSwitchingFunc = []() {};
+        std::function<void()> loadingScreenFunc = customLoadingScreen;
 
-        uint32_t shadowWidth = 1024, shadowHeight = 1024;
+        static void customLoadingScreen();
+        std::thread* loadingScreen;
+        GLuint ssbo;
 
-        GLuint depthMapFBO, depthMap, ssbo;
-
-        bool drawingInShadow;
+        bool drawingInShadow, drawingReflex;
+        glm::vec3 reflexPos;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
         VkAllocationCallbacks* g_Allocator = NULL;

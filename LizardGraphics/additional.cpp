@@ -50,13 +50,41 @@ namespace LGraphics
         return ((y + 1.0f)*screenSize.y) / 2.0f;
     }
 
-    //std::tuple<glm::vec2, glm::vec2> getMoveAndSizeByCoords(glm::vec2 topLeft,
-    //    glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft)
-    //{
-    //    return std::tuple<glm::vec2, glm::vec2>(
-    //        { (topLeft.x - topRight.x) / 2.0f, (topLeft.y - bottomLeft.y) / 2.0f , 1.0f }, 
-    //        glm::vec3(topLeft.x, topLeft.y, 0.0f) - glm::vec3(-0.5f, 0.5f, 0.0f));
-    //}
+    glm::mat4 assimpToGLM(const aiMatrix4x4& from)
+    {
+        return glm::transpose(glm::make_mat4(&from.a1));
+        //glm::mat4 to;
+        //to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+        //to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+        //to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+        //to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+        //return to;
+    }
+
+    glm::mat3 assimpToGLM(const aiMatrix3x3& from)
+    {
+        return glm::transpose(glm::make_mat3(&from.a1));
+        //glm::mat3 to;
+        //to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3;
+        //to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3;
+        //to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3;
+        //return to;
+    }
+
+    glm::vec2 assimpToGLM(const aiVector2D& vec)
+    {
+        return glm::vec2(vec.x,vec.y);
+    }
+
+    glm::vec3 assimpToGLM(const aiVector3D& vec)
+    {
+        return glm::vec3(vec.x,vec.y,vec.z);
+    }
+
+    glm::quat assimpToGLM(const aiQuaternion& quat)
+    {
+        return glm::quat(quat.w, quat.x, quat.y, quat.z);
+    }
 
     glm::vec3 rgbToFloat(unsigned char r, unsigned char g, unsigned char b)
     {
@@ -74,5 +102,15 @@ namespace LGraphics
         while (size > i)
             i <<= 2;
         return i;
+    }
+
+    std::string extractFileNameFromPath(const std::filesystem::path& path)
+    {
+        std::string pathCopy = path.generic_string();
+        std::replace(pathCopy.begin(), pathCopy.end(), '\\', '/');
+        auto fileNamePos = pathCopy.rfind("/");     
+        return fileNamePos!= std::string::npos
+            ? pathCopy.substr(fileNamePos + 1, pathCopy.size() - fileNamePos + 1)
+            : pathCopy;
     }
 }

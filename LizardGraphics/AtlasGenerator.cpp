@@ -20,7 +20,6 @@ void Atlas::AtlasManager::saveAtlas(const AtlasData& data,
 		atlasInfoPathCopy = getUniqueFileName(atlasInfoPath, atlasInfoExtension);
 	std::cout << atlasInfoPathCopy << std::endl;
 
-
 	if (atlasExtension == "png")
 		stbi_write_png((atlasName + '.' + atlasExtension).data(), data.atlasSize.first, data.atlasSize.second, STBI_rgb_alpha, data.pixels.data(), 0);
 	else if (atlasExtension == "jpg")
@@ -60,10 +59,4 @@ void Atlas::AtlasManager::saveAtlas(const AtlasData& data,
 		out << o1 + ',' + o2 + ' ';
 	}
 	out.close();
-
-	std::ofstream atlasCacheOut(atlasCachePath, std::ios::app | std::ios::binary);
-	if (!atlasCacheOut.is_open())
-		throw std::runtime_error("error, can't open file " + atlasCachePath.generic_string());
-	atlasCacheOut << atlasInfoPathCopy << std::endl;
-	atlasCacheOut.close();
 }

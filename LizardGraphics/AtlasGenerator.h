@@ -132,7 +132,7 @@ public:
 					atlasData.pixels[pixel1 + 3] = img.pixels[pixel + 3];
 				}
 		}
-		return atlasData;
+		return std::ref(atlasData);
 	}
 	
 	void saveAtlas(const std::string& atlasInfoName = "atlas_info");
@@ -150,11 +150,6 @@ public:
 	size_t findOptimalAtlasDimension(const std::vector<Image>& images) const
 	{
 		return findOptimalAtlasDimension(images.data(), images.size());
-		//size_t squareSum = 0;
-		//for (auto& i : images)
-		//	squareSum += i.texHeight * i.texWidth;
-		//int squarePowerTwo = std::log2(getPowerTwoAlign(squareSum)) / 2;
-		//return squarePowerTwo % 2 == 0 ? 2 << squarePowerTwo - 1 : 2 << squarePowerTwo;
 	}
 
 	template <typename T>
@@ -164,12 +159,15 @@ public:
 		for (size_t j = 0; j < size; j++)
 			squareSum += images[j].texHeight * images[j].texWidth;
 		int squarePowerTwo = std::log2(getPowerTwoAlign(squareSum)) / 2;
-		return squarePowerTwo % 2 == 0 ? 2 << squarePowerTwo - 1 : 2 << squarePowerTwo;
+		return 2 << squarePowerTwo - 1;
 	}
 
 	const std::vector<std::string>& getCacheAtlases() const { return manager.getCacheAtlases(); }
 
 	void setSizeThreshold(size_t val) { sizeThreshold = val; }
+
+	void setFileName(const std::string& fileName) { this->filename = fileName; }
+	const std::string& getOutPath() const { return filename; }
 
 private:
 
@@ -195,7 +193,6 @@ private:
 			}
 
 			this->atlasInfoExtension = atlasInfoExtension;
-			auto p = fs::temp_directory_path().generic_string();
 		}
 
 		const std::vector<std::string>& getCacheAtlases() const { return atlases; }
@@ -236,7 +233,7 @@ private:
 			return atlasCachePath;
 		}
 
-		std::string getAtlasExtensuin() const
+		std::string getAtlasExtension() const
 		{
 			return atlasExtension;
 		}
@@ -342,14 +339,14 @@ private:
 			{
 				const auto& img = images[i];
 				const auto insertPoint = insertPoints[j];
-				if (insertPoint.offset.first + img.texWidth < textureDims - 1 &&
+				if (insertPoint.offset.first + img.texWidth <= textureDims &&
 					insertPoint.offset.second + img.texHeight <= insertPoint.parentHeight)
 				{
 					insertPoints.erase(insertPoints.begin() + j);
 					firstInRow = insertPoint.offset.first == 0;
 
 					// right point
-					if (insertPoint.offset.first + img.texWidth < textureDims - 1)
+					if (insertPoint.offset.first + img.texWidth <= textureDims)
 						insertPoints.push_back({ { insertPoint.offset.first + img.texWidth,insertPoint.offset.second },
 							(size_t)img.texHeight + insertPoint.offset.second });
 

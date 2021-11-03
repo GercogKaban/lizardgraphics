@@ -77,10 +77,10 @@ std::string CodeGen::getColorData(LGraphics::LWidget* w)
     return std::string(std::to_string(w->getColor().x) + ", " + std::to_string(w->getColor().y) + ", " + std::to_string(w->getColor().z));
 }
 
-std::string CodeGen::getTextureData(LGraphics::LWidget* w)
-{
-    return w->getTexturePath();
-}
+//std::string CodeGen::getTextureData(LGraphics::LWidget* w)
+//{
+//    return w->getTexturePath();
+//}
 
 std::string CodeGen::getHiddenData(LGraphics::LWidget* w)
 {
@@ -103,11 +103,11 @@ std::string CodeGen::getRotateData(LGraphics::LWidget* w)
     return res;
 }
 
-std::string CodeGen::getConstructor(LGraphics::LWidget* w, const char* appName)
-{
-    return w->getObjectType() == std::string("LWRectangle") ?
-        std::string(w->getObjectType()) + "(" + appName + ",\"" + w->getTexturePath() + "\");"
-        // need to add normalMap in ctor
-        : std::string(w->getObjectType()) + "(" + appName + ",\"" + 
-        ((LGraphics::LModel*)w)->getModelPath() + "\",\"" + w->getTexturePath() + "\");";
-}
+//std::string CodeGen::getConstructor(LGraphics::LWidget* w, const char* appName)
+//{
+//    return w->getObjectType() == std::string("LWRectangle") ?
+//        std::string(w->getObjectType()) + "(" + appName + ",\"" + w->getTexturePath() + "\");"
+//        // need to add normalMap in ctor
+//        : std::string(w->getObjectType()) + "(" + appName + ",\"" + 
+//        ((LGraphics::LModel*)w)->getModelPath() + "\",\"" + w->getTexturePath() + "\");";
+//}

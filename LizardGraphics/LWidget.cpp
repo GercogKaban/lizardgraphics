@@ -2,7 +2,6 @@
 #include "LApp.h"
 #include "pch.h"
 
-std::vector<LGraphics::LWidget::WidgetUniforms> LGraphics::LWidget::uniforms;
 LGraphics::LApp* LGraphics::LWidget::app = nullptr;
 
 void LGraphics::LWidget::rotateX(float angleDegree)
@@ -63,15 +62,10 @@ void LGraphics::LWidget::setUpdateUniformsFlag()
         changed = 1;
 }
 
-LGraphics::LWidget::LWidget(LApp* app, const char * path)
-    :LImage(path,app->info.api)
+LGraphics::LWidget::LWidget(LApp* app)
 {
     this->app = app;
+    auto ranges = app->lastLoadedRanges;
+    rangeX = ranges[0]; rangeY = ranges[1]; rangeZ = ranges[2];
     setUpdateUniformsFlag();
-}
-
-void LGraphics::LWidget::init()
-{
-    this->LImage::init();
-    isInited_ = true;
 }

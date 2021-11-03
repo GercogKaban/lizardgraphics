@@ -1,5 +1,5 @@
 #include "LizardGraphics/LApp.h"
-#include "LizardGraphics/LWRectangle.h"
+#include "LizardGraphics/LPlane.h"
 #include "LizardGraphics/LModel.h"
 #include "LizardGraphics/LTimer.h"
 #include "LizardGraphics/LLogger.h"
@@ -11,12 +11,11 @@ namespace LGraphics
     {
     public:
         ImGuiInterface(LApp* app)
-            :poolSize(app->info.poolSize)
         {
             this->app = app;
-            pressed = new bool[poolSize];
+            /*pressed = new bool[poolSize];
             sliderRanges = new SliderRanges[poolSize];
-            std::fill(pressed, pressed + poolSize, false);
+            std::fill(pressed, pressed + poolSize, false);*/
             currentPath = std::filesystem::current_path().generic_string();
             vectors.insert(std::make_pair(MOVE, "move_"));
             vectors.insert(std::make_pair(SCALE, "scale_"));
@@ -24,8 +23,8 @@ namespace LGraphics
 
         ~ImGuiInterface()
         {
-            delete[] pressed;
-            delete[] sliderRanges;
+            //delete[] pressed;
+            //delete[] sliderRanges;
         }
 
     private:
@@ -34,7 +33,7 @@ namespace LGraphics
 
         static const size_t pathSize = 128;
         static constexpr size_t coordsCount = 3;
-        const size_t poolSize;
+        //const size_t poolSize;
 
         std::unordered_map<uint8_t, std::string> vectors;
         enum VectorTypes : uint8_t
@@ -160,11 +159,11 @@ public:
                         //auto m = new LModel(app, modelPath_, texturePath_);
                         //m->setName(createObjName);
                     }
-                    else if (radioRectangle)
-                    {
-                        auto r = new LWRectangle(app, texturePath_);
-                        r->setName(createObjName);
-                    }
+                    //else if (radioRectangle)
+                    //{
+                    //    auto r = new LWRectangle(app, texturePath_);
+                    //    r->setName(createObjName);
+                    //}
                     else
                     {
 
@@ -225,12 +224,12 @@ public:
                         ImGui::Text("Are you sure you want to delete this object?");
                         if (ImGui::Button("Yes"))
                         {
-                            sliderRanges[i].inited = false;
-                            if (obj->getObjectType() == std::string("LModel"))
-                                app->safeDelete(obj);
-                            else if (obj->getObjectType() == std::string("LWRectangle"))
-                                app->safeDelete(obj);
-                            deleteDialog = false;
+                            //sliderRanges[i].inited = false;
+                            //if (obj->getObjectType() == std::string("LModel"))
+                            //    app->safeDelete(obj);
+                            //else if (obj->getObjectType() == std::string("LWRectangle"))
+                            //    app->safeDelete(obj);
+                            //deleteDialog = false;
                         }
                         ImGui::SameLine();
                         if (ImGui::Button("No"))
@@ -244,7 +243,7 @@ public:
 
                 if (pressed[i])
                 {
-                    auto& degrees = obj->getRotateDegrees();
+                    auto degrees = obj->getRotateDegrees();
                     auto ranges = sliderRanges[i];
 
                     //app->lockFrontViewCamera();

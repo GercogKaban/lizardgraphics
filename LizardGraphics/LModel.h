@@ -1,53 +1,101 @@
 #pragma once
 #include "LShape.h"
+#include "LImage.h"
+#include "LBuffer.h"
+#include "LAnimation.h"
 
 namespace LGraphics
 {
+    class LResourceManager;
+
+#define CTOR_PATH_VARS const std::string& modelName, const std::string& diffuseName, \
+     const std::string& normalName, const std::string& displacementName, const std::string& reflexName
+
+#define CTOR_PATH_VARS_VEC const std::string& modelName, const std::vector<std::string>& diffuseNames, \
+     const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames, const std::vector<std::string>& reflexNames
+
     class LModel : public LShape
     {
+        friend LApp;
+        friend Animation;
     public:
 
-        friend LApp;
-        enum TextureType
+        struct Mesh
         {
-            BASE_TEXTURE,
-            NORMALS,
+            LBuffer* buffer = nullptr;
+            LImage* image = nullptr;
         };
+
+        struct ModelResource
+        {
+            std::string name;
+        };
+
+        friend LApp;
         friend LResourceManager;
 
-        const char* getObjectType() const override { return "LModel"; }
+        const char* getObjectType() const { return "LModel"; }
 
+        void setDiffuse(const TexturesData& data, size_t meshNum = 0);
+        void setNormal(const TexturesData& data, size_t meshNum = 0);
+        void setDisplacement(const TexturesData& data, size_t meshNum = 0);
+        void setReflex(const TexturesData& data, size_t meshNum = 0);
 
-        LModel(LApp* app, const char* modelPath, const char* texturePath = nullptr,
-            const char* normalsPath = nullptr, bool debugInfo = false);
+        void setNormalMapping(bool normalMapping, size_t meshNum = 0);
+        void setParallaxMapping(bool parallaxMapping, size_t meshNum = 0);
+        void setReflexMapping(bool reflexMapping, size_t meshNum = 0);
+
+        void setNormalMappingAllMeshes(bool normalMapping);
+        void setParallaxMappingAllMeshes(bool parallaxMapping);
+        void setReflexMappingAllMeshes(bool reflexMapping);
+
+        bool getNormalMapping(size_t meshNum = 0)   const { return meshes[meshNum].image->getNormalMapping(); };
+        bool getParallaxMapping(size_t meshNum = 0) const { return meshes[meshNum].image->getParallaxMapping(); };
+        bool getReflexMapping(size_t meshNum = 0) const { return meshes[meshNum].image->getReflexMapping(); };
+
+        LModel(LApp* app, ModelResource res, bool cropTextureCoords = false);
+        LModel(LApp* app, CTOR_PATH_VARS, bool cropTextureCoords = false);
+        LModel(LApp* app, CTOR_PATH_VARS_VEC, bool cropTextureCoords = false);
+
+        LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, bool cropTextureCoords = false);
+        LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, 
+            const std::vector<uint32_t>& indices);
         ~LModel();
-        
-        void loadTexture(const char* path, TextureType type);
+        const auto& getMehes() const { return meshes; };
+        void draw() override;
 
-        void setMeshDrawing(size_t num, bool draw);
-        bool getMeshDrawing(size_t num) const;
-        //LMaterial getMeshMaterial(size_t num) const;
+        const auto& getAnime() const { return animations;}
 
-        size_t getMeshesCount() const { return meshesCount; }
-        const char* getModelPath() const { return modelPath; }
+        bool getSpeedModifier() const;
+        void setSpeedModifier(float speed);
 
-        //void setMeshMaterial(const LMaterial& material, size_t meshNum = 0);
+        void playAnimation();
+        void playAnimation(const std::string& name);
+        void stopAnimation();
+        void restartAnimation();
 
-#ifdef VULKAN
-        void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) override;
-#endif
+        //void setReflexSize(size_t reflexSize);
+        size_t getReflexSize() const;
+
     protected:
 
-        void loadModel(const char* modelPath, bool debugInfo);
+        LModel(LApp* app, const std::string& path, bool cropTextureCoords, size_t dummy);
+        void draw(VkCommandBuffer commandBuffers, uint32_t frameIndex) override {}
+        std::vector<Mesh> meshes;
 
-        bool mouseOnIt() override { return false; }
+        std::unordered_map<std::string, BoneInfo> m_BoneInfoMap;
+        int m_BoneCounter = 0;
+        auto& GetBoneInfoMap() { return m_BoneInfoMap; }
+        int& GetBoneCount() { return m_BoneCounter; }
 
-        const char* modelPath;
-        void** textures;
+        std::unordered_map<std::string,Animation> animations;
+        Animator animator;
+        glm::mat4 mTransformation;
+ 
+        bool playAnimation_ = false;
+        void init();
 
-        bool* meshesToDraw = nullptr;
-        //LMaterial* materials = nullptr;
-
-        size_t meshesCount = 0;
+        size_t reflexSize = 1024;
+        GLuint reflexCubeMap = UNINITIALIZED, depthMap = UNINITIALIZED, reflexFBO = UNINITIALIZED;
     };
 }

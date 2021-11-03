@@ -4,41 +4,21 @@
 
 namespace LGraphics
 {
-    void LRectangleBuffer::setBuffers()
+    const std::vector<Vertex> LRectangleBuffer::vert =
     {
-        LOG_CALL
-        verticesCount = 4; indicesCount = 6, textureCoordsCount = 2, normalsCount = 3;
+        {glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,0.0,0.0),glm::vec2(0.0,0.0) },
+        {glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,0.0,0.0),glm::vec2(0.0,0.0) },
+        {glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,0.0,0.0),glm::vec2(0.0,0.0) },
+        {glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,0.0,0.0),glm::vec2(0.0,0.0) },
+    };
 
-        setVerts();
-        setInds();
-        genBuffers();
-    }
-
-    void LRectangleBuffer::setVerts()
+    const std::vector<uint32_t> LRectangleBuffer::ind =
     {
-        LOG_CALL
-        vertices = new float[/*(coordsCount + textureCoordsCount + normalsCount) * verticesCount*/]
-        {
-             0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        };
-    }
-
-    void LRectangleBuffer::setInds()
-    {
-        LOG_CALL
-        ebo = new uint16_t[indicesCount]
-        {
-            0,1,3,
-            1,2,3
-        };
-    }
+        0,1,3,1,2,3
+    };
 
     LRectangleBuffer::LRectangleBuffer(LApp* app)
+        :LBuffer(app,vert,ind)
     {
-        LOG_CALL
-        init(app);
     }
 }

@@ -26,6 +26,10 @@
 #include <tuple>
 #include <filesystem>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #define VK_VERSION_1_0
 #define IMGUI_IMPL_OPENGL_LOADER_GLEW
 #ifdef WIN32
@@ -58,13 +62,6 @@
 #include "vulkan_wrapper.h"
 #endif
 
-//#define GLFW_INCLUDE_NONE
-//#define GLFW_INCLUDE_VULKAN
-//#include "include/GLEW/glew.h"
-//#include "include/GLFW/glfw3.h"
-
-//#include "imgui_impl_vulkan.h"
-//#include "imgui/backends/imgui_impl_opengl3.h"
 #include "additional.h"
 
 //#endif //PCH_H

@@ -1,22 +1,29 @@
 ﻿#pragma once
 
+#include "constants.h"
 #include "LObject.h"
-//#ifdef OPENGL
 #include "include/GLEW/glew.h"
 #include "vulkan/vulkan.h"
-//#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
-//#endif
-
-//#include "LApp.h"
 
 namespace LGraphics
 {
+    struct Vertex
+    {
+        glm::vec3 Position;
+        glm::vec3 Normal;
+        glm::vec2 TexCoords;
+        glm::vec3 Tangent;
+        glm::vec3 Bitangent;
+        glm::ivec4 BoneIDs;
+        glm::vec4 BoneWeights;
+    };
+
     class LApp;
     /*!
     @brief Абстрактный класс буфера вершин.
 
     LBuffer хранит в себе массив вершин объекта, массив текстурных координат,
-    массив индексов (в каком порядке будут соединяться вершины при отрисовке).
+    массив индексов
     */
     class LBuffer : public LObject
     {
@@ -28,38 +35,18 @@ namespace LGraphics
         /*!
         @brief Возвращает массив вершин.
         */
-        auto getVertices() const { return vertices; }
+        const auto& getVertices() const { return vertices; }
 
-        auto getIndices() const { return ebo; }
-
-        /*!
-        @brief Возвращает размер массива вершин.
-        */
-        virtual size_t getVertSize() const { return verticesCount * (coordsCount + textureCoordsCount + normalsCount) * sizeof(decltype(*vertices)); }
-
-        ///*!
-        //@brief Возвращает размер массива текстурных координат.
-        //*/
-        //size_t getTextureSize() const { return textureCoordsCount * verticesCount * sizeof(GLfloat); }
+        const auto& getIndices() const { return ebo; }
 
         /*!
         @brief Возвращает размер массива индексов.
         */
-        virtual size_t getIndSize() const { return indicesCount * sizeof(decltype(*ebo)); }
-
-        /*!
-        @brief Возвращает количество индексов.
-        */
-        size_t getIndCount() const { return indicesCount; }
-
-        /*!
-        @brief Возвращает количество вершин.
-        */
-        size_t getVerticesCount() const { return verticesCount; }
+        virtual size_t getIndSize() const { return ebo.size() * sizeof(decltype(*ebo.data())); }
+        virtual size_t getVertSize() const { return vertices.size() * sizeof(Vertex); }
 
         const GLuint getVaoNum() const { return VAO; }
 
-        void init(LApp* app);
         //VkBuffer& getVertBuffer() { return vertexBuffer; }
         //VkBuffer& getIndBuffer() { return indexBuffer; }
 
@@ -68,31 +55,14 @@ namespace LGraphics
         */
         virtual ~LBuffer();
 
+        LBuffer(LApp* app, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
+
+        void setGeometry(const std::vector<Vertex>& vertices);
+        void setGeometry(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
+
     protected:
 
-        LBuffer();
-
-        /*!
-        @brief Инициализирует все буфферы (вершины, индексы).
-        */
-        virtual void setBuffers() = 0;
-
-        /*!
-        @brief Инициализирует массив вершин.
-        */
-        virtual void setVerts() = 0;
-
-        /*!
-        @brief Инициализирует массив индексов.
-        */
-        virtual void setInds() = 0;
-
-        /*!
-        @brief Создаёт VAO и привязывает к нему VBO,EBO.
-        */
         virtual void genBuffers();
-
-        float* textures = nullptr; ///< Массив текстурных координат.
 
 #ifdef VULKAN
         VkBuffer vertexBuffer = VK_NULL_HANDLE;
@@ -102,15 +72,9 @@ namespace LGraphics
 #endif // VULKAN
 
         LApp* app;
-//#ifdef OPENGL
-        float* vertices = nullptr; ///< Массив вершин.*/
-        uint16_t* ebo = nullptr;       ///< Массив индексов.*/
-//#endif
-        uint32_t VBO,VAO,EBO;
-        //uint32_t VBO[4]/*на всякий случай больше, для потомков*/, VAO, EBO;     ///< OpenGL буфферы.*/
-
-        const size_t coordsCount = 3;
-        size_t verticesCount, indicesCount, normalsCount, textureCoordsCount = 0; ///< Кол-во вершин, индексов, координат, текстурных координат.*/
+        std::vector<Vertex> vertices; ///< Массив вершин.*/
+        std::vector<uint32_t> ebo;       ///< Массив индексов.*/
+        GLuint VBO,VAO,EBO;
     };
 }
 

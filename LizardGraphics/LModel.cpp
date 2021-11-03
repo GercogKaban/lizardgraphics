@@ -1,75 +1,291 @@
-#include "LModel.h"
-#include "LModelBuffer.h"
+﻿#include "LModel.h"
 #include "LResourceManager.h"
 #include "LLogger.h"
 #include "LApp.h"
+#include "constants.h"
 
-LGraphics::LModel::LModel(LApp* app, const char* path, const char* texturePath, 
-    const char* normalsPath, bool debugInfo)
-    :LShape(app,nullptr), modelPath(path)
+void LGraphics::LModel::setDiffuse(const TexturesData& data, size_t meshNum)
+{
+    auto& diff = TO_GL(meshes[meshNum].image->textures[0]);
+    const auto& in = TO_GL(data);
+    diff.id = in.id;
+    diff.offset = in.offset;
+    diff.size = in.size;
+}
+
+void LGraphics::LModel::setNormal(const TexturesData& data, size_t meshNum)
+{
+    auto& norm = TO_GL(meshes[meshNum].image->textures[1]);
+    const auto& in = TO_GL(data);
+    norm.id = in.id;
+    norm.offset = in.offset;
+    norm.size = in.size;
+}
+
+void LGraphics::LModel::setDisplacement(const TexturesData& data, size_t meshNum)
+{
+    auto& disp = TO_GL(meshes[meshNum].image->textures[2]);
+    const auto& in = TO_GL(data);
+    disp.id = in.id;
+    disp.offset = in.offset;
+    disp.size = in.size;
+}
+
+void LGraphics::LModel::setReflex(const TexturesData& data, size_t meshNum)
+{
+    auto& refl = TO_GL(meshes[meshNum].image->textures[3]);
+    const auto& in = TO_GL(data);
+    refl.id = in.id;
+    refl.offset = in.offset;
+    refl.size = in.size;
+}
+
+void LGraphics::LModel::setNormalMapping(bool normalMapping, size_t meshNum)
+{
+    meshes[meshNum].image->setNormalMapping(normalMapping);
+}
+
+void LGraphics::LModel::setParallaxMapping(bool parallaxMapping, size_t meshNum)
+{
+    meshes[meshNum].image->setParallaxMapping(parallaxMapping);
+}
+
+void LGraphics::LModel::setReflexMapping(bool reflexMapping, size_t meshNum)
+{
+    meshes[meshNum].image->setReflexMapping(reflexMapping);
+}
+
+void LGraphics::LModel::setNormalMappingAllMeshes(bool normalMapping)
+{
+    for (size_t i = 0; i < meshes.size(); ++i)
+        meshes[i].image->setNormalMapping(normalMapping);
+}
+
+void LGraphics::LModel::setParallaxMappingAllMeshes(bool parallaxMapping)
+{
+    for (size_t i = 0; i < meshes.size(); ++i)
+        meshes[i].image->setParallaxMapping(parallaxMapping);
+}
+
+void LGraphics::LModel::setReflexMappingAllMeshes(bool reflexMapping)
+{
+    for (size_t i = 0; i < meshes.size(); ++i)
+        meshes[i].image->setReflexMapping(reflexMapping);
+}
+
+LGraphics::LModel::LModel(LApp* app, ModelResource modelResource, bool cropTextureCoords)
+    :LShape(app)
 {
     LOG_CALL
-    // Base texture and normal map 
-    //textures.resize(2);
-    loadModel(path, debugInfo);
+    LResourceManager::loadModel(this, modelResource, cropTextureCoords);
+    init();
+}
 
-    if (texturePath)
+LGraphics::LModel::LModel(LApp* app, CTOR_PATH_VARS, bool cropTextureCoords)
+    :LShape(app)
+{
+    LOG_CALL
+    LResourceManager::loadModel(this, ModelResource{ modelName },cropTextureCoords);
+
+    setDiffuse(LResourceManager::loadMaterialTextures(app->getRealDiffusePath() + diffuseName));
+    setNormal(LResourceManager::loadMaterialTextures(app->getRealNormalPath() + normalName));
+    setDisplacement(LResourceManager::loadMaterialTextures(app->getRealDisplacementPath() + displacementName));
+    setReflex(LResourceManager::loadMaterialTextures(app->getRealReflexPath() + reflexName));
+
+    setNormalMappingAllMeshes(normalName.size());
+    setParallaxMappingAllMeshes(displacementName.size());
+    setReflexMappingAllMeshes(reflexName.size());
+    init();
+}
+
+LGraphics::LModel::LModel(LApp* app, CTOR_PATH_VARS_VEC, bool cropTextureCoords)
+    :LShape(app)
+{
+    LOG_CALL
+    LResourceManager::loadModel(this, { modelName },cropTextureCoords);
+
+    for (size_t i = 0; i < diffuseNames.size(); ++i)
     {
-        loadTexture(texturePath, BASE_TEXTURE);
-        this->texturePath = texturePath;
+        if (i < diffuseNames.size())
+            setDiffuse(LResourceManager::loadMaterialTextures(app->getRealDiffusePath()+ diffuseNames[i]),i);
+        if (i < normalNames.size())
+            setNormal(LResourceManager::loadMaterialTextures(app->getRealNormalPath() + normalNames[i]), i);
+        if (i < displacementNames.size())
+            setDisplacement(LResourceManager::loadMaterialTextures(app->getRealDisplacementPath() + displacementNames[i]), i);
+        if (i < reflexNames.size())
+            setReflex(LResourceManager::loadMaterialTextures(app->getRealReflexPath() + reflexNames[i]), i);
     }
-    if (normalsPath)
-        loadTexture(normalsPath, NORMALS);
+    init();
+}
 
-    app->toCreate.push(this);
-#ifdef VULKAN
-    shader = app->lightShader.get();
-#endif
+LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, bool cropTextureCoords)
+    :LShape(app)
+{
+    res.normals = false;
+    std::vector<uint32_t> dummy;
+    meshes = { {new LBuffer(app, vertices, dummy), new LImage(res, app->info.api)}};
+    init();
+}
+
+LGraphics::LModel::LModel(LApp* app, LImage::ImageResource res, const std::vector<Vertex>& vertices, 
+    const std::vector<uint32_t>& indices)
+    :LShape(app)
+{
+    res.normals = false;
+    meshes = { {new LBuffer(app, vertices, indices), new LImage(res, app->info.api)} };
+    init();
 }
 
 LGraphics::LModel::~LModel()
 {
     LOG_CALL
-    if (meshesToDraw)
-        delete[] meshesToDraw;
+    for (auto& m : meshes)
+    {
+        if (m.buffer)
+            delete m.buffer;
+        if (m.image)
+            delete m.image;
+    }
+    if (reflexCubeMap != UNINITIALIZED)
+    {
+        glDeleteTextures(1, &reflexCubeMap);
+        glDeleteTextures(1, &depthMap);
+    }
+    if (reflexFBO != UNINITIALIZED)
+        glDeleteFramebuffers(1, &reflexFBO);
 }
 
-void LGraphics::LModel::loadTexture(const char* path, TextureType type)
+void LGraphics::LModel::draw()
 {
-    LOG_CALL
-    //auto texture = LResourceManager::loadTexture(path,mipLevels);
-    //auto m = LResourceManager::models[modelPath]->textures[type] = texture;
-    //this->texture = texture;
+    auto shader = (LShaders::OpenGLShader*)app->modelShader.get();
+    if (app->drawingInShadow)
+        shader = ((LShaders::OpenGLShader*)app->shadowMapModelShader.get());
+    else if (app->drawingReflex)
+        shader = ((LShaders::OpenGLShader*)app->reflexModelShader.get());
+    GLuint shaderProgram = shader->getShaderProgram();
+    shader->use();
+    setGlobalUniforms(shaderProgram);
+    model = calculateModelMatrix();
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(glGetUniformLocation(shaderProgram, "playAnimation"), playAnimation_);
+    if (playAnimation_ && app->drawingInShadow)
+        animator.UpdateAnimation(app->getDeltaTime());
+
+    const auto& transforms = animator.GetFinalBoneMatrices();
+    if (transforms.size())
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), transforms.size(), GL_FALSE,
+            glm::value_ptr(transforms[0]));
+
+    FOR(i, 0, meshes.size())
+    {
+        if (meshes[i].image)
+        {
+            if (!app->drawingInShadow)
+            {
+#ifdef MEGATEXTURE_LG
+                auto& diffuse = meshes[i].image->getDiffuse();
+                const auto castedDiff = TO_GL(diffuse);
+                auto& normal = meshes[i].image->getNormal();
+                const auto castedNorm = TO_GL(normal);
+                auto& parallax = meshes[i].image->getParallax();
+                const auto castedParallax = TO_GL(parallax);
+                auto& reflex = meshes[i].image->getReflex();
+                const auto castedReflex = TO_GL(reflex);
+
+                glUniform2f(glGetUniformLocation(shaderProgram, "offset"), castedDiff.offset.x, castedDiff.offset.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "textureSize"), castedDiff.size.x, castedDiff.size.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "offsetNormal"), castedNorm.offset.x, castedNorm.offset.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeNormal"), castedNorm.size.x, castedNorm.size.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "offsetParallax"), castedParallax.offset.x, castedParallax.offset.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeParallax"), castedParallax.size.x, castedParallax.size.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "offsetReflex"), castedReflex.offset.x, castedReflex.offset.y);
+                glUniform2f(glGetUniformLocation(shaderProgram, "textureSizeReflex"), castedReflex.size.x, castedReflex.size.y);
+                glUniform1i(glGetUniformLocation(shaderProgram, "normalMapping"), getNormalMapping(i));
+                glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMapping"), getParallaxMapping(i));
+                glUniform1i(glGetUniformLocation(shaderProgram, "reflexMapping"), getReflexMapping(i));
+
+                glUniformMatrix3fv(glGetUniformLocation(shaderProgram, "inverseModel"), 1, GL_FALSE,
+                    glm::value_ptr(glm::mat3(glm::transpose(glm::inverse(model)))));
+
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
+                glActiveTexture(GL_TEXTURE4);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
+                if (!app->drawingReflex)
+                {
+                    glActiveTexture(GL_TEXTURE5);
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, reflexCubeMap);
+                }
+#endif
+            }
+        }
+        glBindVertexArray(meshes[i].buffer->getVaoNum());
+        if (meshes[i].buffer->getIndices().size())
+            glDrawElements(GL_TRIANGLES, meshes[i].buffer->getIndices().size(), GL_UNSIGNED_INT, 0);
+        else
+            glDrawArrays(GL_TRIANGLES, 0, meshes[i].buffer->getVertices().size());
+        glBindVertexArray(0);
+    }
 }
 
-void LGraphics::LModel::setMeshDrawing(size_t num, bool draw)
+bool LGraphics::LModel::getSpeedModifier() const
 {
-    LOG_CALL
-    meshesToDraw[num] = draw;
+    return animator.speed;
 }
 
-bool LGraphics::LModel::getMeshDrawing(size_t num) const
+void LGraphics::LModel::setSpeedModifier(float speed)
 {
-    LOG_CALL 
-    return meshesToDraw[num];
+    animator.speed = speed;
 }
 
-//LGraphics::LMaterial LGraphics::LModel::getMeshMaterial(size_t num) const
-//{
-//    LOG_CALL
-//    return materials[num];
-//}
-
-void LGraphics::LModel::loadModel(const char* modelPath, bool debugInfo)
+void LGraphics::LModel::playAnimation()
 {
-    LOG_CALL
-    //LResourceManager::loadModel(this, modelPath, debugInfo);
+    playAnimation_ = true;
 }
 
-//void LGraphics::LModel::setMeshMaterial(const LMaterial& material, size_t meshNum)
-//{
-//    updateUniforms();
-//}
+void LGraphics::LModel::playAnimation(const std::string& name)
+{
+    animator.PlayAnimation(animations[name]);
+}
+
+void LGraphics::LModel::stopAnimation()
+{
+    playAnimation_ = false;
+}
+
+void LGraphics::LModel::restartAnimation()
+{
+    animator.m_CurrentTime = 0.0f;
+}
+
+size_t LGraphics::LModel::getReflexSize() const
+{
+    return reflexSize;
+}
+
+LGraphics::LModel::LModel(LApp* app, const std::string& path, bool cropTextureCoords,size_t dummy)
+    :LShape(app)
+{
+    std::string pathStr(path);
+    LResourceManager::loadModel(this, pathStr, cropTextureCoords);
+}
+
+void LGraphics::LModel::init()
+{
+    rotateX(180.0f);
+    setShader(app->modelShader.get());
+    app->toCreateM.push(this);
+    if (animations.size())
+        animator.PlayAnimation(animations.begin()->second);
+    //reflexWidth = app->getWindowSize().x;
+    //reflexHeight = app->getWindowSize().y;
+}
 
 //void LGraphics::LModel::draw(VkCommandBuffer commandBuffer, uint32_t frameIndex)
 //{

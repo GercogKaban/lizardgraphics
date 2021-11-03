@@ -1,9 +1,12 @@
 ﻿#pragma once
 
 #include <tuple>
+#include <filesystem>
+#include <assimp/scene.h>
 #include "include/glm/glm.hpp"
+#include "include/glm/gtc/quaternion.hpp"
 
-#define FOR(i,n) for (size_t j = i; j < n; j++)
+#define FOR(var,j,n) for (size_t var = j; i < n; i++)
 
 namespace LGraphics
 {
@@ -22,6 +25,12 @@ namespace LGraphics
 
     float xGlCoordToScreenCoord(glm::vec2 screenSize, float x);
     float yGlCoordToScreenCoord(glm::vec2 screenSize, float y);
+
+    glm::mat4 assimpToGLM(const aiMatrix4x4& matrix);
+    glm::mat3 assimpToGLM(const aiMatrix3x3& matrix);
+    glm::vec2 assimpToGLM(const aiVector2D& vec);
+    glm::vec3 assimpToGLM(const aiVector3D& vec);
+    glm::quat assimpToGLM(const aiQuaternion& quat);
     /*std::tuple<glm::vec2, glm::vec2> getMoveAndSizeByCoords(glm::vec2 topLeft, 
         glm::vec2 topRight, glm::vec2 bottomRight, glm::vec2 bottomLeft);*/
 
@@ -30,4 +39,6 @@ namespace LGraphics
     bool isExists(const std::string& path);
 
     size_t getPowerTwoAlign(size_t size);
+
+    std::string extractFileNameFromPath(const std::filesystem::path& path);
 }

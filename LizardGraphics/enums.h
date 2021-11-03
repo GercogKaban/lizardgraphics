@@ -23,9 +23,20 @@ namespace LGraphics
 
     enum LGClasses : uint8_t
     {
-        L_RECTANGLE,
+        L_PLANE,
         L_CUBE,
-        L_MODEL,
+        L_SPHERE,
+        L_ICOSPHERE,
+        L_CONE,
+        L_TORUS,
+        L_CYLINDER,
+    };
+
+    enum LLights : uint8_t
+    {
+        L_POINT_LIGHT,
+        L_SPOT_LIGHT,
+        L_DIRECTIONAL_LIGHT,
     };
 
     enum RenderingAPI : uint8_t
@@ -61,6 +72,28 @@ namespace LGraphics
         RED_RUBBER,
         WHITE_RUBBER,
         YELLOW_RUBBER,
+    };
+
+    enum ModelLoading
+    {
+        FAST,
+        QUALITY,
+        MAX_QUALITY,
+    };
+
+    enum QualityLevels
+    {
+        AUTO,
+        LOW,
+        MEDIUM,
+        HIGH,
+        //MAXIMUM,
+    };
+
+    enum TextureTypes
+    {
+        DIFFUSE,
+        NORMAL,
     };
 
 }
