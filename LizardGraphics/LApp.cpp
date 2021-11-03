@@ -24,15 +24,15 @@
 namespace LGraphics
 {
     GLFWwindow* LApp::window_;
-    LAppCreateInfo LApp::info;
+    LAppInitialCreateInfo LApp::info;
 
-    LApp::LApp(const LAppCreateInfo& info)
+    LApp::LApp(const LAppInitialCreateInfo& info)
     {
         LOG_CALL
         initApp_(info);
     }
 
-    void LApp::initApp_(const LAppCreateInfo& info)
+    void LApp::initApp_(const LAppInitialCreateInfo& info)
     {
 #ifdef WIN32
         __try
@@ -152,17 +152,20 @@ namespace LGraphics
     std::string LApp::getRealTexturesPath() const
     {
         LOG_CALL
-        assert(std::filesystem::is_symlink(std::filesystem::current_path().generic_string() + "/textures/"));
-        return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/textures/").generic_string() +
-            '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
+        return std::filesystem::is_symlink(info.resourceDir.generic_string() + "/textures/") ?
+            std::filesystem::read_symlink(info.resourceDir.generic_string() + "/textures/").generic_string() +
+            '/' + qualityDirectories.find(info.texturesQuality)->second + '/' :
+            info.resourceDir.generic_string() + "/textures/" + qualityDirectories.find(info.texturesQuality)->second + '/';
+
     }
 
     std::string LApp::getRealModelsPath() const
     {
         LOG_CALL
-        assert(std::filesystem::is_symlink(std::filesystem::current_path().generic_string() + "/textures/"));
-        return std::filesystem::read_symlink(std::filesystem::current_path().generic_string() + "/models/").generic_string() +
-            '/' + qualityDirectories.find(info.texturesQuality)->second + '/';
+        return std::filesystem::is_symlink(info.resourceDir.generic_string() + "/models/") ?
+            std::filesystem::read_symlink(info.resourceDir.generic_string() + "/models/").generic_string() +
+            '/' + qualityDirectories.find(info.texturesQuality)->second + '/' :
+            info.resourceDir.generic_string() + "/models/" + qualityDirectories.find(info.texturesQuality)->second + '/';
     }
 
     void LApp::drawScene()
@@ -928,6 +931,9 @@ namespace LGraphics
         qualityDirectories.insert(std::make_pair(LOW, "low"));
         qualityDirectories.insert(std::make_pair(MEDIUM, "medium"));
         qualityDirectories.insert(std::make_pair(HIGH, "high"));
+
+        if (!info.resourceDir.generic_string().size())
+            info.resourceDir = std::filesystem::current_path();
 
         LResourceManager::textures.insert(std::make_pair("dummy", TexturesData{ new TexturesData::OGLImageData }));
         //lwRectPool.setCreationCallback([&]()

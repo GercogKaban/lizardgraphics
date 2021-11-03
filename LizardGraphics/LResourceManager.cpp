@@ -218,13 +218,7 @@ namespace LGraphics
     {
         Assimp::Importer importer;
 
-        const aiScene* scene = importer.ReadFile(modelPath, app->modelLoadingFlags);
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-        {
-            PRINTLN("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
-            throw std::runtime_error("ERROR::ASSIMP::" + std::string(importer.GetErrorString()));
-        }
-
+        const aiScene* scene = tryToLoadScene(modelPath,importer);
         currentModel = model;   
         auto& modelAnimations = model->animations;
         processNode(app, model->meshes, scene->mRootNode, scene, cropTextureCoords, scene->mRootNode->mTransformation);
@@ -519,4 +513,30 @@ namespace LGraphics
         }
     }
 
+    std::string LResourceManager::tryToFindFile(const std::string& path)
+    {
+        auto fileName = extractFileNameFromPath(std::filesystem::path(path));
+        if (fileName == path)
+            return "";
+        else
+            for (auto& p : std::filesystem::recursive_directory_iterator(app->getRealModelsPath()))
+                if (p.is_regular_file() && extractFileNameFromPath(p.path()) == fileName)
+                    return p.path().generic_string();
+    }
+
+    const aiScene* LResourceManager::tryToLoadScene(const std::string& path, Assimp::Importer& importer, size_t it)
+    {
+        const aiScene* scene = importer.ReadFile(path, app->modelLoadingFlags);
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+        {
+            if (it == 1)
+                throw std::runtime_error("Assimp importing error: " + std::string(importer.GetErrorString()));
+            else
+            {
+                PRINTLN("Assimp importing warning: " + std::string(importer.GetErrorString()));
+                scene = tryToLoadScene(tryToFindFile(path), importer, it + 1);
+            }
+        }
+        return scene;
+    }
 }

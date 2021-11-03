@@ -88,6 +88,9 @@ namespace LGraphics
         static void ReadMissingBones(const aiAnimation* assimpAnimation, LModel* model, Animation& animation);
         static void ReadHeirarchyData(NodeData& dest, const aiNode* src);
 
+        static std::string tryToFindFile(const std::string& path);
+        static const aiScene* tryToLoadScene(const std::string& path, Assimp::Importer& importer, size_t it = 0);
+
         static LApp* app;
 
         static std::vector<AtlasData> atlasData;

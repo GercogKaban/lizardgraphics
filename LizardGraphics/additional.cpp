@@ -103,4 +103,14 @@ namespace LGraphics
             i <<= 2;
         return i;
     }
+
+    std::string extractFileNameFromPath(const std::filesystem::path& path)
+    {
+        std::string pathCopy = path.generic_string();
+        std::replace(pathCopy.begin(), pathCopy.end(), '\\', '/');
+        auto fileNamePos = pathCopy.rfind("/");     
+        return fileNamePos!= std::string::npos
+            ? pathCopy.substr(fileNamePos + 1, pathCopy.size() - fileNamePos + 1)
+            : pathCopy;
+    }
 }

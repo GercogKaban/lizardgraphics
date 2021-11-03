@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <tuple>
+#include <filesystem>
 #include <assimp/scene.h>
 #include "include/glm/glm.hpp"
 #include "include/glm/gtc/quaternion.hpp"
@@ -38,4 +39,6 @@ namespace LGraphics
     bool isExists(const std::string& path);
 
     size_t getPowerTwoAlign(size_t size);
+
+    std::string extractFileNameFromPath(const std::filesystem::path& path);
 }

@@ -188,7 +188,6 @@ void main()
 		textureCoords.y*textureSize.y + offset.y);   
     vs.model = model_;
     vs.TexCoords_ = textureCoords;
-    //vs.Normal = normalize(mat3(transpose(inverse(model_))) * normals); 
     vs.Normal = normalize(inverseModel * normals); 
     gl_Position = proj * vs.eyeSpacePosition;
 }

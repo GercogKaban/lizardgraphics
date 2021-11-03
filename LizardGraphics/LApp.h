@@ -91,7 +91,7 @@ namespace LGraphics
     class LRectangleMirror;
     class InstantPoolCubes;
 
-    struct LAppCreateInfo
+    struct LAppInitialCreateInfo
     {
         RenderingAPI api = L_VULKAN;
         size_t wndWidth = 0, wndHeight = 0;
@@ -109,7 +109,7 @@ namespace LGraphics
         ModelLoading loading = LGraphics::ModelLoading::QUALITY;
         QualityLevels texturesQuality = LGraphics::QualityLevels::AUTO;
         size_t shadowsWidth = 1024, shadowsHeight = 1024;
-        //QualityLevels modelsQuality = LGraphics::QualityLevels::AUTO;
+        std::filesystem::path resourceDir = "";
     };
 
     /*!
@@ -152,7 +152,7 @@ namespace LGraphics
 
     public:
 
-        LApp(const LAppCreateInfo& info);
+        LApp(const LAppInitialCreateInfo& info);
         ~LApp();
 
         /*!
@@ -166,7 +166,7 @@ namespace LGraphics
         void emergencyStop(unsigned long code);
         void emergencyStop(std::exception& exception);
 
-        const LAppCreateInfo& getAppInfo() const { return info; }
+        const LAppInitialCreateInfo& getAppInfo() const { return info; }
 
         // нужен фикс
         float tesselationLevel = 2.0f;
@@ -189,7 +189,7 @@ namespace LGraphics
         std::unordered_map<QualityLevels, std::string> qualityDirectories;
 
         void loop_();
-        void initApp_(const LAppCreateInfo& info);
+        void initApp_(const LAppInitialCreateInfo& info);
         void initErrorRecovering();
         void updateShaders();
         void updateBuffers();
@@ -380,7 +380,7 @@ namespace LGraphics
     protected:
 
         std::string loadingText;
-        static LAppCreateInfo info;
+        static LAppInitialCreateInfo info;
 
         LSkyBox* skybox = nullptr;
 

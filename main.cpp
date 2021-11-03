@@ -20,7 +20,7 @@ using namespace LGraphics;
 
 int main(int argc, char** argv)
 {
-    LAppCreateInfo info;
+    LAppInitialCreateInfo info;
 
     info.api = L_OPENGL;
     info.projection = L_PERSPECTIVE;
