@@ -70,32 +70,23 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;LBuffer.h&quot;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">namespace </span>LGraphics</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>{</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="class_l_graphics_1_1_l_cube_buffer.html">    6</a></span>    <span class="keyword">class </span><a class="code hl_class" href="class_l_graphics_1_1_l_cube_buffer.html">LCubeBuffer</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        <span class="keyword">const</span> <span class="keywordtype">char</span>* getObjectType()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;LCubeBuffer&quot;</span>; }</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_l_graphics_1_1_l_cube_buffer.html#a1ba5622f5d31feb403d6782e9382b94a">setBuffers</a>() <span class="keyword">override</span>; </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_l_graphics_1_1_l_cube_buffer.html#a666550515dfb21513f427f9dcf4d55b5">setVerts</a>() <span class="keyword">override</span>; </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_l_graphics_1_1_l_cube_buffer.html#a0bebd5bc2e6f2abb7fb36c18bfee4519">setInds</a>() <span class="keyword">override</span>; </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="class_l_graphics_1_1_l_cube_buffer.html#a1cbe3573e3106419a5239dbd395ee03c">genBuffers</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_class" href="class_l_graphics_1_1_l_cube_buffer.html">LCubeBuffer</a>(<a class="code hl_class" href="class_l_graphics_1_1_l_app.html">LApp</a>* app);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    };</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_app_html"><div class="ttname"><a href="class_l_graphics_1_1_l_app.html">LGraphics::LApp</a></div><div class="ttdoc">РљР»Р°СЃСЃ РїСЂРёР»РѕР¶РµРЅРёСЏ Lizard Graphics.</div><div class="ttdef"><b>Definition:</b> LApp.h:113</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_buffer_html"><div class="ttname"><a href="class_l_graphics_1_1_l_buffer.html">LGraphics::LBuffer</a></div><div class="ttdoc">РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РєР»Р°СЃСЃ Р±СѓС„РµСЂР° РІРµСЂС€РёРЅ.</div><div class="ttdef"><b>Definition:</b> LBuffer.h:22</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_cube_buffer_html"><div class="ttname"><a href="class_l_graphics_1_1_l_cube_buffer.html">LGraphics::LCubeBuffer</a></div><div class="ttdef"><b>Definition:</b> LCubeBuffer.h:7</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_cube_buffer_html_a0bebd5bc2e6f2abb7fb36c18bfee4519"><div class="ttname"><a href="class_l_graphics_1_1_l_cube_buffer.html#a0bebd5bc2e6f2abb7fb36c18bfee4519">LGraphics::LCubeBuffer::setInds</a></div><div class="ttdeci">void setInds() override</div><div class="ttdoc">Инициализирует массив индексов.</div><div class="ttdef"><b>Definition:</b> LCubeBuffer.cpp:64</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_cube_buffer_html_a1ba5622f5d31feb403d6782e9382b94a"><div class="ttname"><a href="class_l_graphics_1_1_l_cube_buffer.html#a1ba5622f5d31feb403d6782e9382b94a">LGraphics::LCubeBuffer::setBuffers</a></div><div class="ttdeci">void setBuffers() override</div><div class="ttdoc">Инициализирует массив вершин и индексов.</div><div class="ttdef"><b>Definition:</b> LCubeBuffer.cpp:5</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_cube_buffer_html_a1cbe3573e3106419a5239dbd395ee03c"><div class="ttname"><a href="class_l_graphics_1_1_l_cube_buffer.html#a1cbe3573e3106419a5239dbd395ee03c">LGraphics::LCubeBuffer::genBuffers</a></div><div class="ttdeci">void genBuffers() override</div><div class="ttdoc">РЎРѕР·РґР°С‘С‚ VAO Рё РїСЂРёРІСЏР·С‹РІР°РµС‚ Рє РЅРµРјСѓ VBO,EBO.</div><div class="ttdef"><b>Definition:</b> LCubeBuffer.cpp:68</div></div>
-<div class="ttc" id="aclass_l_graphics_1_1_l_cube_buffer_html_a666550515dfb21513f427f9dcf4d55b5"><div class="ttname"><a href="class_l_graphics_1_1_l_cube_buffer.html#a666550515dfb21513f427f9dcf4d55b5">LGraphics::LCubeBuffer::setVerts</a></div><div class="ttdeci">void setVerts() override</div><div class="ttdoc">Инициализирует массив вершин.</div><div class="ttdef"><b>Definition:</b> LCubeBuffer.cpp:15</div></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//#include &quot;LBuffer.h&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//namespace LGraphics</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">//{</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//  class LCubeBuffer : public LBuffer</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//  {</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//  public:</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">//</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">//      const char* getObjectType() const override { return &quot;LCubeBuffer&quot;; }</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">//      void genBuffers() override;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">//</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">//      LCubeBuffer(LApp* app);</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">//  private:</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">//      //static const std::vector&lt;Vertex&gt; vert;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">//  };</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">//}</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

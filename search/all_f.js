@@ -212,10 +212,11 @@ var searchData=
   ['presentregionskhr_209',['PresentRegionsKHR',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_present_regions_k_h_r.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['presenttimegoogle_210',['PresentTimeGOOGLE',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_present_time_g_o_o_g_l_e.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['presenttimesinfogoogle_211',['PresentTimesInfoGOOGLE',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_present_times_info_g_o_o_g_l_e.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['printmsg_212',['printMsg',['../class_l_graphics_1_1_l_logger.html#a88520b73eb0d263302809added853b29',1,'LGraphics::LLogger::printMsg(const T &amp;t, Args... args)'],['../class_l_graphics_1_1_l_logger.html#adf0b9585bd7d1ab697fee73ce38b139f',1,'LGraphics::LLogger::printMsg(const T &amp;t)']]],
-  ['printmsgln_213',['printMsgLn',['../class_l_graphics_1_1_l_logger.html#aebe0982dde33cd264cbfddf0c2458f0d',1,'LGraphics::LLogger::printMsgLn(const T &amp;t, Args... args)'],['../class_l_graphics_1_1_l_logger.html#a076c4ab74cf7f347253ce7b4f9462f3e',1,'LGraphics::LLogger::printMsgLn(const T &amp;t)']]],
-  ['privatedataslotcreateinfoext_214',['PrivateDataSlotCreateInfoEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_private_data_slot_create_info_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['privatedataslotext_215',['PrivateDataSlotEXT',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_private_data_slot_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['protectedsubmitinfo_216',['ProtectedSubmitInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_protected_submit_info.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['pushconstantrange_217',['PushConstantRange',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_push_constant_range.html',1,'VULKAN_HPP_NAMESPACE']]]
+  ['primitiveuniforms_212',['PrimitiveUniforms',['../struct_l_graphics_1_1_l_widget_1_1_primitive_uniforms.html',1,'LGraphics::LWidget']]],
+  ['printmsg_213',['printMsg',['../class_l_graphics_1_1_l_logger.html#a88520b73eb0d263302809added853b29',1,'LGraphics::LLogger::printMsg(const T &amp;t, Args... args)'],['../class_l_graphics_1_1_l_logger.html#adf0b9585bd7d1ab697fee73ce38b139f',1,'LGraphics::LLogger::printMsg(const T &amp;t)']]],
+  ['printmsgln_214',['printMsgLn',['../class_l_graphics_1_1_l_logger.html#aebe0982dde33cd264cbfddf0c2458f0d',1,'LGraphics::LLogger::printMsgLn(const T &amp;t, Args... args)'],['../class_l_graphics_1_1_l_logger.html#a076c4ab74cf7f347253ce7b4f9462f3e',1,'LGraphics::LLogger::printMsgLn(const T &amp;t)']]],
+  ['privatedataslotcreateinfoext_215',['PrivateDataSlotCreateInfoEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_private_data_slot_create_info_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['privatedataslotext_216',['PrivateDataSlotEXT',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_private_data_slot_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['protectedsubmitinfo_217',['ProtectedSubmitInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_protected_submit_info.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['pushconstantrange_218',['PushConstantRange',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_push_constant_range.html',1,'VULKAN_HPP_NAMESPACE']]]
 ];

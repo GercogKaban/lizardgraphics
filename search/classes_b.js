@@ -1,5 +1,23 @@
 var searchData=
 [
-  ['nativewindowinusekhrerror_0',['NativeWindowInUseKHRError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_native_window_in_use_k_h_r_error.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['notpermittedexterror_1',['NotPermittedEXTError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_not_permitted_e_x_t_error.html',1,'VULKAN_HPP_NAMESPACE']]]
+  ['mappedmemoryrange_0',['MappedMemoryRange',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_mapped_memory_range.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['megatexture_1',['Megatexture',['../struct_l_graphics_1_1_l_app_1_1_megatexture.html',1,'LGraphics::LApp']]],
+  ['memoryallocateflagsinfo_2',['MemoryAllocateFlagsInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_allocate_flags_info.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryallocateinfo_3',['MemoryAllocateInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_allocate_info.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorybarrier_4',['MemoryBarrier',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_barrier.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorydedicatedallocateinfo_5',['MemoryDedicatedAllocateInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_dedicated_allocate_info.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorydedicatedrequirements_6',['MemoryDedicatedRequirements',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_dedicated_requirements.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryfdpropertieskhr_7',['MemoryFdPropertiesKHR',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_fd_properties_k_h_r.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorygetfdinfokhr_8',['MemoryGetFdInfoKHR',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_get_fd_info_k_h_r.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryheap_9',['MemoryHeap',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_heap.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryhostpointerpropertiesext_10',['MemoryHostPointerPropertiesEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_host_pointer_properties_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorymapfailederror_11',['MemoryMapFailedError',['../class_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_map_failed_error.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryopaquecaptureaddressallocateinfo_12',['MemoryOpaqueCaptureAddressAllocateInfo',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_opaque_capture_address_allocate_info.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorypriorityallocateinfoext_13',['MemoryPriorityAllocateInfoEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_priority_allocate_info_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryrequirements_14',['MemoryRequirements',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_requirements.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memoryrequirements2_15',['MemoryRequirements2',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_requirements2.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['memorytype_16',['MemoryType',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_memory_type.html',1,'VULKAN_HPP_NAMESPACE']]],
+  ['mesh_17',['Mesh',['../struct_l_graphics_1_1_l_model_1_1_mesh.html',1,'LGraphics::LModel']]],
+  ['modelresource_18',['ModelResource',['../struct_l_graphics_1_1_l_model_1_1_model_resource.html',1,'LGraphics::LModel']]],
+  ['multisamplepropertiesext_19',['MultisamplePropertiesEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_multisample_properties_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]]
 ];

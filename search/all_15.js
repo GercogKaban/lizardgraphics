@@ -10,11 +10,11 @@ var searchData=
   ['vect4_5fdata_7',['vect4_data',['../structvect4__data.html',1,'']]],
   ['vect_5fcustom_5fdata_8',['vect_custom_data',['../structvect__custom__data.html',1,'']]],
   ['vect_5fprototype2_9',['vect_prototype2',['../structvect__prototype2.html',1,'']]],
-  ['vertex_10',['Vertex',['../struct_l_graphics_1_1_l_app_1_1_vertex.html',1,'LGraphics::LApp']]],
+  ['vertex_10',['Vertex',['../struct_l_graphics_1_1_l_app_1_1_vertex.html',1,'LGraphics::LApp::Vertex'],['../struct_l_graphics_1_1_vertex.html',1,'LGraphics::Vertex']]],
   ['vertexinputattributedescription_11',['VertexInputAttributeDescription',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_vertex_input_attribute_description.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['vertexinputbindingdescription_12',['VertexInputBindingDescription',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_vertex_input_binding_description.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['vertexinputbindingdivisordescriptionext_13',['VertexInputBindingDivisorDescriptionEXT',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_vertex_input_binding_divisor_description_e_x_t.html',1,'VULKAN_HPP_NAMESPACE']]],
-  ['vertices_14',['vertices',['../class_l_graphics_1_1_l_buffer.html#ab57c872179aa060993fa561102a92040',1,'LGraphics::LBuffer']]],
+  ['vertices_14',['vertices',['../class_l_graphics_1_1_l_buffer.html#a9e43a76616394ce51a18feffe0fde78d',1,'LGraphics::LBuffer']]],
   ['viewport_15',['Viewport',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_viewport.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['viewportswizzlenv_16',['ViewportSwizzleNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_viewport_swizzle_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
   ['viewportwscalingnv_17',['ViewportWScalingNV',['../struct_v_u_l_k_a_n___h_p_p___n_a_m_e_s_p_a_c_e_1_1_viewport_w_scaling_n_v.html',1,'VULKAN_HPP_NAMESPACE']]],
@@ -615,7 +615,7 @@ var searchData=
   ['vkxlibsurfacecreateinfokhr_612',['VkXlibSurfaceCreateInfoKHR',['../struct_vk_xlib_surface_create_info_k_h_r.html',1,'']]],
   ['vkxycolorext_613',['VkXYColorEXT',['../struct_vk_x_y_color_e_x_t.html',1,'']]],
   ['vulkan_20reference_614',['Vulkan reference',['../group__vulkan.html',1,'']]],
-  ['vulkanimagedata_615',['VulkanImageData',['../struct_l_graphics_1_1_l_resource_manager_1_1_textures_data_1_1_vulkan_image_data.html',1,'LGraphics::LResourceManager::TexturesData']]],
+  ['vulkanimagedata_615',['VulkanImageData',['../struct_l_graphics_1_1_textures_data_1_1_vulkan_image_data.html',1,'LGraphics::TexturesData']]],
   ['vulkanshader_616',['VulkanShader',['../class_l_shaders_1_1_vulkan_shader.html',1,'LShaders']]],
-  ['vulkantexturedata_617',['VulkanTextureData',['../struct_l_graphics_1_1_l_resource_manager_1_1_textures_data_1_1_vulkan_image_data_1_1_vulkan_texture_data.html',1,'LGraphics::LResourceManager::TexturesData::VulkanImageData']]]
+  ['vulkantexturedata_617',['VulkanTextureData',['../struct_l_graphics_1_1_textures_data_1_1_vulkan_image_data_1_1_vulkan_texture_data.html',1,'LGraphics::TexturesData::VulkanImageData']]]
 ];
