@@ -1,12 +1,13 @@
 ﻿# lizardgraphics
-C++ Graphic library written on OpenGL and Vulkan API.
+C++ Graphics library written on OpenGL.
 As GUI Lizard Graphics offering Dear ImGui lib.
 
 Reasons to use:
 
 1. Fast primitives renderering.
 2. Сross-platform.
-3. Free.
+3. Easy to master.
+4. Free.
 
 <img src="screenshots/redactor_1.jpg" height="512px">
 
@@ -25,7 +26,7 @@ On Windows you need to place this static libraries in the "LizardGraphics/libs" 
 ```sh
 git clone https://github.com/GercogKaban/lizardgraphics
 cd /d path
-cmake -G "Visual Studio 16 2019" -A x64 -S path -DAPI=VULKAN
+cmake .
 ``` 
 
 # Building for Linux
@@ -33,11 +34,9 @@ cmake -G "Visual Studio 16 2019" -A x64 -S path -DAPI=VULKAN
 ```sh
 git clone https://github.com/GercogKaban/lizardgraphics
 cd path
-cmake . -DAPI=VULKAN
+cmake .
 make
 ```
-
-also you can choose OpenGL api: -DAPI=OPENGL (currently unavalaible :) )
 
 # Examples
 
@@ -120,18 +119,6 @@ You can choose interface rom interfaces.h using ImGuiInterface class.
 ```cpp
     app.loop();
 ```
-
-# TODO
-
-## Features
-1. Fixing shadows.
-2. Reflections.
-3. Skeletal animation.
-
-## Optimizations
-
-1. Multithread command buffers writing (Vulkan)
-2. Prerecording command buffers (Vulkan).
 
 # Documentation
 Here you can find documentation for Lizard Graphics https://gercogkaban.github.io/lizardgraphics/index.html
