@@ -385,7 +385,7 @@ void main()
     // need turning on for each object individually
     //if (!gl_FrontFacing)
         //Normal_ = -Normal0;
-    //else
+
     Normal_ = Normal0;
 
     vec3 result = vec3(0.0);
@@ -400,12 +400,13 @@ void main()
     }
     else
         result =  vec3(1.0f);
-    vec4 reflex = texture(reflexMap, TexCoordReflex);
-    if (!drawingReflex && vs.mapping[2] != 0 && (reflex.r != 0 || reflex.g != 0 || reflex.b != 0))
+    if (!drawingReflex && vs.mapping[2] != 0)
     {
+        vec4 reflex = texture(reflexMap, TexCoordReflex);
+        const float refCoef = (reflex.r + reflex.g + reflex.b)/3.0;
         vec3 I = normalize(vs.FragPos_ - viewPos);
         vec3 R = reflect(I, vs.Normal);
-        color = vec4(texture(environment, R).rgb, 1.0);
+        color = mix( (vec4(result,1.0) * texture(diffuseMap, TexCoord)),(vec4(texture(environment, R).rgb, 1.0)),refCoef);
     }
     else
         color = vec4(result,1.0) * texture(diffuseMap, TexCoord);
