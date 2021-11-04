@@ -84,14 +84,18 @@ namespace LGraphics
 
     }
 
-    void LImagedShape::drawInstanced(LGClasses type, std::vector<LShape*>& changed, bool needToResetBuffer, GLuint vao,
-        GLuint vbo,std::vector<LWidget::PrimitiveUniforms>& uniforms, size_t indCount)
+    void LImagedShape::drawInstanced(LGClasses type, std::vector<LShape*>& changed, bool needToResetBuffer, 
+        GLuint vao, GLuint vbo,std::vector<LWidget::PrimitiveUniforms>& uniforms, size_t indCount)
     {
         if (!uniforms.size()) return;
         LShaders::OpenGLShader* shader;
         shader = app->tesselation? (LShaders::OpenGLShader*)app->getStandartShaderTes() : (LShaders::OpenGLShader*)app->getStandartShader();
         if (app->drawingInShadow)
-            shader = ((LShaders::OpenGLShader*)app->shadowMapShader.get());
+        {
+            shader = dynamic_cast<LPointLight*>(app->currentLight)
+                ? (LShaders::OpenGLShader*)app->shadowCubeMapShader.get()
+                : (LShaders::OpenGLShader*)app->shadowMapShader.get();
+        }
         else if (app->drawingReflex)
             shader = ((LShaders::OpenGLShader*)app->reflexPrimitiveShader.get());
         GLuint shaderProgram = shader->getShaderProgram();
@@ -102,8 +106,14 @@ namespace LGraphics
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+            if (app->currentLight)
+            {
+                glActiveTexture(GL_TEXTURE1);
+                if (dynamic_cast<LPointLight*>(app->currentLight))
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, app->currentDepthMap);
+                else
+                    glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+            }
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
             glActiveTexture(GL_TEXTURE3);
@@ -111,6 +121,7 @@ namespace LGraphics
             glActiveTexture(GL_TEXTURE4);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
         }
+
         glBindVertexArray(vao);
         if (app->tesselation)
         {
@@ -183,6 +194,7 @@ namespace LGraphics
         glEnableVertexAttribArray(16);
         glVertexAttribPointer(16, 3, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms),
             (void*)(offsetof(LWidget::PrimitiveUniforms, inverseModel) + 2 * vec3Size));
+
         glVertexAttribDivisor(5, 1);
         glVertexAttribDivisor(6, 1);
         glVertexAttribDivisor(7, 1);

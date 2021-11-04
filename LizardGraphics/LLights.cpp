@@ -6,7 +6,8 @@ LGraphics::LLight::LLight(LApp* app, size_t shadowWidth, size_t shadowHeight)
 {
 	this->app = app;
 	app->lightsToInit.push_back(this);
-	lightSpaceMatrix = glm::mat4(1.0f);
+	lightSpaceMatrix.resize(1);
+	lightSpaceMatrix[0] = glm::mat4(1.0f);
 
 	ambient = glm::vec3(0.1f, 0.1f, 0.1f);
 	diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -77,11 +78,8 @@ void LGraphics::LLight::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	//glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
-	float borderColor_[] = { app->borderColor.x,app->borderColor.y,app->borderColor.z,app->borderColor.w };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
+	//float borderColor_[] = { app->borderColor.x,app->borderColor.y,app->borderColor.z,app->borderColor.w };
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
@@ -95,7 +93,7 @@ void LGraphics::LSpotLight::setLightSpaceMatrix()
 	LOG_CALL
 	glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), 1.0f, nearPlane, farPlane);
 	glm::mat4 lightView = glm::lookAt(position, direction, glm::vec3(0.0, 1.0, 0.0));
-	lightSpaceMatrix = lightProjection * lightView;
+	lightSpaceMatrix[0] = lightProjection * lightView;
 }
 
 LGraphics::LSpotLight::LSpotLight(LApp* app)
@@ -129,6 +127,8 @@ void LGraphics::LSpotLight::setRadius(float radius)
 LGraphics::LPointLight::LPointLight(LApp* app)
 	:LLight(app)
 {
+	nearPlane = 0.1f;
+	farPlane = 100.0f;
 	app->addLight(this);
 	constant = 1.0f;
 	linear = 0.14f;
@@ -143,8 +143,27 @@ LGraphics::LPointLight::LPointLight(LApp* app)
 void LGraphics::LPointLight::setLightSpaceMatrix()
 {
 	LOG_CALL
+	const float aspect = (float)shadowWidth / (float)shadowHeight;
+	//const glm::mat4 shadowProj = app.getPro
+	const glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, nearPlane, farPlane);
+
+	lightSpaceMatrix =
+	{
+	shadowProj *
+		glm::lookAt(position, position + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)),
+	shadowProj *
+		glm::lookAt(position, position + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)),
+	shadowProj *
+		glm::lookAt(position, position + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)),
+	shadowProj *
+		glm::lookAt(position, position + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)),
+	shadowProj *
+		glm::lookAt(position, position + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)),
+	shadowProj *
+		glm::lookAt(position, position + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))
+	};
+
 	//glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-	//glm::mat4 lightView = glm::lookAt(position, direction, glm::vec3(0.0, 1.0, 0.0));
 	//lightSpaceMatrix = lightProjection * lightView;
 }
 
@@ -166,11 +185,37 @@ void LGraphics::LPointLight::setQuadratic(float quadratic)
 	changed = true;
 }
 
+void LGraphics::LPointLight::init()
+{
+	shadowWidth = app->info.shadowsWidth;
+	shadowHeight = app->info.shadowsHeight;
+	glGenFramebuffers(1, &depthMapFBO);
+	glGenTextures(1, &depthMap);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+	for (unsigned int i = 0; i < 6; ++i)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+			shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	app->checkFramebufferError();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void LGraphics::LDirectionalLight::setLightSpaceMatrix()
 {
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
     glm::mat4 lightView = glm::lookAt(position, direction, app->getCameraUp());
-    lightSpaceMatrix = lightProjection * lightView;
+    lightSpaceMatrix[0] = lightProjection * lightView;
 }
 
 LGraphics::LDirectionalLight::LDirectionalLight(LApp* app)

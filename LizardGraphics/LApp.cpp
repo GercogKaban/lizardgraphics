@@ -216,9 +216,7 @@ namespace LGraphics
         drawingReflex = true;
         reflexPos = position;
         glViewport(0, 0, reflexSize, reflexSize);
-        checkError();
         glBindFramebuffer(GL_FRAMEBUFFER, reflexFBO);
-        checkError();
         clearColorDepth();
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
         drawScene();
@@ -1154,6 +1152,7 @@ namespace LGraphics
             throw std::runtime_error("can't load GL_ARB_bindless_texture!");
 
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glEnable(GL_MULTISAMPLE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1204,6 +1203,16 @@ namespace LGraphics
             shadowMapModelShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vert").data()
                 , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),"", "", ""));
+
+            shadowCubeMapShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.frag").data(), "", "", 
+                  (std::string(LIB_PATH) + "//shaders//shadowCubeMap.geom").data()));
+
+            shadowCubeMapModelShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//shadowCubeMapModel.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.frag").data(), "", "", 
+                  (std::string(LIB_PATH) +   "//shaders//shadowCubeMap.geom").data()));
 
             reflexPrimitiveShader.reset(new LShaders::OpenGLShader(this
                 , (std::string(LIB_PATH) + "//shaders//reflex_primitive.vert").data()

@@ -159,7 +159,11 @@ void LGraphics::LModel::draw()
 {
     auto shader = (LShaders::OpenGLShader*)app->modelShader.get();
     if (app->drawingInShadow)
-        shader = ((LShaders::OpenGLShader*)app->shadowMapModelShader.get());
+    {
+        shader = dynamic_cast<LPointLight*>(app->currentLight)
+            ? (LShaders::OpenGLShader*)app->shadowCubeMapModelShader.get()
+            : (LShaders::OpenGLShader*)app->shadowMapModelShader.get();
+    }
     else if (app->drawingReflex)
         shader = ((LShaders::OpenGLShader*)app->reflexModelShader.get());
     GLuint shaderProgram = shader->getShaderProgram();
@@ -209,8 +213,14 @@ void LGraphics::LModel::draw()
 
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+                if (app->currentLight)
+                {
+                    glActiveTexture(GL_TEXTURE1);
+                    if (dynamic_cast<LPointLight*>(app->currentLight))
+                        glBindTexture(GL_TEXTURE_CUBE_MAP, app->currentDepthMap);
+                    else
+                        glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+                }
                 glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
                 glActiveTexture(GL_TEXTURE3);

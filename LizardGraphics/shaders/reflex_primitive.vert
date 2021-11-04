@@ -11,9 +11,11 @@ layout (location = 0) out vec4 position_;
 out VS_OUT
 {
 out vec3 Normal;
-out vec2 TexCoords;
+out vec2 BaseTexCoords;
 out vec3 FragPos;
-out vec3 FragPos_;
+out vec3 FragPosTBN;
+out vec3 viewPosTBN;
+out vec2 TexCoordsDiffuse;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec2 TexCoordsReflex;
@@ -21,8 +23,6 @@ out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 viewPos_; 
-out vec2 TexCoords_;
 out vec2 off_;
 out vec2 sz_;
 out vec2 maxParallax;
@@ -40,11 +40,11 @@ void main()
     position_ = temp;
     vs.eyeSpacePosition = view*temp;
     vs.FragPos = temp.xyz;
-    vs.viewPos_ = viewPos;
+    //vs.viewPos = viewPos;
 
-        vs.TexCoords = vec2(
+        vs.TexCoordsDiffuse = vec2(
 		    textureCoords.x *diffuseCoords[2] + diffuseCoords[0], 
 		    textureCoords.y *diffuseCoords[3] + diffuseCoords[1]);
 
-    vs.TexCoords_ = textureCoords;
+    vs.BaseTexCoords = textureCoords;
 }

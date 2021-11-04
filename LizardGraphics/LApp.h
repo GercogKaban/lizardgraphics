@@ -745,8 +745,9 @@ namespace LGraphics
         size_t sleepTime = 0;
         LBuffer* standartRectBuffer;
 
-        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, shadowMapShader,
-            modelShader, shadowMapModelShader, reflexPrimitiveShader, reflexModelShader;
+        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, 
+        shadowMapShader, shadowMapModelShader, shadowCubeMapShader, shadowCubeMapModelShader, modelShader, reflexPrimitiveShader,
+        reflexModelShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -764,7 +765,7 @@ namespace LGraphics
         std::thread* loadingScreen;
         GLuint ssbo;
 
-        bool drawingInShadow, drawingReflex;
+        bool drawingInShadow = false, drawingReflex = false;
         glm::vec3 reflexPos;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 

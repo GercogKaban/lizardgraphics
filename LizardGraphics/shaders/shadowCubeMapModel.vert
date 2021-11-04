@@ -7,7 +7,6 @@ layout (location = 5) in ivec4 boneIds;
 layout (location = 6) in vec4 weights;
 
 uniform mat4 model_;
-uniform mat4 lightSpaceMatrix;
 uniform mat4 finalBonesTrans[MAX_BONES];
 
 void main()
@@ -25,5 +24,5 @@ void main()
         totalPosition += finalBonesTrans[boneIds[i]] * vec4(position,1.0f) * weights[i];
     }
 
-    gl_Position = lightSpaceMatrix * model_ * vec4(vec3(totalPosition), 1.0);
+    gl_Position = model_ * vec4(vec3(totalPosition), 1.0);
 }
