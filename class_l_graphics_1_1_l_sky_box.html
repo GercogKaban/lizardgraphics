@@ -117,6 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acd4eba9e876d39b8c9b731ba5a62e603"><td class="memItemLeft" align="right" valign="top"><a id="acd4eba9e876d39b8c9b731ba5a62e603" name="acd4eba9e876d39b8c9b731ba5a62e603"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> (VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum)</td></tr>
 <tr class="separator:acd4eba9e876d39b8c9b731ba5a62e603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac203c688cb962faf45102f7291de1d30"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_cube.html#ac203c688cb962faf45102f7291de1d30">getObjectType</a> () const override</td></tr>
+<tr class="separator:ac203c688cb962faf45102f7291de1d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2f98706918ace6ad7ae3dcf65179aae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_cube.html#af2f98706918ace6ad7ae3dcf65179aae">setModel</a> (const glm::mat4 &amp;model) override</td></tr>
 <tr class="separator:af2f98706918ace6ad7ae3dcf65179aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d6d036ce3b0b38d613664b746637181"><td class="memItemLeft" align="right" valign="top"><a id="a8d6d036ce3b0b38d613664b746637181" name="a8d6d036ce3b0b38d613664b746637181"></a>
@@ -171,8 +173,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setNormalMapping</b> 
 <tr class="memitem:acf1007054e4d1bb9db2dfafd8ca35be9"><td class="memItemLeft" align="right" valign="top"><a id="acf1007054e4d1bb9db2dfafd8ca35be9" name="acf1007054e4d1bb9db2dfafd8ca35be9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setParallaxMapping</b> (std::vector&lt; <a class="el" href="class_l_graphics_1_1_l_shape.html">LShape</a> * &gt; &amp;changed, <a class="el" href="class_l_graphics_1_1_l_shape.html">LShape</a> *shape, bool parallaxMapping)</td></tr>
 <tr class="separator:acf1007054e4d1bb9db2dfafd8ca35be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd7c822aa13040653be14d77aab4eb4b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_imaged_shape.html#afd7c822aa13040653be14d77aab4eb4b">getObjectType</a> () const override</td></tr>
-<tr class="separator:afd7c822aa13040653be14d77aab4eb4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdff6cd237626415717b3a973432f48c"><td class="memItemLeft" align="right" valign="top"><a id="abdff6cd237626415717b3a973432f48c" name="abdff6cd237626415717b3a973432f48c"></a>
 const <a class="el" href="class_l_graphics_1_1_l_buffer.html">LBuffer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getBuffer</b> () const</td></tr>
 <tr class="separator:abdff6cd237626415717b3a973432f48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -824,8 +824,8 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 </div>
 </div>
-<a id="afd7c822aa13040653be14d77aab4eb4b" name="afd7c822aa13040653be14d77aab4eb4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd7c822aa13040653be14d77aab4eb4b">&#9670;&nbsp;</a></span>getObjectType()</h2>
+<a id="ac203c688cb962faf45102f7291de1d30" name="ac203c688cb962faf45102f7291de1d30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac203c688cb962faf45102f7291de1d30">&#9670;&nbsp;</a></span>getObjectType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -834,7 +834,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char * LGraphics::LImagedShape::getObjectType </td>
+          <td class="memname">const char * LGraphics::LCube::getObjectType </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -847,7 +847,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="class_l_graphics_1_1_l_image.html">LGraphics::LImage</a>.</p>
+<p>Reimplemented from <a class="el" href="class_l_graphics_1_1_l_object.html">LGraphics::LObject</a>.</p>
 
 </div>
 </div>

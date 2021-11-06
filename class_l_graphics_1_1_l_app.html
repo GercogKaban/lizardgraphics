@@ -100,9 +100,13 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_base_vertex_u_buffer.html">BaseVertexUBuffer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_f_b_o_attach.html">FBOAttach</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_l_fog.html">LFog</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_megatexture.html">Megatexture</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_pixel_info.html">PixelInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_l_graphics_1_1_l_app_1_1_queue_family_indices.html">QueueFamilyIndices</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -323,6 +327,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>getCurrentFrame</b> 
 <tr class="memitem:aaad9cfc47d9108a2edf4a10c8d9343a7"><td class="memItemLeft" align="right" valign="top"><a id="aaad9cfc47d9108a2edf4a10c8d9343a7" name="aaad9cfc47d9108a2edf4a10c8d9343a7"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>getDeltaTime</b> () const</td></tr>
 <tr class="separator:aaad9cfc47d9108a2edf4a10c8d9343a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8209a0b6e49fde1f50c2d85068d2fcf6"><td class="memItemLeft" align="right" valign="top"><a id="a8209a0b6e49fde1f50c2d85068d2fcf6" name="a8209a0b6e49fde1f50c2d85068d2fcf6"></a>
+std::pair&lt; <a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *, <a class="el" href="struct_l_graphics_1_1_l_app_1_1_pixel_info.html">PixelInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectByMousePos</b> (size_t x, size_t y)</td></tr>
+<tr class="separator:a8209a0b6e49fde1f50c2d85068d2fcf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc9b695b2a16c9863b3ee76ca290fe77"><td class="memItemLeft" align="right" valign="top"><a id="afc9b695b2a16c9863b3ee76ca290fe77" name="afc9b695b2a16c9863b3ee76ca290fe77"></a>
 VkDevice&#160;</td><td class="memItemRight" valign="bottom"><b>getDevice</b> () const</td></tr>
 <tr class="separator:afc9b695b2a16c9863b3ee76ca290fe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -399,6 +406,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSceneForLight</b>
 <tr class="memitem:a9a446ebe1c82d7fa07bee0e49b714f29"><td class="memItemLeft" align="right" valign="top"><a id="a9a446ebe1c82d7fa07bee0e49b714f29" name="a9a446ebe1c82d7fa07bee0e49b714f29"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSceneForReflex</b> (GLuint reflexFBO, size_t reflexSize, glm::vec3 position)</td></tr>
 <tr class="separator:a9a446ebe1c82d7fa07bee0e49b714f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78cf2530a8853ac521e93ee818a90ea4"><td class="memItemLeft" align="right" valign="top"><a id="a78cf2530a8853ac521e93ee818a90ea4" name="a78cf2530a8853ac521e93ee818a90ea4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSceneForPicking</b> (GLuint pickingFBO, size_t pickingSize, int colorBuffer)</td></tr>
+<tr class="separator:a78cf2530a8853ac521e93ee818a90ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad733e6f227358e72d9eb9eb85150cf20"><td class="memItemLeft" align="right" valign="top"><a id="ad733e6f227358e72d9eb9eb85150cf20" name="ad733e6f227358e72d9eb9eb85150cf20"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clearColor</b> ()</td></tr>
 <tr class="separator:ad733e6f227358e72d9eb9eb85150cf20"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -441,6 +451,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>generateMegatexture</
 <tr class="memitem:a157d1d749af4359140ea5d57eed612c2"><td class="memItemLeft" align="right" valign="top"><a id="a157d1d749af4359140ea5d57eed612c2" name="a157d1d749af4359140ea5d57eed612c2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initMegatextureData</b> (const <a class="el" href="class_atlas.html">Atlas</a> &amp;atl, std::unordered_map&lt; std::string, std::pair&lt; glm::vec2, glm::vec2 &gt; &gt; &amp;subtextures, GLuint megatextureId)</td></tr>
 <tr class="separator:a157d1d749af4359140ea5d57eed612c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45c11d69b9089888f931b6892e0ffe08"><td class="memItemLeft" align="right" valign="top"><a id="a45c11d69b9089888f931b6892e0ffe08" name="a45c11d69b9089888f931b6892e0ffe08"></a>
+<a class="el" href="struct_l_graphics_1_1_l_app_1_1_pixel_info.html">PixelInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><b>readPixel</b> (size_t x, size_t y, uint32_t fbo, int colorBuffer) const</td></tr>
+<tr class="separator:a45c11d69b9089888f931b6892e0ffe08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a433ba707dd5b90aa01c4123281b28b66"><td class="memItemLeft" align="right" valign="top"><a id="a433ba707dd5b90aa01c4123281b28b66" name="a433ba707dd5b90aa01c4123281b28b66"></a>
+<a class="el" href="class_l_graphics_1_1_l_widget.html">LWidget</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectByPixel</b> (const <a class="el" href="struct_l_graphics_1_1_l_app_1_1_pixel_info.html">PixelInfo</a> &amp;pixelinfo) const</td></tr>
+<tr class="separator:a433ba707dd5b90aa01c4123281b28b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfe898eb0fa1eecfea9ebf6ee38453ef"><td class="memItemLeft" align="right" valign="top"><a id="abfe898eb0fa1eecfea9ebf6ee38453ef" name="abfe898eb0fa1eecfea9ebf6ee38453ef"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMatrices</b> ()</td></tr>
 <tr class="separator:abfe898eb0fa1eecfea9ebf6ee38453ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -465,6 +481,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initOpenGL</b> ()</td
 <tr class="memitem:a2e13332dca145c4ea5a3eff427ec5f86"><td class="memItemLeft" align="right" valign="top"><a id="a2e13332dca145c4ea5a3eff427ec5f86" name="a2e13332dca145c4ea5a3eff427ec5f86"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initVulkan</b> ()</td></tr>
 <tr class="separator:a2e13332dca145c4ea5a3eff427ec5f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba40d74575a684cc80559cfb21fefb77"><td class="memItemLeft" align="right" valign="top"><a id="aba40d74575a684cc80559cfb21fefb77" name="aba40d74575a684cc80559cfb21fefb77"></a>
+<a class="el" href="struct_l_graphics_1_1_l_app_1_1_f_b_o_attach.html">FBOAttach</a>&#160;</td><td class="memItemRight" valign="bottom"><b>createAttachment</b> (const <a class="el" href="struct_l_graphics_1_1_l_app_1_1_f_b_o_attach.html">FBOAttach</a> &amp;attach) const</td></tr>
+<tr class="separator:aba40d74575a684cc80559cfb21fefb77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac693b8d9ab60e22c1dccd20ce94cb8b3"><td class="memItemLeft" align="right" valign="top"><a id="ac693b8d9ab60e22c1dccd20ce94cb8b3" name="ac693b8d9ab60e22c1dccd20ce94cb8b3"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>createFramebuffer</b> (const std::vector&lt; <a class="el" href="struct_l_graphics_1_1_l_app_1_1_f_b_o_attach.html">FBOAttach</a> &gt; &amp;attachments, int firstColorBuffer=0) const</td></tr>
+<tr class="separator:ac693b8d9ab60e22c1dccd20ce94cb8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54c80eadd6757cd4cfaf099394f05180"><td class="memItemLeft" align="right" valign="top"><a id="a54c80eadd6757cd4cfaf099394f05180" name="a54c80eadd6757cd4cfaf099394f05180"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowCallbacks</b> ()</td></tr>
 <tr class="separator:a54c80eadd6757cd4cfaf099394f05180"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -709,6 +731,9 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>modelLoadingFlags
 <tr class="memitem:a0bba1b9bb9d1786efe9585cee9917286"><td class="memItemLeft" align="right" valign="top"><a id="a0bba1b9bb9d1786efe9585cee9917286" name="a0bba1b9bb9d1786efe9585cee9917286"></a>
 std::unordered_map&lt; QualityLevels, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>qualityDirectories</b></td></tr>
 <tr class="separator:a0bba1b9bb9d1786efe9585cee9917286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1229984aba32a2673f86321c01f4c0e"><td class="memItemLeft" align="right" valign="top"><a id="ac1229984aba32a2673f86321c01f4c0e" name="ac1229984aba32a2673f86321c01f4c0e"></a>
+<a class="el" href="class_l_graphics_1_1_l_picking.html">LPicking</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>picking</b> = nullptr</td></tr>
+<tr class="separator:ac1229984aba32a2673f86321c01f4c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc4c5a5f50b3132fe2d10a808e9a28bb"><td class="memItemLeft" align="right" valign="top"><a id="acc4c5a5f50b3132fe2d10a808e9a28bb" name="acc4c5a5f50b3132fe2d10a808e9a28bb"></a>
 struct <a class="el" href="struct_l_graphics_1_1_l_app_1_1_megatexture.html">LGraphics::LApp::Megatexture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>megatexture</b></td></tr>
 <tr class="separator:acc4c5a5f50b3132fe2d10a808e9a28bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -934,18 +959,30 @@ std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShader
 <tr class="memitem:a2b9f707288eee3558791f193cbac03e2"><td class="memItemLeft" align="right" valign="top"><a id="a2b9f707288eee3558791f193cbac03e2" name="a2b9f707288eee3558791f193cbac03e2"></a>
 std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>shadowMapShader</b></td></tr>
 <tr class="separator:a2b9f707288eee3558791f193cbac03e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22d8e62cd7f26ed4c5486bdc1591719e"><td class="memItemLeft" align="right" valign="top"><a id="a22d8e62cd7f26ed4c5486bdc1591719e" name="a22d8e62cd7f26ed4c5486bdc1591719e"></a>
-std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>modelShader</b></td></tr>
-<tr class="separator:a22d8e62cd7f26ed4c5486bdc1591719e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa30ec4e0ce66ee0e88f13869045e41fb"><td class="memItemLeft" align="right" valign="top"><a id="aa30ec4e0ce66ee0e88f13869045e41fb" name="aa30ec4e0ce66ee0e88f13869045e41fb"></a>
 std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>shadowMapModelShader</b></td></tr>
 <tr class="separator:aa30ec4e0ce66ee0e88f13869045e41fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d37f7d0e73192ec162c0d3bbfd907f0"><td class="memItemLeft" align="right" valign="top"><a id="a3d37f7d0e73192ec162c0d3bbfd907f0" name="a3d37f7d0e73192ec162c0d3bbfd907f0"></a>
+std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>shadowCubeMapShader</b></td></tr>
+<tr class="separator:a3d37f7d0e73192ec162c0d3bbfd907f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb3c7ce8f3717ec1b61fd75a1de3710"><td class="memItemLeft" align="right" valign="top"><a id="abdb3c7ce8f3717ec1b61fd75a1de3710" name="abdb3c7ce8f3717ec1b61fd75a1de3710"></a>
+std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>shadowCubeMapModelShader</b></td></tr>
+<tr class="separator:abdb3c7ce8f3717ec1b61fd75a1de3710"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22d8e62cd7f26ed4c5486bdc1591719e"><td class="memItemLeft" align="right" valign="top"><a id="a22d8e62cd7f26ed4c5486bdc1591719e" name="a22d8e62cd7f26ed4c5486bdc1591719e"></a>
+std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>modelShader</b></td></tr>
+<tr class="separator:a22d8e62cd7f26ed4c5486bdc1591719e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3155ae1837ffa1fac76281e76c520302"><td class="memItemLeft" align="right" valign="top"><a id="a3155ae1837ffa1fac76281e76c520302" name="a3155ae1837ffa1fac76281e76c520302"></a>
 std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reflexPrimitiveShader</b></td></tr>
 <tr class="separator:a3155ae1837ffa1fac76281e76c520302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab47509e0cc946ebc68f7a9cb4351d16b"><td class="memItemLeft" align="right" valign="top"><a id="ab47509e0cc946ebc68f7a9cb4351d16b" name="ab47509e0cc946ebc68f7a9cb4351d16b"></a>
 std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reflexModelShader</b></td></tr>
 <tr class="separator:ab47509e0cc946ebc68f7a9cb4351d16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19111abfe5b38ad3115ffe93e10ee94d"><td class="memItemLeft" align="right" valign="top"><a id="a19111abfe5b38ad3115ffe93e10ee94d" name="a19111abfe5b38ad3115ffe93e10ee94d"></a>
+std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pickingPrimitiveShader</b></td></tr>
+<tr class="separator:a19111abfe5b38ad3115ffe93e10ee94d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57fb8d357d62635b7428404f8235f654"><td class="memItemLeft" align="right" valign="top"><a id="a57fb8d357d62635b7428404f8235f654" name="a57fb8d357d62635b7428404f8235f654"></a>
+std::unique_ptr&lt; <a class="el" href="class_l_shaders_1_1_shader.html">LShaders::Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pickingModelShader</b></td></tr>
+<tr class="separator:a57fb8d357d62635b7428404f8235f654"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6121e87c952e7cc0c9d1ffa8dc0c32c4"><td class="memItemLeft" align="right" valign="top"><a id="a6121e87c952e7cc0c9d1ffa8dc0c32c4" name="a6121e87c952e7cc0c9d1ffa8dc0c32c4"></a>
 std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>drawingMutex</b></td></tr>
 <tr class="separator:a6121e87c952e7cc0c9d1ffa8dc0c32c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -977,11 +1014,14 @@ std::thread *&#160;</td><td class="memItemRight" valign="bottom"><b>loadingScree
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>ssbo</b></td></tr>
 <tr class="separator:a608f3783f102a8631229b12b6bc0dd06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a471da94ef716373d213669e6a7a5982f"><td class="memItemLeft" align="right" valign="top"><a id="a471da94ef716373d213669e6a7a5982f" name="a471da94ef716373d213669e6a7a5982f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>drawingInShadow</b></td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>drawingInShadow</b> = false</td></tr>
 <tr class="separator:a471da94ef716373d213669e6a7a5982f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53abc7a2b68cf09ca2964dbf8e2d758a"><td class="memItemLeft" align="right" valign="top"><a id="a53abc7a2b68cf09ca2964dbf8e2d758a" name="a53abc7a2b68cf09ca2964dbf8e2d758a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>drawingReflex</b></td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>drawingReflex</b> = false</td></tr>
 <tr class="separator:a53abc7a2b68cf09ca2964dbf8e2d758a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21c4a5134b6cfa0b52f6ab553b81281f"><td class="memItemLeft" align="right" valign="top"><a id="a21c4a5134b6cfa0b52f6ab553b81281f" name="a21c4a5134b6cfa0b52f6ab553b81281f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>drawingPicking</b> = false</td></tr>
+<tr class="separator:a21c4a5134b6cfa0b52f6ab553b81281f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aaba28547fcf55accf08a0757b319ed"><td class="memItemLeft" align="right" valign="top"><a id="a8aaba28547fcf55accf08a0757b319ed" name="a8aaba28547fcf55accf08a0757b319ed"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>reflexPos</b></td></tr>
 <tr class="separator:a8aaba28547fcf55accf08a0757b319ed"><td class="memSeparator" colspan="2">&#160;</td></tr>

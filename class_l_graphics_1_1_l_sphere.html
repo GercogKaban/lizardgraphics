@@ -111,6 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1fa5f81db0ae23b0a913d5d81e3b905e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_sphere.html#a1fa5f81db0ae23b0a913d5d81e3b905e">draw</a> (VkCommandBuffer commandBuffer, uint32_t frameIndex) override</td></tr>
 <tr class="memdesc:a1fa5f81db0ae23b0a913d5d81e3b905e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Рисует виджет.  <a href="class_l_graphics_1_1_l_sphere.html#a1fa5f81db0ae23b0a913d5d81e3b905e">More...</a><br /></td></tr>
 <tr class="separator:a1fa5f81db0ae23b0a913d5d81e3b905e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03592571c4aa7f37170d18343706c62d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_sphere.html#a03592571c4aa7f37170d18343706c62d">getObjectType</a> () const override</td></tr>
+<tr class="separator:a03592571c4aa7f37170d18343706c62d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf84b1a977dc729426553bdbf8280b50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_sphere.html#abf84b1a977dc729426553bdbf8280b50">setModel</a> (const glm::mat4 &amp;model) override</td></tr>
 <tr class="separator:abf84b1a977dc729426553bdbf8280b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa62fcfdc7dc33fc84601482840bcbdd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_sphere.html#aa62fcfdc7dc33fc84601482840bcbdd1">scale</a> (const float x, const float y, const float z) override</td></tr>
@@ -129,8 +131,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a31112e8baece85708d7f462914277a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39917f56f47234a2f97f438bc79e7131"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_sphere.html#a39917f56f47234a2f97f438bc79e7131">setParallaxMapping</a> (bool parallaxMapping) override</td></tr>
 <tr class="separator:a39917f56f47234a2f97f438bc79e7131"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd7c822aa13040653be14d77aab4eb4b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_imaged_shape.html#afd7c822aa13040653be14d77aab4eb4b">getObjectType</a> () const override</td></tr>
-<tr class="separator:afd7c822aa13040653be14d77aab4eb4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd4eba9e876d39b8c9b731ba5a62e603"><td class="memItemLeft" align="right" valign="top"><a id="acd4eba9e876d39b8c9b731ba5a62e603" name="acd4eba9e876d39b8c9b731ba5a62e603"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> (VkCommandBuffer commandBuffers, uint32_t frameIndex, size_t objectNum)</td></tr>
 <tr class="separator:acd4eba9e876d39b8c9b731ba5a62e603"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -820,8 +820,8 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
 
 </div>
 </div>
-<a id="afd7c822aa13040653be14d77aab4eb4b" name="afd7c822aa13040653be14d77aab4eb4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd7c822aa13040653be14d77aab4eb4b">&#9670;&nbsp;</a></span>getObjectType()</h2>
+<a id="a03592571c4aa7f37170d18343706c62d" name="a03592571c4aa7f37170d18343706c62d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03592571c4aa7f37170d18343706c62d">&#9670;&nbsp;</a></span>getObjectType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -830,7 +830,7 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char * LGraphics::LImagedShape::getObjectType </td>
+          <td class="memname">const char * LGraphics::LSphere::getObjectType </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -838,12 +838,12 @@ static <a class="el" href="class_l_graphics_1_1_l_resource_manager.html">LResour
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="class_l_graphics_1_1_l_image.html">LGraphics::LImage</a>.</p>
+<p>Reimplemented from <a class="el" href="class_l_graphics_1_1_l_imaged_shape.html">LGraphics::LImagedShape</a>.</p>
 
 </div>
 </div>

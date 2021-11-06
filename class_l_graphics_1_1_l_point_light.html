@@ -173,9 +173,8 @@ friend&#160;</td><td class="memItemRight" valign="bottom"><b>LShape</b></td></tr
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:aac08f442d3784c2ccfe8c8d77a4f2e9e"><td class="memItemLeft" align="right" valign="top"><a id="aac08f442d3784c2ccfe8c8d77a4f2e9e" name="aac08f442d3784c2ccfe8c8d77a4f2e9e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
-<tr class="separator:aac08f442d3784c2ccfe8c8d77a4f2e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add7b87d8da1f38b6f89a2dcf2521c840"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_l_graphics_1_1_l_point_light.html#add7b87d8da1f38b6f89a2dcf2521c840">init</a> () override</td></tr>
+<tr class="separator:add7b87d8da1f38b6f89a2dcf2521c840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -200,9 +199,9 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>depthMap</b> = UINT
 <tr class="memitem:ab397137fb5535ce06757dab4d622ae27"><td class="memItemLeft" align="right" valign="top"><a id="ab397137fb5535ce06757dab4d622ae27" name="ab397137fb5535ce06757dab4d622ae27"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>depthMapFBO</b> = UINT32_MAX</td></tr>
 <tr class="separator:ab397137fb5535ce06757dab4d622ae27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5c2a727eb8048ad06b53aa3b1d8b51e"><td class="memItemLeft" align="right" valign="top"><a id="aa5c2a727eb8048ad06b53aa3b1d8b51e" name="aa5c2a727eb8048ad06b53aa3b1d8b51e"></a>
-glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>lightSpaceMatrix</b></td></tr>
-<tr class="separator:aa5c2a727eb8048ad06b53aa3b1d8b51e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfaffbc5599805dbc9748716299806b9"><td class="memItemLeft" align="right" valign="top"><a id="abfaffbc5599805dbc9748716299806b9" name="abfaffbc5599805dbc9748716299806b9"></a>
+std::vector&lt; glm::mat4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lightSpaceMatrix</b></td></tr>
+<tr class="separator:abfaffbc5599805dbc9748716299806b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfb9ae888efc2d49b67d644939ac70d3"><td class="memItemLeft" align="right" valign="top"><a id="adfb9ae888efc2d49b67d644939ac70d3" name="adfb9ae888efc2d49b67d644939ac70d3"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>position</b></td></tr>
 <tr class="separator:adfb9ae888efc2d49b67d644939ac70d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,6 +234,33 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>shadowHeight</b></t
 <tr class="separator:a6d5668c03251fce486b7c3438813f2f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="add7b87d8da1f38b6f89a2dcf2521c840" name="add7b87d8da1f38b6f89a2dcf2521c840"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add7b87d8da1f38b6f89a2dcf2521c840">&#9670;&nbsp;</a></span>init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LGraphics::LPointLight::init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="class_l_graphics_1_1_l_light.html">LGraphics::LLight</a>.</p>
+
+</div>
+</div>
 <a id="a1f2c9dbb08e0b3df94760c786c408bc9" name="a1f2c9dbb08e0b3df94760c786c408bc9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1f2c9dbb08e0b3df94760c786c408bc9">&#9670;&nbsp;</a></span>setLightSpaceMatrix()</h2>
 
