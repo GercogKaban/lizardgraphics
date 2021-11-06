@@ -7,14 +7,16 @@ layout(location = 1) in vec3 normals[];
 
 uniform mat4 view;
 uniform mat4 proj;
-uniform mat4 lightSpaceMatrix;
+uniform mat4 lightSpaceMatrix[6];
  
 in VS_OUT
 {
 in vec3 Normal;
-in vec2 TexCoords;
+in vec2 BaseTexCoords;
 in vec3 FragPos;
-in vec3 FragPos_;
+in vec3 FragPosTBN;
+in vec3 viewPosTBN;
+in vec2 TexCoordsDiffuse;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
 in vec2 TexCoordsReflex;
@@ -22,21 +24,20 @@ in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
 in mat4 model;
-in vec3 viewPos_; 
-in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
 in flat ivec3 mapping;
-} vs[];
+}  vs[];
 
 out VS_OUT
 {
-//out vec3 Position;
 out vec3 Normal;
-out vec2 TexCoords;
+out vec2 BaseTexCoords;
 out vec3 FragPos;
-out vec3 FragPos_;
+out vec3 FragPosTBN;
+out vec3 viewPosTBN;
+out vec2 TexCoordsDiffuse;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec2 TexCoordsReflex;
@@ -44,13 +45,11 @@ out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 viewPos_; 
-out vec2 TexCoords_;
 out vec2 off_;
 out vec2 sz_;
 out vec2 maxParallax;
 out flat ivec3 mapping;
-} tes_out;
+}  tes_out;
 
  
  struct PnPatch
@@ -87,7 +86,7 @@ void main()
     tes_out.eyeSpacePosition = vs[0].eyeSpacePosition;
     tes_out.TBN = vs[0].TBN;
     tes_out.model = vs[0].model;
-    tes_out.viewPos_ = vs[0].viewPos_;
+    tes_out.viewPosTBN = vs[0].viewPosTBN;
     tes_out.off_ = vs[0].off_;
     tes_out.sz_ = vs[0].sz_;
     tes_out.maxParallax = vs[0].maxParallax;
@@ -120,12 +119,12 @@ void main()
                             iPnPatch[2].n101));
 
  // compute texcoords
- tes_out.TexCoords  = gl_TessCoord[2]*vs[0].TexCoords
-            + gl_TessCoord[0]*vs[1].TexCoords
-            + gl_TessCoord[1]*vs[2].TexCoords;
+ tes_out.TexCoordsDiffuse  = gl_TessCoord[2]*vs[0].TexCoordsDiffuse
+            + gl_TessCoord[0]*vs[1].TexCoordsDiffuse
+            + gl_TessCoord[1]*vs[2].TexCoordsDiffuse;
 
- tes_out.TexCoordsNormal =  tes_out.TexCoords;
- tes_out.TexCoordsParallax = tes_out.TexCoords;
+ tes_out.TexCoordsNormal =  tes_out.TexCoordsDiffuse;
+ tes_out.TexCoordsParallax = tes_out.TexCoordsDiffuse;
 
  // normal
  vec3 barNormal = gl_TessCoord[2]*normals[0]
@@ -166,7 +165,7 @@ tes_out.TBN[2] = tes_out.Normal;
 
     vec3 finalPos = (1.0-uTessAlpha)*barPos + uTessAlpha*pnPos;
     tes_out.FragPos = finalPos;
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(tes_out.FragPos, 1.0);
+    vec4 FragPosLightSpace = lightSpaceMatrix[0] * vec4(tes_out.FragPos, 1.0);
     tes_out.projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
     tes_out.eyeSpacePosition = view*vec4(finalPos,1.0f);
     gl_Position = proj * tes_out.eyeSpacePosition;

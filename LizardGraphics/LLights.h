@@ -43,13 +43,14 @@ namespace LGraphics
 		void setShadowsCalculating(bool calculateShadows);
 
 	protected:
-		void init();
+
+		virtual void init();
 
 		LApp* app;
 		int id;
 		GLuint depthMap = UINT32_MAX;
 		GLuint depthMapFBO = UINT32_MAX;
-		glm::mat4 lightSpaceMatrix;
+		std::vector<glm::mat4> lightSpaceMatrix;
 
 		glm::vec3 position;
 		glm::vec3 ambient;
@@ -121,6 +122,8 @@ namespace LGraphics
 		float constant;
 		float linear;
 		float quadratic;
+
+		void init() override;
 	};
 
 	class LDirectionalLight : public LLight

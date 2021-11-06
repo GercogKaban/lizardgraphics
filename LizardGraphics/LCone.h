@@ -12,6 +12,7 @@ namespace LGraphics
 
 		LCone(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
+		const char* getObjectType() const override { return "LCone"; }
 		static void drawInstanced();
 
 		void setModel(const glm::mat4& model) override;

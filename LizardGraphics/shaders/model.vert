@@ -3,48 +3,6 @@
 #define MAX_BONES 100
 #define MAX_BONE_INFLUENCE 4
 
-struct DirLight 
-{
-	vec3 position;
-    vec3 direction;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-
-    bool calculateShadow;
-};
-
-struct PointLight 
-{
-    vec3 position;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    
-    float constant;
-    float linear;
-    float quadratic;
-
-    bool calculateShadow;
-};
-
-struct SpotLight 
-{
-    vec3 position;
-    vec3 direction;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;  
-
-    float cutOff;
-    float outerCutOff; 
-    float constant;
-    float linear;
-    float quadratic;
- 
-    bool calculateShadow;   
-};
-
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normals;
 layout (location = 2) in vec2 textureCoords;
@@ -53,19 +11,14 @@ layout (location = 4) in vec3 bitangent;
 layout (location = 5) in ivec4 boneIds; 
 layout (location = 6) in vec4 weights;
 
-//layout(std430, binding = 3) buffer Layout
-//{
-//    mat4 finalBonesTrans[MAX_BONES];
-//};
-
-layout (location = 2) out mat4 outModel;
-
 out VS_OUT
 {
 out vec3 Normal;
-out vec2 TexCoords;
+out vec2 BaseTexCoords;
 out vec3 FragPos;
-out vec3 FragPos_;
+out vec3 FragPosTBN;
+out vec3 viewPosTBN;
+out vec2 TexCoordsDiffuse;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec2 TexCoordsReflex;
@@ -73,8 +26,6 @@ out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 viewPos_; 
-out vec2 TexCoords_;
 out vec2 off_;
 out vec2 sz_;
 out vec2 maxParallax;
@@ -83,7 +34,7 @@ out flat ivec3 mapping;
 
 uniform mat4 view;
 uniform mat4 proj;
-uniform mat4 lightSpaceMatrix;
+uniform mat4 lightSpaceMatrix[6];
 uniform vec3 viewPos;
 uniform mat3 inverseModel;
 
@@ -107,7 +58,7 @@ uniform mat4 finalBonesTrans[MAX_BONES];
 
 void main()
 {
-    outModel = model_;
+    vs.model = model_;
     vs.mapping[0] = normalMapping;
     vs.mapping[1] = parallaxMapping;
     vs.mapping[2] = reflexMapping;
@@ -159,7 +110,7 @@ void main()
 
     vec4 temp = model_ * vec4(vec3(totalPosition), 1.0);
     vs.eyeSpacePosition = view*temp;
-    vs.FragPos_ = vec3(temp);
+    vs.FragPos = vec3(temp);
     if (normalMapping != 0 || parallaxMapping!= 0)
     {
         vec3 Tangent =   normalize(mat3(model_)*tangent);
@@ -170,24 +121,18 @@ void main()
     }
     if (normalMapping != 0 || parallaxMapping!= 0)
     {
-        vs.FragPos  = vs.TBN * vs.FragPos_;
-        vs.viewPos_ = vs.TBN * viewPos;
+        vs.FragPosTBN  = vs.TBN * vs.FragPos;
+        vs.viewPosTBN = vs.TBN * viewPos;
     }
 
-    else 
-    {
-        vs.FragPos = vs.FragPos_;
-        vs.viewPos_ = viewPos;
-    }
-
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(vs.FragPos_, 1.0);
+    vec4 FragPosLightSpace = lightSpaceMatrix[0] * vec4(vs.FragPos, 1.0);
     vs.projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
     
-    vs.TexCoords = vec2(
+    vs.TexCoordsDiffuse = vec2(
 		textureCoords.x *textureSize.x + offset.x , 
 		textureCoords.y*textureSize.y + offset.y);   
     vs.model = model_;
-    vs.TexCoords_ = textureCoords;
+    vs.BaseTexCoords = textureCoords;
     vs.Normal = normalize(inverseModel * normals); 
     gl_Position = proj * vs.eyeSpacePosition;
 }

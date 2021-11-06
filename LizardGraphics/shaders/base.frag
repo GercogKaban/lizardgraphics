@@ -53,18 +53,18 @@ struct Fog
 in VS_OUT
 {
 in vec3 Normal;
-in vec2 TexCoords;
+in vec2 BaseTexCoords;
 in vec3 FragPos;
-in vec3 FragPos_;
+in vec3 FragPosTBN;
+in vec3 viewPosTBN;
+in vec2 TexCoordsDiffuse;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
-in vec2 TexCoordsReflex;  
+in vec2 TexCoordsReflex;
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
 in mat4 model;
-in vec3 viewPos_; 
-in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
@@ -81,6 +81,7 @@ vec3 Normal_;
 uniform vec3 viewPos;
 uniform mat4 view;
 
+uniform samplerCube shadowCubeMap;
 uniform sampler2D diffuseMap;
 uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
@@ -102,6 +103,7 @@ uniform int spotSourcesCount = 0;
 uniform int dirSourcesCount = 0;
 uniform Fog fog;
 uniform bool drawingReflex;
+uniform float farPlane;
 
 vec3 CalcDirLight(DirLight light, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 viewDir);
@@ -222,11 +224,7 @@ float getFogFactor(float fogCoordinate)
 
 float ShadowCalculation(vec3 lightDir)
 {
-    //if(projCoords.z > 1.0)
-       //return 0.0;
-    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float closestDepth = texture(shadowMap, vs.projCoords.xy).r; 
-    // get depth of current fragment from light's perspective
     float currentDepth = vs.projCoords.z;
     float bias = max(0.05 * (1.0 - dot(Normal_, lightDir)), 0.005);
     float shadow = 0.0;
@@ -243,11 +241,29 @@ float ShadowCalculation(vec3 lightDir)
     return shadow;
 }
 
+float ShadowCalculationOmni(vec3 lightPos)
+{
+    // get vector between fragment position and light position
+    vec3 lightToFrag = vs.FragPos - lightPos;
+    //fragToLight.y = - fragToLight.y;
+    // use the fragment to light vector to sample from the depth map    
+    float closestDepth = texture(shadowCubeMap, lightToFrag).r;
+    // it is currently in linear range between [0,1], let's re-transform it back to original depth value
+    closestDepth *= farPlane;
+    // now get current linear depth as the length between the fragment and light position
+    float currentDepth = length(lightToFrag);
+    // test for shadows
+    float bias = 0.05; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+    return currentDepth -  bias > closestDepth ? 1.0 : 0.0;        
+    // display closestDepth as debug (to visualize depth cubemap)
+    // FragColor = vec4(vec3(closestDepth / far_plane), 1.0);    
+}
+
 // calculates the color when using a directional light.
 vec3 CalcDirLight(DirLight light, vec3 viewDir)
 {
     vec3 LightPos = vs.TBN * light.position;
-    vec3 lightDir = normalize(LightPos - vs.FragPos);
+    vec3 lightDir = normalize(LightPos - vs.FragPosTBN);
     // diffuse shading
     float diff = max(dot(lightDir,Normal_), 0.0);
     // specular shading
@@ -270,31 +286,30 @@ vec3 CalcPointLight(PointLight light, vec3 viewDir)
     vec3 LightPos = light.position;
     if (vs.mapping[1] != 0 || vs.mapping[0] != 0)
         LightPos = vs.TBN* light.position;
-    vec3 lightDir = normalize(LightPos - vs.FragPos);
+    vec3 lightDir = normalize(LightPos - vs.FragPosTBN);
     // diffuse shading
     float diff = max(dot(Normal_, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
     // attenuation
-    float distance = length(LightPos - vs.FragPos);
+    float distance = length(LightPos - vs.FragPosTBN);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // combine results
     vec3 ambient = light.ambient * attenuation;
     vec3 diffuse = light.diffuse * attenuation * diff;
     vec3 specular = light.specular * attenuation * spec;
-    float shadow = 0.0;
+    float shadow = ShadowCalculationOmni(light.position);
     //if (selfShading)
         //shadow = parallaxSoftShadowMultiplier(lightDir, TexCoord, texture(parallaxMap, TexCoord).r);
-
     //ShadowCalculation(light.position); 
-    return (ambient + diffuse + specular);
+    return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
 {
     vec3 lightPos = vs.TBN * light.position;
-	vec3 lightDir = normalize(lightPos - vs.FragPos);
+	vec3 lightDir = normalize(lightPos - vs.FragPosTBN);
     float theta = dot(lightDir, normalize(-light.direction)); 
     vec3 result = vec3(0.0f);
     
@@ -315,7 +330,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
         vec3 specular = light.specular * spec;//* texture(1.0f, TexCoords).rgb;  
         
         // attenuation
-        float distance    = length(lightPos - vs.FragPos);
+        float distance    = length(lightPos - vs.FragPosTBN);
         float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
         // ambient  *= attenuation; // remove attenuation from ambient, as otherwise at large distances the light would be darker inside than outside the spotlight due the ambient term in the else branche
@@ -347,7 +362,7 @@ void main()
         }
     }
 
-    vec3 viewDir = normalize(vs.viewPos_ - vs.FragPos);
+    vec3 viewDir = normalize(vs.viewPosTBN - vs.FragPosTBN);
 
     if (vs.mapping[1])
     {
@@ -368,7 +383,7 @@ void main()
     }
     else
     {
-        TexCoord = vs.TexCoords;
+        TexCoord = vs.TexCoordsDiffuse;
         TexCoordNormal = vs.TexCoordsNormal;
         TexCoordReflex = vs.TexCoordsReflex;
     }
@@ -404,7 +419,7 @@ void main()
     {
         vec4 reflex = texture(reflexMap, TexCoordReflex);
         const float refCoef = (reflex.r + reflex.g + reflex.b)/3.0;
-        vec3 I = normalize(vs.FragPos_ - viewPos);
+        vec3 I = normalize(vs.FragPos - viewPos);
         vec3 R = reflect(I, vs.Normal);
         color = mix( (vec4(result,1.0) * texture(diffuseMap, TexCoord)),(vec4(texture(environment, R).rgb, 1.0)),refCoef);
     }

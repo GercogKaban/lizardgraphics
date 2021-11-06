@@ -90,6 +90,7 @@ namespace LGraphics
     class LSkyBox;
     class LRectangleMirror;
     class InstantPoolCubes;
+    class LPicking;
 
     struct LAppInitialCreateInfo
     {
@@ -149,6 +150,7 @@ namespace LGraphics
         friend LLight;
         friend LSpotLight;
         friend LPointLight;
+        friend LPicking;
 
     public:
 
@@ -188,6 +190,7 @@ namespace LGraphics
         uint32_t modelLoadingFlags = 0;
         std::unordered_map<QualityLevels, std::string> qualityDirectories;
 
+        LPicking* picking = nullptr;
         void loop_();
         void initApp_(const LAppInitialCreateInfo& info);
         void initErrorRecovering();
@@ -198,6 +201,7 @@ namespace LGraphics
         void drawScene();
         void drawSceneForLight(LLight* l);
         void drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position);
+        void drawSceneForPicking(GLuint pickingFBO, size_t pickingSize, int colorBuffer);
 
         void clearColor();
         void clearDepth();
@@ -377,7 +381,28 @@ namespace LGraphics
         float getCurrentFrame() const { return lastFrame; }
         float getDeltaTime() const { return deltaTime; }
 
+        struct PixelInfo
+        {
+            uint32_t objectID;
+            uint32_t primitiveNum;
+            uint32_t triangleNum;
+        };
+
+        std::pair<LWidget*,PixelInfo> getObjectByMousePos(size_t x, size_t y);
+
     protected:
+
+        struct FBOAttach
+        {
+            int textureType;
+            int componentType;
+            int attachmentSize;
+            int valuesType;
+            GLuint attachmentId;
+        };
+
+        PixelInfo readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const;
+        LWidget* getObjectByPixel(const PixelInfo& pixelinfo) const;
 
         std::string loadingText;
         static LAppInitialCreateInfo info;
@@ -425,6 +450,9 @@ namespace LGraphics
 
         void initOpenGL();
         void initVulkan();
+
+        FBOAttach createAttachment(const FBOAttach& attach) const;
+        GLuint createFramebuffer(const std::vector<FBOAttach>& attachments, int firstColorBuffer = 0 ) const;
 
         void setWindowCallbacks();
 
@@ -745,8 +773,9 @@ namespace LGraphics
         size_t sleepTime = 0;
         LBuffer* standartRectBuffer;
 
-        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, shadowMapShader,
-            modelShader, shadowMapModelShader, reflexPrimitiveShader, reflexModelShader;
+        std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, 
+        shadowMapShader, shadowMapModelShader, shadowCubeMapShader, shadowCubeMapModelShader, modelShader, reflexPrimitiveShader,
+        reflexModelShader, pickingPrimitiveShader, pickingModelShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -764,7 +793,7 @@ namespace LGraphics
         std::thread* loadingScreen;
         GLuint ssbo;
 
-        bool drawingInShadow, drawingReflex;
+        bool drawingInShadow = false, drawingReflex = false, drawingPicking = false;
         glm::vec3 reflexPos;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 

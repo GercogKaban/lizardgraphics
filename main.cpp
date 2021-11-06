@@ -55,15 +55,12 @@ int main(int argc, char** argv)
     app.fog.color = glm::vec3(211.0f / 255.0f, 211.0f / 255.0f, 211.0f / 255.0f);
     app.fog.isEnabled = true;
 
-    auto dirLight = new LDirectionalLight(&app);
-    dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
-    dirLight->setDirection(glm::vec3(4, 0, 4));
-    //dirLight->setShadowsCalculating(false);
+    //auto dirLight = new LDirectionalLight(&app);
+    //dirLight->setPosition(glm::vec3(0.0f, 5.0f, 0));
+    //dirLight->setDirection(glm::vec3(4, 0, 4));
    
-    LPlane* last;
-
-    //auto s = new LPointLight(&app);
-    //s->setRadius(25);
+    auto pointLight = new LPointLight(&app);
+    pointLight->setShadowsCalculating(true);
 
     float yOffset = -0.3f;
     if (!info.loadObjects)
@@ -80,16 +77,16 @@ int main(int argc, char** argv)
                     p->setNormalMapping(true);
                 }
 
-            for (size_t i = 0; i < 2; ++i)
-                for (size_t j = 0; j < 2; ++j)
-                {
-                    LPlane* p;
-                    p = new LPlane(&app, { "Rocks011.jpg" });
-                    p->rotateX(270.0f);
-                    p->move(i, yOffset + 1, (float)j);
-                    p->setParallaxMapping(false);
-                    p->setNormalMapping(true);
-                }
+            //for (size_t i = 0; i < 2; ++i)
+            //    for (size_t j = 0; j < 2; ++j)
+            //    {
+            //        LPlane* p;
+            //        p = new LPlane(&app, { "Rocks011.jpg" });
+            //        p->rotateX(270.0f);
+            //        p->move(i, yOffset + 1, (float)j);
+            //        p->setParallaxMapping(false);
+            //        p->setNormalMapping(true);
+            //    }
 
             const float off = 1.5f;
             const float startX = 1.0f;
@@ -154,8 +151,11 @@ int main(int argc, char** argv)
             GLfloat camX = sin(app.getCurrentFrame());
             GLfloat camZ = cos(app.getCurrentFrame());
 
-            dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
-                camZ * radius));
+   /*         dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
+                camZ * radius));*/
+
+            if (!app.flag__)
+                pointLight->setPosition(app.getCameraPos());
 
 
             //c->move(cMove.x + radius * camX, c->getMove().y, cMove.z + radius * camZ);
@@ -191,8 +191,8 @@ int main(int argc, char** argv)
             //    test->setReflexSize(test->getReflexSize() * 2);
             //if (app.isPressed(GLFW_KEY_Q))
             //    test->setReflexSize(test->getReflexSize() / 2);
-            //if (app.isPressed(GLFW_KEY_G))
-            //    app.flag__ = !app.flag__;
+            if (app.isPressed(GLFW_KEY_C))
+                app.flag__ = !app.flag__;
             //if (app.isPressed(GLFW_KEY_T))
             //    app.setTesselation(!app.getTesselation());
             //if (app.isPressed(GLFW_KEY_G))
@@ -240,6 +240,15 @@ int main(int argc, char** argv)
     {
         if (app.isCursorEnabled())
         {
+            if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
+            {
+                auto obj = app.getObjectByMousePos(app.getMouseCoords().x,
+                    app.getWindowSize().y - app.getMouseCoords().y);
+                if (!obj.first)
+                    PRINTLN("not an object");
+                else
+                    PRINTLN(obj.first->getObjectType());
+            }
             //if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
             //{
             //    auto coords = app.getMouseCoords();

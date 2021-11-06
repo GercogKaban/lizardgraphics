@@ -13,6 +13,7 @@ namespace LGraphics
 		LCube(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override{}
 		static void drawInstanced();
+		const char* getObjectType() const override { return "LCube"; }
 
 		void setModel(const glm::mat4& model) override;
 		void scale(const float x, const float y, const float z) override;

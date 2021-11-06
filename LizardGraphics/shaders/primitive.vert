@@ -13,16 +13,16 @@ layout (location = 12) in vec4 reflexCoords;
 layout (location = 13) in ivec3 mapping;
 layout (location = 14) in mat3 inverseModel;
 
-layout (location = 0) out vec3 position_;
 layout (location = 1) out vec3 normals_;
-layout (location = 2) out mat4 outModel;
 
 out VS_OUT
 {
 out vec3 Normal;
-out vec2 TexCoords;
+out vec2 BaseTexCoords;
 out vec3 FragPos;
-out vec3 FragPos_;
+out vec3 FragPosTBN;
+out vec3 viewPosTBN;
+out vec2 TexCoordsDiffuse;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec2 TexCoordsReflex;
@@ -30,8 +30,6 @@ out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 viewPos_; 
-out vec2 TexCoords_;
 out vec2 off_;
 out vec2 sz_;
 out vec2 maxParallax;
@@ -41,37 +39,32 @@ out flat ivec3 mapping;
 uniform vec3 viewPos;
 uniform mat4 view;
 uniform mat4 proj;
-uniform mat4 lightSpaceMatrix;
+uniform mat4 lightSpaceMatrix[6];
 
 void main()
 {
-    outModel = model_;
-    vec4 temp = model_ * vec4(position, 1.0);
-    normals_ = normalize(inverseModel * normals); 
-    vs.Normal = normals_;
-    position_ = temp.xyz;
-    vs.eyeSpacePosition = view*temp;
+    vec4 FragPos = model_ * vec4(position, 1.0);
+    vs.Normal = normalize(inverseModel * normals);
+    vs.eyeSpacePosition = view*FragPos;
     vs.mapping[0] = mapping[0];
     vs.mapping[1] = mapping[1];
     vs.mapping[2] = mapping[2];
 
-    vec3 FragPos_ = temp.xyz;
-
-    vs.FragPos = FragPos_;
-    vs.viewPos_ = viewPos;
+    vs.FragPos = FragPos.xyz;
 
     if (vs.mapping[0]!=0 || vs.mapping[1]!=0)
     {
         vec3 Tangent =   normalize(mat3(model_)*tangent);
         vec3 Bitangent = normalize(mat3(model_)*bitangent);
-        Tangent =        normalize(Tangent - dot(Tangent, normals_) * normals_);
-        vs.TBN = transpose(mat3(Tangent, Bitangent, normals_));    
+        vec3 Normal =    normalize(mat3(model_)*normals);
+        Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);
+        vs.TBN = transpose(mat3(Tangent, Bitangent, Normal));    
 
-        vs.FragPos  = vs.TBN * FragPos_;
-        vs.viewPos_ = vs.TBN * viewPos;
+        vs.FragPosTBN  = vs.TBN * vs.FragPos;
+        vs.viewPosTBN  = vs.TBN * viewPos;
     }
 
-        vs.TexCoords = vec2(
+        vs.TexCoordsDiffuse = vec2(
 		    textureCoords.x *diffuseCoords[2] + diffuseCoords[0], 
 		    textureCoords.y *diffuseCoords[3] + diffuseCoords[1]);
 
@@ -99,10 +92,10 @@ void main()
 		    textureCoords.y *reflexCoords[3] + reflexCoords[1]);
         }
 
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos_, 1.0);
+    vec4 FragPosLightSpace = lightSpaceMatrix[0] * vec4(vs.FragPos, 1.0);
     vs.projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
     vs.model = model_;
-    vs.TexCoords_ = textureCoords;
+    vs.BaseTexCoords = textureCoords;
     gl_Position = proj * vs.eyeSpacePosition;
 }

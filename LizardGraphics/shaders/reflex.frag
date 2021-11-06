@@ -10,23 +10,23 @@ struct Fog
 in VS_OUT
 {
 in vec3 Normal;
-in vec2 TexCoords;
+in vec2 BaseTexCoords;
 in vec3 FragPos;
-in vec3 FragPos_;
+in vec3 FragPosTBN;
+in vec3 viewPosTBN;
+in vec2 TexCoordsDiffuse;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
-in vec2 TexCoordsReflex;  
+in vec2 TexCoordsReflex;
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
 in mat4 model;
-in vec3 viewPos_; 
-in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
 in flat ivec3 mapping;
-} vs;
+}  vs;
 
 out vec4 color;
 
@@ -52,7 +52,7 @@ void main()
         }
     }
 
-    color = texture(diffuseMap, vs.TexCoords);
+    color = texture(diffuseMap, vs.TexCoordsDiffuse);
     if(fog.isEnabled)
        color = mix(color, vec4(fog.color, 1.0), getFogFactor(fogCoordinate));
     if (color.a - 0.1 < 0) discard;

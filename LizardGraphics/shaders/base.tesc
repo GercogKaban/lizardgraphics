@@ -12,18 +12,18 @@ uniform float tessellationLevel;
 in VS_OUT
 {
 in vec3 Normal;
-in vec2 TexCoords;
+in vec2 BaseTexCoords;
 in vec3 FragPos;
-in vec3 FragPos_;
+in vec3 FragPosTBN;
+in vec3 viewPosTBN;
+in vec2 TexCoordsDiffuse;
 in vec2 TexCoordsNormal;
-in vec2 TexCoordsParallax;  
-in vec2 TexCoordsReflex;  
+in vec2 TexCoordsParallax;
+in vec2 TexCoordsReflex;
 in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
 in mat4 model;
-in vec3 viewPos_; 
-in vec2 TexCoords_;
 in vec2 off_;
 in vec2 sz_;
 in vec2 maxParallax;
@@ -33,23 +33,23 @@ in flat ivec3 mapping;
 out VS_OUT
 {
 out vec3 Normal;
-out vec2 TexCoords;
+out vec2 BaseTexCoords;
 out vec3 FragPos;
-out vec3 FragPos_;
+out vec3 FragPosTBN;
+out vec3 viewPosTBN;
+out vec2 TexCoordsDiffuse;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
-out vec2 TexCoordsReflex;  
+out vec2 TexCoordsReflex;
 out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
-out vec3 viewPos_; 
-out vec2 TexCoords_;
 out vec2 off_;
 out vec2 sz_;
 out vec2 maxParallax;
 out flat ivec3 mapping;
-} ts_out[];
+}  ts_out[];
  
 struct PnPatch
 {
@@ -85,7 +85,7 @@ void main()
     oNormals[gl_InvocationID]   = normals[gl_InvocationID];
 
     ts_out[gl_InvocationID].Normal = vs[gl_InvocationID].Normal;
-    ts_out[gl_InvocationID].TexCoords = vs[gl_InvocationID].TexCoords;
+    ts_out[gl_InvocationID].TexCoordsDiffuse = vs[gl_InvocationID].TexCoordsDiffuse;
     ts_out[gl_InvocationID].FragPos = vs[gl_InvocationID].FragPos;
     ts_out[gl_InvocationID].TexCoordsNormal = vs[gl_InvocationID].TexCoordsNormal;
     ts_out[gl_InvocationID].TexCoordsParallax = vs[gl_InvocationID].TexCoordsParallax;
@@ -94,8 +94,8 @@ void main()
     ts_out[gl_InvocationID].eyeSpacePosition = vs[gl_InvocationID].eyeSpacePosition;
     ts_out[gl_InvocationID].TBN = vs[gl_InvocationID].TBN;
     ts_out[gl_InvocationID].model = vs[gl_InvocationID].model;
-    ts_out[gl_InvocationID].viewPos_ = vs[gl_InvocationID].viewPos_;
-    ts_out[gl_InvocationID].TexCoords_ = vs[gl_InvocationID].TexCoords_;
+    ts_out[gl_InvocationID].viewPosTBN = vs[gl_InvocationID].viewPosTBN;
+    ts_out[gl_InvocationID].BaseTexCoords = vs[gl_InvocationID].BaseTexCoords;
     ts_out[gl_InvocationID].off_ = vs[gl_InvocationID].off_;
     ts_out[gl_InvocationID].sz_ = vs[gl_InvocationID].sz_;
     ts_out[gl_InvocationID].maxParallax = vs[gl_InvocationID].maxParallax;

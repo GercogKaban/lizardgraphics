@@ -154,18 +154,29 @@ namespace LGraphics
         LOG_CALL
         const auto proj = app->getProjectionMatrix();
         const auto view = app->getViewMatrix();
-        if (app->currentLight)
-                glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 1, GL_FALSE,
-                    glm::value_ptr(app->currentLight->getLightspaceMatrix()));
+        if (app->drawingInShadow)
+            if (app->currentLight)
+                glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 
+                    app->currentLight->getLightspaceMatrix().size(), GL_FALSE,
+                    glm::value_ptr(app->currentLight->getLightspaceMatrix()[0]));
  
+        if (app->drawingPicking)
+        {
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        }
+
         glUniform1f(glGetUniformLocation(shaderProgram, "tessellationLevel"),app->tesselationLevel);
-        if (!app->drawingInShadow)
+        if (!app->drawingInShadow && !app->drawingPicking)
         {
             glUniform1i(glGetUniformLocation(shaderProgram, "drawingReflex"), app->drawingReflex);
             glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), false);
             glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
             glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
-            glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
+            if (dynamic_cast<LPointLight*>(app->currentLight))
+                glUniform1i(glGetUniformLocation(shaderProgram, "shadowCubeMap"), 1);
+            else
+                glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
             glUniform1i(glGetUniformLocation(shaderProgram, "normalMap"), 2);
             glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMap"), 3);
             glUniform1i(glGetUniformLocation(shaderProgram, "reflexMap"), 4);
@@ -275,30 +286,26 @@ namespace LGraphics
             glm::mat4 Proj = app->getProjectionMatrix();//glm::perspective(glm::radians(90.0f), aspect, near_, far_);
 
             const std::array<glm::mat4, 6> faceTransforms = {
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
             (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))),
             (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)))
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
+            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)))
             };
-            //const std::array<glm::mat4, 6> faceTransforms = 
-            //{
-            //(Proj*
-            //    glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0))),
-            //(Proj*
-            //    glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0))),
-            //(Proj*
-            //    glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))),
-            //(Proj*
-            //    glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0,-1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))),
-            //(Proj*
-            //    glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(-1.0, 0.0, 0.0))),
-            //(Proj*
-            //    glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0, 0.0,-1.0), glm::vec3(1.0, 0.0, 0.0)))
-            //};
 
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "faceTransforms"), faceTransforms.size(), GL_FALSE, glm::value_ptr(faceTransforms[0]));
+        }
+
+        else if (!app->drawingPicking)
+        {
+            const auto& currentLight = app->currentLight;
+            if (dynamic_cast<LPointLight*>(currentLight))
+            {
+                glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
+                    currentLight->position.x, currentLight->position.y, currentLight->position.z);
+                glUniform1f(glGetUniformLocation(shaderProgram, "farPlane"), currentLight->farPlane);
+            }
         }
     }
 
