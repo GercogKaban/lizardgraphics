@@ -154,13 +154,20 @@ namespace LGraphics
         LOG_CALL
         const auto proj = app->getProjectionMatrix();
         const auto view = app->getViewMatrix();
-        if (app->currentLight)
+        if (app->drawingInShadow)
+            if (app->currentLight)
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 
                     app->currentLight->getLightspaceMatrix().size(), GL_FALSE,
                     glm::value_ptr(app->currentLight->getLightspaceMatrix()[0]));
  
+        if (app->drawingPicking)
+        {
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        }
+
         glUniform1f(glGetUniformLocation(shaderProgram, "tessellationLevel"),app->tesselationLevel);
-        if (!app->drawingInShadow)
+        if (!app->drawingInShadow && !app->drawingPicking)
         {
             glUniform1i(glGetUniformLocation(shaderProgram, "drawingReflex"), app->drawingReflex);
             glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), false);
@@ -290,7 +297,7 @@ namespace LGraphics
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "faceTransforms"), faceTransforms.size(), GL_FALSE, glm::value_ptr(faceTransforms[0]));
         }
 
-        else
+        else if (!app->drawingPicking)
         {
             const auto& currentLight = app->currentLight;
             if (dynamic_cast<LPointLight*>(currentLight))

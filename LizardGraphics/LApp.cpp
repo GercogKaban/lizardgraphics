@@ -10,6 +10,7 @@
 #include "LCone.h"
 #include "LCylinder.h"
 #include "LTorus.h"
+#include "LPicking.h"
 
 #ifdef WIN32
 #include "CodeGen.h"
@@ -212,16 +213,29 @@ namespace LGraphics
     void LApp::drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position)
     {
         LOG_CALL
-        assert(reflexFBO != UNINITIALIZED);
         drawingReflex = true;
         reflexPos = position;
         glViewport(0, 0, reflexSize, reflexSize);
         glBindFramebuffer(GL_FRAMEBUFFER, reflexFBO);
-        clearColorDepth();
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        clearColorDepth();
         drawScene();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         drawingReflex = false;
+    }
+
+    void LApp::drawSceneForPicking(GLuint fbo, size_t pickingSize, int colorBuffer)
+    {
+        LOG_CALL
+        drawingPicking = true;
+        glViewport(0, 0, info.wndWidth, info.wndHeight);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glDrawBuffer(colorBuffer);
+        clearColorDepth();
+        drawScene();
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        drawingPicking = false;
     }
 
     void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath)
@@ -355,18 +369,21 @@ namespace LGraphics
                 }
                 else if (info.api == L_OPENGL)
                 {
+                    glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
                     // init depth maps
                     for (auto& l : lightsToInit)
                         l->init();
                     lightsToInit.clear();
 
                     initReflex();
+                    if (!picking)
+                        picking = new LPicking(this, std::max(info.wndWidth, info.wndHeight));
+
+                    //glEnable(GL_DEPTH_TEST);
 
                     // рисуем в карту теней
-                    clearColor();
+                    clearColorDepth();
                     drawingInShadow = true;
-
-                    glEnable(GL_DEPTH_TEST);
 
                     FOR(i, 0, lights[L_SPOT_LIGHT].size())
                         drawSceneForLight(lights[L_SPOT_LIGHT][i]);
@@ -377,10 +394,11 @@ namespace LGraphics
                     FOR(i, 0, lights[L_DIRECTIONAL_LIGHT].size())
                         drawSceneForLight(lights[L_DIRECTIONAL_LIGHT][i]);
                     drawingInShadow = false;
-                    glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
                     // рисуем отражения
                     FOR(i, 0, models.size())
                         drawSceneForReflex(models[i]->reflexFBO, models[i]->reflexSize, models[i]->getMiddlePoint());
+
+                    drawSceneForPicking(picking->fbo, picking->size, picking->colorBuffer);
 
                     glViewport(0, 0, info.wndWidth, info.wndHeight);
 
@@ -830,10 +848,26 @@ namespace LGraphics
         userCharacterCallback = func;
     }
 
+    std::pair<LWidget*, LApp::PixelInfo> LApp::getObjectByMousePos(size_t x, size_t y)
+    {
+        auto pixel = readPixel(x, y, picking->fbo, picking->colorBuffer);
+        return std::make_pair(getObjectByPixel(pixel),pixel);
+    }
+
     void LApp::setUserScrollCallback(std::function<void(GLFWwindow* window, double xoffset, double yoffset)> func)
     {
         LOG_CALL
         userScrollCallback = func;
+    }
+
+    LWidget* LApp::getObjectByPixel(const PixelInfo& pixelinfo) const
+    {
+        if (pixelinfo.primitiveNum > 7)
+            return nullptr;
+        if (pixelinfo.primitiveNum <= 6)
+            return primitives[pixelinfo.primitiveNum][pixelinfo.objectID];
+        else
+            return models[pixelinfo.objectID];
     }
 
     void LApp::checkError() const
@@ -886,6 +920,114 @@ namespace LGraphics
         if (info.projection == L_PERSPECTIVE)
             projection = glm::perspective(45.0f, aspect, 0.01f, 1000.0f);
         else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 1000.0f);
+    }
+
+    GLuint LApp::createFramebuffer(const std::vector<LApp::FBOAttach>& attachments, int firstColorBuffer) const
+    {
+        uint32_t fbo;
+        glGenFramebuffers(1, &fbo);
+
+        int colorNum = firstColorBuffer;
+        auto getColorNum = [&]()
+        {
+            int ret;
+            switch (colorNum)
+            {
+            case 0: ret = GL_COLOR_ATTACHMENT0; break;
+            case 1: ret = GL_COLOR_ATTACHMENT1; break;
+            case 2: ret = GL_COLOR_ATTACHMENT2; break;
+            case 3: ret = GL_COLOR_ATTACHMENT3; break;
+            case 4: ret = GL_COLOR_ATTACHMENT4; break;
+            case 5: ret = GL_COLOR_ATTACHMENT5; break;
+            case 6: ret = GL_COLOR_ATTACHMENT6; break;
+            case 7: ret = GL_COLOR_ATTACHMENT7; break;
+            case 8: ret = GL_COLOR_ATTACHMENT8; break;
+            case 9: ret = GL_COLOR_ATTACHMENT9; break;
+            case 10: ret = GL_COLOR_ATTACHMENT10; break;
+            case 11: ret = GL_COLOR_ATTACHMENT11; break;
+            case 12: ret = GL_COLOR_ATTACHMENT12; break;
+            case 13: ret = GL_COLOR_ATTACHMENT13; break;
+            case 14: ret = GL_COLOR_ATTACHMENT14; break;
+            case 15: ret = GL_COLOR_ATTACHMENT15; break;
+            default: throw std::runtime_error("error, too many color attachments!");
+            }
+            colorNum++;
+            return ret;
+        };
+
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (const auto& a : attachments)
+        {
+            auto attachmentType = a.componentType == GL_DEPTH_COMPONENT ? GL_DEPTH_ATTACHMENT : getColorNum();
+            if (a.textureType == GL_TEXTURE_2D)
+                glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, a.attachmentId, 0);
+            else
+                glFramebufferTexture(GL_FRAMEBUFFER, attachmentType, a.attachmentId, 0);
+        }
+
+        if (!colorNum)
+            glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        checkFramebufferError();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        return fbo;
+    }
+
+    LApp::FBOAttach LApp::createAttachment(const LApp::FBOAttach& attachment) const
+    {
+        FBOAttach out = attachment;
+        glGenTextures(1, &out.attachmentId);
+
+
+        auto getFormat = [&](int component)
+        {
+            switch (component)
+            {
+            case GL_RGBA: return GL_RGBA;
+            case GL_DEPTH_COMPONENT: return GL_DEPTH_COMPONENT;
+            case GL_RGB32UI: return GL_RGB_INTEGER;
+            default: throw std::runtime_error("error, wrong component");
+            }
+        };
+        
+        auto format = getFormat(out.componentType);
+        if (out.textureType == GL_TEXTURE_CUBE_MAP)
+        {
+            glBindTexture(GL_TEXTURE_CUBE_MAP, out.attachmentId);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            for (size_t face = 0; face < 6; ++face)
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, out.componentType, out.attachmentSize,
+                    out.attachmentSize, 0, format, out.valuesType, NULL);
+        }
+
+        else if (out.textureType == GL_TEXTURE_2D)
+        {
+            glBindTexture(GL_TEXTURE_2D, out.attachmentId);
+            glTexImage2D(GL_TEXTURE_2D, 0, out.componentType, out.attachmentSize, out.attachmentSize, 0,
+                format, out.valuesType, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        }
+        checkError();
+        return out;
+    }
+
+    LApp::PixelInfo LApp::readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glReadBuffer(colorBuffer);
+        PixelInfo Pixel;
+        glReadPixels(x, y, 1, 1, GL_RGB_INTEGER, GL_UNSIGNED_INT, &Pixel);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        return Pixel;
     }
 
     void LApp::initErrorRecovering()
@@ -1159,8 +1301,8 @@ namespace LGraphics
 
         int maxLocations;
         glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxLocations);
-        if (maxLocations < 17)
-            throw std::runtime_error("error: \"Sorry, your hardware doesn't supporting Lizard Graphics :(");
+        if (maxLocations < 18)
+            throw std::runtime_error("error: \"Sorry, your GPU doesn't supporting Lizard Graphics :(");
 
         if (info.vsync == L_TRUE)
            glfwSwapInterval(1);
@@ -1223,6 +1365,16 @@ namespace LGraphics
                 , (std::string(LIB_PATH) + "//shaders//reflex_model.vert").data()
                 , (std::string(LIB_PATH) + "//shaders//reflex_model.frag").data(), "", "", 
                   (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
+
+            pickingPrimitiveShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//pickingPrimitive.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//picking.frag").data(), "", "",
+                ""));
+
+            pickingModelShader.reset(new LShaders::OpenGLShader(this
+                , (std::string(LIB_PATH) + "//shaders//pickingModel.vert").data()
+                , (std::string(LIB_PATH) + "//shaders//picking.frag").data(), "", "",
+                ""));
         }
         glViewport(0, 0, info.wndWidth, info.wndHeight);
     }
@@ -1465,6 +1617,8 @@ namespace LGraphics
         //delete standartRectBuffer;
         //delete cube;
         //delete standartCubeBuffer;
+        if (picking)
+            delete picking;
     }
 
     void LApp::releaseGlfwResources()
@@ -1544,39 +1698,21 @@ namespace LGraphics
                 const size_t reflexSize = m->getReflexSize();
                 assert(reflexSize);
 
-                glGenTextures(1, &m->depthMap);
-                glBindTexture(GL_TEXTURE_CUBE_MAP, m->depthMap);
+                LApp::FBOAttach depthAttachment, colorAttachment;
+                depthAttachment.attachmentSize = reflexSize;
+                depthAttachment.componentType = GL_DEPTH_COMPONENT;
+                depthAttachment.textureType = GL_TEXTURE_CUBE_MAP;
+                depthAttachment.valuesType = GL_FLOAT;
 
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                colorAttachment = depthAttachment;
+                colorAttachment.componentType = GL_RGBA;
 
-                for (size_t face = 0; face < 6; ++face)
-                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_DEPTH_COMPONENT, reflexSize, reflexSize, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+                const auto depthAttach = createAttachment(depthAttachment);
+                const auto colorAttach = createAttachment(colorAttachment);
 
-                glGenTextures(1, &m->reflexCubeMap);
-                glBindTexture(GL_TEXTURE_CUBE_MAP, m->reflexCubeMap);
-
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                
-                for (size_t face = 0; face < 6; ++face)
-                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, reflexSize, reflexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-                glGenFramebuffers(1, &m->reflexFBO);
-                glBindFramebuffer(GL_FRAMEBUFFER, m->reflexFBO);
-                glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m->reflexCubeMap, 0);
-                glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m->depthMap, 0);
-
-                glDrawBuffer(GL_COLOR_ATTACHMENT0);
-                glReadBuffer(GL_NONE);
-                checkFramebufferError();
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                m->depthMap = depthAttach.attachmentId;
+                m->reflexCubeMap = colorAttach.attachmentId;
+                m->reflexFBO = createFramebuffer({ depthAttach,colorAttach });
             }
         }
     }

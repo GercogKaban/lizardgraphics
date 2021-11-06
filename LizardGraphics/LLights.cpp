@@ -70,22 +70,16 @@ void LGraphics::LLight::init()
 {
 	shadowWidth = app->info.shadowsWidth;
 	shadowHeight = app->info.shadowsHeight;
-	glGenFramebuffers(1, &depthMapFBO);
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//float borderColor_[] = { app->borderColor.x,app->borderColor.y,app->borderColor.z,app->borderColor.w };
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor_);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	app->checkFramebufferError();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	LApp::FBOAttach attachment;
+	attachment.attachmentSize = app->info.shadowsWidth;
+	attachment.componentType = GL_DEPTH_COMPONENT;
+	attachment.textureType = GL_TEXTURE_2D;
+	attachment.valuesType = GL_FLOAT;
+
+	auto attach = app->createAttachment(attachment);
+	depthMap = attach.attachmentId;
+	depthMapFBO = app->createFramebuffer({ attach });
 }
 
 void LGraphics::LSpotLight::setLightSpaceMatrix()
@@ -189,26 +183,16 @@ void LGraphics::LPointLight::init()
 {
 	shadowWidth = app->info.shadowsWidth;
 	shadowHeight = app->info.shadowsHeight;
-	glGenFramebuffers(1, &depthMapFBO);
-	glGenTextures(1, &depthMap);
 
-	glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
-	for (unsigned int i = 0; i < 6; ++i)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-			shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	LApp::FBOAttach attachment;
+	attachment.attachmentSize = app->info.shadowsWidth;
+	attachment.componentType = GL_DEPTH_COMPONENT;
+	attachment.textureType = GL_TEXTURE_CUBE_MAP;
+	attachment.valuesType = GL_FLOAT;
 
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthMap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	app->checkFramebufferError();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	auto attach = app->createAttachment(attachment);
+	depthMap = attach.attachmentId;
+	depthMapFBO = app->createFramebuffer({ attach });
 }
 
 void LGraphics::LDirectionalLight::setLightSpaceMatrix()

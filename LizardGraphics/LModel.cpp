@@ -166,9 +166,14 @@ void LGraphics::LModel::draw()
     }
     else if (app->drawingReflex)
         shader = ((LShaders::OpenGLShader*)app->reflexModelShader.get());
+    else if (app->drawingPicking)
+        shader = ((LShaders::OpenGLShader*)app->pickingModelShader.get());
+
     GLuint shaderProgram = shader->getShaderProgram();
     shader->use();
     setGlobalUniforms(shaderProgram);
+
+    // тут нужна оптимизация
     model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(glGetUniformLocation(shaderProgram, "playAnimation"), playAnimation_);
@@ -176,15 +181,17 @@ void LGraphics::LModel::draw()
         animator.UpdateAnimation(app->getDeltaTime());
 
     const auto& transforms = animator.GetFinalBoneMatrices();
-    if (transforms.size())
+    if (transforms.size() && !app->drawingPicking)
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "finalBonesTrans"), transforms.size(), GL_FALSE,
             glm::value_ptr(transforms[0]));
+    if (app->drawingPicking)
+        glUniform2i(glGetUniformLocation(shaderProgram, "ids"), id,L_MODEL);
 
     FOR(i, 0, meshes.size())
     {
         if (meshes[i].image)
         {
-            if (!app->drawingInShadow)
+            if (!app->drawingInShadow && !app->drawingPicking)
             {
 #ifdef MEGATEXTURE_LG
                 auto& diffuse = meshes[i].image->getDiffuse();

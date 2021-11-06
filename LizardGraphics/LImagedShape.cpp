@@ -98,6 +98,9 @@ namespace LGraphics
         }
         else if (app->drawingReflex)
             shader = ((LShaders::OpenGLShader*)app->reflexPrimitiveShader.get());
+        else if (app->drawingPicking)
+            shader = ((LShaders::OpenGLShader*)app->pickingPrimitiveShader.get());
+
         GLuint shaderProgram = shader->getShaderProgram();
         shader->use();
         setGlobalUniforms(shaderProgram);
@@ -155,6 +158,7 @@ namespace LGraphics
         obj.mapping = { app->primitives[primitive][id]->getNormalMapping(),app->primitives[primitive][id]->getParallaxMapping(),
         app->primitives[primitive][id]->getReflexMapping() };
         obj.inverseModel = glm::mat3(glm::transpose(glm::inverse(obj.model)));
+        obj.ids = { id,primitive };
     }
 
     void LGraphics::LImagedShape::resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms> uniforms)
@@ -194,6 +198,8 @@ namespace LGraphics
         glEnableVertexAttribArray(16);
         glVertexAttribPointer(16, 3, GL_FLOAT, GL_FALSE, sizeof(LWidget::PrimitiveUniforms),
             (void*)(offsetof(LWidget::PrimitiveUniforms, inverseModel) + 2 * vec3Size));
+        glVertexAttribIPointer(17, 2, GL_INT, sizeof(LWidget::PrimitiveUniforms), (void*)offsetof(LWidget::PrimitiveUniforms, ids));
+        glEnableVertexAttribArray(17);
 
         glVertexAttribDivisor(5, 1);
         glVertexAttribDivisor(6, 1);
@@ -207,6 +213,7 @@ namespace LGraphics
         glVertexAttribDivisor(14, 1);
         glVertexAttribDivisor(15, 1);
         glVertexAttribDivisor(16, 1);
+        glVertexAttribDivisor(17, 1);
         glBindVertexArray(0);
         app->checkError();
         glBindBuffer(GL_ARRAY_BUFFER, 0);

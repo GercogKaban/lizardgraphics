@@ -240,6 +240,15 @@ int main(int argc, char** argv)
     {
         if (app.isCursorEnabled())
         {
+            if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
+            {
+                auto obj = app.getObjectByMousePos(app.getMouseCoords().x,
+                    app.getWindowSize().y - app.getMouseCoords().y);
+                if (!obj.first)
+                    PRINTLN("not an object");
+                else
+                    PRINTLN(obj.first->getObjectType());
+            }
             //if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
             //{
             //    auto coords = app.getMouseCoords();

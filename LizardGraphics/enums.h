@@ -30,6 +30,7 @@ namespace LGraphics
         L_CONE,
         L_TORUS,
         L_CYLINDER,
+        L_MODEL,
     };
 
     enum LLights : uint8_t
