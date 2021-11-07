@@ -177,6 +177,10 @@ void LGraphics::LModel::draw()
     model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(glGetUniformLocation(shaderProgram, "playAnimation"), playAnimation_);
+    //if (app->currentLight)
+    //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix[0]"),
+    //        1, GL_FALSE, glm::value_ptr(app->currentLight->getLightspaceMatrix()[0]));
+
     if (playAnimation_ && app->drawingInShadow)
         animator.UpdateAnimation(app->getDeltaTime());
 
@@ -220,23 +224,29 @@ void LGraphics::LModel::draw()
 
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
                 if (app->currentLight)
                 {
-                    glActiveTexture(GL_TEXTURE1);
                     if (dynamic_cast<LPointLight*>(app->currentLight))
+                    {
+                        glActiveTexture(GL_TEXTURE5);
                         glBindTexture(GL_TEXTURE_CUBE_MAP, app->currentDepthMap);
+                    }
                     else
+                    {
+                        glActiveTexture(GL_TEXTURE4);
                         glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+                    }
                 }
-                glActiveTexture(GL_TEXTURE2);
-                glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
-                glActiveTexture(GL_TEXTURE3);
-                glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
-                glActiveTexture(GL_TEXTURE4);
-                glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
+
                 if (!app->drawingReflex)
                 {
-                    glActiveTexture(GL_TEXTURE5);
+                    glActiveTexture(GL_TEXTURE6);
                     glBindTexture(GL_TEXTURE_CUBE_MAP, reflexCubeMap);
                 }
 #endif
@@ -298,8 +308,10 @@ void LGraphics::LModel::init()
     rotateX(180.0f);
     setShader(app->modelShader.get());
     app->toCreateM.push(this);
-    if (animations.size())
-        animator.PlayAnimation(animations.begin()->second);
+    if (getReflexMapping())
+        app->modelReflexesToInit.push_back(this);
+    //if (animations.size())
+    //    animator.PlayAnimation(animations.begin()->second);
     //reflexWidth = app->getWindowSize().x;
     //reflexHeight = app->getWindowSize().y;
 }

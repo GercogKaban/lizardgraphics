@@ -4,7 +4,7 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normals;
 layout (location = 2) in vec2 textureCoords;
 layout (location = 5) in mat4 model_;
-layout (location = 9)  in vec4 diffuseCoords;
+layout (location = 9) in vec4 diffuseCoords;
 
 layout (location = 0) out vec4 position_;
 

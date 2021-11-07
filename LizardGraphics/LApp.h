@@ -94,12 +94,14 @@ namespace LGraphics
 
     struct LAppInitialCreateInfo
     {
-        RenderingAPI api = L_VULKAN;
+        RenderingAPI api = L_OPENGL;
+        RenderingTypes renderingType = FORWARD;
         size_t wndWidth = 0, wndHeight = 0;
         size_t sleepThread = 0;
         LStates vsync = L_FALSE;
         LStates saveObjects = L_FALSE;
         LStates loadObjects = L_FALSE;
+        LStates picking = L_FALSE;
         LStates lighting = L_FALSE;
         uint32_t anisotropy = 16;
         uint32_t MSAA = 0;
@@ -181,9 +183,11 @@ namespace LGraphics
         void switchRendererTo(RenderingAPI api);
         void setAfterSwitchingFunc(std::function<void()> func) { afterSwitchingFunc = func; }
 
-        static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
-            std::cout << "[OpenGL Error](" << type << ") " << message << std::endl;
+        static void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) 
+        {
+            PRINTLN("[OpenGL Error](", std::to_string(type), ") " , message ,'\n');
         }
+
         GLuint currentDepthMap;
 
         bool parallaxSelfShading = true;
@@ -198,14 +202,21 @@ namespace LGraphics
         void updateBuffers();
         void updateTextures();
 
-        void drawScene();
-        void drawSceneForLight(LLight* l);
-        void drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position);
-        void drawSceneForPicking(GLuint pickingFBO, size_t pickingSize, int colorBuffer);
+        void renderSceneObjects();
+
+        void drawPass();
+        void shadowPass(LLight* l);
+        void reflexPass(GLuint reflexFBO, size_t reflexSize, glm::vec3 position);
+        void pickingPass(GLuint pickingFBO, size_t pickingSize, int colorBuffer);
+
+        void initForwardRenderingShaders();
+        void initDefferedRenderingShaders();
 
         void clearColor();
         void clearDepth();
         void clearColorDepth();
+
+        static void errorCallback(int error, const char* description);
 
         bool isDirectoryChanged(const std::string& path, const std::string& cacheFile) const;
         void saveDirectoryChangedTime(const std::string& path, const std::string& filePath) const;
@@ -263,7 +274,7 @@ namespace LGraphics
             bool isEnabled = false;
         }fog;
 
-        void initReflex();
+        void initReflex(LModel* m);
 
         /*!
         @brief Возвращает размеры окна (в пикселях).
@@ -438,6 +449,7 @@ namespace LGraphics
         glm::vec3 prevCameraFront = glm::vec3(0.0f);
 
         std::deque<LLight*> lightsToInit;
+        std::deque<LModel*> modelReflexesToInit;
 
         void setMatrices();
 

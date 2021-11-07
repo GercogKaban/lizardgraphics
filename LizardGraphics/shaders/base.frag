@@ -81,13 +81,13 @@ vec3 Normal_;
 uniform vec3 viewPos;
 uniform mat4 view;
 
-uniform samplerCube shadowCubeMap;
 uniform sampler2D diffuseMap;
-uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
 uniform sampler2D parallaxMap;
 uniform sampler2D reflexMap;
+uniform sampler2D shadowMap;
 
+uniform samplerCube shadowCubeMap;
 uniform samplerCube environment;
 
 uniform int selfShading;

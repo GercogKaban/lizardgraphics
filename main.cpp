@@ -24,6 +24,7 @@ int main(int argc, char** argv)
 
     info.api = L_OPENGL;
     info.projection = L_PERSPECTIVE;
+    info.picking = L_TRUE;
     info.saveObjects = L_FALSE;
     info.loadObjects = L_FALSE;
     info.lighting = L_TRUE;
@@ -151,8 +152,8 @@ int main(int argc, char** argv)
             GLfloat camX = sin(app.getCurrentFrame());
             GLfloat camZ = cos(app.getCurrentFrame());
 
-   /*         dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
-                camZ * radius));*/
+            //dirLight->setPosition(glm::vec3(camX * radius, dirLight->getPosition().y,
+            //    camZ * radius));
 
             if (!app.flag__)
                 pointLight->setPosition(app.getCameraPos());
@@ -240,15 +241,6 @@ int main(int argc, char** argv)
     {
         if (app.isCursorEnabled())
         {
-            if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
-            {
-                auto obj = app.getObjectByMousePos(app.getMouseCoords().x,
-                    app.getWindowSize().y - app.getMouseCoords().y);
-                if (!obj.first)
-                    PRINTLN("not an object");
-                else
-                    PRINTLN(obj.first->getObjectType());
-            }
             //if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
             //{
             //    auto coords = app.getMouseCoords();

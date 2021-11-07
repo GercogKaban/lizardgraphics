@@ -97,4 +97,10 @@ namespace LGraphics
         NORMAL,
     };
 
+    enum RenderingTypes
+    {
+        FORWARD,
+        DEFERRED,
+    };
+
 }

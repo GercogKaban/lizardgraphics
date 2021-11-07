@@ -138,6 +138,76 @@ namespace LGraphics
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
+    void LApp::errorCallback(int error, const char* description)
+    {
+        PRINTLN("error: ",std::to_string(error), ", ", description);
+    }
+
+    void LApp::initForwardRenderingShaders()
+    {
+        openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//base.frag").data(),
+            (std::string(LIB_PATH) + "//shaders//base.tesc").data(),
+            (std::string(LIB_PATH) + "//shaders//base.tese").data()
+            , ""));
+
+        openGLLightShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "", "", ""));
+
+        modelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//model.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "", "", ""));
+
+        skyBoxShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//skybox.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(), "", "", ""));
+
+        shadowMapShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//shadowMap.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(), "", "", ""));
+
+        shadowMapModelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(), "", "", ""));
+
+        shadowCubeMapShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.frag").data(), "", "",
+            (std::string(LIB_PATH) + "//shaders//shadowCubeMap.geom").data()));
+
+        shadowCubeMapModelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//shadowCubeMapModel.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.frag").data(), "", "",
+            (std::string(LIB_PATH) + "//shaders//shadowCubeMap.geom").data()));
+
+        reflexPrimitiveShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//reflex_primitive.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//reflex.frag").data(), "", "",
+            (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
+
+        reflexModelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//reflex_model.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//reflex_model.frag").data(), "", "",
+            (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
+
+        pickingPrimitiveShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//pickingPrimitive.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//picking.frag").data(), "", "",
+            ""));
+
+        pickingModelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//pickingModel.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//picking.frag").data(), "", "",
+            ""));
+    }
+
+    void LApp::initDefferedRenderingShaders()
+    {
+
+    }
+
     std::string LApp::getRealDisplacementPath() const
     {
         LOG_CALL
@@ -169,7 +239,7 @@ namespace LGraphics
             info.resourceDir.generic_string() + "/models/" + qualityDirectories.find(info.texturesQuality)->second + '/';
     }
 
-    void LApp::drawScene()
+    void LApp::renderSceneObjects()
     {
         LOG_CALL
         LCube::drawInstanced();
@@ -191,7 +261,14 @@ namespace LGraphics
         }
     }
 
-    void LApp::drawSceneForLight(LLight* l)
+    void LApp::drawPass()
+    {
+        glViewport(0, 0, info.wndWidth, info.wndHeight);
+        clearColorDepth();
+        renderSceneObjects();
+    }
+
+    void LApp::shadowPass(LLight* l)
     {
         LOG_CALL
         if (l->calculateShadow)
@@ -203,14 +280,14 @@ namespace LGraphics
             glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
             clearDepth();
             glCullFace(GL_FRONT);
-            drawScene();
+            renderSceneObjects();
             glCullFace(GL_BACK);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
     }
 
 
-    void LApp::drawSceneForReflex(GLuint reflexFBO, size_t reflexSize, glm::vec3 position)
+    void LApp::reflexPass(GLuint reflexFBO, size_t reflexSize, glm::vec3 position)
     {
         LOG_CALL
         drawingReflex = true;
@@ -219,12 +296,12 @@ namespace LGraphics
         glBindFramebuffer(GL_FRAMEBUFFER, reflexFBO);
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
         clearColorDepth();
-        drawScene();
+        renderSceneObjects();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         drawingReflex = false;
     }
 
-    void LApp::drawSceneForPicking(GLuint fbo, size_t pickingSize, int colorBuffer)
+    void LApp::pickingPass(GLuint fbo, size_t pickingSize, int colorBuffer)
     {
         LOG_CALL
         drawingPicking = true;
@@ -232,7 +309,7 @@ namespace LGraphics
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glDrawBuffer(colorBuffer);
         clearColorDepth();
-        drawScene();
+        renderSceneObjects();
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         drawingPicking = false;
@@ -370,41 +447,36 @@ namespace LGraphics
                 else if (info.api == L_OPENGL)
                 {
                     glfwGetFramebufferSize(window_, (int*)&info.wndWidth, (int*)&info.wndHeight);
-                    // init depth maps
+
+                    // initing depth maps
                     for (auto& l : lightsToInit)
                         l->init();
                     lightsToInit.clear();
 
-                    initReflex();
-                    if (!picking)
-                        picking = new LPicking(this, std::max(info.wndWidth, info.wndHeight));
+                    for (auto& m : modelReflexesToInit)
+                        initReflex(m);
+                    modelReflexesToInit.clear();
 
-                    //glEnable(GL_DEPTH_TEST);
-
-                    // рисуем в карту теней
-                    clearColorDepth();
                     drawingInShadow = true;
 
                     FOR(i, 0, lights[L_SPOT_LIGHT].size())
-                        drawSceneForLight(lights[L_SPOT_LIGHT][i]);
+                        shadowPass(lights[L_SPOT_LIGHT][i]);
 
                     FOR(i, 0, lights[L_POINT_LIGHT].size())
-                        drawSceneForLight(lights[L_POINT_LIGHT][i]);
+                        shadowPass(lights[L_POINT_LIGHT][i]);
 
                     FOR(i, 0, lights[L_DIRECTIONAL_LIGHT].size())
-                        drawSceneForLight(lights[L_DIRECTIONAL_LIGHT][i]);
+                        shadowPass(lights[L_DIRECTIONAL_LIGHT][i]);
+
                     drawingInShadow = false;
-                    // рисуем отражения
+
                     FOR(i, 0, models.size())
-                        drawSceneForReflex(models[i]->reflexFBO, models[i]->reflexSize, models[i]->getMiddlePoint());
+                        reflexPass(models[i]->reflexFBO, models[i]->reflexSize, models[i]->getMiddlePoint());
 
-                    drawSceneForPicking(picking->fbo, picking->size, picking->colorBuffer);
+                    if (info.picking == L_TRUE)
+                        pickingPass(picking->fbo, picking->size, picking->colorBuffer);
 
-                    glViewport(0, 0, info.wndWidth, info.wndHeight);
-
-                    // рисуем сцену
-                    clearColorDepth();
-                    drawScene();
+                    drawPass();
                     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
                 }
                 afterDrawingFunc();
@@ -924,6 +996,7 @@ namespace LGraphics
 
     GLuint LApp::createFramebuffer(const std::vector<LApp::FBOAttach>& attachments, int firstColorBuffer) const
     {
+        LOG_CALL
         uint32_t fbo;
         glGenFramebuffers(1, &fbo);
 
@@ -975,9 +1048,9 @@ namespace LGraphics
 
     LApp::FBOAttach LApp::createAttachment(const LApp::FBOAttach& attachment) const
     {
+        LOG_CALL
         FBOAttach out = attachment;
         glGenTextures(1, &out.attachmentId);
-
 
         auto getFormat = [&](int component)
         {
@@ -986,6 +1059,7 @@ namespace LGraphics
             case GL_RGBA: return GL_RGBA;
             case GL_DEPTH_COMPONENT: return GL_DEPTH_COMPONENT;
             case GL_RGB32UI: return GL_RGB_INTEGER;
+            case GL_RGB16F: return GL_RGB;
             default: throw std::runtime_error("error, wrong component");
             }
         };
@@ -1015,6 +1089,10 @@ namespace LGraphics
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         }
+
+        else
+            throw std::runtime_error("error, wrong texture type!");
+
         checkError();
         return out;
     }
@@ -1068,6 +1146,11 @@ namespace LGraphics
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
 
+        if (info.renderingType == FORWARD)
+            initForwardRenderingShaders();
+        else if (info.renderingType == DEFERRED)
+            initDefferedRenderingShaders();
+
         qualityDirectories.insert(std::make_pair(LOW, "low"));
         qualityDirectories.insert(std::make_pair(MEDIUM, "medium"));
         qualityDirectories.insert(std::make_pair(HIGH, "high"));
@@ -1076,17 +1159,6 @@ namespace LGraphics
             info.resourceDir = std::filesystem::current_path();
 
         LResourceManager::textures.insert(std::make_pair("dummy", TexturesData{ new TexturesData::OGLImageData }));
-        //lwRectPool.setCreationCallback([&]()
-        //{
-        //    auto lwRect = new LPlane(this);
-        //    removeObject(lwRect);
-        //    return lwRect;
-        //});
-
-        //lwRectPool.setReleaseFunction([&]()
-        //{
-        //});
-
         setMatrices();
 
         if (info.loadObjects)
@@ -1203,6 +1275,8 @@ namespace LGraphics
         torus = new LModel(this, std::string(LIB_PATH) + "/primitives/torus.obj", false, 0);
 
         setCursorEnabling(!isCursorEnabled());
+        if (info.picking == L_TRUE)
+            picking = new LPicking(this, std::max(info.wndWidth, info.wndHeight));
     }
 
     void LApp::initRenderer()
@@ -1251,9 +1325,12 @@ namespace LGraphics
     {
         LOG_CALL
         glfwInit();
-        //glfwSetErrorCallback(glfw_error_callback);
         if (!glfwInit())
             throw std::runtime_error("can't init glfw.");
+
+#ifndef NDEBUG
+        glfwSetErrorCallback(errorCallback);
+#endif
 
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if (!info.wndHeight || !info.wndWidth)
@@ -1297,6 +1374,10 @@ namespace LGraphics
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glEnable(GL_MULTISAMPLE);
+#ifndef NDEBUG
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(MessageCallback, 0);
+#endif
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         int maxLocations;
@@ -1316,66 +1397,6 @@ namespace LGraphics
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         customLoadingScreen();
-
-        if (info.api == L_OPENGL)
-        {
-            openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
-                 ,(std::string(LIB_PATH)+"//shaders//primitive.vert").data()
-                ,(std::string(LIB_PATH) + "//shaders//base.frag").data(),
-                (std::string(LIB_PATH) + "//shaders//base.tesc").data(),
-                (std::string(LIB_PATH) + "//shaders//base.tese").data()
-            ,""));
-
-            openGLLightShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//base.frag").data(),"","", ""));
-
-            modelShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//model.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "","", ""));
-
-            skyBoxShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//skybox.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(),"","", ""));
-
-            shadowMapShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),"","", ""));
-
-            shadowMapModelShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//shadowMapModel.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowMap.frag").data(),"", "", ""));
-
-            shadowCubeMapShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.frag").data(), "", "", 
-                  (std::string(LIB_PATH) + "//shaders//shadowCubeMap.geom").data()));
-
-            shadowCubeMapModelShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//shadowCubeMapModel.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//shadowCubeMap.frag").data(), "", "", 
-                  (std::string(LIB_PATH) +   "//shaders//shadowCubeMap.geom").data()));
-
-            reflexPrimitiveShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//reflex_primitive.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//reflex.frag").data(), "", "", 
-                  (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
-
-            reflexModelShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//reflex_model.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//reflex_model.frag").data(), "", "", 
-                  (std::string(LIB_PATH) + "//shaders//reflex.geom").data()));
-
-            pickingPrimitiveShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//pickingPrimitive.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//picking.frag").data(), "", "",
-                ""));
-
-            pickingModelShader.reset(new LShaders::OpenGLShader(this
-                , (std::string(LIB_PATH) + "//shaders//pickingModel.vert").data()
-                , (std::string(LIB_PATH) + "//shaders//picking.frag").data(), "", "",
-                ""));
-        }
         glViewport(0, 0, info.wndWidth, info.wndHeight);
     }
 
@@ -1687,12 +1708,9 @@ namespace LGraphics
         userScrollCallback(window, xoffset, yoffset);
     }
 
-    void LApp::initReflex()
+    void LApp::initReflex(LModel* m)
     {
         LOG_CALL
-        // нужно добавить вектор toInit
-        for (const auto& m : models)
-        {
             if (m->reflexCubeMap == UNINITIALIZED)
             {
                 const size_t reflexSize = m->getReflexSize();
@@ -1714,7 +1732,6 @@ namespace LGraphics
                 m->reflexCubeMap = colorAttach.attachmentId;
                 m->reflexFBO = createFramebuffer({ depthAttach,colorAttach });
             }
-        }
     }
 
 

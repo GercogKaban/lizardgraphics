@@ -154,7 +154,7 @@ namespace LGraphics
         LOG_CALL
         const auto proj = app->getProjectionMatrix();
         const auto view = app->getViewMatrix();
-        if (app->drawingInShadow)
+        //if (app->drawingInShadow)
             if (app->currentLight)
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix"), 
                     app->currentLight->getLightspaceMatrix().size(), GL_FALSE,
@@ -172,15 +172,14 @@ namespace LGraphics
             glUniform1i(glGetUniformLocation(shaderProgram, "drawingReflex"), app->drawingReflex);
             glUniform1i(glGetUniformLocation(shaderProgram, "selfShading"), false);
             glUniform2i(glGetUniformLocation(shaderProgram, "screenSize"), (int)app->info.wndWidth, (int)app->info.wndHeight);
+
             glUniform1i(glGetUniformLocation(shaderProgram, "diffuseMap"), 0);
-            if (dynamic_cast<LPointLight*>(app->currentLight))
-                glUniform1i(glGetUniformLocation(shaderProgram, "shadowCubeMap"), 1);
-            else
-                glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 1);
-            glUniform1i(glGetUniformLocation(shaderProgram, "normalMap"), 2);
-            glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMap"), 3);
-            glUniform1i(glGetUniformLocation(shaderProgram, "reflexMap"), 4);
-            glUniform1i(glGetUniformLocation(shaderProgram, "environment"), 5);
+            glUniform1i(glGetUniformLocation(shaderProgram, "normalMap"), 1);
+            glUniform1i(glGetUniformLocation(shaderProgram, "parallaxMap"), 2);
+            glUniform1i(glGetUniformLocation(shaderProgram, "reflexMap"), 3);
+            glUniform1i(glGetUniformLocation(shaderProgram, "shadowMap"), 4);
+            glUniform1i(glGetUniformLocation(shaderProgram, "shadowCubeMap"), 5);
+            glUniform1i(glGetUniformLocation(shaderProgram, "environment"), 6);
 
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
@@ -283,15 +282,15 @@ namespace LGraphics
             float aspect = (float)1024 / (float)1024;
             float near_ = 0.01f;
             float far_ = 100.0f;
-            glm::mat4 Proj = app->getProjectionMatrix();//glm::perspective(glm::radians(90.0f), aspect, near_, far_);
+            //glm::perspective(glm::radians(90.0f), aspect, near_, far_);
 
             const std::array<glm::mat4, 6> faceTransforms = {
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
-            (Proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)))
+            (proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
+            (proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
+            (proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))),
+            (proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f))),
+            (proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f))),
+            (proj* glm::lookAt(app->reflexPos, app->reflexPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)))
             };
 
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "faceTransforms"), faceTransforms.size(), GL_FALSE, glm::value_ptr(faceTransforms[0]));

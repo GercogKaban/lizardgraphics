@@ -109,20 +109,23 @@ namespace LGraphics
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.id);
-            if (app->currentLight)
-            {
-                glActiveTexture(GL_TEXTURE1);
-                if (dynamic_cast<LPointLight*>(app->currentLight))
-                    glBindTexture(GL_TEXTURE_CUBE_MAP, app->currentDepthMap);
-                else
-                    glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
-            }
-            glActiveTexture(GL_TEXTURE2);
+            glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idNormal);
-            glActiveTexture(GL_TEXTURE3);
+            glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idParallax);
-            glActiveTexture(GL_TEXTURE4);
+            glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, app->megatexture.idReflex);
+
+            if (dynamic_cast<LPointLight*>(app->currentLight))
+            {
+                glActiveTexture(GL_TEXTURE5);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, app->currentDepthMap);
+            }
+            else
+            {
+                glActiveTexture(GL_TEXTURE4);
+                glBindTexture(GL_TEXTURE_2D, app->currentDepthMap);
+            }
         }
 
         glBindVertexArray(vao);

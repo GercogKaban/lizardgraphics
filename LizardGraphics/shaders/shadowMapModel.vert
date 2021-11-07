@@ -10,11 +10,15 @@ uniform mat4 model_;
 uniform mat4 lightSpaceMatrix;
 uniform mat4 finalBonesTrans[MAX_BONES];
 
+uniform bool playAnimation;
+
 void main()
 {
     vec4 totalPosition = vec4(0.0f);
-    for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
+    if (playAnimation == true)
     {
+        for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
+        {
         if(boneIds[i] == -1) 
             continue;
         if(boneIds[i] >= MAX_BONES) 
@@ -23,7 +27,10 @@ void main()
             break;
         }
         totalPosition += finalBonesTrans[boneIds[i]] * vec4(position,1.0f) * weights[i];
+        }
     }
+    else
+       totalPosition = vec4(position,1.0f);
 
     gl_Position = lightSpaceMatrix * model_ * vec4(vec3(totalPosition), 1.0);
 }
