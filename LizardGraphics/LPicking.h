@@ -5,12 +5,12 @@ namespace LGraphics
 	{
 		friend LApp;
 	public:
-		LPicking(LApp* app, size_t size);
+		LPicking(LApp* app, size_t width, size_t height);
 		~LPicking();
 	private:
 
 		int colorBuffer;
 		uint32_t depthText, colorText, fbo;
-		size_t size;
+		size_t width,height;
 	};
 }

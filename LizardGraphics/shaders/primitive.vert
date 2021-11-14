@@ -1,4 +1,5 @@
 #version 430 core
+#define MAX_LIGHTS 100
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normals;
@@ -13,20 +14,57 @@ layout (location = 12) in vec4 reflexCoords;
 layout (location = 13) in ivec3 mapping;
 layout (location = 14) in mat3 inverseModel;
 
-layout (location = 1) out vec3 normals_;
+struct DirLight 
+{
+	vec3 position;
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    bool calculateShadow;
+};
+
+struct PointLight 
+{
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    
+    float constant;
+    float linear;
+    float quadratic;
+
+    bool calculateShadow;
+};
+
+struct SpotLight 
+{
+    vec3 position;
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;  
+
+    float cutOff;
+    float outerCutOff; 
+    float constant;
+    float linear;
+    float quadratic;
+ 
+    bool calculateShadow;   
+};
 
 out VS_OUT
 {
 out vec3 Normal;
 out vec2 BaseTexCoords;
 out vec3 FragPos;
-out vec3 FragPosTBN;
-out vec3 viewPosTBN;
 out vec2 TexCoordsDiffuse;
 out vec2 TexCoordsNormal;
 out vec2 TexCoordsParallax;
 out vec2 TexCoordsReflex;
-out vec3 projCoords;
 out vec4 eyeSpacePosition;
 out mat3 TBN;
 out mat4 model;
@@ -54,14 +92,11 @@ void main()
 
     if (vs.mapping[0]!=0 || vs.mapping[1]!=0)
     {
-        vec3 Tangent =   normalize(mat3(model_)*tangent);
-        vec3 Bitangent = normalize(mat3(model_)*bitangent);
-        vec3 Normal =    normalize(mat3(model_)*normals);
-        Tangent =        normalize(Tangent - dot(Tangent, Normal) * Normal);
-        vs.TBN = transpose(mat3(Tangent, Bitangent, Normal));    
-
-        vs.FragPosTBN  = vs.TBN * vs.FragPos;
-        vs.viewPosTBN  = vs.TBN * viewPos;
+        vec3 T = normalize(vec3(model_ * vec4(tangent,   0.0)));
+        vec3 B = normalize(vec3(model_ * vec4(bitangent, 0.0)));
+        vec3 N = normalize(vec3(model_ * vec4(normals,    0.0)));
+        T = normalize(T - dot(T, N) * N);
+        vs.TBN = mat3(T, B, N);    
     }
 
         vs.TexCoordsDiffuse = vec2(
@@ -91,9 +126,6 @@ void main()
 		    textureCoords.x *reflexCoords[2] + reflexCoords[0], 
 		    textureCoords.y *reflexCoords[3] + reflexCoords[1]);
         }
-
-    vec4 FragPosLightSpace = lightSpaceMatrix[0] * vec4(vs.FragPos, 1.0);
-    vs.projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
 
     vs.model = model_;
     vs.BaseTexCoords = textureCoords;

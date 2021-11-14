@@ -72,10 +72,11 @@ void LGraphics::LLight::init()
 	shadowHeight = app->info.shadowsHeight;
 
 	LApp::FBOAttach attachment;
-	attachment.attachmentSize = app->info.shadowsWidth;
+	attachment.attachmentSize = { app->info.shadowsWidth, app->info.shadowsHeight };
 	attachment.componentType = GL_DEPTH_COMPONENT;
 	attachment.textureType = GL_TEXTURE_2D;
 	attachment.valuesType = GL_FLOAT;
+	attachment.drawBuffer = GL_DEPTH_ATTACHMENT;
 
 	auto attach = app->createAttachment(attachment);
 	depthMap = attach.attachmentId;
@@ -185,7 +186,7 @@ void LGraphics::LPointLight::init()
 	shadowHeight = app->info.shadowsHeight;
 
 	LApp::FBOAttach attachment;
-	attachment.attachmentSize = app->info.shadowsWidth;
+	attachment.attachmentSize = { app->info.shadowsWidth,app->info.shadowsHeight };
 	attachment.componentType = GL_DEPTH_COMPONENT;
 	attachment.textureType = GL_TEXTURE_CUBE_MAP;
 	attachment.valuesType = GL_FLOAT;
@@ -206,7 +207,7 @@ LGraphics::LDirectionalLight::LDirectionalLight(LApp* app)
 	:LLight(app)
 {
 	app->addLight(this);
-	position = glm::vec3(0.0f, 3.0f, 5.0f);
+	position = glm::vec3(-5.0f, -2.0f, 0.0f);
 	ambient = glm::vec3(0.1f, 0.1f, 0.1f);
 	diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
 	specular = glm::vec3(0.9f, 0.9f, 0.9f);

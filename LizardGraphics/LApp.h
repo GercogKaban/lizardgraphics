@@ -113,6 +113,8 @@ namespace LGraphics
         QualityLevels texturesQuality = LGraphics::QualityLevels::AUTO;
         size_t shadowsWidth = 1024, shadowsHeight = 1024;
         std::filesystem::path resourceDir = "";
+        LStates ssao = L_FALSE;
+        LStates ssr = L_FALSE;
     };
 
     /*!
@@ -177,6 +179,7 @@ namespace LGraphics
         bool flag__ = false;
 
     protected:
+
         void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
         bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
@@ -204,11 +207,14 @@ namespace LGraphics
 
         void renderSceneObjects();
 
-        void drawPass();
+        void mainPass();
         void shadowPass(LLight* l);
         void reflexPass(GLuint reflexFBO, size_t reflexSize, glm::vec3 position);
-        void pickingPass(GLuint pickingFBO, size_t pickingSize, int colorBuffer);
+        void pickingPass(GLuint pickingFBO, int colorBuffer);
+        void deferredRenderingPass();
+        void postProcessingPass();
 
+        void initBaseShaders();
         void initForwardRenderingShaders();
         void initDefferedRenderingShaders();
 
@@ -407,10 +413,67 @@ namespace LGraphics
         {
             int textureType;
             int componentType;
-            int attachmentSize;
+            glm::ivec2 attachmentSize;
             int valuesType;
+            GLuint drawBuffer;
             GLuint attachmentId;
         };
+
+        struct RBOAttach
+        {
+            int componentType;
+            glm::ivec2 attachmentSize;
+            GLuint drawBuffer;
+            GLuint fbo;
+        };
+
+        class PostProcessingFBO
+        {
+            friend LApp;
+        public:
+            PostProcessingFBO(glm::ivec2 bufferSize);
+            ~PostProcessingFBO();
+        protected:
+
+            GLuint buffer, color, normal, depth;
+            std::vector<GLuint> drawingBuffers;
+        };
+
+        PostProcessingFBO* postProcessingFBO = nullptr;
+
+        class GBuffer
+        {
+            friend LApp;
+        public:
+            GBuffer(glm::ivec2 bufferSize);
+            ~GBuffer();
+        protected:
+
+            GLuint gBuffer, gPosition, gNormal, gAlbedoSpec, rboDepth;
+            std::vector<GLuint> drawingBuffers;
+        };
+
+        GBuffer* gBuffer = nullptr;
+
+        class FullscreenQuad
+        {
+            friend LApp;
+        public:
+            void draw();
+
+            FullscreenQuad();
+            ~FullscreenQuad();
+        protected:
+            const float quadVertices[20] = 
+            {
+                -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+                 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+            };
+
+            GLuint vao, vbo;
+        } *fullscreenQuad = nullptr;
 
         PixelInfo readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const;
         LWidget* getObjectByPixel(const PixelInfo& pixelinfo) const;
@@ -437,7 +500,7 @@ namespace LGraphics
 
         std::array<std::pair<float, float>, 3> lastLoadedRanges;
 
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        glm::vec4 clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         bool cursorEnabled = true;
         bool cameraFrontViewLock = false;
@@ -463,14 +526,15 @@ namespace LGraphics
         void initOpenGL();
         void initVulkan();
 
-        FBOAttach createAttachment(const FBOAttach& attach) const;
-        GLuint createFramebuffer(const std::vector<FBOAttach>& attachments, int firstColorBuffer = 0 ) const;
+        static FBOAttach createAttachment(const FBOAttach& attach);
+        static GLuint createFramebuffer(const std::vector<FBOAttach>& attachments);
+        static GLuint createRenderbuffer(const RBOAttach& attach);
 
         void setWindowCallbacks();
 
         void checkEvents();
-        void checkError() const;
-        void checkFramebufferError() const;
+        static void checkError();
+        static void checkFramebufferError();
 
         void releaseVulkanResources();
         void releaseOpenGLResources();
@@ -787,7 +851,7 @@ namespace LGraphics
 
         std::unique_ptr<LShaders::Shader> openGLLightShader, openGLLightShaderTes, lightShader, skyBoxShader, 
         shadowMapShader, shadowMapModelShader, shadowCubeMapShader, shadowCubeMapModelShader, modelShader, reflexPrimitiveShader,
-        reflexModelShader, pickingPrimitiveShader, pickingModelShader;
+        reflexModelShader, pickingPrimitiveShader, pickingModelShader, deferredQuadShader, postProcessingShader;
 
         std::mutex drawingMutex;
         std::unordered_map<uint32_t, bool> pressedKeys;
@@ -803,13 +867,12 @@ namespace LGraphics
 
         static void customLoadingScreen();
         std::thread* loadingScreen;
-        GLuint ssbo;
 
-        bool drawingInShadow = false, drawingReflex = false, drawingPicking = false;
+        bool drawingInShadow = false, drawingReflex = false, drawingPicking = false, deferredRendering = false;
         glm::vec3 reflexPos;
         glm::vec4 borderColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 
-        VkAllocationCallbacks* g_Allocator = NULL;
+        VkAllocationCallbacks*   g_Allocator = NULL;
         VkInstance               g_Instance = VK_NULL_HANDLE;
         VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
         VkDevice                 g_Device = VK_NULL_HANDLE;

@@ -55,13 +55,11 @@ in VS_OUT
 in vec3 Normal;
 in vec2 BaseTexCoords;
 in vec3 FragPos;
-in vec3 FragPosTBN;
-in vec3 viewPosTBN;
 in vec2 TexCoordsDiffuse;
 in vec2 TexCoordsNormal;
 in vec2 TexCoordsParallax;
 in vec2 TexCoordsReflex;
-in vec3 projCoords;
+//in vec3 projCoords;
 in vec4 eyeSpacePosition;
 in mat3 TBN;
 in mat4 model;
@@ -105,9 +103,7 @@ uniform Fog fog;
 uniform bool drawingReflex;
 uniform float farPlane;
 
-vec3 CalcDirLight(DirLight light, vec3 viewDir);
-vec3 CalcPointLight(PointLight light, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 viewDir);      
+uniform mat4 lightSpaceMatrix[6];
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -224,17 +220,19 @@ float getFogFactor(float fogCoordinate)
 
 float ShadowCalculation(vec3 lightDir)
 {
-    float closestDepth = texture(shadowMap, vs.projCoords.xy).r; 
-    float currentDepth = vs.projCoords.z;
-    float bias = max(0.05 * (1.0 - dot(Normal_, lightDir)), 0.005);
+    vec4 FragPosLightSpace = lightSpaceMatrix[0] * vec4(vs.FragPos, 1.0);
+    vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w * 0.5 + 0.5;
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float currentDepth = projCoords.z;
+    //float bias = max(0.05 * (1.0 - dot(Normal_, lightDir)), 0.005);
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, vs.projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth > pcfDepth ? 1.0 : 0.0;
         }
     }
     shadow /= 9.0;
@@ -260,10 +258,12 @@ float ShadowCalculationOmni(vec3 lightPos)
 }
 
 // calculates the color when using a directional light.
-vec3 CalcDirLight(DirLight light, vec3 viewDir)
+vec3 CalcDirLight(DirLight light, vec3 viewDir, int lightNum)
 {
-    vec3 LightPos = vs.TBN * light.position;
-    vec3 lightDir = normalize(LightPos - vs.FragPosTBN);
+    vec3 LightPos = light.position;
+    //vec3 LightPos = vec3(0.0f);
+    //vec3 LightPos = vs.dirLightPositionsTBN[lightNum];
+    vec3 lightDir = normalize(LightPos - vs.FragPos);
     // diffuse shading
     float diff = max(dot(lightDir,Normal_), 0.0);
     // specular shading
@@ -281,19 +281,19 @@ vec3 CalcDirLight(DirLight light, vec3 viewDir)
 }
 
 // calculates the color when using a point light.
-vec3 CalcPointLight(PointLight light, vec3 viewDir)
+vec3 CalcPointLight(PointLight light, vec3 viewDir, int lightNum)
 {
+    //vec3 LightPos = vs.pointLightPositionsTBN[lightNum];
+    //if (vs.mapping[1] != 0 || vs.mapping[0] != 0)
     vec3 LightPos = light.position;
-    if (vs.mapping[1] != 0 || vs.mapping[0] != 0)
-        LightPos = vs.TBN* light.position;
-    vec3 lightDir = normalize(LightPos - vs.FragPosTBN);
+    vec3 lightDir = normalize(LightPos - vs.FragPos);
     // diffuse shading
     float diff = max(dot(Normal_, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir); 
     float spec = pow(max(dot(Normal_, halfwayDir), 0.0), 32.0);
     // attenuation
-    float distance = length(LightPos - vs.FragPosTBN);
+    float distance = length(LightPos - vs.FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // combine results
     vec3 ambient = light.ambient * attenuation;
@@ -306,10 +306,11 @@ vec3 CalcPointLight(PointLight light, vec3 viewDir)
     return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
+vec3 CalcSpotLight(SpotLight light, vec3 viewDir, int lightNum)
 {
-    vec3 lightPos = vs.TBN * light.position;
-	vec3 lightDir = normalize(lightPos - vs.FragPosTBN);
+    vec3 lightPos = light.position;
+    //vec3 lightPos = vs.spotLightPositionsTBN[lightNum];
+	vec3 lightDir = normalize(lightPos - vs.FragPos);
     float theta = dot(lightDir, normalize(-light.direction)); 
     vec3 result = vec3(0.0f);
     
@@ -330,7 +331,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 viewDir)
         vec3 specular = light.specular * spec;//* texture(1.0f, TexCoords).rgb;  
         
         // attenuation
-        float distance    = length(lightPos - vs.FragPosTBN);
+        float distance    = length(lightPos - vs.FragPos);
         float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
         // ambient  *= attenuation; // remove attenuation from ambient, as otherwise at large distances the light would be darker inside than outside the spotlight due the ambient term in the else branche
@@ -362,7 +363,7 @@ void main()
         }
     }
 
-    vec3 viewDir = normalize(vs.viewPosTBN - vs.FragPosTBN);
+    vec3 viewDir = normalize(viewPos - vs.FragPos);
 
     if (vs.mapping[1])
     {
@@ -391,8 +392,12 @@ void main()
     vec3 Normal0;
     if (vs.mapping[0])
     {
-        vec3 BumpMapNormal = texture(normalMap, TexCoordNormal).rgb;
-        Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0)); 
+          Normal0 = texture(normalMap, TexCoordNormal).rgb;
+          Normal0 = normalize(Normal0 * 2.0 - 1.0);   
+          Normal0 = normalize(vs.TBN * Normal0);  
+          //Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0)); 
+//        vec3 BumpMapNormal = texture(normalMap, TexCoordNormal).rgb;
+//        Normal0 = normalize(2.0 * BumpMapNormal - vec3(1.0,1.0,1.0)); 
     }  
     else
         Normal0 = vs.Normal;
@@ -407,18 +412,18 @@ void main()
     if (!drawingReflex)
     {
     for (int i = 0; i < pointSourcesCount; ++i)
-        result += CalcPointLight(pointSources[i],viewDir);
+        result += CalcPointLight(pointSources[i],viewDir,i);
     for (int i = 0; i < spotSourcesCount; ++i)
-        result += CalcSpotLight(spotSources[i],viewDir);
+        result += CalcSpotLight(spotSources[i],viewDir,i);
     for (int i = 0; i < dirSourcesCount; ++i)
-        result += CalcDirLight(dirSources[i],viewDir);
+        result += CalcDirLight(dirSources[i],viewDir,i);
     }
     else
         result =  vec3(1.0f);
     if (!drawingReflex && vs.mapping[2] != 0)
     {
         vec4 reflex = texture(reflexMap, TexCoordReflex);
-        const float refCoef = (reflex.r + reflex.g + reflex.b)/3.0;
+        float refCoef = (reflex.r + reflex.g + reflex.b)/3.0;
         vec3 I = normalize(vs.FragPos - viewPos);
         vec3 R = reflect(I, vs.Normal);
         color = mix( (vec4(result,1.0) * texture(diffuseMap, TexCoord)),(vec4(texture(environment, R).rgb, 1.0)),refCoef);

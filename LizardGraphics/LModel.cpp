@@ -171,15 +171,22 @@ void LGraphics::LModel::draw()
 
     GLuint shaderProgram = shader->getShaderProgram();
     shader->use();
-    setGlobalUniforms(shaderProgram);
+
+    if (app->drawingInShadow)
+        setGlobalUniformsShadows(shaderProgram);
+    else if (app->drawingReflex)
+        setGlobalUniformsReflex(shaderProgram);
+    else if (app->drawingPicking)
+        setGlobalUniformsPicking(shaderProgram);
+    else if (app->deferredRendering)
+        setGlobalUniformsGBuffer(shaderProgram);
+    else
+        setGlobalUniforms(shaderProgram);
 
     // тут нужна оптимизация
     model = calculateModelMatrix();
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model_"), 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(glGetUniformLocation(shaderProgram, "playAnimation"), playAnimation_);
-    //if (app->currentLight)
-    //    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightSpaceMatrix[0]"),
-    //        1, GL_FALSE, glm::value_ptr(app->currentLight->getLightspaceMatrix()[0]));
 
     if (playAnimation_ && app->drawingInShadow)
         animator.UpdateAnimation(app->getDeltaTime());

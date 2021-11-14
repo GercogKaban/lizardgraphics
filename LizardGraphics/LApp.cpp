@@ -112,54 +112,8 @@ namespace LGraphics
         return getRealTexturesPath() + "normal/";
     }
 
-    void LApp::clearColor()
+    void LApp::initBaseShaders()
     {
-        LOG_CALL
-        if (fog.isEnabled)
-            glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
-        else
-            glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
-
-    void LApp::clearDepth()
-    {
-        LOG_CALL
-        glClear(GL_DEPTH_BUFFER_BIT);
-    }
-
-    void LApp::clearColorDepth()
-    {
-        LOG_CALL
-        if (fog.isEnabled)
-            glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
-        else
-            glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
-    void LApp::errorCallback(int error, const char* description)
-    {
-        PRINTLN("error: ",std::to_string(error), ", ", description);
-    }
-
-    void LApp::initForwardRenderingShaders()
-    {
-        openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
-            , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
-            , (std::string(LIB_PATH) + "//shaders//base.frag").data(),
-            (std::string(LIB_PATH) + "//shaders//base.tesc").data(),
-            (std::string(LIB_PATH) + "//shaders//base.tese").data()
-            , ""));
-
-        openGLLightShader.reset(new LShaders::OpenGLShader(this
-            , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
-            , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "", "", ""));
-
-        modelShader.reset(new LShaders::OpenGLShader(this
-            , (std::string(LIB_PATH) + "//shaders//model.vert").data()
-            , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "", "", ""));
-
         skyBoxShader.reset(new LShaders::OpenGLShader(this
             , (std::string(LIB_PATH) + "//shaders//skybox.vert").data()
             , (std::string(LIB_PATH) + "//shaders//skybox.frag").data(), "", "", ""));
@@ -203,9 +157,79 @@ namespace LGraphics
             ""));
     }
 
+    void LApp::clearColor()
+    {
+        LOG_CALL
+        if (fog.isEnabled)
+            glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
+        else
+            glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    void LApp::clearDepth()
+    {
+        LOG_CALL
+        glClear(GL_DEPTH_BUFFER_BIT);
+    }
+
+    void LApp::clearColorDepth()
+    {
+        LOG_CALL
+        if (fog.isEnabled)
+            glClearColor(fog.color.x, fog.color.y, fog.color.z, fog.density);
+        else
+            glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    void LApp::errorCallback(int error, const char* description)
+    {
+        PRINTLN("error: ",std::to_string(error), ", ", description);
+    }
+
+    void LApp::initForwardRenderingShaders()
+    {
+        //openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
+        //    , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+        //    , (std::string(LIB_PATH) + "//shaders//base.frag").data(),
+        //    (std::string(LIB_PATH) + "//shaders//base.tesc").data(),
+        //    (std::string(LIB_PATH) + "//shaders//base.tese").data()
+        //    , ""));
+
+        openGLLightShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "", "", ""));
+
+        modelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//model.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//base.frag").data(), "", "", ""));   
+    }
+
     void LApp::initDefferedRenderingShaders()
     {
+        //openGLLightShaderTes.reset(new LShaders::OpenGLShader(this
+        //    , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+        //    , (std::string(LIB_PATH) + "//shaders//deferred//base.frag").data(),
+        //    (std::string(LIB_PATH) + "//shaders//base.tesc").data(),
+        //    (std::string(LIB_PATH) + "//shaders//base.tese").data()
+        //    , ""));
 
+        openGLLightShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//primitive.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//deferred//base.frag").data(), "", "", ""));
+
+        modelShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//model.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//deferred//base.frag").data(), "", "", ""));
+
+        deferredQuadShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//deferred//quad.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//deferred//lighting.frag").data(), "", "", ""));
+
+        postProcessingShader.reset(new LShaders::OpenGLShader(this
+            , (std::string(LIB_PATH) + "//shaders//deferred//quad.vert").data()
+            , (std::string(LIB_PATH) + "//shaders//deferred//postprocessing.frag").data(), "", "", ""));
     }
 
     std::string LApp::getRealDisplacementPath() const
@@ -218,6 +242,21 @@ namespace LGraphics
     {
         LOG_CALL
         return getRealTexturesPath() + "reflex/";
+    }
+
+    void LApp::postProcessingPass()
+    {
+        auto shader = (LShaders::OpenGLShader*)postProcessingShader.get();
+        GLuint shaderProgram = shader->getShaderProgram();
+        shader->use();
+        LShape::setGlobalUniformsPostProcessing(shaderProgram);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, postProcessingFBO->color);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, postProcessingFBO->normal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, postProcessingFBO->depth);
+        fullscreenQuad->draw();
     }
 
     std::string LApp::getRealTexturesPath() const
@@ -261,11 +300,38 @@ namespace LGraphics
         }
     }
 
-    void LApp::drawPass()
+    void LApp::mainPass()
     {
         glViewport(0, 0, info.wndWidth, info.wndHeight);
+        if (info.renderingType == DEFERRED)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, gBuffer->gBuffer);
+            glDrawBuffers(gBuffer->drawingBuffers.size(), gBuffer->drawingBuffers.data());
+            setClearColor(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        }
         clearColorDepth();
         renderSceneObjects();
+        if (info.renderingType == DEFERRED)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            if (postProcessingFBO)
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, postProcessingFBO->buffer);
+                glDrawBuffers(postProcessingFBO->drawingBuffers.size(), postProcessingFBO->drawingBuffers.data());
+            }
+            fog.isEnabled = true;
+            clearColorDepth();
+            deferredRenderingPass();
+            if (postProcessingFBO)
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                //glDrawBuffer(GL_COLOR_ATTACHMENT0);
+                checkError();
+                clearColorDepth();
+                postProcessingPass();
+                checkError();
+            }
+        }
     }
 
     void LApp::shadowPass(LLight* l)
@@ -279,9 +345,9 @@ namespace LGraphics
             glViewport(0, 0, l->shadowWidth, l->shadowHeight);
             glBindFramebuffer(GL_FRAMEBUFFER, l->depthMapFBO);
             clearDepth();
-            glCullFace(GL_FRONT);
+            //glCullFace(GL_FRONT);
             renderSceneObjects();
-            glCullFace(GL_BACK);
+            //glCullFace(GL_BACK);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
     }
@@ -295,13 +361,15 @@ namespace LGraphics
         glViewport(0, 0, reflexSize, reflexSize);
         glBindFramebuffer(GL_FRAMEBUFFER, reflexFBO);
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        //if (info.renderingType == DEFERRED)
+        //    setClearColor(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
         clearColorDepth();
         renderSceneObjects();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         drawingReflex = false;
     }
 
-    void LApp::pickingPass(GLuint fbo, size_t pickingSize, int colorBuffer)
+    void LApp::pickingPass(GLuint fbo, int colorBuffer)
     {
         LOG_CALL
         drawingPicking = true;
@@ -313,6 +381,32 @@ namespace LGraphics
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         drawingPicking = false;
+    }
+
+    void LApp::deferredRenderingPass()
+    {
+        auto shader = (LShaders::OpenGLShader*)deferredQuadShader.get();
+        GLuint shaderProgram = shader->getShaderProgram();
+        shader->use();
+        LShape::setGlobalUniformsDeferred(shaderProgram);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, gBuffer->gPosition);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, gBuffer->gNormal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, gBuffer->gAlbedoSpec);
+        if (dynamic_cast<LPointLight*>(currentLight))
+        {
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, currentDepthMap);
+        }
+        else
+        {
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, currentDepthMap);
+        }
+        fullscreenQuad->draw();
     }
 
     void LApp::generateMegatexture(const std::string& texturesPath, Atlas& atl, const std::string& atlPath)
@@ -364,6 +458,7 @@ namespace LGraphics
         {         
             while (!glfwWindowShouldClose(window_))
             {
+                setClearColor(fog.isEnabled ? glm::vec4(fog.color,fog.density) : clear_color);
                 const float currentFrame = glfwGetTime();
                 deltaTime = currentFrame - lastFrame;
                 lastFrame = currentFrame;
@@ -474,9 +569,9 @@ namespace LGraphics
                         reflexPass(models[i]->reflexFBO, models[i]->reflexSize, models[i]->getMiddlePoint());
 
                     if (info.picking == L_TRUE)
-                        pickingPass(picking->fbo, picking->size, picking->colorBuffer);
+                        pickingPass(picking->fbo, picking->colorBuffer);
 
-                    drawPass();
+                    mainPass();
                     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
                 }
                 afterDrawingFunc();
@@ -942,16 +1037,16 @@ namespace LGraphics
             return models[pixelinfo.objectID];
     }
 
-    void LApp::checkError() const
+    void LApp::checkError()
     {
         if (auto er = glGetError(); er)
             throw std::runtime_error("error: " + std::to_string(er) + '\n');
     }
 
-    void LApp::checkFramebufferError() const
+    void LApp::checkFramebufferError()
     {
         if (GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); status != GL_FRAMEBUFFER_COMPLETE)
-            throw std::runtime_error("FB error, status: " + std::to_string(status) + '\n');
+            throw std::runtime_error("FBO error, status: " + std::to_string(status) + '\n');
     }
 
     void LApp::setMatrices()
@@ -968,6 +1063,7 @@ namespace LGraphics
         clear_color.y = clearColor.y;
         clear_color.z = clearColor.z;
         clear_color.w = clearColor.w;
+        fog.isEnabled = false;
     }
 
     void LApp::refreshCamera()
@@ -990,63 +1086,51 @@ namespace LGraphics
         LOG_CALL
         const auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
         if (info.projection == L_PERSPECTIVE)
-            projection = glm::perspective(45.0f, aspect, 0.01f, 1000.0f);
+            projection = glm::perspective(45.0f, aspect, 0.1f, 100.0f);
         else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 1000.0f);
     }
 
-    GLuint LApp::createFramebuffer(const std::vector<LApp::FBOAttach>& attachments, int firstColorBuffer) const
+    GLuint LApp::createFramebuffer(const std::vector<LApp::FBOAttach>& attachments)
     {
         LOG_CALL
         uint32_t fbo;
+        std::vector<GLuint> attachmentBuffers;
         glGenFramebuffers(1, &fbo);
-
-        int colorNum = firstColorBuffer;
-        auto getColorNum = [&]()
-        {
-            int ret;
-            switch (colorNum)
-            {
-            case 0: ret = GL_COLOR_ATTACHMENT0; break;
-            case 1: ret = GL_COLOR_ATTACHMENT1; break;
-            case 2: ret = GL_COLOR_ATTACHMENT2; break;
-            case 3: ret = GL_COLOR_ATTACHMENT3; break;
-            case 4: ret = GL_COLOR_ATTACHMENT4; break;
-            case 5: ret = GL_COLOR_ATTACHMENT5; break;
-            case 6: ret = GL_COLOR_ATTACHMENT6; break;
-            case 7: ret = GL_COLOR_ATTACHMENT7; break;
-            case 8: ret = GL_COLOR_ATTACHMENT8; break;
-            case 9: ret = GL_COLOR_ATTACHMENT9; break;
-            case 10: ret = GL_COLOR_ATTACHMENT10; break;
-            case 11: ret = GL_COLOR_ATTACHMENT11; break;
-            case 12: ret = GL_COLOR_ATTACHMENT12; break;
-            case 13: ret = GL_COLOR_ATTACHMENT13; break;
-            case 14: ret = GL_COLOR_ATTACHMENT14; break;
-            case 15: ret = GL_COLOR_ATTACHMENT15; break;
-            default: throw std::runtime_error("error, too many color attachments!");
-            }
-            colorNum++;
-            return ret;
-        };
-
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         for (const auto& a : attachments)
         {
-            auto attachmentType = a.componentType == GL_DEPTH_COMPONENT ? GL_DEPTH_ATTACHMENT : getColorNum();
             if (a.textureType == GL_TEXTURE_2D)
-                glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, a.attachmentId, 0);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, a.drawBuffer, GL_TEXTURE_2D, a.attachmentId, 0);
             else
-                glFramebufferTexture(GL_FRAMEBUFFER, attachmentType, a.attachmentId, 0);
+                glFramebufferTexture(GL_FRAMEBUFFER, a.drawBuffer, a.attachmentId, 0);
+            if (a.drawBuffer != GL_DEPTH_ATTACHMENT)
+                attachmentBuffers.push_back(a.drawBuffer);
         }
 
-        if (!colorNum)
-            glDrawBuffer(GL_NONE);
+        glDrawBuffers(attachmentBuffers.size(), attachmentBuffers.data());
         glReadBuffer(GL_NONE);
+        checkError();
         checkFramebufferError();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         return fbo;
     }
 
-    LApp::FBOAttach LApp::createAttachment(const LApp::FBOAttach& attachment) const
+    GLuint LApp::createRenderbuffer(const LApp::RBOAttach& attach)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, attach.fbo);
+        int fbo;
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &fbo);
+        if (!fbo)
+            throw std::runtime_error("error, no bound framebuffer");
+        GLuint rbo;
+        glGenRenderbuffers(1, &rbo);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, attach.componentType, attach.attachmentSize.x, attach.attachmentSize.y);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, attach.drawBuffer, GL_RENDERBUFFER, rbo);
+        checkFramebufferError();
+    }
+
+    LApp::FBOAttach LApp::createAttachment(const LApp::FBOAttach& attachment)
     {
         LOG_CALL
         FBOAttach out = attachment;
@@ -1075,19 +1159,20 @@ namespace LGraphics
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             for (size_t face = 0; face < 6; ++face)
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, out.componentType, out.attachmentSize,
-                    out.attachmentSize, 0, format, out.valuesType, NULL);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, out.componentType, out.attachmentSize.x,
+                    out.attachmentSize.y, 0, format, out.valuesType, NULL);
         }
 
         else if (out.textureType == GL_TEXTURE_2D)
         {
             glBindTexture(GL_TEXTURE_2D, out.attachmentId);
-            glTexImage2D(GL_TEXTURE_2D, 0, out.componentType, out.attachmentSize, out.attachmentSize, 0,
+            glTexImage2D(GL_TEXTURE_2D, 0, out.componentType, out.attachmentSize.x, out.attachmentSize.y, 0,
                 format, out.valuesType, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            
         }
 
         else
@@ -1142,6 +1227,11 @@ namespace LGraphics
     {
         LOG_CALL
 
+        auto postprocessing = info.ssao || info.ssr;
+        if (postprocessing)
+            throw std::runtime_error("sorry, postprocessing currently unavailable!");
+
+        fullscreenQuad = new FullscreenQuad();
         LLogger::initErrors(info.logFlags);
         if (info.logFlags & ASYNC_LOG)
             LAsyncLogger::start();
@@ -1149,7 +1239,13 @@ namespace LGraphics
         if (info.renderingType == FORWARD)
             initForwardRenderingShaders();
         else if (info.renderingType == DEFERRED)
+        {
+            gBuffer = new GBuffer(getWindowSize());
+            if (postprocessing)
+                postProcessingFBO = new PostProcessingFBO(getWindowSize());
             initDefferedRenderingShaders();
+        }
+        initBaseShaders();
 
         qualityDirectories.insert(std::make_pair(LOW, "low"));
         qualityDirectories.insert(std::make_pair(MEDIUM, "medium"));
@@ -1276,7 +1372,7 @@ namespace LGraphics
 
         setCursorEnabling(!isCursorEnabled());
         if (info.picking == L_TRUE)
-            picking = new LPicking(this, std::max(info.wndWidth, info.wndHeight));
+            picking = new LPicking(this, info.wndWidth, info.wndHeight);
     }
 
     void LApp::initRenderer()
@@ -1345,7 +1441,10 @@ namespace LGraphics
         //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-        glfwWindowHint(GLFW_SAMPLES, info.MSAA);
+
+        if (info.renderingType == FORWARD)
+            glfwWindowHint(GLFW_SAMPLES, info.MSAA);
+       
 //#ifndef NDEBUG
         window_ = glfwCreateWindow(info.wndWidth, info.wndHeight, "Lizard Graphics", NULL, NULL);
 //#else
@@ -1374,6 +1473,8 @@ namespace LGraphics
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glEnable(GL_MULTISAMPLE);
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(10.0f, 20.0f);
 #ifndef NDEBUG
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(MessageCallback, 0);
@@ -1567,18 +1668,15 @@ namespace LGraphics
         resourseManager.textures.clear();
 
         for (size_t i = 0; i < swapChainImageViews.size(); i++)
-        {
             vkDestroyImageView(g_Device, swapChainImageViews[i], nullptr);
-        }
 
         vkDestroyImageView(g_Device, depthImageView, nullptr);
         vmaDestroyImage(allocator, depthImage, depthImageMemory);
 
         vkDestroyRenderPass(g_Device, renderPass, nullptr);
 
-        for (auto framebuffer : swapChainFramebuffers) {
+        for (auto framebuffer : swapChainFramebuffers)
             vkDestroyFramebuffer(g_Device, framebuffer, nullptr);
-        }
 
         vkDestroyDescriptorSetLayout(g_Device, descriptorSetLayout, nullptr);
 
@@ -1638,6 +1736,12 @@ namespace LGraphics
         //delete standartRectBuffer;
         //delete cube;
         //delete standartCubeBuffer;
+        if (fullscreenQuad)
+            delete fullscreenQuad;
+        if (postProcessingFBO)
+            delete postProcessingFBO;
+        if (gBuffer)
+            delete gBuffer;
         if (picking)
             delete picking;
     }
@@ -1717,13 +1821,15 @@ namespace LGraphics
                 assert(reflexSize);
 
                 LApp::FBOAttach depthAttachment, colorAttachment;
-                depthAttachment.attachmentSize = reflexSize;
+                depthAttachment.attachmentSize = { reflexSize,reflexSize };
                 depthAttachment.componentType = GL_DEPTH_COMPONENT;
                 depthAttachment.textureType = GL_TEXTURE_CUBE_MAP;
                 depthAttachment.valuesType = GL_FLOAT;
+                depthAttachment.drawBuffer = GL_DEPTH_ATTACHMENT;
 
                 colorAttachment = depthAttachment;
                 colorAttachment.componentType = GL_RGBA;
+                colorAttachment.drawBuffer = GL_COLOR_ATTACHMENT0;
 
                 const auto depthAttach = createAttachment(depthAttachment);
                 const auto colorAttach = createAttachment(colorAttachment);
@@ -3270,6 +3376,117 @@ namespace LGraphics
         }
 
         return attributeDescriptions;
+    }
+
+    LApp::GBuffer::GBuffer(glm::ivec2 bufferSize)
+    {
+        LApp::FBOAttach pos,normals,diff;
+
+        pos.attachmentSize = { bufferSize.x, bufferSize.y };
+        pos.componentType = GL_RGB16F;
+        pos.drawBuffer = GL_COLOR_ATTACHMENT0;
+        pos.textureType = GL_TEXTURE_2D;
+        pos.valuesType = GL_FLOAT;
+
+        normals = pos;
+        normals.drawBuffer = GL_COLOR_ATTACHMENT1;
+
+        diff = pos;
+        //diff.componentType = GL_RGBA;
+        diff.drawBuffer = GL_COLOR_ATTACHMENT2;
+        diff.valuesType = GL_UNSIGNED_BYTE;
+
+        const auto posAttach = createAttachment(pos);
+        const auto normalsAttach = createAttachment(normals);
+        const auto diffAttach = createAttachment(diff);
+
+        gPosition = posAttach.attachmentId;
+        gNormal = normalsAttach.attachmentId;
+        gAlbedoSpec = diffAttach.attachmentId;
+
+        drawingBuffers = { pos.drawBuffer, normals.drawBuffer, diff.drawBuffer };
+        gBuffer = createFramebuffer({ posAttach,normalsAttach,diffAttach });
+
+        RBOAttach rboAttach;
+        rboAttach.attachmentSize = { bufferSize.x, bufferSize.y };
+        rboAttach.componentType = GL_DEPTH_COMPONENT;
+        rboAttach.drawBuffer = GL_DEPTH_ATTACHMENT;
+        rboAttach.fbo = gBuffer;
+
+        rboDepth = createRenderbuffer(rboAttach);
+    }
+
+    LApp::PostProcessingFBO::PostProcessingFBO(glm::ivec2 bufferSize)
+    {
+        LApp::FBOAttach color_, normal_, depth_;
+
+        color_.attachmentSize = { bufferSize.x, bufferSize.y };
+        color_.componentType = GL_RGBA;
+        color_.drawBuffer = GL_COLOR_ATTACHMENT0;
+        color_.textureType = GL_TEXTURE_2D;
+        color_.valuesType = GL_FLOAT;
+
+        normal_ = color_;
+        normal_.componentType = GL_RGB16F;
+        normal_.drawBuffer = GL_COLOR_ATTACHMENT1;
+
+        depth_ = color_;
+        depth_.componentType = GL_DEPTH_COMPONENT;
+        depth_.drawBuffer = GL_DEPTH_ATTACHMENT;
+ 
+        const auto colorAttach = createAttachment(color_);
+        const auto normalAttach = createAttachment(normal_);
+        const auto depthAttach = createAttachment(depth_);
+
+        color = colorAttach.attachmentId;
+        normal = normalAttach.attachmentId;
+        depth = depthAttach.attachmentId;
+
+        drawingBuffers = { colorAttach.drawBuffer,normalAttach.drawBuffer };
+        buffer = createFramebuffer({ colorAttach,normalAttach,depthAttach });
+    }
+
+    LApp::PostProcessingFBO::~PostProcessingFBO()
+    {
+        glDeleteTextures(1, &color);
+        glDeleteTextures(1, &normal);
+        glDeleteTextures(1, &depth);
+        glDeleteFramebuffers(1, &buffer);
+    }
+
+    LApp::GBuffer::~GBuffer()
+    {
+        glDeleteTextures(1, &gPosition);
+        glDeleteTextures(1, &gNormal);
+        glDeleteTextures(1, &gAlbedoSpec);
+        glDeleteFramebuffers(1, &gBuffer);
+        glDeleteRenderbuffers(1, &rboDepth);
+    }
+
+    LApp::FullscreenQuad::FullscreenQuad()
+    {
+        glGenVertexArrays(1, &vao);
+        glGenBuffers(1, &vbo);
+        glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    }
+
+    LApp::FullscreenQuad::~FullscreenQuad()
+    {
+        glDeleteVertexArrays(1, &vao);
+        glDeleteBuffers(1, &vbo);
+    }
+
+    void LApp::FullscreenQuad::draw()
+    {
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
     }
 }
 

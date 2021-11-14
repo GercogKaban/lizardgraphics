@@ -89,7 +89,8 @@ namespace LGraphics
     {
         if (!uniforms.size()) return;
         LShaders::OpenGLShader* shader;
-        shader = app->tesselation? (LShaders::OpenGLShader*)app->getStandartShaderTes() : (LShaders::OpenGLShader*)app->getStandartShader();
+        shader = (LShaders::OpenGLShader*)app->getStandartShader();
+        //shader = app->tesselation? (LShaders::OpenGLShader*)app->getStandartShaderTes() : (LShaders::OpenGLShader*)app->getStandartShader();
         if (app->drawingInShadow)
         {
             shader = dynamic_cast<LPointLight*>(app->currentLight)
@@ -103,7 +104,18 @@ namespace LGraphics
 
         GLuint shaderProgram = shader->getShaderProgram();
         shader->use();
-        setGlobalUniforms(shaderProgram);
+
+        if (app->drawingInShadow)
+            setGlobalUniformsShadows(shaderProgram);
+        else if (app->drawingReflex)
+            setGlobalUniformsReflex(shaderProgram);
+        else if (app->drawingPicking)
+            setGlobalUniformsPicking(shaderProgram);
+        else if (app->deferredRendering)
+            setGlobalUniformsGBuffer(shaderProgram);
+        else
+            setGlobalUniforms(shaderProgram);
+
         updateBuffer(type,changed,needToResetBuffer,vao,vbo,uniforms);
         if (!app->drawingInShadow)
         {
@@ -129,12 +141,12 @@ namespace LGraphics
         }
 
         glBindVertexArray(vao);
-        if (app->tesselation)
-        {
-            glPatchParameteri(GL_PATCH_VERTICES, 3);
-            glDrawElementsInstanced(GL_PATCHES, indCount, GL_UNSIGNED_INT, 0, uniforms.size());
-        }
-        else
+        //if (app->tesselation)
+        //{
+        //    glPatchParameteri(GL_PATCH_VERTICES, 3);
+        //    glDrawElementsInstanced(GL_PATCHES, indCount, GL_UNSIGNED_INT, 0, uniforms.size());
+        //}
+        //else
             glDrawElementsInstanced(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, 0, uniforms.size());
     }
 

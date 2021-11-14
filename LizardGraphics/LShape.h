@@ -121,7 +121,15 @@ namespace LGraphics
 
     protected:
 
+        static void setGlobalUniformsGBuffer(GLuint shaderProgram);
+        static void setGlobalUniformsDeferred(GLuint shaderProgram);
+        static void setGlobalUniformsPicking(GLuint shaderProgram);
+        static void setGlobalUniformsShadows(GLuint shaderProgram);
+        static void setGlobalUniformsReflex(GLuint shaderProgram);
+        static void setGlobalUniformsPostProcessing(GLuint shaderProgram);
         static void setGlobalUniforms(GLuint shaderProgram);
+        static void setLightUniforms(GLuint shaderProgram);
+        static void setFogUniforms(GLuint shaderProgram);
 
         void refreshModel();
         glm::mat4 calculateModelMatrix() const;
