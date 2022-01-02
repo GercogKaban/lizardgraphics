@@ -88,7 +88,6 @@ namespace LGraphics
         LOW,
         MEDIUM,
         HIGH,
-        //MAXIMUM,
     };
 
     enum TextureTypes
@@ -101,6 +100,11 @@ namespace LGraphics
     {
         FORWARD,
         DEFERRED,
+    };
+
+    enum SpecialCharacters
+    {
+        SPACE = ' ',
     };
 
 }

@@ -36,12 +36,12 @@ namespace LGraphics
         LImagedShape(LApp* app, ImageResource res, std::vector<LShape*>& changed, std::vector<LGraphics::LWidget::PrimitiveUniforms>& u,
             bool& needToResetBuffer);
 
-        static void updateBufferParallel(LGClasses type, LWidget::PrimitiveUniforms* buffer, std::vector<LShape*>& changed, size_t begin, size_t end);
-        static void updateBuffer(LGClasses type, std::vector<LGraphics::LShape*>& changed, bool needToResetBuffer
-            , GLuint vao, GLuint vbo, std::vector<LWidget::PrimitiveUniforms>& u);
-        static void drawInstanced(LGClasses type, std::vector<LShape*>& changed, bool needToResetBuffer, GLuint vao,
+        static void updateBufferParallel(LGClasses type, LWidget::PrimitiveUniforms* buffer, const std::vector<LShape*>& changed, size_t begin, size_t end);
+        static void updateBuffer(LGClasses type, std::vector<LGraphics::LShape*>& changed, bool& needToResetBuffer
+            , GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms>& u);
+        static void drawInstanced(LGClasses type, std::vector<LShape*>& changed, bool& needToResetBuffer, GLuint vao,
             GLuint vbo, std::vector<LWidget::PrimitiveUniforms>& uniforms, size_t indCount);
-        static void resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms> uniforms);
+        static void resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms>& uniforms);
         static void updateUniforms(LApp* app, LGClasses primitive, LWidget::PrimitiveUniforms* buffer, size_t id);
 
         void init(LApp* app);

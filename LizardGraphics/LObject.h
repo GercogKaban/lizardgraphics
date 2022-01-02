@@ -1,5 +1,7 @@
 ﻿#pragma once
 #define MEGATEXTURE_LG
+#define METAGEN_CLASS
+#define GEN_METADATA
 
 namespace LGraphics
 {

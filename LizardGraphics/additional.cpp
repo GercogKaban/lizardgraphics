@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "additional.h"
+#include "enums.h"
 
 namespace LGraphics
 {
@@ -53,22 +54,11 @@ namespace LGraphics
     glm::mat4 assimpToGLM(const aiMatrix4x4& from)
     {
         return glm::transpose(glm::make_mat4(&from.a1));
-        //glm::mat4 to;
-        //to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
-        //to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
-        //to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
-        //to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
-        //return to;
     }
 
     glm::mat3 assimpToGLM(const aiMatrix3x3& from)
     {
         return glm::transpose(glm::make_mat3(&from.a1));
-        //glm::mat3 to;
-        //to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3;
-        //to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3;
-        //to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3;
-        //return to;
     }
 
     glm::vec2 assimpToGLM(const aiVector2D& vec)
@@ -112,5 +102,43 @@ namespace LGraphics
         return fileNamePos!= std::string::npos
             ? pathCopy.substr(fileNamePos + 1, pathCopy.size() - fileNamePos + 1)
             : pathCopy;
+    }
+
+    std::string lstrip(const std::string& str)
+    {
+        std::string res = str;
+        size_t counter = 0;
+        while (str[counter++] == SPACE);
+        res.erase(0, counter - 1);
+        return res;
+    }
+
+    std::string rstrip(const std::string& str)
+    {
+        std::string res = str;
+        size_t counter = 0;
+        while (str[str.size() - 1 - counter++] == SPACE);
+        res.erase(str.size()-counter + 1);
+        return res;
+    }
+
+    std::string strip(const std::string& str)
+    {
+        return lstrip(rstrip(str));
+    }
+
+    std::vector<std::string> splitToTokens(const std::string& str, char delim)
+    {
+        std::vector<std::string> tokens;
+        std::stringstream stream(str);
+        std::string token;
+        while (getline(stream, token, delim))
+            tokens.push_back(token);
+        return tokens;
+    }
+
+    bool stob(const std::string& str)
+    {
+        return isdigit(str[0]) ? std::stoi(str) : str == "true" ? true : false;
     }
 }

@@ -4,13 +4,13 @@
 namespace LGraphics
 {
 	class LApp;
-	class LCone : public LImagedShape
+	class METAGEN_CLASS LCone : public LImagedShape
 	{
 	public:
 
 		friend LApp;
 
-		LCone(LApp* app, ImageResource res);
+		GEN_METADATA LCone(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
 		const char* getObjectType() const override { return "LCone"; }
 		static void drawInstanced();

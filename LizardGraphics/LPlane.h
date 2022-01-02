@@ -6,7 +6,7 @@
 namespace LGraphics
 {
     class LApp;
-    class LPlane : public LImagedShape
+    class METAGEN_CLASS LPlane : public LImagedShape
     {
     public:
 
@@ -18,17 +18,17 @@ namespace LGraphics
 
         static void drawInstanced();
 
-        void setModel(const glm::mat4& model) override;
-        void scale(const float x, const float y, const float z) override;
-        void move(const float x, const float y, const float z) override;
+        GEN_METADATA void setModel(const glm::mat4& model) override;
+        GEN_METADATA void scale(const float x, const float y, const float z) override;
+        GEN_METADATA void move(const float x, const float y, const float z) override;
 
-        void rotateX(float angle) override;
-        void rotateY(float angle) override;
-        void rotateZ(float angle) override;
+        GEN_METADATA void rotateX(float angle) override;
+        GEN_METADATA void rotateY(float angle) override;
+        GEN_METADATA void rotateZ(float angle) override;
 
-        void setNormalMapping(bool normalMapping) override;
-        void setParallaxMapping(bool parallaxMapping) override;
-
+        GEN_METADATA void setNormalMapping(bool normalMapping) override;
+        GEN_METADATA void setParallaxMapping(bool parallaxMapping) override;
+        //
     protected:
 
         static void updateBuffer();

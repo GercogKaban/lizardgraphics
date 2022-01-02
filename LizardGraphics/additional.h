@@ -41,4 +41,30 @@ namespace LGraphics
     size_t getPowerTwoAlign(size_t size);
 
     std::string extractFileNameFromPath(const std::filesystem::path& path);
+
+    std::string lstrip(const std::string& str);
+    std::string rstrip(const std::string& str);
+    std::string strip(const std::string& str);
+
+    std::vector<std::string> splitToTokens(const std::string& str, char delim);
+
+    bool stob(const std::string& str);
+
+    template <typename I>
+    I findNumEntry(I begin, I end, std::decay_t<decltype(*begin)> elem, size_t num)
+    {
+        size_t counter = 0;
+        while (counter < num && begin != end)
+            if (*(begin++) == elem) counter++;
+        return counter == num ? --begin : end;
+    }
+
+
+    template <typename I>
+    size_t getPosByIt(I begin, I it)
+    {
+        return ((size_t)&*it - (size_t)&*begin) / sizeof(std::decay_t<decltype(*begin)>);
+    }
+
+    
 }

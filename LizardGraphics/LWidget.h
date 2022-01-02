@@ -160,7 +160,6 @@ namespace LGraphics
         virtual glm::vec3& getScaleRef() = 0;         ///< Возвращает размеры виджета.
         virtual glm::vec3& getMoveRef() = 0;          ///< Возвращает вектор move виджета.
 
-
         virtual glm::quat& getRotateRef() { return rotate_q; }
         virtual bool isInstanced() const { return false; }
 

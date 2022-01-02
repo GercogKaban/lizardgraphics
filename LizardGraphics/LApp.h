@@ -53,6 +53,7 @@ void handle_cmd(android_app* app, int32_t cmd);
 #include "AtlasGenerator.h"
 #include "LObject.h"
 #include "LLights.h"
+//#include "interpretator.h"
 
 namespace LShaders
 {
@@ -91,6 +92,7 @@ namespace LGraphics
     class LRectangleMirror;
     class InstantPoolCubes;
     class LPicking;
+    class Interpretator;
 
     struct LAppInitialCreateInfo
     {
@@ -124,7 +126,7 @@ namespace LGraphics
     LGraphics, т.к. LApp инициализурент OpenGL, GLFW окно и некоторые
     другие вспомогательные классы
     */
-    class LApp : public LObject
+    class METAGEN_CLASS LApp : public LObject
     {
         friend LShape;
         friend LImagedShape;
@@ -155,6 +157,7 @@ namespace LGraphics
         friend LSpotLight;
         friend LPointLight;
         friend LPicking;
+        friend Interpretator;
 
     public:
 
@@ -173,14 +176,15 @@ namespace LGraphics
         void emergencyStop(std::exception& exception);
 
         const LAppInitialCreateInfo& getAppInfo() const { return info; }
+        GEN_METADATA void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
 
         // нужен фикс
         float tesselationLevel = 2.0f;
         bool flag__ = false;
+        Interpretator* interpetator;
 
     protected:
 
-        void setParallaxSelfShading(bool shading) { this->parallaxSelfShading = shading; }
         bool getParallaxSelfShading() const { return parallaxSelfShading; }
 
         void switchRendererTo(RenderingAPI api);
@@ -283,7 +287,7 @@ namespace LGraphics
         void initReflex(LModel* m);
 
         /*!
-        @brief Возвращает размеры окна (в пикселях).
+        @brief Возвращает размеры окна в пикселях.
 
         */
         glm::vec<2, size_t> getWindowSize() const;
@@ -293,7 +297,7 @@ namespace LGraphics
         */
         static GLFWwindow* getWindowHandler() { return window_; }
 
-        void setMatrices(glm::mat4 view, glm::mat4 projection);
+        GEN_METADATA void setMatrices(glm::mat4 view, glm::mat4 projection);
         
         template<typename T>
         void fastErase(std::vector<T>& collection, size_t id)
@@ -322,7 +326,7 @@ namespace LGraphics
         const auto& getPrimitives() const { return primitives; }
         const auto& getModels() const { return models; }
 
-        void setTesselation(bool tesselation) { this->tesselation = tesselation; }
+        GEN_METADATA void setTesselation(bool tesselation) { this->tesselation = tesselation; }
         bool getTesselation() const { return tesselation; }
 
         const auto& getSpotLights() const { return lights[L_SPOT_LIGHT]; }
@@ -340,7 +344,7 @@ namespace LGraphics
 
         std::mutex& getDrawingMutex() { return drawingMutex; }
 
-        void setSleepTime(size_t milliseconds) { sleepTime = milliseconds; }
+        GEN_METADATA void setSleepTime(size_t milliseconds) { sleepTime = milliseconds; }
         size_t getSleepTime() const { return sleepTime; }
 
         void lockFrontViewCamera() { cameraFrontViewLock = true; }
@@ -349,15 +353,17 @@ namespace LGraphics
 
         glm::vec3 viewAxonometricVector = glm::vec3(1 / sqrt(3));
 
-        void setClearColor(glm::vec4 clearColor);
+        GEN_METADATA void setClearColor(glm::vec4 clearColor);
 
         void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
         void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
-        void setCameraPos(glm::vec3 pos) { cameraPos = pos; }
-        void setCameraFront(glm::vec3 cameraFront) { this->cameraFront = cameraFront; }
-        void setCameraUp(glm::vec3 cameraUp) { this->cameraUp = cameraUp; }
-        void setViewRadius(float radius) { viewRadius = radius; /*refreshCamera(); refreshProjection();*/ }
+        GEN_METADATA void setCameraPos(glm::vec3 pos) { cameraPos = pos; }
+        GEN_METADATA void setCameraFront(glm::vec3 cameraFront) { this->cameraFront = cameraFront; }
+        GEN_METADATA void setCameraUp(glm::vec3 cameraUp) { this->cameraUp = cameraUp; }
+        GEN_METADATA void setViewRadius(float radius) { viewRadius = radius; /*refreshCamera(); refreshProjection();*/ }
+
+        GEN_METADATA void setFov(float fov);
 
         void drawUI(bool draw) { drawUI_ = draw; }
 
@@ -389,10 +395,10 @@ namespace LGraphics
         uint8_t getLogFlags() const { return info.logFlags; }
         bool cursorModeSwitched = false;
 
-        void setYaw(float yaw) { this->yaw = yaw; };
+        GEN_METADATA void setYaw(float yaw) { this->yaw = yaw; };
         float getYaw() const { return yaw; }
 
-        void setPitch(float pitch) { this->pitch = pitch; };
+        GEN_METADATA void setPitch(float pitch) { this->pitch = pitch; };
         float getPitch() const { return pitch; }
 
         float getCurrentFrame() const { return lastFrame; }
@@ -449,7 +455,7 @@ namespace LGraphics
             ~GBuffer();
         protected:
 
-            GLuint gBuffer, gPosition, gNormal, gAlbedoSpec, rboDepth;
+            GLuint gBuffer, gPosition, gNormal, gAlbedoSpec, gDepth;
             std::vector<GLuint> drawingBuffers;
         };
 

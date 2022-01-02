@@ -70,13 +70,14 @@ void main()
     normal = Normal;
 
     albedo = texture(diffuseMap, vs.TexCoordsDiffuse).rgb;
+    //albedo = albedo4.rgb;
     if (!drawingReflex && vs.mapping[2] != 0)
     {
         vec4 reflex = texture(reflexMap, vs.TexCoordsReflex);
         float refCoef = (reflex.r + reflex.g + reflex.b)/3.0;
         vec3 I = normalize(position - viewPos);
         vec3 R = reflect(I, vs.Normal);
-        albedo = mix(albedo,texture(environment, R).rgb,refCoef);
+        albedo.rgb = mix(albedo.rgb,texture(environment, R).rgb,refCoef);
     }
 
     //if(fog.isEnabled)

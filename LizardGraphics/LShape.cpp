@@ -1,13 +1,4 @@
 ﻿#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
-#include "LShape.h"
 #include "pch.h"
 #include "LApp.h"
 
@@ -24,7 +15,7 @@ namespace LGraphics
     void LShape::color(const unsigned char r, const unsigned char g, const unsigned char b)
     {
         LOG_CALL
-        color_ = { (float)r / (float)UINT8_MAX, (float)g / UINT8_MAX,(float)b / UINT8_MAX };
+        color_ = { (float)r / (float)UINT8_MAX, (float)g / (float)UINT8_MAX,(float)b / (float)UINT8_MAX };
         setUpdateUniformsFlag();
     }
 
@@ -257,19 +248,28 @@ namespace LGraphics
 
     void LShape::setGlobalUniformsPostProcessing(GLuint shaderProgram)
     {
-        const auto viewProjection = app->view * app->projection;
-        const auto inverseViewProjection = glm::inverse(viewProjection);
+        const auto projView = app->projection * app->view;
+        const auto invProjView = glm::inverse(projView);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "colorMap"), 0);
         glUniform1i(glGetUniformLocation(shaderProgram, "normalMap"), 1);
         glUniform1i(glGetUniformLocation(shaderProgram, "depthMap"), 2);
 
         glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "viewProjection"), 
-            1, GL_FALSE, glm::value_ptr(viewProjection));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "inverseViewProjection"),
-            1, GL_FALSE, glm::value_ptr(inverseViewProjection));
+        //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projView"), 
+        //    1, GL_FALSE, glm::value_ptr(projView));
+        //glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "invProjView"),
+        //    1, GL_FALSE, glm::value_ptr(invProjView));
 
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "proj"),
+            1, GL_FALSE, glm::value_ptr(app->projection));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
+            1, GL_FALSE, glm::value_ptr(app->view));
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "invProj"),
+            1, GL_FALSE, glm::value_ptr(glm::inverse(app->projection)));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "invView"),
+            1, GL_FALSE, glm::value_ptr(glm::inverse(app->view)));
         setFogUniforms(shaderProgram);
     }
 

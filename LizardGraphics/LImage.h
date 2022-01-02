@@ -13,6 +13,10 @@
 
 namespace LGraphics
 {
+    struct ModelResource
+    {
+        std::string name;
+    };
     struct TexturesData;
     //using OpenGLTexture = TexturesData::OGLImageData::OGLTextureData;
 

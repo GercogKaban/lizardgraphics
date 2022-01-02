@@ -25,6 +25,7 @@
 #include <map>
 #include <tuple>
 #include <filesystem>
+#include <sstream>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

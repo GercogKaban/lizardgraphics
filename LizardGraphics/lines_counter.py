@@ -9,6 +9,7 @@ from pathlib import Path
 import os
 
 startDir = os.getcwd()
+script_dir = os.path.dirname(os.path.realpath(__file__))
 
 def getIgnore():
     
@@ -25,7 +26,7 @@ def getIgnore():
     isTag = False
     tags = ["[fileTypes]","[dirIgnore]","[output]"]
     lists = {tags[0]:fileTypes,tags[1]:dirs}
-    f = open("lines_counter.ini", 'r', -1,errors='ignore',encoding = "utf-8") 
+    f = open(script_dir+"\lines_counter.ini", 'r', -1,errors='ignore',encoding = "utf-8") 
     for line in f:
         # нужно пофиксить
         if line.find('#')!=-1 or len(line)<2:
@@ -77,3 +78,4 @@ if __name__ == "__main__":
     line_counter,dir_counter = get_path_line_count(current_dir, ret[0],ret[1], line_counter,dir_counter)
     print ('\n', 'gj!__________________', line_counter,  ' lines,')
     print('\n','_____________________',dir_counter, 'dirs in project!')
+    input()

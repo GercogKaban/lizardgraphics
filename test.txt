@@ -1,0 +1,21 @@
+class A
+{
+public:
+...
+		// ___GENERATED CODE START___ DON'T MODIFY THIS LINE (OR YOU'L DIE IN AGONY!!!!)
+std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> appFunctionPointers = 
+{{"setParallaxSelfShading(bool)",[&](const std::vector<std::string>& args) {app->setParallaxSelfShading(tobool(args[0]));}},
+{"setMatrices(mat4,mat4)",[&](const std::vector<std::string>& args) {app->setMatrices(tomat4(args[0])tomat4(args[1]));}},
+{"setTesselation(bool)",[&](const std::vector<std::string>& args) {app->setTesselation(tobool(args[0]));}},
+{"setSleepTime(size_t)",[&](const std::vector<std::string>& args) {app->setSleepTime(tosize_t(args[0]));}},
+{"setClearColor(vec4)",[&](const std::vector<std::string>& args) {app->setClearColor(tovec4(args[0]));}},
+{"setCameraPos(vec3)",[&](const std::vector<std::string>& args) {app->setCameraPos(tovec3(args[0]));}},
+{"setCameraFront(vec3)",[&](const std::vector<std::string>& args) {app->setCameraFront(tovec3(args[0]));}},
+{"setCameraUp(vec3)",[&](const std::vector<std::string>& args) {app->setCameraUp(tovec3(args[0]));}},
+{"setViewRadius(float)",[&](const std::vector<std::string>& args) {app->setViewRadius(tofloat(args[0]));}},
+{"setFov(float)",[&](const std::vector<std::string>& args) {app->setFov(tofloat(args[0]));}},
+{"setYaw(float)",[&](const std::vector<std::string>& args) {app->setYaw(tofloat(args[0]));}},
+{"setPitch(float)",[&](const std::vector<std::string>& args) {app->setPitch(tofloat(args[0]));}},
+};
+// ___GENERATED CODE END___   DON'T MODIFY THIS LINE (OR YOU'L DIE IN AGONY!!!!)
+}

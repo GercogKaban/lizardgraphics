@@ -4,13 +4,13 @@
 namespace LGraphics
 {
 	class LApp;
-	class LIcosphere : public LImagedShape
+	class METAGEN_CLASS LIcosphere : public LImagedShape
 	{
 	public:
 
 		friend LApp;
 
-		LIcosphere(LApp* app, ImageResource res);
+		GEN_METADATA LIcosphere(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
 		static void drawInstanced();
 		const char* getObjectType() const override { return "LIcosphere"; }

@@ -20,7 +20,7 @@
 #include "LCubeBuffer.h"
 #include "LSkyBox.h"
 #include "LRectangleMirror.h"
-
+#include "interpretator.h"
 
 namespace LGraphics
 {
@@ -255,7 +255,7 @@ namespace LGraphics
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, postProcessingFBO->normal);
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, postProcessingFBO->depth);
+        glBindTexture(GL_TEXTURE_2D, gBuffer->gDepth);
         fullscreenQuad->draw();
     }
 
@@ -276,6 +276,14 @@ namespace LGraphics
             std::filesystem::read_symlink(info.resourceDir.generic_string() + "/models/").generic_string() +
             '/' + qualityDirectories.find(info.texturesQuality)->second + '/' :
             info.resourceDir.generic_string() + "/models/" + qualityDirectories.find(info.texturesQuality)->second + '/';
+    }
+
+    void LApp::setFov(float fov)
+    {
+        const auto aspect = (float)getWindowSize().x / (float)getWindowSize().y;
+        if (info.projection == L_PERSPECTIVE)
+            projection = glm::perspective(fov, aspect, 0.1f, 100.0f);
+        //else projection = glm::ortho(viewRadius * -1.0f, viewRadius * 1.0f, viewRadius * -1.0f / aspect, viewRadius * 1.0f / aspect, -1.0f, 1000.0f);
     }
 
     void LApp::renderSceneObjects()
@@ -325,7 +333,6 @@ namespace LGraphics
             if (postProcessingFBO)
             {
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                //glDrawBuffer(GL_COLOR_ATTACHMENT0);
                 checkError();
                 clearColorDepth();
                 postProcessingPass();
@@ -1226,10 +1233,7 @@ namespace LGraphics
     void LApp::initLEngine()
     {
         LOG_CALL
-
         auto postprocessing = info.ssao || info.ssr;
-        if (postprocessing)
-            throw std::runtime_error("sorry, postprocessing currently unavailable!");
 
         fullscreenQuad = new FullscreenQuad();
         LLogger::initErrors(info.logFlags);
@@ -1373,6 +1377,7 @@ namespace LGraphics
         setCursorEnabling(!isCursorEnabled());
         if (info.picking == L_TRUE)
             picking = new LPicking(this, info.wndWidth, info.wndHeight);
+        interpetator = new Interpretator(this);
     }
 
     void LApp::initRenderer()
@@ -1759,6 +1764,7 @@ namespace LGraphics
         glDeleteBuffers(1, &LCube::vbo);
         glDeleteBuffers(1, &LPlane::vbo);
         LResourceManager::clear();
+        delete interpetator;
     }
 
     void LApp::releaseResources()
@@ -3380,7 +3386,7 @@ namespace LGraphics
 
     LApp::GBuffer::GBuffer(glm::ivec2 bufferSize)
     {
-        LApp::FBOAttach pos,normals,diff;
+        LApp::FBOAttach pos,normals,diff, depth;
 
         pos.attachmentSize = { bufferSize.x, bufferSize.y };
         pos.componentType = GL_RGB16F;
@@ -3392,28 +3398,36 @@ namespace LGraphics
         normals.drawBuffer = GL_COLOR_ATTACHMENT1;
 
         diff = pos;
-        //diff.componentType = GL_RGBA;
+        diff.componentType = GL_RGBA;
         diff.drawBuffer = GL_COLOR_ATTACHMENT2;
-        diff.valuesType = GL_UNSIGNED_BYTE;
+        //diff.valuesType = GL_UNSIGNED_BYTE;
+
+        depth = pos;
+        depth.componentType = GL_DEPTH_COMPONENT;
+        depth.drawBuffer = GL_DEPTH_ATTACHMENT;
+
+        //depth = pos;
 
         const auto posAttach = createAttachment(pos);
         const auto normalsAttach = createAttachment(normals);
         const auto diffAttach = createAttachment(diff);
+        const auto depthAttach = createAttachment(depth);
 
         gPosition = posAttach.attachmentId;
         gNormal = normalsAttach.attachmentId;
         gAlbedoSpec = diffAttach.attachmentId;
+        gDepth = depthAttach.attachmentId;
 
         drawingBuffers = { pos.drawBuffer, normals.drawBuffer, diff.drawBuffer };
-        gBuffer = createFramebuffer({ posAttach,normalsAttach,diffAttach });
+        gBuffer = createFramebuffer({ posAttach,normalsAttach,diffAttach,depthAttach });
 
-        RBOAttach rboAttach;
-        rboAttach.attachmentSize = { bufferSize.x, bufferSize.y };
-        rboAttach.componentType = GL_DEPTH_COMPONENT;
-        rboAttach.drawBuffer = GL_DEPTH_ATTACHMENT;
-        rboAttach.fbo = gBuffer;
+        //RBOAttach rboAttach;
+        //rboAttach.attachmentSize = { bufferSize.x, bufferSize.y };
+        //rboAttach.componentType = GL_DEPTH_COMPONENT;
+        //rboAttach.drawBuffer = GL_DEPTH_ATTACHMENT;
+        //rboAttach.fbo = gBuffer;
 
-        rboDepth = createRenderbuffer(rboAttach);
+        //rboDepth = createRenderbuffer(rboAttach);
     }
 
     LApp::PostProcessingFBO::PostProcessingFBO(glm::ivec2 bufferSize)
@@ -3459,8 +3473,9 @@ namespace LGraphics
         glDeleteTextures(1, &gPosition);
         glDeleteTextures(1, &gNormal);
         glDeleteTextures(1, &gAlbedoSpec);
+        glDeleteTextures(1, &gDepth);
         glDeleteFramebuffers(1, &gBuffer);
-        glDeleteRenderbuffers(1, &rboDepth);
+        //glDeleteRenderbuffers(1, &rboDepth);
     }
 
     LApp::FullscreenQuad::FullscreenQuad()

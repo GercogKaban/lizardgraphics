@@ -4,13 +4,13 @@
 
 namespace LGraphics
 {
-	class LCube : public LImagedShape
+	class METAGEN_CLASS LCube : public LImagedShape
 	{
 	public:
 
 		friend LApp;
 
-		LCube(LApp* app, ImageResource res);
+		GEN_METADATA LCube(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override{}
 		static void drawInstanced();
 		const char* getObjectType() const override { return "LCube"; }

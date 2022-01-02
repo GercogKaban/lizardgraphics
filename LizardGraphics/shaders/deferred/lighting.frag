@@ -45,6 +45,7 @@ struct SpotLight
 
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec3 normal;
+//layout (location = 2) out float depth;
 
 uniform vec3 viewPos;
 uniform mat4 view;
@@ -268,5 +269,4 @@ void main()
     color*= vec4(result,1.0);
     if(fog.isEnabled)
        color = mix(color, vec4(fog.color, 1.0), getFogFactor(fogCoordinate));
-    //if (color.a - 0.1 < 0) discard;
 }

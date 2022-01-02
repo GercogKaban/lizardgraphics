@@ -14,7 +14,7 @@ namespace LGraphics
 #define CTOR_PATH_VARS_VEC const std::string& modelName, const std::vector<std::string>& diffuseNames, \
      const std::vector<std::string>& normalNames, const std::vector<std::string>& displacementNames, const std::vector<std::string>& reflexNames
 
-    class LModel : public LShape
+    class METAGEN_CLASS LModel : public LShape
     {
         friend LApp;
         friend Animation;
@@ -31,7 +31,6 @@ namespace LGraphics
             std::string name;
         };
 
-        friend LApp;
         friend LResourceManager;
 
         const char* getObjectType() const { return "LModel"; }
@@ -53,7 +52,7 @@ namespace LGraphics
         bool getParallaxMapping(size_t meshNum = 0) const { return meshes[meshNum].image->getParallaxMapping(); };
         bool getReflexMapping(size_t meshNum = 0) const { return meshes[meshNum].image->getReflexMapping(); };
 
-        LModel(LApp* app, ModelResource res, bool cropTextureCoords = false);
+        GEN_METADATA LModel(LApp* app, ModelResource res, bool cropTextureCoords = false);
         LModel(LApp* app, CTOR_PATH_VARS, bool cropTextureCoords = false);
         LModel(LApp* app, CTOR_PATH_VARS_VEC, bool cropTextureCoords = false);
 

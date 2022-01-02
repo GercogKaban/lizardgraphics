@@ -4,11 +4,13 @@
 namespace LGraphics
 {
 	class LApp;
+	class Interpretator;
 	class LTorus : public LImagedShape
 	{
 	public:
 
 		friend LApp;
+		friend Interpretator;
 
 		LTorus(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
@@ -16,6 +18,7 @@ namespace LGraphics
 		static void drawInstanced();
 
 		void setModel(const glm::mat4& model) override;
+		
 		void scale(const float x, const float y, const float z) override;
 		void move(const float x, const float y, const float z) override;
 

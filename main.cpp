@@ -13,6 +13,7 @@
 #include "LTorus.h"
 #include "LPlane.h"
 #include "LCylinder.h"
+#include "interpretator.h"
 
 #include <ctime>
 
@@ -33,7 +34,7 @@ int main(int argc, char** argv)
     info.anisotropy = 16;
     info.MSAA = 4;
     info.vsync = L_FALSE;
-    info.ssr = L_TRUE;
+    //info.ssr = L_FALSE;
 
 #ifndef NDEBUG
     info.texturesQuality = LOW;
@@ -77,18 +78,20 @@ int main(int argc, char** argv)
                     p->rotateX(270.0f);              
                     p->move(i, yOffset, (float)j);
                     p->setParallaxMapping(false);
+                    //p->setNormalMapping(false);
                 }
 
-            //for (size_t i = 0; i < 2; ++i)
-            //    for (size_t j = 0; j < 2; ++j)
-            //    {
-            //        LPlane* p;
-            //        p = new LPlane(&app, { "Rocks011.jpg" });
-            //        p->rotateX(270.0f);
-            //        p->move(i, yOffset + 0.25f, (float)j);
-            //        p->setParallaxMapping(false);
-            //        p->setNormalMapping(false);
-            //    }
+            for (size_t i = 0; i < 2; ++i)
+                for (size_t j = 0; j < 2; ++j)
+                {
+                    LPlane* p;
+                    p = new LPlane(&app, { "Rocks011.jpg" });
+                    p->rotateX(270.0f);
+                    p->rotateY(180.0f);
+                    p->move(i, yOffset + 1.0f, (float)j);
+                    p->setParallaxMapping(false);
+                    //p->setNormalMapping(false);
+                }
 
             const float off = 1.5f;
             const float startX = 1.0f;
@@ -115,7 +118,6 @@ int main(int argc, char** argv)
         }
     }
 
-    //const float scale = 0.3f;
     const float scale = 0.0025f;
     auto test = new LModel(&app, "girl.fbx","Kachujin_diffuse.png","Kachujin_normal.png","", "refl_map.jpg");
     //auto test = new LModel(&app, "cube228.obj","Rocks011.jpg","Rocks011.jpg","",
@@ -168,6 +170,7 @@ int main(int argc, char** argv)
 
             const float cameraSpeed = 2.0f / ImGui::GetIO().Framerate;
             glm::vec3 cameraPos = app.getCameraPos();
+            const auto temp = cameraPos;
             const auto cameraFront = app.getCameraFront();
             const auto cameraUp = app.getCameraUp();
 
@@ -182,7 +185,7 @@ int main(int argc, char** argv)
             if (app.isPressed(GLFW_KEY_D))
                 cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
-            cameraPos.y = 0.0f;
+            cameraPos.y = temp.y;
             app.setCameraPos(cameraPos);
         });
 
@@ -254,6 +257,32 @@ int main(int argc, char** argv)
         }
     });
 
+    float fov = 45.0f;
+    app.setUserScrollCallback([&](GLFWwindow* window, double xOffset, double yOffset)
+    {
+        //const float min = 1.0f;
+        //const float max = 45.0f;
+        //const float scale = 1.0f / 25.0f;
+
+        //if (fov >= min && fov <= max)
+        //    fov -= yOffset * scale;
+        //if (fov < min)
+        //    fov = min;
+        //if (fov > max)
+        //    fov = max;
+        //app.setFov(fov);
+
+        //if (fov <= min)
+        {
+            const auto offset = yOffset / 5.0f;
+            const auto cameraPos = app.getCameraPos();
+            const auto cameraFront = glm::normalize(app.getCameraFront()) * (float)offset;
+            app.setCameraPos({ 
+                cameraPos.x + cameraFront.x,
+                cameraPos.y - cameraFront.y,
+                cameraPos.z + cameraFront.z});
+        }
+    });
     //app.setDirLightPos(app.getCameraPos());
     app.loop();
     return 0;

@@ -10,7 +10,7 @@ namespace LGraphics
 
 		friend LApp;
 
-		LSphere(LApp* app, ImageResource res);
+		GEN_METADATA LSphere(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
 		const char* getObjectType() const override { return "LSphere"; }
 		static void drawInstanced();

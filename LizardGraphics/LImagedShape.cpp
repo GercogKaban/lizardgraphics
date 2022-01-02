@@ -5,6 +5,7 @@
 #include "LApp.h"
 #include "LLogger.h"
 #include "LResourceManager.h"
+#include "LPlane.h"
 
 namespace LGraphics
 {
@@ -38,27 +39,31 @@ namespace LGraphics
             shader = app->lightShader.get();
     }
 
-    void LImagedShape::updateBufferParallel(LGClasses type, LWidget::PrimitiveUniforms* buffer, std::vector<LShape*>& changed, size_t begin, size_t end)
+    void LImagedShape::updateBufferParallel(LGClasses type, LWidget::PrimitiveUniforms* buffer, const std::vector<LShape*>& changed, size_t begin, size_t end)
     {
         for (size_t i = begin; i < end; i++)
             updateUniforms(app, type, buffer, changed[i]->id);
     }
 
-    void LImagedShape::updateBuffer(LGClasses type, std::vector<LGraphics::LShape*>& objChanged, bool needToResetBuffer
-    ,GLuint vao, GLuint vbo, std::vector<LWidget::PrimitiveUniforms>& u)
+    void LImagedShape::updateBuffer(LGClasses type, std::vector<LGraphics::LShape*>& objChanged, bool& needToResetBuffer
+    ,GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms>& u)
     {
         if (objChanged.size())
         {
             if (needToResetBuffer)
             {
                 resetInstanceBuffer(vao,vbo,u);
-                needToResetBuffer = false;
+
+                objChanged.clear();
+                for (auto p : app->primitives[type])
+                     objChanged.push_back(p);
             }
 
-            LWidget::PrimitiveUniforms* buffer = (LWidget::PrimitiveUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::PrimitiveUniforms) * u.size(),
+            LWidget::PrimitiveUniforms* buffer = (LWidget::PrimitiveUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::PrimitiveUniforms) * u.capacity(),
                 GL_MAP_WRITE_BIT);
             if (!buffer)
                 throw std::runtime_error(LOG_HEADER + "buffer == NULL, error: " + std::to_string(glGetError()) + "\n\n");
+
 #ifdef PARALLEL_UPDATE
 
             if (objChanged.size() > 1000 && app->info.freeThreads > 1)
@@ -84,7 +89,7 @@ namespace LGraphics
 
     }
 
-    void LImagedShape::drawInstanced(LGClasses type, std::vector<LShape*>& changed, bool needToResetBuffer, 
+    void LImagedShape::drawInstanced(LGClasses type, std::vector<LShape*>& changed, bool& needToResetBuffer, 
         GLuint vao, GLuint vbo,std::vector<LWidget::PrimitiveUniforms>& uniforms, size_t indCount)
     {
         if (!uniforms.size()) return;
@@ -176,7 +181,7 @@ namespace LGraphics
         obj.ids = { id,primitive };
     }
 
-    void LGraphics::LImagedShape::resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms> uniforms)
+    void LGraphics::LImagedShape::resetInstanceBuffer(GLuint vao, GLuint vbo, const std::vector<LWidget::PrimitiveUniforms>& uniforms)
     {
         const size_t vec4Size = sizeof(glm::vec4);
         const size_t vec3Size = sizeof(glm::vec3);
@@ -184,6 +189,7 @@ namespace LGraphics
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(LWidget::PrimitiveUniforms) * uniforms.capacity(), uniforms.data(), GL_STATIC_DRAW);
+
         glBindVertexArray(vao);
 
         glEnableVertexAttribArray(5);

@@ -4,13 +4,13 @@
 
 namespace LGraphics
 {
-	class LCylinder : public LImagedShape
+	class METAGEN_CLASS LCylinder : public LImagedShape
 	{
 	public:
 
 		friend LApp;
 
-		LCylinder(LApp* app, ImageResource res);
+		GEN_METADATA LCylinder(LApp* app, ImageResource res);
 		void draw(VkCommandBuffer commandBuffer, uint32_t frameIndex) override {}
 		static void drawInstanced();
 		const char* getObjectType() const override { return "LCylinder"; }
