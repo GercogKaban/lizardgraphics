@@ -172,6 +172,7 @@ namespace LGraphics
         bool isHidden() const { return isHidden_; }       ///< Возвращает спрятан ли виджет.
         bool isInited() const { return isInited_; }
         bool isChanged() const { return changed != UNMODIFIED; }
+        auto getId() const { return id; }
         //virtual int getId() const { return id; }
         
         virtual ~LWidget();

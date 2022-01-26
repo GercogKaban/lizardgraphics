@@ -10,6 +10,22 @@ namespace LGraphics
     class ImGuiInterface
     {
     public:
+
+        void setDepth(float depth)
+        {
+            currentDepth = depth;
+        }
+
+        void setCursorWorldPos(glm::vec3 cursorPos)
+        {
+            cursorWorldPos = cursorPos;
+        }
+
+        void setPickedObject(LWidget* w)
+        {
+            pickedObject = w;
+        }
+
         ImGuiInterface(LApp* app)
         {
             this->app = app;
@@ -29,7 +45,9 @@ namespace LGraphics
 
     private:
 
+        
         LApp* app;
+        LWidget* pickedObject = nullptr;
 
         static const size_t pathSize = 128;
         static constexpr size_t coordsCount = 3;
@@ -63,7 +81,12 @@ namespace LGraphics
         bool firstDialog = false;
         SliderRanges* sliderRanges;
 
+        bool console = false;
+
         bool radioRectangle = false, radioModel = false, fileSystem = false;
+
+        float currentDepth = 0.0f;
+        glm::vec3 cursorWorldPos;
 
 public:
         void imguiInterface()
@@ -76,13 +99,26 @@ public:
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
-                ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar |
+                ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar|
                 ImGuiWindowFlags_::ImGuiWindowFlags_NoMouseInputs);
 
-            ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "camera pos: x = %.3f, y = %.3f, z = %.3f",app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
-            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "camera front: x = %.3f, y = %.3f, z = %.3f", app->cameraFront.x, app->cameraFront.y, app->cameraFront.z);
-            ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "renderer: %s", app->info.api == L_OPENGL ? "OpenGL" : "Vulkan");
+            ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "Application average %.3f ms/frame (%.1f FPS)", 
+                1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "mouse pos: x = %.3f, y = %.3f, depth = %.3f",
+                app->mouseCoords.x, app->mouseCoords.y, currentDepth);
+
+            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "cursor at world coords: x = %.3f, y = %.3f, z = %.3f",
+                cursorWorldPos.x, cursorWorldPos.y, cursorWorldPos.z);
+
+            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "camera pos: x = %.3f, y = %.3f, z = %.3f",
+                app->cameraPos.x, app->cameraPos.y, app->cameraPos.z);
+
+            ImGui::TextColored({ 0.0f,0.0f,1.0f,1.0f }, "camera front: x = %.3f, y = %.3f, z = %.3f", 
+                app->cameraFront.x, app->cameraFront.y, app->cameraFront.z);
+
+            ImGui::TextColored({ 0.0f / 255.0f,0.0f / 255.0f,255.0f / 255.0f,1 }, "renderer: %s",
+                app->info.api == L_OPENGL ? "OpenGL" : "Vulkan");
             ImGui::End();
 
             auto fileDialog = [&](char* arr)
@@ -91,6 +127,12 @@ public:
                 fileSystemArr = arr;
             };
 
+            ImGui::Begin("Object redactor");
+            if (pickedObject)
+            {
+                ImGui::Text(pickedObject->getObjectType());
+            }
+            ImGui::End();
             //auto drawFileDialog = [&]
             //{
 
@@ -194,187 +236,187 @@ public:
             }
 
               
-            ImGui::Begin("Objects redactor", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
-            if (ImGui::RadioButton("lock camera on object", lockCamOnObject))
-                lockCamOnObject = !lockCamOnObject;
-            ImGui::BeginChild("Scrolling");
+            //ImGui::Begin("Objects redactor", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+            //if (ImGui::RadioButton("lock camera on object", lockCamOnObject))
+            //    lockCamOnObject = !lockCamOnObject;
+            //ImGui::BeginChild("Scrolling");
 
-            auto drawObjectUI = [&](int i, LWidget* obj, std::string name_)
-            {
-                //const auto& obj = app->getModels()[i];
-                std::string name = strlen(obj->getName().data()) ? obj->getName() : name_ + std::to_string(i);
-                auto pressed_ = ImGui::Button(name.data());
+            //auto drawObjectUI = [&](int i, LWidget* obj, std::string name_)
+            //{
+            //    //const auto& obj = app->getModels()[i];
+            //    std::string name = strlen(obj->getName().data()) ? obj->getName() : name_ + std::to_string(i);
+            //    auto pressed_ = ImGui::Button(name.data());
 
-                if (pressed_ && lockCamOnObject)
-                {
-                    app->setCameraPos({ obj->getMove().x, obj->getMove().y + 10.0f, obj->getMove().z + 5.0f });
-                    app->setCameraFront(glm::normalize(obj->getMove() - app->getCameraPos()));
-                }
+            //    if (pressed_ && lockCamOnObject)
+            //    {
+            //        app->setCameraPos({ obj->getMove().x, obj->getMove().y + 10.0f, obj->getMove().z + 5.0f });
+            //        app->setCameraFront(glm::normalize(obj->getMove() - app->getCameraPos()));
+            //    }
 
-                pressed[i] = pressed_ ? !pressed[i] : pressed[i];
-                ImGui::SameLine();
-                if (ImGui::Button("X") || deleteDialog)
-                {
-                    if (!firstDialog)
-                    {
-                        if (deleteDialog) firstDialog = true;
-                        deleteDialog = true;
-                        ImGui::Begin("Delete object", 0, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize
-                        | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
-                        ImGui::Text("Are you sure you want to delete this object?");
-                        if (ImGui::Button("Yes"))
-                        {
-                            //sliderRanges[i].inited = false;
-                            //if (obj->getObjectType() == std::string("LModel"))
-                            //    app->safeDelete(obj);
-                            //else if (obj->getObjectType() == std::string("LWRectangle"))
-                            //    app->safeDelete(obj);
-                            //deleteDialog = false;
-                        }
-                        ImGui::SameLine();
-                        if (ImGui::Button("No"))
-                            deleteDialog = false;
-                        ImGui::End();
-                    }
-                }
+            //    pressed[i] = pressed_ ? !pressed[i] : pressed[i];
+            //    ImGui::SameLine();
+            //    if (ImGui::Button("X") || deleteDialog)
+            //    {
+            //        if (!firstDialog)
+            //        {
+            //            if (deleteDialog) firstDialog = true;
+            //            deleteDialog = true;
+            //            ImGui::Begin("Delete object", 0, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize
+            //            | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+            //            ImGui::Text("Are you sure you want to delete this object?");
+            //            if (ImGui::Button("Yes"))
+            //            {
+            //                //sliderRanges[i].inited = false;
+            //                //if (obj->getObjectType() == std::string("LModel"))
+            //                //    app->safeDelete(obj);
+            //                //else if (obj->getObjectType() == std::string("LWRectangle"))
+            //                //    app->safeDelete(obj);
+            //                //deleteDialog = false;
+            //            }
+            //            ImGui::SameLine();
+            //            if (ImGui::Button("No"))
+            //                deleteDialog = false;
+            //            ImGui::End();
+            //        }
+            //    }
 
-                constexpr float range = 0.01f;
-                constexpr float halfRange = range / 2.0f;
+            //    constexpr float range = 0.01f;
+            //    constexpr float halfRange = range / 2.0f;
 
-                if (pressed[i])
-                {
-                    auto degrees = obj->getRotateDegrees();
-                    auto ranges = sliderRanges[i];
+            //    if (pressed[i])
+            //    {
+            //        auto degrees = obj->getRotateDegrees();
+            //        auto ranges = sliderRanges[i];
 
-                    //app->lockFrontViewCamera();
+            //        //app->lockFrontViewCamera();
 
-                    // support functions
+            //        // support functions
 
-                    auto initRanges = [&](const glm::vec3* vec, VectorTypes vectorType)
-                    {
+            //        auto initRanges = [&](const glm::vec3* vec, VectorTypes vectorType)
+            //        {
 
-                        const auto leftEndOffset = vectorType * coordsCount * SliderRanges::rangeEndsCount;
-                        const auto rightEndOffset = leftEndOffset + coordsCount;
+            //            const auto leftEndOffset = vectorType * coordsCount * SliderRanges::rangeEndsCount;
+            //            const auto rightEndOffset = leftEndOffset + coordsCount;
 
-                        ranges.ranges[leftEndOffset] = vec->x - range;
-                        ranges.ranges[rightEndOffset] = vec->x + range;
-                        ranges.ranges[leftEndOffset + 1] = vec->y - range;
-                        ranges.ranges[rightEndOffset + 1] = vec->y + range;
-                        ranges.ranges[leftEndOffset + 2] = vec->z - range;
-                        ranges.ranges[rightEndOffset + 2] = vec->z + range;
-                    };
-
-
-                    auto checkRanges = [&](const glm::vec3& vec, VectorTypes vectorType, size_t coordNum)
-                    {
-                        const auto leftOffset = vectorType * coordsCount * SliderRanges::rangeEndsCount;
-                        const auto rightOffset = leftOffset + coordsCount;
-
-                        if (vec[coordNum] <= ranges.ranges[leftOffset + coordNum])
-                        {
-                            ranges.ranges[leftOffset + coordNum] -= halfRange;
-                            ranges.ranges[rightOffset + coordNum] -= halfRange;
-                        }
-                        else if (vec[coordNum] >= ranges.ranges[rightOffset + coordNum])
-                        {
-                            ranges.ranges[leftOffset + coordNum] += halfRange;
-                            ranges.ranges[rightOffset + coordNum] += halfRange;
-                        }
-                    };
-
-                    auto vectorGui = [&](glm::vec3& vec, VectorTypes type, size_t coordNum)
-                    {
-                        const auto offset = type * coordsCount * SliderRanges::rangeEndsCount + coordNum;
-                        ImGui::PushID(coordsCount * type + coordNum);
-                        if (ImGui::Button("<"))
-                            vec[coordNum] -= range;
-                        ImGui::SameLine();
-                        ImGui::SliderFloat("", &vec[coordNum], ranges.ranges[offset], ranges.ranges[offset + 3]);
-                        ImGui::SameLine();
-                        if (ImGui::Button(">"))
-                            vec[coordNum] += range;
-                        ImGui::SameLine();
-                        if (coordNum == 0) ImGui::Text((vectors[type] + 'x').data());
-                        else if (coordNum == 1) ImGui::Text((vectors[type] + 'y').data());
-                        else if (coordNum == 2) ImGui::Text((vectors[type] + 'z').data());
-                        ImGui::PopID();
-                    };
-
-                    auto doLogick = [&](std::array<std::pair<glm::vec3*, VectorTypes>, SliderRanges::vectorTypes>& vectors)
-                    {
-                        for (auto& i : vectors)
-                        {
-                            if (!ranges.inited)
-                            {
-                                initRanges(i.first, i.second);
-                            }
-                            for (size_t j = 0; j < coordsCount; j++)
-                            {
-                                checkRanges(*i.first, i.second, j);
-                                vectorGui(*i.first, i.second, j);
-                            }
-
-                        }
-                        ranges.inited = true;
-                    };
-
-                    //////////////////////////////////////////////////////////////////////
+            //            ranges.ranges[leftEndOffset] = vec->x - range;
+            //            ranges.ranges[rightEndOffset] = vec->x + range;
+            //            ranges.ranges[leftEndOffset + 1] = vec->y - range;
+            //            ranges.ranges[rightEndOffset + 1] = vec->y + range;
+            //            ranges.ranges[leftEndOffset + 2] = vec->z - range;
+            //            ranges.ranges[rightEndOffset + 2] = vec->z + range;
+            //        };
 
 
-                    std::array<std::pair<glm::vec3*, VectorTypes>, SliderRanges::vectorTypes> vectors_
-                    {
-                        std::make_pair(&obj->getMoveRef(),MOVE),
-                        std::make_pair(&obj->getScaleRef(),SCALE),
-                    };
+            //        auto checkRanges = [&](const glm::vec3& vec, VectorTypes vectorType, size_t coordNum)
+            //        {
+            //            const auto leftOffset = vectorType * coordsCount * SliderRanges::rangeEndsCount;
+            //            const auto rightOffset = leftOffset + coordsCount;
 
-                    doLogick(vectors_);
+            //            if (vec[coordNum] <= ranges.ranges[leftOffset + coordNum])
+            //            {
+            //                ranges.ranges[leftOffset + coordNum] -= halfRange;
+            //                ranges.ranges[rightOffset + coordNum] -= halfRange;
+            //            }
+            //            else if (vec[coordNum] >= ranges.ranges[rightOffset + coordNum])
+            //            {
+            //                ranges.ranges[leftOffset + coordNum] += halfRange;
+            //                ranges.ranges[rightOffset + coordNum] += halfRange;
+            //            }
+            //        };
 
-                    ImGui::PushID(INT_MAX - 1 - i);
-                    constexpr float range = 1.0f;
-                    if (ImGui::Button("<"))
-                        obj->rotateX(-range);
-                    ImGui::SameLine();
-                    if (ImGui::SliderFloat("", &degrees.x, -360.0f, 360.0f))
-                        obj->rotateX(degrees.x - obj->getRotateDegrees().x);
-                    ImGui::SameLine();
-                    if (ImGui::Button(">"))
-                        obj->rotateX(range);
-                    ImGui::SameLine();
-                    ImGui::Text("rotate_x");
-                    ImGui::PopID();
+            //        auto vectorGui = [&](glm::vec3& vec, VectorTypes type, size_t coordNum)
+            //        {
+            //            const auto offset = type * coordsCount * SliderRanges::rangeEndsCount + coordNum;
+            //            ImGui::PushID(coordsCount * type + coordNum);
+            //            if (ImGui::Button("<"))
+            //                vec[coordNum] -= range;
+            //            ImGui::SameLine();
+            //            ImGui::SliderFloat("", &vec[coordNum], ranges.ranges[offset], ranges.ranges[offset + 3]);
+            //            ImGui::SameLine();
+            //            if (ImGui::Button(">"))
+            //                vec[coordNum] += range;
+            //            ImGui::SameLine();
+            //            if (coordNum == 0) ImGui::Text((vectors[type] + 'x').data());
+            //            else if (coordNum == 1) ImGui::Text((vectors[type] + 'y').data());
+            //            else if (coordNum == 2) ImGui::Text((vectors[type] + 'z').data());
+            //            ImGui::PopID();
+            //        };
 
-                    ImGui::PushID(INT_MAX - 2 - i);
-                    if (ImGui::Button("<"))
-                        obj->rotateY(-range);
-                    ImGui::SameLine();
-                    if (ImGui::SliderFloat("", &degrees.y, -360.0f, 360.0f))
-                        obj->rotateY(degrees.y - obj->getRotateDegrees().y);
-                    ImGui::SameLine();
-                    if (ImGui::Button(">"))
-                        obj->rotateY(range);
-                    ImGui::SameLine();
-                    ImGui::Text("rotate_y");
-                    ImGui::PopID();
+            //        auto doLogick = [&](std::array<std::pair<glm::vec3*, VectorTypes>, SliderRanges::vectorTypes>& vectors)
+            //        {
+            //            for (auto& i : vectors)
+            //            {
+            //                if (!ranges.inited)
+            //                {
+            //                    initRanges(i.first, i.second);
+            //                }
+            //                for (size_t j = 0; j < coordsCount; j++)
+            //                {
+            //                    checkRanges(*i.first, i.second, j);
+            //                    vectorGui(*i.first, i.second, j);
+            //                }
 
-                    ImGui::PushID(INT_MAX - 3 - i);
-                    if (ImGui::Button("<"))
-                        obj->rotateZ(-range);
-                    ImGui::SameLine();
-                    if (ImGui::SliderFloat("", &degrees.z, -360.0f, 360.0f))
-                        obj->rotateZ(degrees.z - obj->getRotateDegrees().z);
-                    ImGui::SameLine();
-                    if (ImGui::Button(">"))
-                        obj->rotateZ(range);
-                    ImGui::SameLine();
-                    ImGui::Text("rotate_z");
-                    ImGui::PopID();
+            //            }
+            //            ranges.inited = true;
+            //        };
 
-                    ImGui::InputText("", objName, sizeof(objName));
-                    ImGui::SameLine();
-                    ImGui::Text("name");
-                    obj->setName(objName);
-                }
-            };
+            //        //////////////////////////////////////////////////////////////////////
+
+
+            //        std::array<std::pair<glm::vec3*, VectorTypes>, SliderRanges::vectorTypes> vectors_
+            //        {
+            //            std::make_pair(&obj->getMoveRef(),MOVE),
+            //            std::make_pair(&obj->getScaleRef(),SCALE),
+            //        };
+
+            //        doLogick(vectors_);
+
+            //        ImGui::PushID(INT_MAX - 1 - i);
+            //        constexpr float range = 1.0f;
+            //        if (ImGui::Button("<"))
+            //            obj->rotateX(-range);
+            //        ImGui::SameLine();
+            //        if (ImGui::SliderFloat("", &degrees.x, -360.0f, 360.0f))
+            //            obj->rotateX(degrees.x - obj->getRotateDegrees().x);
+            //        ImGui::SameLine();
+            //        if (ImGui::Button(">"))
+            //            obj->rotateX(range);
+            //        ImGui::SameLine();
+            //        ImGui::Text("rotate_x");
+            //        ImGui::PopID();
+
+            //        ImGui::PushID(INT_MAX - 2 - i);
+            //        if (ImGui::Button("<"))
+            //            obj->rotateY(-range);
+            //        ImGui::SameLine();
+            //        if (ImGui::SliderFloat("", &degrees.y, -360.0f, 360.0f))
+            //            obj->rotateY(degrees.y - obj->getRotateDegrees().y);
+            //        ImGui::SameLine();
+            //        if (ImGui::Button(">"))
+            //            obj->rotateY(range);
+            //        ImGui::SameLine();
+            //        ImGui::Text("rotate_y");
+            //        ImGui::PopID();
+
+            //        ImGui::PushID(INT_MAX - 3 - i);
+            //        if (ImGui::Button("<"))
+            //            obj->rotateZ(-range);
+            //        ImGui::SameLine();
+            //        if (ImGui::SliderFloat("", &degrees.z, -360.0f, 360.0f))
+            //            obj->rotateZ(degrees.z - obj->getRotateDegrees().z);
+            //        ImGui::SameLine();
+            //        if (ImGui::Button(">"))
+            //            obj->rotateZ(range);
+            //        ImGui::SameLine();
+            //        ImGui::Text("rotate_z");
+            //        ImGui::PopID();
+
+            //        ImGui::InputText("", objName, sizeof(objName));
+            //        ImGui::SameLine();
+            //        ImGui::Text("name");
+            //        obj->setName(objName);
+            //    }
+            //};
             //for (size_t i = 0; i < app->getModels().size(); ++i)
             //{
             //    ImGui::PushID(i);
@@ -389,9 +431,9 @@ public:
             //    drawObjectUI(id, app->getPrimitives()[i], "rect");
             //    ImGui::PopID();
             //}
-            firstDialog = false;
-            ImGui::EndChild();
-            ImGui::End();
+            //firstDialog = false;
+            //ImGui::EndChild();
+            //ImGui::End();
         }
     };
     

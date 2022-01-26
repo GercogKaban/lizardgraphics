@@ -202,6 +202,7 @@ namespace LGraphics
                 app->currentLight->position.x, app->currentLight->position.y, app->currentLight->position.z);
             glUniform1f(glGetUniformLocation(shaderProgram, "farPlane"), app->currentLight->farPlane);
         }
+        glUniform1i(glGetUniformLocation(shaderProgram, "pcf"), app->pcf);
     }
 
     void LShape::setGlobalUniformsPicking(GLuint shaderProgram)
@@ -401,11 +402,13 @@ namespace LGraphics
 
     glm::vec3 LShape::getMiddlePoint() const
     {
-        std::pair<float,float> scaledRangeX = { rangeX.first * scale_.x, rangeX.second * scale_.x };
-        std::pair<float, float> scaledRangeY = { rangeY.first * scale_.y, rangeY.second * scale_.y };
-        std::pair<float, float> scaledRangeZ = { rangeZ.first * scale_.z, rangeZ.second * scale_.z };
-        return { move_.x + scaledRangeX.second - scaledRangeX.first, move_.y + scaledRangeY.second - scaledRangeY.first,
-            move_.z + scaledRangeZ.second - scaledRangeZ.first };
+        //const std::pair<float, float> scaledRangeX = { scale_.x * rangeX.first ,  scale_.x * rangeX.second  };
+        //const std::pair<float, float> scaledRangeY = { scale_.y * rangeY.first ,  scale_.y * rangeY.second  };
+        //const std::pair<float, float> scaledRangeZ = { scale_.z * rangeZ.first ,  scale_.z * rangeZ.second};
+        return { 
+            move_.x + (scale_.x * rangeX.second - scale_.x * rangeX.first),
+            move_.y + (scale_.y * rangeY.second - scale_.y * rangeY.first) ,
+            move_.z + (scale_.z * rangeZ.second - scale_.z * rangeZ.first) };
     }
 
     LShape::~LShape()

@@ -70,6 +70,8 @@ uniform int dirSourcesCount = 0;
 uniform bool drawingReflex;
 uniform float farPlane;
 
+uniform bool pcf;
+
 uniform mat4 lightSpaceMatrix[6];
 
 struct Fog
@@ -102,6 +104,8 @@ float ShadowCalculation(vec3 lightDir, vec3 FragPos)
     float closestDepth = texture(shadowMap, projCoords.xy).r; 
     float currentDepth = projCoords.z;
     //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    if (!pcf)
+        return currentDepth > closestDepth  ? 1.0 : 0.0;
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
     for(int x = -1; x <= 1; ++x)

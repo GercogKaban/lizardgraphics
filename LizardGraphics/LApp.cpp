@@ -298,7 +298,11 @@ namespace LGraphics
         LTorus::drawInstanced();
 
         for (auto& m : models)
+        { 
+            m->beforeDrawingFunc();
             m->draw();
+            m->afterDrawingFunc();
+        }
         if (!drawingInShadow)
         {
             glDepthFunc(GL_LEQUAL);
@@ -363,6 +367,8 @@ namespace LGraphics
     void LApp::reflexPass(GLuint reflexFBO, size_t reflexSize, glm::vec3 position)
     {
         LOG_CALL
+        if (reflexFBO == -1)
+            return;
         drawingReflex = true;
         reflexPos = position;
         glViewport(0, 0, reflexSize, reflexSize);
@@ -1022,7 +1028,7 @@ namespace LGraphics
         userCharacterCallback = func;
     }
 
-    std::pair<LWidget*, LApp::PixelInfo> LApp::getObjectByMousePos(size_t x, size_t y)
+    std::pair<LWidget*, LApp::PickingPixelInfo> LApp::getObjectByMousePos(size_t x, size_t y)
     {
         auto pixel = readPixel(x, y, picking->fbo, picking->colorBuffer);
         return std::make_pair(getObjectByPixel(pixel),pixel);
@@ -1034,7 +1040,7 @@ namespace LGraphics
         userScrollCallback = func;
     }
 
-    LWidget* LApp::getObjectByPixel(const PixelInfo& pixelinfo) const
+    LWidget* LApp::getObjectByPixel(const PickingPixelInfo& pixelinfo) const
     {
         if (pixelinfo.primitiveNum > 7)
             return nullptr;
@@ -1189,15 +1195,26 @@ namespace LGraphics
         return out;
     }
 
-    LApp::PixelInfo LApp::readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const
+    LApp::PickingPixelInfo LApp::readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glReadBuffer(colorBuffer);
-        PixelInfo Pixel;
+        PickingPixelInfo Pixel;
         glReadPixels(x, y, 1, 1, GL_RGB_INTEGER, GL_UNSIGNED_INT, &Pixel);
         glReadBuffer(GL_NONE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         return Pixel;
+    }
+
+    float LApp::readPixelDepth(size_t x, size_t y) const
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer->gBuffer);
+        glReadBuffer(GL_DEPTH_ATTACHMENT);
+        float depth;
+        glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        return 1.0f - depth;
     }
 
     void LApp::initErrorRecovering()
@@ -1794,7 +1811,7 @@ namespace LGraphics
     {
         LOG_CALL
         userCursorCallback(window, xpos, ypos);
-        mouseCoords = { (float)xpos,(float)ypos };
+        mouseCoords = { (float)xpos, (float)ypos };
     }
 
     void LApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -3502,6 +3519,35 @@ namespace LGraphics
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
+    }
+
+    glm::vec3 LApp::screeSpaceToWorldSpace(const glm::vec2& screenCoords, float depth) const
+    {
+        glm::mat4 invViewProj = glm::inverse(view * projection);
+        glm::vec4 in = {screenCoords.x,screenCoords.y,depth,1.0f};
+        in = in * 2.0f - 1.0f;
+        glm::vec4 pos = in * invViewProj;
+        pos.w = 1.0 / pos.w;
+        pos.x *= pos.w;
+        pos.y *= pos.w;
+        pos.z *= pos.w;
+        return { pos.x,pos.y,pos.z };
+    }
+
+    glm::vec2 LApp::normalizeMousePos(const glm::vec2& screenCoords) const
+    {
+        const auto wndSize = getWindowSize();
+        glm::vec2 normalizedMousePos = screenCoords;
+        normalizedMousePos.x /= wndSize.x;
+        normalizedMousePos.y /= wndSize.y;
+        return normalizedMousePos;
+    }
+
+    float LApp::getDepthByPos(size_t x, size_t y) const
+    {
+        if (info.renderingType == FORWARD)
+            throw std::runtime_error("currently unavailable in forward rendering mode!");
+        return readPixelDepth(x, y);
     }
 }
 

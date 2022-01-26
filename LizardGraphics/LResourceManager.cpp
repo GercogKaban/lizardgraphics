@@ -333,6 +333,9 @@ namespace LGraphics
             if (pos_.z > rangeZ.second) rangeZ.second = pos_.z;
         }
         app->lastLoadedRanges = { rangeX ,rangeY ,rangeZ };
+        out.rangeX = rangeX;
+        out.rangeY = rangeY;
+        out.rangeZ = rangeZ;
 
         ExtractBoneWeightForVertices(currentModel,vertices, mesh, scene);
 

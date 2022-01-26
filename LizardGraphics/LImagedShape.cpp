@@ -54,9 +54,11 @@ namespace LGraphics
             {
                 resetInstanceBuffer(vao,vbo,u);
 
-                objChanged.clear();
-                for (auto p : app->primitives[type])
-                     objChanged.push_back(p);
+                //objChanged.clear();
+                //objChanged.resize(app->primitives[type].size());
+                //for (size_t i = 0; i < app->primitives[type].size(); ++i)
+                //    objChanged[i] = app->primitives[type][i];
+                needToResetBuffer = false;
             }
 
             LWidget::PrimitiveUniforms* buffer = (LWidget::PrimitiveUniforms*)glMapNamedBufferRange(vbo, 0, sizeof(LWidget::PrimitiveUniforms) * u.capacity(),

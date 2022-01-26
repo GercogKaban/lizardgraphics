@@ -2,6 +2,15 @@
 #define PARALLEL_UPDATE
 #define MAX_LIGHTS 128
 
+#define LG_DYN_CAST(a,b) if(dynamic_cast<LPlane*>(a)){((LPlane*)a)b;}\
+else if (dynamic_cast<LCube*>(a)){((LCube*)a)b;}\
+else if (dynamic_cast<LSphere*>(a)){((LSphere*)a)b;}\
+else if (dynamic_cast<LIcosphere*>(a)){((LIcosphere*)a)b;}\
+else if (dynamic_cast<LCone*>(a)){((LCone*)a)b;}\
+else if (dynamic_cast<LTorus*>(a)){((LTorus*)a)b;}\
+else if (dynamic_cast<LCylinder*>(a)){((LCylinder*)a)b;}\
+else if (dynamic_cast<LModel*>(a)){((LModel*)a)b;}
+
 #include <mutex>
 #include <optional>
 #include <unordered_map>
@@ -181,7 +190,9 @@ namespace LGraphics
         // нужен фикс
         float tesselationLevel = 2.0f;
         bool flag__ = false;
+        bool pcf = true;
         Interpretator* interpetator;
+        LShape* picked = nullptr;
 
     protected:
 
@@ -380,8 +391,7 @@ namespace LGraphics
 
         glm::vec2 getMouseCoords() const { return mouseCoords; }
 
-        //ObjectPool<LPlane*> lwRectPool;
-        //std::vector<LNonWidget*> customObjects;
+        auto getPickedObject() { return picked; }
 
         void setImgui(std::function<void()> func) { imgui = func; }
         void safeDelete(LImagedShape* w) { toDelete.push(w); }
@@ -404,14 +414,19 @@ namespace LGraphics
         float getCurrentFrame() const { return lastFrame; }
         float getDeltaTime() const { return deltaTime; }
 
-        struct PixelInfo
+        struct PickingPixelInfo
         {
             uint32_t objectID;
             uint32_t primitiveNum;
             uint32_t triangleNum;
         };
 
-        std::pair<LWidget*,PixelInfo> getObjectByMousePos(size_t x, size_t y);
+        std::pair<LWidget*, PickingPixelInfo> getObjectByMousePos(size_t x, size_t y);
+
+        glm::vec3 screeSpaceToWorldSpace(const glm::vec2& screenCoords, float depth = 1.0f) const;
+        glm::vec2 normalizeMousePos(const glm::vec2& screenCoords) const;
+        auto getGBuffer() const { return gBuffer; };
+        float getDepthByPos(size_t x, size_t y) const;
 
     protected:
 
@@ -481,8 +496,10 @@ namespace LGraphics
             GLuint vao, vbo;
         } *fullscreenQuad = nullptr;
 
-        PixelInfo readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const;
-        LWidget* getObjectByPixel(const PixelInfo& pixelinfo) const;
+        PickingPixelInfo readPixel(size_t x, size_t y, uint32_t fbo, int colorBuffer) const;
+        float readPixelDepth(size_t x, size_t y) const;
+
+        LWidget* getObjectByPixel(const PickingPixelInfo& pixelinfo) const;
 
         std::string loadingText;
         static LAppInitialCreateInfo info;
@@ -623,8 +640,6 @@ namespace LGraphics
 
         UboDataDynamicV testStructV;
         size_t dynamicAlignment;
-        //} vulkanWrap;
-
 
         VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
             const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);

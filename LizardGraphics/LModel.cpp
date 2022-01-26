@@ -317,6 +317,9 @@ void LGraphics::LModel::init()
     app->toCreateM.push(this);
     if (getReflexMapping())
         app->modelReflexesToInit.push_back(this);
+    rangeX = meshes[0].rangeX;
+    rangeY = meshes[0].rangeY;
+    rangeZ = meshes[0].rangeZ;
     //if (animations.size())
     //    animator.PlayAnimation(animations.begin()->second);
     //reflexWidth = app->getWindowSize().x;

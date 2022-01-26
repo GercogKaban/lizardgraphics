@@ -24,6 +24,7 @@ namespace LGraphics
         {
             LBuffer* buffer = nullptr;
             LImage* image = nullptr;
+            std::pair<float, float> rangeX, rangeY, rangeZ;
         };
 
         struct ModelResource
@@ -73,8 +74,10 @@ namespace LGraphics
         void stopAnimation();
         void restartAnimation();
 
-        //void setReflexSize(size_t reflexSize);
         size_t getReflexSize() const;
+
+        void setBeforeDrawingFunc(std::function<void()> func) { beforeDrawingFunc = func; }
+        void setAfterDrawingFunc(std::function<void()> func) { afterDrawingFunc = func; }
 
     protected:
 
@@ -96,5 +99,8 @@ namespace LGraphics
 
         size_t reflexSize = 1024;
         GLuint reflexCubeMap = UNINITIALIZED, depthMap = UNINITIALIZED, reflexFBO = UNINITIALIZED;
+
+        std::function<void()> beforeDrawingFunc = [](){};
+        std::function<void()> afterDrawingFunc = [](){};
     };
 }
